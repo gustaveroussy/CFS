@@ -26,6 +26,7 @@ library(ape)
 #library(harmony)
 #library(furrr)
 library(copykat)
+library(plotly)
 options(browser = "firefox")
 
 library(corrplot)

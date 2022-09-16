@@ -11,39 +11,21 @@
 # input directory
 
 output[["load_data_UI"]] <- renderUI({
-  fluidPage( # Application title
-    mainPanel(
-      shinyDirButton("dir", "Input directory", "Upload"),
-      verbatimTextOutput("dir", placeholder = TRUE)  
-    ))
+  fluidRow(
+    column(12,
+           titlePanel("Load data"),
+           fileInput(
+             inputId = "input_file",
+             label = "Select input data (.rds file)",
+             multiple = FALSE,
+             accept = c(".rds"),
+             width = '350px',
+             buttonLabel = "Browse...",
+             placeholder = "No file selected"
+           )
+    )
+  )
 })
-
-shinyDirChoose(
-  input,
-  'dir',
-  roots = c(home = '/'),
-  filetypes = c('', 'txt', 'bigWig', "tsv", "csv", "bw")
-)
-
-global <- reactiveValues(datapath = getwd())
-
-dir <- reactive(input$dir)
-
-output$dir <- renderText({
-  global$datapath
-})
-
-observeEvent(ignoreNULL = TRUE,
-             eventExpr = {
-               input$dir
-             },
-             handlerExpr = {
-               if (!"path" %in% names(dir())) return()
-               home <- normalizePath("/")
-               global$datapath <-
-                 file.path(home, paste(unlist(dir()$path[-1]), collapse = .Platform$file.sep))
-               message(global$datapath)
-             })
 
 # output directory
 
@@ -81,11 +63,6 @@ observeEvent(ignoreNULL = TRUE,
                  file.path(home_2, paste(unlist(dir_out()$path[-1]), collapse = .Platform$file.sep))
                message(global_2$output_datapath)
              })
-
-input_path <- reactive({
-  path <- global$datapath
-  return(path)
-})
 
 output_path <- reactive({
   path <- global_2$output_datapath

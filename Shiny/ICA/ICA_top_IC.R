@@ -36,7 +36,7 @@ output[["ICA_top_IC_UI"]] <- renderUI({
 
 output[["top_IC_plot_or_message"]] <- renderUI({
     tagList(
-      plotOutput("top_gene_IC_plot")
+      plotly::plotlyOutput("top_gene_IC_plot")
     )
 })
 
@@ -44,10 +44,13 @@ output[["top_IC_plot_or_message"]] <- renderUI({
 ## Relationship tree.
 ##----------------------------------------------------------------------------##
 
-output[["top_gene_IC_plot"]] <- renderPlot({
-  DoHeatmapICA(data=Launch_analysis(),nics=names(which(Stat_analysis()$Kurtosis_ICs>3)),GeneStatICA=Stat_analysis(),ngenes=10,ProjectName=input$project_name)
+output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
+  data <- Launch_analysis()
+  plot_ly(
+    x = colnames(data@misc[["top_gene_ICA"]]), y = rownames(data@misc[["top_gene_ICA"]]),
+    z = data@misc[["top_gene_ICA"]], type = "heatmap"
+  )
 })
-
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.
 ##----------------------------------------------------------------------------##

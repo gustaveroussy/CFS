@@ -16,11 +16,5 @@ output[["start_analysis_UI"]] <- renderUI({
 })
 
 observeEvent(input$start_analysis, {
-  name <- input$project_name
-  DirIC=paste0(output_path(),"/",name)
-  message(DirIC)
-  dir.create(DirIC, recursive=FALSE)
-  data <- Launch_analysis()
-  Stat_data <- Stat_analysis()
-  view(data@meta.data)
+  message(input$input_file)
 })
