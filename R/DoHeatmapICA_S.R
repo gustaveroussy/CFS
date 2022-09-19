@@ -1,4 +1,4 @@
-DoHeatmapICA=function(data="NULL",nics="IC_1",GeneStatICA="NULL",ngenes=10){
+DoHeatmapICA_S=function(data="NULL",nics="IC_1",GeneStatICA="NULL",ngenes=10){
   list_gene <-  purrr::map(GeneStatICA$Contrib_gene[nics],function(.x){x<-.x %>% arrange(desc(abs(Sig))) %>% head(n=ngenes) ;return(x$gene)}) %>% unlist %>% unique 
   
   # paletteLength <- 50
@@ -9,7 +9,7 @@ DoHeatmapICA=function(data="NULL",nics="IC_1",GeneStatICA="NULL",ngenes=10){
   #              seq(max(data_heat)/paletteLength, max(data_heat), length.out=floor(paletteLength/2)))
   
   # Plot the heatmap
-  data@misc[["top_gene_ICA"]] <- data_heat
+  
   # pheatmap(data_heat,clustering_method = "ward.D",color=myColor, breaks=myBreaks,,clustering_distance_cols = "correlation",width = 15,height=30)
-  return(data)
+  return(data_heat)
 }

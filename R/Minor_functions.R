@@ -46,3 +46,4 @@ ScatterPie=function(data=NULL,cell_type_all=NULL,image=NULL){
                                 img_path = image,
                                 pie_scale = 0.4)   
 }
+
