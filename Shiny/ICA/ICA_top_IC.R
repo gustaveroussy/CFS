@@ -1,30 +1,60 @@
 output[["ICA_top_IC_UI"]] <- renderUI({
   fluidRow(
-    box(id = "heatmap_container",
-      title = tagList(
-        p("IC top genes heatmap", style = "padding-right: 5px; display: inline"),
-        actionButton(
-          inputId = "IC_top_gene_info",
-          label = "info",
-          icon = NULL,
-          class = "btn-xs",
-          title = "Show additional information for this panel.",
-          style = "margin-right: 3px"
+    column(width = 3, offset = 0, style = "padding: 0px;",
+           box(id = "ICA_top_IC_main_parameters",
+               title = tagList(
+                 "Main parameters",
+                 actionButton(
+                   inputId = "ICA_top_IC_main_parameters_info",
+                   label = "info",
+                   icon = NULL,
+                   class = "btn-xs",
+                   title = "Show additional information for this panel.",
+                   style = "margin-right: 3px"
+                 ),
+                 shinyWidgets::dropdownButton(
+                   circle = FALSE,
+                   icon = icon("cog"),
+                   inline = TRUE,
+                   size = "xs"
+                 )
+               ),
+               status = "primary",
+               solidHeader = TRUE,
+               width = 12,
+               height = NULL,
+               collapsible = TRUE,
+               collapsed = FALSE,
+               uiOutput("ICA_top_IC_main_parameters_UI")
+           )
+    ),
+    column(width = 9, offset = 0, style = "padding: 0px;",
+      box(id = "heatmap_container",
+        title = tagList(
+          p("IC top genes heatmap", style = "padding-right: 5px; display: inline"),
+          actionButton(
+            inputId = "IC_top_gene_info",
+            label = "info",
+            icon = NULL,
+            class = "btn-xs",
+            title = "Show additional information for this panel.",
+            style = "margin-right: 3px"
+          ),
+          shinyWidgets::dropdownButton(
+            circle = FALSE,
+            icon = icon("cog"),
+            inline = TRUE,
+            size = "xs"
+          )
         ),
-        shinyWidgets::dropdownButton(
-          circle = FALSE,
-          icon = icon("cog"),
-          inline = TRUE,
-          size = "xs"
-        )
-      ),
-      status = "primary",
-      solidHeader = TRUE,
-      width = 12,
-      height = NULL,
-      collapsible = TRUE,
-      collapsed = FALSE,
-      uiOutput("top_IC_plot_or_message")
+        status = "primary",
+        solidHeader = TRUE,
+        width = 12,
+        height = NULL,
+        collapsible = TRUE,
+        collapsed = FALSE,
+        uiOutput("top_IC_plot_or_message")
+      )
     )
   )
 })
@@ -48,7 +78,8 @@ output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
   data <- Launch_analysis()
   plot_ly(
     x = colnames(data@misc[["top_gene_ICA"]]), y = rownames(data@misc[["top_gene_ICA"]]),
-    z = data@misc[["top_gene_ICA"]], type = "heatmap"
+    z = data@misc[["top_gene_ICA"]], type = "heatmap", zmin = input$slider_IC_top_range[1], zmax = input$slider_IC_top_range[2],
+    colorscale = input$select_color_IC_top
   )
 })
 ##----------------------------------------------------------------------------##

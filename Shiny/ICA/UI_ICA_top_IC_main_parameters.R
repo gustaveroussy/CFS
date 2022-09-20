@@ -1,27 +1,24 @@
 ##----------------------------------------------------------------------------##
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
-output[["IC_projection_main_parameters_UI"]] <- renderUI({
+output[["ICA_top_IC_main_parameters_UI"]] <- renderUI({
   tagList(
-    selectInput(
-      "IC_projection_IC_choice",
-      label = "Choose IC to plot",
-      choices = names(Launch_analysis()@misc)[-1]
-    ),
-    selectInput("select_color_IC_projection", label = "Select color", 
+    selectInput("select_color_IC_top", label = "Select color", 
                 choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
-                selected = "Viridis")
+                selected = "Viridis"),
+    sliderInput("slider_IC_top_range", label = "Color range", min = round(min(Launch_analysis()@misc$top_gene_ICA), digits = 0), 
+                max = round(max(Launch_analysis()@misc$top_gene_ICA), digits = 0), value = c(round(min(Launch_analysis()@misc$top_gene_ICA), digits = 0), round(max(Launch_analysis()@misc$top_gene_ICA), digits = 0)))
   )
 })
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["IC_projection_main_parameters_info"]], {
+observeEvent(input[["ICA_top_IC_main_parameters_info"]], {
   showModal(
     modalDialog(
-      IC_projection_main_parameters_info[["text"]],
-      title = IC_projection_main_parameters_info[["title"]],
+      ICA_top_IC_main_parameters_info[["text"]],
+      title = ICA_top_IC_main_parameters_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
@@ -31,8 +28,8 @@ observeEvent(input[["IC_projection_main_parameters_info"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-IC_projection_main_parameters_info <- list(
-  title = "Main parameters for projection",
+ICA_top_IC_main_parameters_info <- list(
+  title = "Main parameters for total gene heatmap",
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
