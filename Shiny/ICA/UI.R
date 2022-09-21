@@ -7,8 +7,6 @@ tab_ICA <- tabItem(
   uiOutput("Spatial_IC_UI"),
   uiOutput("Spatial_gene_UI"),
   uiOutput("IC_gene_heatmap_UI"),
-  uiOutput("Heatmap_Exp_IC_UI"),
-  uiOutput("Heatmap_loadings_gene_IC_UI"),
-  uiOutput("FEA_IC_UI"),
-  uiOutput("First_Gene_contr_IC_UI")
+  uiOutput("spot_gene_heatmap_UI"),
+  uiOutput("IC_enrichment_UI")
 )

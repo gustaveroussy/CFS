@@ -76,6 +76,14 @@ output[["top_IC_plot_or_message"]] <- renderUI({
 
 output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
   data <- Launch_analysis()
+  
+  p <- pheatmap(data@misc[["top_gene_ICA"]],clustering_method = "ward.D",clustering_distance_cols = "correlation")
+  
+  col_order <- p[["tree_col"]][["order"]]
+  row_order <- p[["tree_row"]][["order"]]
+  data@misc[["top_gene_ICA"]] <- data@misc[["top_gene_ICA"]][,col_order]
+  data@misc[["top_gene_ICA"]] <- data@misc[["top_gene_ICA"]][row_order,]
+  
   plot_ly(
     x = colnames(data@misc[["top_gene_ICA"]]), y = rownames(data@misc[["top_gene_ICA"]]),
     z = data@misc[["top_gene_ICA"]], type = "heatmap", zmin = input$slider_IC_top_range[1], zmax = input$slider_IC_top_range[2],

@@ -91,10 +91,13 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
           marker = list(color = data@misc[[IC_C]]$IC_weight,
                         colorscale = input$select_color_IC_projection),
           type = 'scatter', mode = "markers",
-          ) %>% layout(
+          ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                       yaxis = list(showgrid = FALSE, showticklabels=FALSE),
     images = list(
       image
     )
+  ) %>% add_trace(
+    
   )
 })
 ##----------------------------------------------------------------------------##

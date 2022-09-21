@@ -1,11 +1,11 @@
-output[["IC_gene_heatmap_UI"]] <- renderUI({
+output[["spot_gene_heatmap_UI"]] <- renderUI({
   fluidRow(
     column(width = 3, offset = 0, style = "padding: 0px;",
-      box(id = "IC_gene_heatmap_main_parameters",
+      box(id = "spot_gene_heatmap_main_parameters",
           title = tagList(
             "Main parameters",
             actionButton(
-              inputId = "IC_gene_heatmap_main_parameters_info",
+              inputId = "spot_gene_heatmap_main_parameters_info",
               label = "info",
               icon = NULL,
               class = "btn-xs",
@@ -25,17 +25,17 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
           height = NULL,
           collapsible = TRUE,
           collapsed = FALSE,
-          uiOutput("IC_gene_heatmap_main_parameters_UI"),
-          uiOutput("IC_gene_heatmap_slider_main_parameters_UI"),
-          uiOutput("IC_gene_heatmap_color_main_parameters_UI")
+          uiOutput("spot_gene_heatmap_main_parameters_UI"),
+          uiOutput("spot_gene_heatmap_slider_main_parameters_UI"),
+          uiOutput("spot_gene_heatmap_color_main_parameters_UI")
       )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",
-      box(id = "IC_gene_heatmap_container",
+      box(id = "spot_gene_heatmap_container",
         title = tagList(
           p("Build heatmap of genes related to IC", style = "padding-right: 5px; display: inline"),
           actionButton(
-            inputId = "IC_gene_heatmap_info",
+            inputId = "spot_gene_heatmap_info",
             label = "info",
             icon = NULL,
             class = "btn-xs",
@@ -55,7 +55,7 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
         height = NULL,
         collapsible = TRUE,
         collapsed = FALSE,
-        uiOutput("IC_gene_heatmap_plot_or_message")
+        uiOutput("spot_gene_heatmap_plot_or_message")
       )
     )
   )
@@ -66,9 +66,9 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
 ## available.
 ##----------------------------------------------------------------------------##
 
-output[["IC_gene_heatmap_plot_or_message"]] <- renderUI({
+output[["spot_gene_heatmap_plot_or_message"]] <- renderUI({
     tagList(
-      plotly::plotlyOutput("IC_gene_heatmap")
+      plotly::plotlyOutput("spot_gene_heatmap")
     )
 })
 
@@ -76,23 +76,24 @@ output[["IC_gene_heatmap_plot_or_message"]] <- renderUI({
 ## Relationship tree.
 ##----------------------------------------------------------------------------##
 
-output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
+output[["spot_gene_heatmap"]] <- plotly::renderPlotly({
   
   data <- Launch_analysis()
-  IC_C = input[["IC_gene_heatmap_IC_choice"]]
+  IC_C = input[["spot_gene_heatmap_IC_choice"]]
   
-  p <- pheatmap(data@misc[[IC_C]]$IC_top_genes_weight,clustering_method = "ward.D",clustering_distance_cols = "correlation")
+  p <- pheatmap(data@misc[[IC_C]]$spot_top_genes_weight,clustering_method = "ward.D",clustering_distance_cols = "correlation")
   
   col_order <- p[["tree_col"]][["order"]]
   row_order <- p[["tree_row"]][["order"]]
-  data@misc[[IC_C]]$IC_top_genes_weight <- data@misc[[IC_C]]$IC_top_genes_weight[,col_order]
-  data@misc[[IC_C]]$IC_top_genes_weight <- data@misc[[IC_C]]$IC_top_genes_weight[row_order,]
-  
+  data@misc[[IC_C]]$spot_top_genes_weight <- data@misc[[IC_C]]$spot_top_genes_weight[,col_order]
+  data@misc[[IC_C]]$spot_top_genes_weight <- data@misc[[IC_C]]$spot_top_genes_weight[row_order,]
   
   plot_ly(
-    x = colnames(data@misc[[IC_C]]$IC_top_genes_weight), y = rownames(data@misc[[IC_C]]$IC_top_genes_weight),
-    z = data@misc[[IC_C]]$IC_top_genes_weight, type = "heatmap", zmin = input$slider_IC_gene_heatmap_range[1], zmax = input$slider_IC_gene_heatmap_range[2],
-    colorscale = input$select_color_IC_gene_heatmap
+    x = colnames(data@misc[[IC_C]]$spot_top_genes_weight), y = rownames(data@misc[[IC_C]]$spot_top_genes_weight),
+    z = data@misc[[IC_C]]$spot_top_genes_weight, type = "heatmap", zmin = input$slider_spot_gene_heatmap_range[1], zmax = input$slider_spot_gene_heatmap_range[2],
+    colorscale = input$select_color_spot_gene_heatmap
+  ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+               yaxis = list(showgrid = FALSE)
   )
 })
 
@@ -104,11 +105,11 @@ output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["IC_gene_heatmap_info"]], {
+observeEvent(input[["spot_gene_heatmap_info"]], {
   showModal(
     modalDialog(
-      IC_gene_heatmap_info[["text"]],
-      title = IC_gene_heatmap_info[["title"]],
+      spot_gene_heatmap_info[["text"]],
+      title = spot_gene_heatmap_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
@@ -119,7 +120,7 @@ observeEvent(input[["IC_gene_heatmap_info"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-IC_gene_heatmap_info <- list(
+spot_gene_heatmap_info <- list(
   title = "Plot gene weight",
   text = p("Plot of gene weight over spatial imagery")
 )

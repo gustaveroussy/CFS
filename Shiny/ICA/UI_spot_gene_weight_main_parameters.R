@@ -1,36 +1,40 @@
 ##----------------------------------------------------------------------------##
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
-output[["gene_IC_main_parameters_UI"]] <- renderUI({
+output[["spot_gene_heatmap_main_parameters_UI"]] <- renderUI({
   tagList(
     selectInput(
-      "gene_projection_IC_choice",
+      "spot_gene_heatmap_IC_choice",
       label = "Choose IC related to genes to plot",
       choices = names(Launch_analysis()@misc)[-1]
     )
   )
 })
 
-output[["gene_choice_main_parameters_UI"]] <- renderUI({
-  selectizeInput("gene_projection_gene_choice", label = "Choose gene to plot",
-                 choices = Launch_analysis()@misc[[input$gene_projection_IC_choice]]$IC_top_genes[1:100], selected = NULL, multiple = TRUE,
-                 options = NULL)
+output[["spot_gene_heatmap_slider_main_parameters_UI"]] <- renderUI({
+  tagList(
+    sliderInput("slider_spot_gene_heatmap_range", label = "Color range", min = round(min(Launch_analysis()@misc[[input$spot_gene_heatmap_IC_choice]]$spot_top_genes_weight), digits = 0), 
+                max = round(max(Launch_analysis()@misc[[input$spot_gene_heatmap_IC_choice]]$spot_top_genes_weight), digits = 0), value = c(round(min(Launch_analysis()@misc[[input$spot_gene_heatmap_IC_choice]]$spot_top_genes_weight), digits = 0), round(max(Launch_analysis()@misc[[input$spot_gene_heatmap_IC_choice]]$spot_top_genes_weight), digits = 0))
+    )
+  )
 })
 
-output[["gene_color_choice_main_parameters_UI"]] <- renderUI({
-  selectInput("select_color_gene_projection", label = "Select color", 
-              choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
-              selected = "Viridis")
+output[["spot_gene_heatmap_color_main_parameters_UI"]] <- renderUI({
+  tagList(
+    selectInput("select_color_spot_gene_heatmap", label = "Select color", 
+                choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
+                selected = "Viridis")
+  )
 })
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["gene_projection_main_parameters_info"]], {
+observeEvent(input[["spot_gene_heatmap_main_parameters_info"]], {
   showModal(
     modalDialog(
-      gene_projection_main_parameters_info[["text"]],
-      title = gene_projection_main_parameters_info[["title"]],
+      spot_gene_heatmap_main_parameters_info[["text"]],
+      title = spot_gene_heatmap_main_parameters_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
@@ -40,7 +44,7 @@ observeEvent(input[["gene_projection_main_parameters_info"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-gene_projection_main_parameters_info <- list(
+spot_gene_heatmap_main_parameters_info <- list(
   title = "Main parameters for projection",
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
