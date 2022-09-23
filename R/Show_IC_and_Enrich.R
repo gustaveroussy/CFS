@@ -1,4 +1,4 @@
-Show_IC_and_Enrich=function(data=NULL,Stat_data=NULL,dbs=c( "GO_Biological_Process_2015"),nb_genes=10,ProjectName="Default"){
+Show_IC_and_Enrich=function(data=NULL,Stat_data=NULL,dbs=c("GO_Biological_Process_2015"),nb_genes=10,ProjectName="Default"){
   print("Start printing")
   i = 1
   for (IC in names(Stat_data$Contrib_gene[names(which(Stat_data$Kurtosis_ICs>3))])){

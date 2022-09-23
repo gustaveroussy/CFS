@@ -7,22 +7,6 @@ launchShiny <- function(
     ...
 ){
   ##--------------------------------------------------------------------------##
-  ## Check validity of input parameters.
-  ##--------------------------------------------------------------------------##
-  if ( mode %in% c('open','closed') == FALSE ) {
-    stop(
-      "'mode' parameter must be set to either 'open' or 'closed'.",
-      call. = FALSE
-    )
-  }
-  if ( projections_show_hover_info %in% c(TRUE, FALSE) == FALSE ) {
-    stop(
-      "'projections_show_hover_info' parameter must be set to either TRUE or FALSE.",
-      call. = FALSE
-    )
-  }
-  
-  ##--------------------------------------------------------------------------##
   ## Create global variable with options that need to be available inside the
   ## Shiny app.
   ##--------------------------------------------------------------------------##

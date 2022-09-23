@@ -1,5 +1,6 @@
-CopyKat_all=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE){
-  copykat.test <- copykat(rawmat=as.matrix(data@assays$Spatial@counts), id.type=species, ngene.chr=5, win.size=25, KS.cut=0.1, sam.name="test", distance="euclidean", norm.cell.names="",output.seg="TRUE", plot.genes="TRUE", genome="hg20",n.cores=threads)
+CopyKat_all=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,genome="hg20"){
+  copykat.test <- copykat(rawmat=as.matrix(data@assays$Spatial@counts), id.type=species, ngene.chr=5, win.size=25, KS.cut=0.1, sam.name="test", distance="euclidean", norm.cell.names="",output.seg="TRUE", plot.genes="TRUE", genome=genome,n.cores=threads)
+  saveRDS(copykat.test, file = "./copykat.test.RDS")
   gc()
   #predict aneuploid cells
   pred.test <- data.frame(copykat.test$prediction)

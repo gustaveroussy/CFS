@@ -6,41 +6,9 @@ library(shiny)
 library(shinydashboard)
 library(shinyFiles)
 library(shinyWidgets)
-library(dplyr)
 library(pheatmap)
-library(igraph)
-library(CellChat)
-library(tidyverse)
 library(Seurat)
-library(pheatmap)
-#library(spatialEco)
-# library(Cairo)
-library(e1071)
-# library(patchwork)
-library(ggalluvial)
-library(NMF)
-# library(copykat)
-library(enrichR)
-library(ape)
-#library(Rfast2)
-#library(harmony)
-#library(furrr)
-library(copykat)
 library(plotly)
-library(reshape2)
-options(browser = "firefox")
-
-library(corrplot)
-#install.packages("Seurat")
-
-setEnrichrSite("Enrichr")
-dbs <- listEnrichrDbs()
-websiteLive <- TRUE
-
-
-
-n_cores = 8
-future::plan("multicore", workers = n_cores)
 
 ##--------------------------------------------------------------------------##
 ## Functions.

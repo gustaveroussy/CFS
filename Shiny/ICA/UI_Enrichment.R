@@ -33,7 +33,7 @@ output[["IC_enrichment_UI"]] <- renderUI({
     column(width = 9, offset = 0, style = "padding: 0px;",
       box(id = "IC_enrichment_container",
         title = tagList(
-          p("Build heatmap of genes related to IC", style = "padding-right: 5px; display: inline"),
+          p("Build bar chart of enrichment", style = "padding-right: 5px; display: inline"),
           actionButton(
             inputId = "IC_enrichment_info",
             label = "info",
@@ -83,24 +83,27 @@ output[["IC_enrichment"]] <- plotly::renderPlotly({
   database_C = input[["IC_enrichment_database_choice"]]
   
   table <- data@misc[[IC_C]]$en[[database_C]]
+  
+  number_of_genes <- table["Overlap"]
+  
   table["Overlap"] <- lapply(table["Overlap"], sub, pattern="/.*", replacement="")
   
-  x <- c("0",table["Overlap"][1:30,])
-  y <- c("No",table["Term"][1:30,])
+  x <- table["Overlap"][1:30,]
+  y <- table["Term"][1:30,]
   
-  plot_ly(
-    x = x,
+  fig <- plot_ly(type = "bar", orientation = 'h')
+  fig <- fig %>% add_trace(
+    x = x, 
     y = y,
-    name = paste0("Enrichment:"),
-    type = "bar",
-    orientation = 'h',
-    marker = list(color = table["Adjusted.P.value"][1:30,], colorscale = input$select_color_IC_enrichment,
-                  colorbar = list(title = "P-value"), showscale = TRUE, reversescale=TRUE
-    )
-  ) %>% layout(coloraxis=list(colorscale='Jet'),
-               yaxis = list(title = 'Enrichment', tickfont = list(size = 5)),
+    hovertext = paste0(y,"\nnumber of genes: ", number_of_genes[1:30,],"\nP-value: ",table["Adjusted.P.value"][1:30,]),
+    hoverinfo = 'text',
+    marker = list(color = table["Adjusted.P.value"][1:30,], colorscale = "Viridis",
+                  colorbar = list(title = "P-value"), showscale = TRUE, reversescale=TRUE)
+  )
+  fig <- fig %>% layout(yaxis = list(title = 'Enrichment', tickfont = list(size = 7)),
                xaxis = list(title = 'Nb genes', tickfont = list(size = 10))
   )
+  
 })
 
 ##----------------------------------------------------------------------------##

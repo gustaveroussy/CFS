@@ -75,30 +75,71 @@ output[["Spatial_IC_plot_or_message"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 
 output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
-  data <- Launch_analysis()
-  image = GetImage(data, mode = c("plotly"))
-  image$x = 100
-  image$y = 0
-  image$sizex = 11100
-  image$sizey = 11400
-  image$sizing = "stretch"
-  image$yanchor = "top"
-  image$xanchor = "left"
-  
-  IC_C = input[["IC_projection_IC_choice"]]
-  
-  plot_ly(x = data@images$slice1@coordinates$imagecol, y = -data@images$slice1@coordinates$imagerow,
-          marker = list(color = data@misc[[IC_C]]$IC_weight,
-                        colorscale = input$select_color_IC_projection),
-          type = 'scatter', mode = "markers",
-          ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                       yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-    images = list(
-      image
-    )
-  ) %>% add_trace(
+  if (input$IC_projection_IC_choice == "All"){
     
-  )
+    fig <- plot_ly()
+    
+    data <- Launch_analysis()
+    image = GetImage(data, mode = c("plotly"))
+    image$x = 100
+    image$y = 0
+    image$sizex = 11100
+    image$sizey = 11400
+    image$sizing = "stretch"
+    image$yanchor = "top"
+    image$xanchor = "left"
+    
+    IC_C = names(data@misc[-1])
+    
+    df = data.frame(matrix(nrow = length(data@misc[[IC_C[1]]]$IC_weight), ncol = 0))
+    
+    for (i in IC_C) {
+      df[i] = as.data.frame(data@misc[[i]]$IC_weight)
+    }
+    
+    df[df<0] <- 0
+    
+    rownames(df) <- rownames(as.data.frame(data@misc[[IC_C[1]]]$IC_weight))
+    
+    df <- rowPercents(df, digits=1)
+    
+    for(i in 1:length(data@misc[[IC_C[1]]]$IC_weight)) {
+      fig <- fig %>% add_pie(data = df, labels = colnames(df[,1:(ncol(df)-2)]), values = df["AAACAGTGTTCCTGGG-1",1:(ncol(df)-2)],
+                             name = "Cut", domain = list(x = c(0, 0.4), y = c(0.4, 1)))
+    }
+
+    fig <- fig %>% layout(xaxis=list(showgrid = FALSE, zeroline = FALSE, showticklabels=FALSE),
+                 yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels=FALSE),
+                 images = list(
+                   image
+                 )
+    )
+    print(fig)
+    typeof(df["AAACAGTGTTCCTGGG-1",])
+  }else{
+    data <- Launch_analysis()
+    image = GetImage(data, mode = c("plotly"))
+    image$x = 100
+    image$y = 0
+    image$sizex = 11100
+    image$sizey = 11400
+    image$sizing = "stretch"
+    image$yanchor = "top"
+    image$xanchor = "left"
+    
+    IC_C = input[["IC_projection_IC_choice"]]
+    
+    plot_ly(x = data@images$slice1@coordinates$imagecol, y = -data@images$slice1@coordinates$imagerow,
+            marker = list(color = data@misc[[IC_C]]$IC_weight,
+                          colorscale = input$select_color_IC_projection),
+            type = 'scatter', mode = "markers",
+            ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                         yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+      images = list(
+        image
+      )
+    )
+  }
 })
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.

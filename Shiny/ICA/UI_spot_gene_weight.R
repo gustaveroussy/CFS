@@ -33,7 +33,7 @@ output[["spot_gene_heatmap_UI"]] <- renderUI({
     column(width = 9, offset = 0, style = "padding: 0px;",
       box(id = "spot_gene_heatmap_container",
         title = tagList(
-          p("Build heatmap of genes related to IC", style = "padding-right: 5px; display: inline"),
+          p("Build heatmap of genes related to spot", style = "padding-right: 5px; display: inline"),
           actionButton(
             inputId = "spot_gene_heatmap_info",
             label = "info",
