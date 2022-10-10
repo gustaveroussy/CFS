@@ -6,7 +6,7 @@ output[["IC_projection_main_parameters_UI"]] <- renderUI({
     selectInput(
       "IC_projection_IC_choice",
       label = "Choose IC to plot",
-      choices = c("All", names(Launch_analysis()@misc)[-1])
+      choices = c("All", names(Launch_analysis()@ica)[-1])
     ),
     selectInput("select_color_IC_projection", label = "Select color", 
                 choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 

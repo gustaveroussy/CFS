@@ -9,6 +9,7 @@ library(shinyWidgets)
 library(pheatmap)
 library(Seurat)
 library(plotly)
+library(raster)
 
 ##--------------------------------------------------------------------------##
 ## Functions.

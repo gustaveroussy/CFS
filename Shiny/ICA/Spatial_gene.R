@@ -78,26 +78,18 @@ output[["Spatial_gene_plot_or_message"]] <- renderUI({
 
 output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
   data <- Launch_analysis()
-  image = GetImage(data, mode = c("plotly"))
-  image$x = 100
-  image$y = 0
-  image$sizex = 11100
-  image$sizey = 11400
-  image$sizing = "stretch"
-  image$yanchor = "top"
-  image$xanchor = "left"
   
   IC_C = input[["gene_projection_IC_choice"]]
   
   if (length(input$gene_projection_gene_choice) == 1){
   plot_ly(x = data@images$slice1@coordinates$imagecol, y = -data@images$slice1@coordinates$imagerow,
-          marker = list(color = data@misc[[IC_C]]$spot_top_genes_weight[input$gene_projection_gene_choice,],
+          marker = list(color = data@ica[[IC_C]]$spot_top_genes_weight[input$gene_projection_gene_choice,],
                         colorscale = input$select_color_gene_projection),
           type = 'scatter', mode = "markers"
           ) %>% layout(title = input$gene_projection_gene_choice, xaxis=list(showgrid = FALSE, showticklabels=FALSE),
           yaxis = list(showgrid = FALSE, showticklabels=FALSE),
     images = list(
-      image
+      plot_image()
     )
   )
   } else if (length(input$gene_projection_gene_choice) > 1) {
@@ -106,13 +98,13 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
     for ( x in input$gene_projection_gene_choice ) {
       
       plotList[[i]] <-  plot_ly(x = data@images$slice1@coordinates$imagecol, y = -data@images$slice1@coordinates$imagerow,
-              marker = list(color = data@misc[[IC_C]]$spot_top_genes_weight[x,],
+              marker = list(color = data@ica[[IC_C]]$spot_top_genes_weight[x,],
                             colorscale = input$select_color_gene_projection),
               type = 'scatter', mode = "markers"
       ) %>% layout(title = input$gene_projection_gene_choice, xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                    yaxis = list(showgrid = FALSE, showticklabels=FALSE),
                    images = list(
-          image
+           plot_image()
         )
       )
     

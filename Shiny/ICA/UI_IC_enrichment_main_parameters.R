@@ -6,20 +6,20 @@ output[["IC_enrichment_main_parameters_UI"]] <- renderUI({
     selectInput(
       "IC_enrichment_IC_choice",
       label = "Choose IC related to enrichment",
-      choices = names(Launch_analysis()@misc)[-1]
+      choices = names(Launch_analysis()@ica)[-1]
     ),
     selectInput(
       "IC_enrichment_database_choice",
       label = "Choose database related to enrichment",
-      choices = names(Launch_analysis()@misc$IC_1$en)
+      choices = names(Launch_analysis()@ica$IC_1$en)
     )
   )
 })
 
 output[["IC_enrichment_slider_main_parameters_UI"]] <- renderUI({
   tagList(
-    sliderInput("slider_IC_enrichment_range", label = "Color range", min = round(min(Launch_analysis()@misc[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0), 
-                max = round(max(Launch_analysis()@misc[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0), value = c(round(min(Launch_analysis()@misc[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0), round(max(Launch_analysis()@misc[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0))
+    sliderInput("slider_IC_enrichment_range", label = "Color range", min = round(min(Launch_analysis()@ica[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0), 
+                max = round(max(Launch_analysis()@ica[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0), value = c(round(min(Launch_analysis()@ica[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0), round(max(Launch_analysis()@ica[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0))
     )
   )
 })

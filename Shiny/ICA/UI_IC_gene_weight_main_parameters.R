@@ -6,15 +6,15 @@ output[["IC_gene_heatmap_main_parameters_UI"]] <- renderUI({
     selectInput(
       "IC_gene_heatmap_IC_choice",
       label = "Choose IC related to genes to plot",
-      choices = names(Launch_analysis()@misc)[-1]
+      choices = names(Launch_analysis()@ica)[-1]
     )
   )
 })
 
 output[["IC_gene_heatmap_slider_main_parameters_UI"]] <- renderUI({
   tagList(
-    sliderInput("slider_IC_gene_heatmap_range", label = "Color range", min = round(min(Launch_analysis()@misc[[input$IC_gene_heatmap_IC_choice]]$IC_top_genes_weight), digits = 0), 
-                max = round(max(Launch_analysis()@misc[[input$IC_gene_heatmap_IC_choice]]$IC_top_genes_weight), digits = 0), value = c(round(min(Launch_analysis()@misc[[input$IC_gene_heatmap_IC_choice]]$IC_top_genes_weight), digits = 0), round(max(Launch_analysis()@misc[[input$IC_gene_heatmap_IC_choice]]$IC_top_genes_weight), digits = 0))
+    sliderInput("slider_IC_gene_heatmap_range", label = "Color range", min = round(min(Launch_analysis()@ica[[input$IC_gene_heatmap_IC_choice]]$IC_top_genes_weight), digits = 0), 
+                max = round(max(Launch_analysis()@ica[[input$IC_gene_heatmap_IC_choice]]$IC_top_genes_weight), digits = 0), value = c(round(min(Launch_analysis()@ica[[input$IC_gene_heatmap_IC_choice]]$IC_top_genes_weight), digits = 0), round(max(Launch_analysis()@ica[[input$IC_gene_heatmap_IC_choice]]$IC_top_genes_weight), digits = 0))
     )
   )
 })

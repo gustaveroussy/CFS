@@ -12,3 +12,7 @@ Launch_analysis <- reactive({
   data <- readRDS(input$input_file$datapath)
   return(data)
 })
+
+observeEvent(input$input_file, {
+  Launch_analysis()
+})
