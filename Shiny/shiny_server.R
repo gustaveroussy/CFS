@@ -8,5 +8,6 @@ server <- function(input, output, session) {
 ##--------------------------------------------------------------------------##
 source(paste0(Shiny.options[["shiny_root"]], "/load_file/server.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/ICA/server.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/Display/server.R"), local = TRUE)
 
   }

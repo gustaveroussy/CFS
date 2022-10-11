@@ -1,38 +1,31 @@
 ##----------------------------------------------------------------------------##
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
-output[["gene_IC_main_parameters_UI"]] <- renderUI({
+output[["Plot_main_parameters_UI"]] <- renderUI({
   tagList(
-    selectInput(
-      "gene_projection_IC_choice",
-      label = "Choose IC related to genes to plot",
-      choices = names(Launch_analysis()@misc)[-1]
+    selectInput("Plot_analysis_type", label = "Select method to use", 
+                choices = list("UMAP"), 
+                selected = "UMAP"),
+    selectizeInput("gene_projection_gene_choice", label = "Choose IC to plot",
+                   choices = names(Launch_analysis()@misc)[-1],
+                   selected = NULL,
+                   multiple = TRUE,
+                   options = NULL),
+    numericInput("Plot_resolution", "Enter Plot resolution", 1.2,
+      min = 0.1, max = 2, step = 0.1
+    ),
+    actionButton("start_plot", "Start plot")
     )
-  )
-})
-
-output[["gene_choice_main_parameters_UI"]] <- renderUI({
-  selectizeInput("gene_projection_gene_choice", label = "Choose gene to plot",
-                 choices = Launch_analysis()@misc[[input$gene_projection_IC_choice]]$IC_top_genes[1:100],
-                 selected = NULL,
-                 multiple = TRUE,
-                 options = NULL)
-})
-
-output[["gene_color_choice_main_parameters_UI"]] <- renderUI({
-  selectInput("select_color_gene_projection", label = "Select color", 
-              choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
-              selected = "Viridis")
 })
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["gene_projection_main_parameters_info"]], {
+observeEvent(input[["Plot_main_parameters_info"]], {
   showModal(
     modalDialog(
-      gene_projection_main_parameters_info[["text"]],
-      title = gene_projection_main_parameters_info[["title"]],
+      Plot_main_parameters_info[["text"]],
+      title = Plot_main_parameters_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
@@ -42,8 +35,8 @@ observeEvent(input[["gene_projection_main_parameters_info"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-gene_projection_main_parameters_info <- list(
-  title = "Main parameters for projection",
+Plot_main_parameters_info <- list(
+  title = "Main parameters for total gene heatmap",
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>

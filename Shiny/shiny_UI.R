@@ -10,6 +10,13 @@ library(pheatmap)
 library(Seurat)
 library(plotly)
 library(raster)
+library(RColorBrewer)
+
+##--------------------------------------------------------------------------##
+## Set class to read shiny object from saveForShiny
+##--------------------------------------------------------------------------##
+
+setClass("shiny_visium", slots=list(ica="list", images="list"))
 
 ##--------------------------------------------------------------------------##
 ## Functions.
@@ -30,6 +37,7 @@ source(paste0(Shiny.options[["shiny_root"]], "/Functions/Copykat.R"), local = TR
 ##----------------------------------------------------------------------------##
 source(paste0(Shiny.options[["shiny_root"]], "/load_file/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/ICA/UI.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/Display/UI.R"), local = TRUE)
 
 # Define UI for app that draws a histogram ----
 ui <- dashboardPage(
@@ -37,7 +45,8 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("Load Data", tabName = "Load_file", icon = icon("spinner")),
-      menuItem("ICA", tabName = "ICA", icon = icon("wave-square"))
+      menuItem("ICA", tabName = "ICA", icon = icon("wave-square")),
+      menuItem("Display", tabName = "Display", icon = icon("display"))
     )
   ),
   dashboardBody(
@@ -51,6 +60,7 @@ ui <- dashboardPage(
 
         $("#heatmap_container").height(boxHeight);
         $("#top_gene_IC_plot").height(boxHeight - 20);
+        $("#Plot_container").height(boxHeight);
       };
 
       // Set input$box_height when the connection is established
@@ -65,7 +75,8 @@ ui <- dashboardPage(
     ')),
     tabItems(
       tab_load,
-      tab_ICA
+      tab_ICA,
+      tab_display
     )
   )
 )

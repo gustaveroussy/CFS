@@ -82,7 +82,7 @@ output[["IC_enrichment"]] <- plotly::renderPlotly({
   IC_C = input[["IC_enrichment_IC_choice"]]
   database_C = input[["IC_enrichment_database_choice"]]
   
-  table <- data@ica[[IC_C]]$en[[database_C]]
+  table <- data@misc[[IC_C]]$en[[database_C]]
   
   number_of_genes <- table["Overlap"]
   

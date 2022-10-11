@@ -6,8 +6,8 @@ output[["ICA_top_IC_main_parameters_UI"]] <- renderUI({
     selectInput("select_color_IC_top", label = "Select color", 
                 choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
                 selected = "Viridis"),
-    sliderInput("slider_IC_top_range", label = "Color range", min = round(min(Launch_analysis()@ica$top_gene_ICA), digits = 0), 
-                max = round(max(Launch_analysis()@ica$top_gene_ICA), digits = 0), value = c(round(min(Launch_analysis()@ica$top_gene_ICA), digits = 0), round(max(Launch_analysis()@ica$top_gene_ICA), digits = 0)))
+    sliderInput("slider_IC_top_range", label = "Color range", min = round(min(Launch_analysis()@misc$top_gene_ICA), digits = 0), 
+                max = round(max(Launch_analysis()@misc$top_gene_ICA), digits = 0), value = c(round(min(Launch_analysis()@misc$top_gene_ICA), digits = 0), round(max(Launch_analysis()@misc$top_gene_ICA), digits = 0)))
   )
 })
 

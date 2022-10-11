@@ -1,11 +1,11 @@
-output[["ICA_top_IC_UI"]] <- renderUI({
+output[["Plot_UI"]] <- renderUI({
   fluidRow(
     column(width = 3, offset = 0, style = "padding: 0px;",
-           box(id = "ICA_top_IC_main_parameters",
+           box(id = "Plot_main_parameters_UI",
                title = tagList(
                  "Main parameters",
                  actionButton(
-                   inputId = "ICA_top_IC_main_parameters_info",
+                   inputId = "Plot_main_parameters_info",
                    label = "info",
                    icon = NULL,
                    class = "btn-xs",
@@ -25,15 +25,15 @@ output[["ICA_top_IC_UI"]] <- renderUI({
                height = NULL,
                collapsible = TRUE,
                collapsed = FALSE,
-               uiOutput("ICA_top_IC_main_parameters_UI")
+               uiOutput("Plot_main_parameters_UI")
            )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",
-      box(id = "heatmap_container",
+      box(id = "Plot_container",
         title = tagList(
-          p("IC top genes heatmap", style = "padding-right: 5px; display: inline"),
+          p("Plot", style = "padding-right: 5px; display: inline"),
           actionButton(
-            inputId = "IC_top_gene_info",
+            inputId = "Plot_info",
             label = "info",
             icon = NULL,
             class = "btn-xs",
@@ -53,7 +53,7 @@ output[["ICA_top_IC_UI"]] <- renderUI({
         height = NULL,
         collapsible = TRUE,
         collapsed = FALSE,
-        uiOutput("top_IC_plot_or_message")
+        uiOutput("Plot_or_message")
       )
     )
   )
@@ -64,38 +64,12 @@ output[["ICA_top_IC_UI"]] <- renderUI({
 ## available.
 ##----------------------------------------------------------------------------##
 
-output[["top_IC_plot_or_message"]] <- renderUI({
+output[["Plot_or_message"]] <- renderUI({
     tagList(
-      plotly::plotlyOutput("top_gene_IC_plot")
+      plotly::plotlyOutput("Plot", height = "900px", width = 'auto')
     )
 })
 
-##----------------------------------------------------------------------------##
-## Relationship tree.
-##----------------------------------------------------------------------------##
-
-output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
-  data <- Launch_analysis()
-  
-  p <- pheatmap(data@misc[["top_gene_ICA"]],clustering_method = "ward.D",clustering_distance_cols = "correlation")
-  
-  col_order <- p[["tree_col"]][["order"]]
-  row_order <- p[["tree_row"]][["order"]]
-  data@misc[["top_gene_ICA"]] <- data@misc[["top_gene_ICA"]][,col_order]
-  data@misc[["top_gene_ICA"]] <- data@misc[["top_gene_ICA"]][row_order,]
-  
-  fig <- plot_ly(
-    x = colnames(data@misc[["top_gene_ICA"]]), y = rownames(data@misc[["top_gene_ICA"]]),
-    z = data@misc[["top_gene_ICA"]], type = "heatmap", zmin = input$slider_IC_top_range[1], zmax = input$slider_IC_top_range[2],
-    colorscale = input$select_color_IC_top,
-    hovertemplate = paste(
-      "Gene: %{y:.2f%}<br>",
-      "IC: %{x:.2f%}<br>",
-      "Value: %{z:.2f%}",
-      "<extra></extra>"
-    )
-  )
-})
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.
 ##----------------------------------------------------------------------------##
@@ -104,7 +78,7 @@ output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["IC_top_gene_info"]], {
+observeEvent(input[["Plot_info"]], {
   showModal(
     modalDialog(
       IC_top_gene_info[["text"]],
@@ -120,6 +94,6 @@ observeEvent(input[["IC_top_gene_info"]], {
 ## Text in info box.
 ##----------------------------------------------------------------------------##
 IC_top_gene_info <- list(
-  title = "IC top genes heatmap",
+  title = "Plot",
   text = p("Heatmap representation of the expression of the overall top genes overs all IC")
 )
