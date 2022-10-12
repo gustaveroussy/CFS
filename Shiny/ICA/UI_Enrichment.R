@@ -96,7 +96,8 @@ output[["IC_enrichment"]] <- plotly::renderPlotly({
     x = x, 
     y = y,
     hovertext = paste0(y,"\nnumber of genes: ", number_of_genes[1:30,],"\nP-value: ",table["Adjusted.P.value"][1:30,]),
-    hoverinfo = 'text',
+    hoverinfo = 'text', 
+    showlegend=FALSE,
     marker = list(color = table["Adjusted.P.value"][1:30,], colorscale = "Viridis",
                   colorbar = list(title = "P-value"), showscale = TRUE, reversescale=TRUE)
   )

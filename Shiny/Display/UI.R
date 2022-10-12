@@ -3,5 +3,6 @@
 ##----------------------------------------------------------------------------##
 tab_display <- tabItem(
   tabName = "Display",
-  uiOutput("Plot_UI")
+  uiOutput("Plot_UI"),
+  uiOutput("Plot_Spatial_UI")
 )

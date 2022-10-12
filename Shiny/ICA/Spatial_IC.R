@@ -113,17 +113,22 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
     
     IC_C = input[["IC_projection_IC_choice"]]
     
-    plot_ly(x = data@images$slice1@coordinates$imagecol, y = -data@images$slice1@coordinates$imagerow,
+    plot_ly(x = TissueCoordinates()[,"imagecol"], y = -TissueCoordinates()[,"imagerow"],
             marker = list(color = data@misc[[IC_C]]$IC_weight,
                           colorscale = input$select_color_IC_projection),
             type = 'scatter', mode = "markers",
+            text = data@misc[[IC_C]]$IC_weight,
+            customdata = names(data@misc[[IC_C]]$IC_weight),
+            hovertemplate = paste("Cell : %{customdata}<br>",
+                                  "Expression: %{text}",
+                                  "<extra></extra>")
             ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                          yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-      images = list(
-        plot_image()
-      )
-    )
-  }
+                         images = list(
+                           plot_image()
+                           )
+            )
+    }
 })
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.
