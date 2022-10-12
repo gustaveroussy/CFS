@@ -46,7 +46,6 @@ current_plot_umap <- reactive({
         )
     }
   }
-  
   return(fig)
 })
 

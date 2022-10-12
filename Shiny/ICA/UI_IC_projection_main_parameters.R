@@ -8,10 +8,12 @@ output[["IC_projection_main_parameters_UI"]] <- renderUI({
       label = "Choose IC to plot",
       choices = c("All", names(Launch_analysis()@misc)[-1])
     ),
+    
     sliderInput("slider_IC_spatial_range", label = "Color range", min = 0,
                 max = 1, value = c(0,1)),
+    
     selectInput("select_color_IC_projection", label = "Select color", 
-                choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
+                choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd","Range"), 
                 selected = "Viridis")
   )
 })
@@ -23,6 +25,12 @@ observeEvent(input$IC_projection_IC_choice, {
                       max = round(max(Launch_analysis()@misc[[input$IC_projection_IC_choice]]$IC_weight), digits = 0),
                       value = c(round(min(Launch_analysis()@misc[[input$IC_projection_IC_choice]]$IC_weight),digits = 0),
                                 round(max(Launch_analysis()@misc[[input$IC_projection_IC_choice]]$IC_weight), digits = 0)))
+  } else {
+    updateSliderInput(session, "slider_IC_spatial_range", label = "Color range",
+                      min = 0, 
+                      max = 1,
+                      value = c(0,1)
+                      )
   }
 })
 

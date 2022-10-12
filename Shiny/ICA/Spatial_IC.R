@@ -113,22 +113,44 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
     
     IC_C = input[["IC_projection_IC_choice"]]
     
-    plot_ly(x = TissueCoordinates()[,"imagecol"], y = -TissueCoordinates()[,"imagerow"],
-            marker = list(color = data@misc[[IC_C]]$IC_weight,
-                          colorscale = input$select_color_IC_projection),
-            type = 'scatter', mode = "markers",
-            text = data@misc[[IC_C]]$IC_weight,
-            customdata = names(data@misc[[IC_C]]$IC_weight),
-            hovertemplate = paste("Cell : %{customdata}<br>",
-                                  "Expression: %{text}",
-                                  "<extra></extra>")
-            ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                         yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                         images = list(
-                           plot_image()
-                           )
-            )
+    if(input$select_color_IC_projection != "Range"){
+      plot_ly(x = TissueCoordinates()[,"imagecol"], y = -TissueCoordinates()[,"imagerow"],
+              marker = list(color = data@misc[[IC_C]]$IC_weight,
+                            colorscale = input$select_color_IC_projection,
+                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2]),
+              type = 'scatter', mode = "markers",
+              text = data@misc[[IC_C]]$IC_weight,
+              customdata = names(data@misc[[IC_C]]$IC_weight),
+              hovertemplate = paste("Cell : %{customdata}<br>",
+                                    "Expression: %{text}",
+                                    "<extra></extra>")
+      ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                   yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                   showlegend = TRUE,
+                   images = list(
+                     plot_image()
+                   )
+      )
+    } else {
+      plot_ly(x = TissueCoordinates()[,"imagecol"], y = -TissueCoordinates()[,"imagerow"],
+              marker = list(color = data@misc[[IC_C]]$IC_weight,
+                            colors = colfunc(),
+                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2]),
+              type = 'scatter', mode = "markers",
+              text = data@misc[[IC_C]]$IC_weight,
+              customdata = names(data@misc[[IC_C]]$IC_weight),
+              hovertemplate = paste("Cell : %{customdata}<br>",
+                                    "Expression: %{text}",
+                                    "<extra></extra>")
+      ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                   yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                   showlegend = TRUE,
+                   images = list(
+                     plot_image()
+                   )
+      ) # add trace, show legend
     }
+  }
 })
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.

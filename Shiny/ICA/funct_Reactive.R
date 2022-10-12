@@ -1,4 +1,13 @@
 ########################################
+# Color palette
+########################################
+
+colfunc <- reactive({
+  color <- colorRampPalette(c("blue", "yellow","red"))
+  return(color)
+})
+
+########################################
 # reactive of the image to plot by plotly
 ########################################
 
@@ -20,13 +29,13 @@ plot_image <- reactive({
     source = raster2uri(raster::as.raster(data@images$slice1@image)),
     xref = 'x',
     yref =  'y',
-    sizex = dim(data_3@images$slice1@image)[1],
-    sizey = dim(data_3@images$slice1@image)[2],
+    sizex = dim(data@images$slice1@image)[1],
+    sizey = dim(data@images$slice1@image)[2],
     sizing = 'stretch',
     opacity = 1,
     layer= 'below',
-    x = -6,
-    y = -10,   
+    x = -10,
+    y = -4,   
     yanchor = 'top',
     xanchor = 'left'
   )
