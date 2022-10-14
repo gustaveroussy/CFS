@@ -9,7 +9,7 @@ output[["IC_projection_main_parameters_UI"]] <- renderUI({
       choices = c("All", names(Launch_analysis()@misc)[-1])
     ),
     
-    sliderInput("slider_IC_spatial_range", label = "Color range", min = 0,
+    sliderInput("slider_IC_spatial_range", label = "Color range",step = 1, min = 0,
                 max = 1, value = c(0,1)),
     
     selectInput("select_color_IC_projection", label = "Select color", 

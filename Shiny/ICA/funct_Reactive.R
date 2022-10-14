@@ -42,4 +42,21 @@ plot_image <- reactive({
   return(image)
 })
 
-
+plot_image_2 <- reactive({
+  data <- Launch_analysis()
+  image <- list(
+    source = raster2uri(raster::as.raster(flipImage(rotateFixed((data@images$slice1@image), 180), mode = "horizontal"))),
+    xref = 'paper',
+    yref =  'paper',
+    sizex = 1,
+    sizey = 1,
+    sizing = 'stretch',
+    opacity = 1,
+    layer= 'below',
+    x = 0,
+    y = 1,   
+    yanchor = 'top',
+    xanchor = 'left'
+  )
+  return(image)
+})

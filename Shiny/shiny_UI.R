@@ -11,6 +11,9 @@ library(Seurat)
 library(plotly)
 library(raster)
 library(RColorBrewer)
+library(magick)
+library(scatterpie)
+library(OpenImageR)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny
