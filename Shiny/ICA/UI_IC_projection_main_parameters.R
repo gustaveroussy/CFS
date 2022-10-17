@@ -7,14 +7,7 @@ output[["IC_projection_main_parameters_UI"]] <- renderUI({
       "IC_projection_IC_choice",
       label = "Choose IC to plot",
       choices = c("All", names(Launch_analysis()@misc)[-1])
-    ),
-    
-    sliderInput("slider_IC_spatial_range", label = "Color range",step = 1, min = 0,
-                max = 1, value = c(0,1)),
-    
-    selectInput("select_color_IC_projection", label = "Select color", 
-                choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd","Range"), 
-                selected = "Viridis")
+    )
   )
 })
 
@@ -34,6 +27,43 @@ observeEvent(input$IC_projection_IC_choice, {
   }
 })
 
+output$pie_chart_check <- renderUI({
+  req(input$IC_projection_IC_choice)
+  if (input$IC_projection_IC_choice != "All"){
+    tagList(
+      sliderInput("slider_IC_spatial_range", label = "Color range",step = 1, min = 0,
+                  max = 1, value = c(0,1)),
+      
+      selectInput("select_color_IC_projection", label = "Select color", 
+                  choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd","Range"), 
+                  selected = "Viridis")
+    )
+  } else {
+    tagList(
+      numericInput(
+        "pieplot_size",
+        label = "Pie size",
+        value = 50,
+        min = 1,
+        max = 1000,
+        step = 1
+      )
+    )
+  }
+})
+
+output$select_all_input_control <- renderUI({
+  req(input$IC_projection_IC_choice)
+  if (input$IC_projection_IC_choice == "All"){
+    tagList(
+      selectizeInput("All_IC_chosen_projection", label = "Choose IC to plot", choices = names(Launch_analysis()@misc)[-1],
+                     selected = NULL, multiple = TRUE,
+                     options = NULL),
+      actionButton("start_pieplot", "Start plot")
+    )
+  }
+})
+
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
@@ -48,6 +78,7 @@ observeEvent(input[["IC_projection_main_parameters_info"]], {
     )
   )
 })
+
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
