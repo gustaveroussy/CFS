@@ -22,8 +22,6 @@ CopyKat_all=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,geno
   cells <- rbind(pred,pred)
   col_breaks = c(seq(-1,-0.4,length=50),seq(-0.4,-0.2,length=150),seq(-0.2,0.2,length=600),seq(0.2,0.4,length=150),seq(0.4, 1,length=50))
   Dist_CNA= parallelDist::parDist(t(CNA.test[,4:ncol(CNA.test)]),threads =threads, method = "euclidean")
-  
-  # Copykat copy heatmap for plotly
   paneuploid <-heatmap.3(t(CNA.test[,4:ncol(CNA.test)]),dendrogram="r", distfun = function(x){return(Dist_CNA)}, hclustfun = function(x) hclust(x, method="ward.D2"),
                          ColSideColors=chr1,RowSideColors=cells,Colv=NA, Rowv=TRUE,
                          notecol="black",col=my_palette,breaks=col_breaks, key=TRUE,
@@ -31,17 +29,11 @@ CopyKat_all=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,geno
                          cexRow=0.1,cexCol=0.1,cex.main=1,cex.lab=0.1,
                          symm=F,symkey=F,symbreaks=T,cex=1, cex.main=4, margins=c(10,10))
   
-  #
-  
   laneuploid<-legend("topright", paste("pred.",names(table(com.preN)),sep=""), pch=15,col=RColorBrewer::brewer.pal(n = 8, name = "Dark2")[2:1], cex=0.6, bty="n")
   tmp<-merge(data.frame(Cells=colnames(data@assays$Spatial@counts)),data.frame(Cells=pred.test$cell.names,Aneuploid=pred.test$copykat.pred),all = T)
   Aneuploid<-tmp$Aneuploid
   names(Aneuploid)<-tmp$Cells
   data@meta.data$aneuploid<-as.factor(Aneuploid)
-  
-  
-  # end copykat here for data treatment ?
-  ## plot for plotly
   paneuploid_spatial<-SpatialDimPlot(data,group.by="aneuploid") 
   paneuploid_umap<-DimPlot(data,group.by="aneuploid")    
   
@@ -52,12 +44,10 @@ CopyKat_all=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,geno
   hcc <- hclust(parallelDist::parDist(t(tumor.mat),threads =threads, method = "euclidean"), method = "ward.D2")
   hc.umap <- cutree(hcc,kcut)
   
-  ######
   rbPal6 <- colorRampPalette(RColorBrewer::brewer.pal(n = 8, name = "Dark2")[3:4])
   subpop <- rbPal6(2)[as.numeric(factor(hc.umap))]
   cells <- rbind(subpop,subpop)
   Dist_tumor.mat<-parallelDist::parDist(t(tumor.mat),threads =threads, method = "euclidean")
-  # organise heatmap for subplot : heatmap plotly
   pSubClone<-heatmap.3(t(tumor.mat),dendrogram="r", distfun = function(x){return(Dist_tumor.mat)}, hclustfun = function(x) hclust(x, method="ward.D2"),
                        ColSideColors=chr1,RowSideColors=cells,Colv=NA, Rowv=TRUE,
                        notecol="black",col=my_palette,breaks=col_breaks, key=TRUE,
@@ -82,8 +72,8 @@ CopyKat_all=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,geno
   
   LR<-data.frame(CNA.test[,1:3], Med= apply(tumor.mat[],1,function(x){median(abs(diff(x)))}))
   Region_Amp_CNA<-LR %>% arrange(desc(Med)) %>% head(n=40)
-  data@misc$copykat = list(copykat.test,paneuploid,laneuploid,hcc,pSubClone,lSubClone,pSubClone_spatial,pCount_spatial,pSubClone_umap,pCount_umap,pBoxSubCount,pCNA_scater,LR,Region_Amp_CNA)
+  COPYKAT_l=list(copykat.test,paneuploid,laneuploid,hcc,pSubClone,lSubClone,pSubClone_spatial,pCount_spatial,pSubClone_umap,pCount_umap,pBoxSubCount,pCNA_scater,LR,Region_Amp_CNA)
   
-  return(data)
+  return(COPYKAT_l)
 }
 

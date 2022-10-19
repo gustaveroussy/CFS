@@ -16,6 +16,12 @@ Clustering_UMAP <- reactive({
   data <- Launch_analysis()
   
   data=Cluster_ICA(adata=data,ICs=as.integer(gsub('[IC_]','',input$gene_projection_gene_choice)),res=input$Plot_resolution)
+  if ("aneuploid" %in% colnames(data@meta.data$aneuploid)) {
+    data@meta.data$aneuploid <- as.character(data@meta.data$aneuploid)
+    data@meta.data$aneuploid[which(is.na(data@meta.data$aneuploid))] = "unknown"
+    data@meta.data$aneuploid <- as.factor(data@meta.data$aneuploid)
+  }
+
   
   return(data)
   
@@ -33,19 +39,37 @@ current_plot_umap <- reactive({
   )
   
   if (input$Plot_analysis_type == "UMAP"){
-    for (i in 0:length(summary(data@meta.data[["seurat_clusters"]]))-1){
-      fig <- fig %>%
-        add_trace(
-          x = data[["umap"]]@cell.embeddings[which(data@meta.data[["seurat_clusters"]]==i),1],
-          y = data[["umap"]]@cell.embeddings[which(data@meta.data[["seurat_clusters"]]==i),2],
-          marker = list(
-            color = palette()[i+1],
-            size = 10
-          ),
-          showlegend = T
-        )
+    if (input$Plot_display_type == "Clustering"){
+      for (i in 0:length(summary(data@meta.data[["seurat_clusters"]]))-1){
+        fig <- fig %>%
+          add_trace(
+            x = data[["umap"]]@cell.embeddings[which(data@meta.data[["seurat_clusters"]]==i),1],
+            y = data[["umap"]]@cell.embeddings[which(data@meta.data[["seurat_clusters"]]==i),2],
+            marker = list(
+              color = palette()[i+1],
+              size = 10
+            ),
+            showlegend = T
+          )
+      }
+    } else if (input$Plot_display_type == "Ploïdie"){
+      c = 1
+      for (i in unique(data@meta.data[["aneuploid"]])){
+        fig <- fig %>%
+          add_trace(
+            x = data[["umap"]]@cell.embeddings[which(data@meta.data[["aneuploid"]]==i),1],
+            y = data[["umap"]]@cell.embeddings[which(data@meta.data[["aneuploid"]]==i),2],
+            name = i,
+            marker = list(
+              color = palette()[c],
+              size = 10
+            ),
+            showlegend = T
+          )
+        c = c+1
+        }
+      }
     }
-  }
   return(fig)
 })
 
@@ -74,27 +98,52 @@ current_plot_spatial <- reactive({
                  mode='markers'
   )
   
-  for (i in 0:length(summary(data@meta.data[["seurat_clusters"]]))-1){
-    fig <- fig %>%
-      add_trace(
-        x = TissueCoordinates()[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)],
-        y = -TissueCoordinates()[,"imagerow"][which(data@meta.data[["seurat_clusters"]]==i)],
-        marker = list(
-          color = palette()[i+1],
-          size = 10
-        ),
-        showlegend = T,
-        customdata = rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)],
-        hovertemplate = paste("Cell : %{customdata}<br>",
-                              "<extra></extra>")
-      )
+  fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)), hoverinfo = "skip")
+  
+  if (input$Plot_analysis_type == "UMAP"){
+    if (input$Plot_display_type == "Clustering"){
+      for (i in 0:length(summary(data@meta.data[["seurat_clusters"]]))-1){
+        fig <- fig %>%
+          add_trace(
+            x = TissueCoordinates()[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)],
+            y = TissueCoordinates()[,"imagerow"][which(data@meta.data[["seurat_clusters"]]==i)],
+            marker = list(
+              color = palette()[i+1],
+              size = 10
+            ),
+            showlegend = T,
+            customdata = rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)],
+            hovertemplate = paste("Cell : %{customdata}<br>",
+                                  "<extra></extra>")
+          )
+    } 
+  } else if (input$Plot_display_type == "Ploïdie"){
+      c = 1
+      for (i in unique(data@meta.data[["aneuploid"]])){
+        fig <- fig %>%
+          add_trace(
+            x = TissueCoordinates()[,"imagecol"][which(data@meta.data[["aneuploid"]]==i)],
+            y = TissueCoordinates()[,"imagerow"][which(data@meta.data[["aneuploid"]]==i)],
+            name = i,
+            marker = list(
+              color = palette()[c],
+              size = 10
+            ),
+            showlegend = T,
+            text = data@meta.data[["aneuploid"]],
+            customdata = rownames(data@meta.data)[which(data@meta.data[["aneuploid"]]==i)],
+            hovertemplate = paste("Cell : %{customdata}<br>",
+                                  "Ploïdie : %{text}<br>",
+                                  "<extra></extra>")
+          )
+        c = c + 1
+      }
+    }
   }
   
   fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                  yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                 images = list(
-                   plot_image()
-                 )
+                 autosize = TRUE
   )
   
   return(fig)
@@ -103,3 +152,16 @@ current_plot_spatial <- reactive({
 output[["Plot_Spatial"]] <- plotly::renderPlotly({
   plots$spatial
 })
+
+##----------------------------------------------------------------------------##
+## Handler for the download for RDS
+##----------------------------------------------------------------------------##
+
+output$download_RDS <- downloadHandler(
+  filename = function() {
+    paste("data", ".RDS", sep = "")
+  },
+  content = function(file) {
+    saveRDS(Clustering_UMAP(), file)
+  }
+)

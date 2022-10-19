@@ -71,11 +71,6 @@ output[["Plot_or_message"]] <- renderUI({
 })
 
 ##----------------------------------------------------------------------------##
-## Alternative text message if data is missing.
-##----------------------------------------------------------------------------##
-#output[["groups_tree_text"]] <- renderText({ "Data not available." })
-
-##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
 observeEvent(input[["Plot_info"]], {

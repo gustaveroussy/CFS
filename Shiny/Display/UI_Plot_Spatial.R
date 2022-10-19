@@ -38,7 +38,7 @@ output[["Plot_Spatial_UI"]] <- renderUI({
 
 output[["Plot_Spatial_or_message"]] <- renderUI({
     tagList(
-      plotly::plotlyOutput("Plot_Spatial", height = 'auto', width = 'auto')
+      plotly::plotlyOutput("Plot_Spatial", height = '900px', width = 'auto')
     )
 })
 

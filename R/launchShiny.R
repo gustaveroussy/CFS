@@ -1,6 +1,6 @@
 launchShiny <- function(
     mode = "open",
-    maxFileSize = 800,
+    maxFileSize = 15000,
     file_to_load = NULL,
     welcome_message = NULL,
     projections_show_hover_info = TRUE,

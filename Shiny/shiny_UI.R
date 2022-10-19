@@ -64,6 +64,7 @@ ui <- dashboardPage(
         $("#heatmap_container").height(boxHeight);
         $("#top_gene_IC_plot").height(boxHeight - 20);
         $("#Plot_container").height(boxHeight);
+        $("#Plot_spatial_container").height(boxHeight);
       };
 
       // Set input$box_height when the connection is established

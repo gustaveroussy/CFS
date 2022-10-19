@@ -6,6 +6,9 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     selectInput("Plot_analysis_type", label = "Select method to use", 
                 choices = list("UMAP"), 
                 selected = "UMAP"),
+    selectInput("Plot_display_type", label = "Select what to color", 
+                choices = list("Clustering", "Ploïdie"), 
+                selected = "Clustering"),
     selectizeInput("gene_projection_gene_choice", label = "Choose IC to plot",
                    choices = names(Launch_analysis()@misc)[-1],
                    selected = NULL,
@@ -14,7 +17,8 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     numericInput("Plot_resolution", "Enter Plot resolution", 1.2,
       min = 0.1, max = 2, step = 0.1
     ),
-    actionButton("start_plot", "Start plot")
+    actionButton("start_plot", "Start plot"),
+    downloadButton("download_RDS", "Download RDS")
     )
 })
 
