@@ -100,7 +100,7 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
                             cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2]),
               text = data@misc[[IC_C]]$IC_weight,
               customdata = names(data@misc[[IC_C]]$IC_weight),
-              hovertemplate = paste("Cell : %{customdata}<br>",
+              hovertemplate = paste0("Cell : %{customdata}<br>",
                                     "Expression: %{text}",
                                     "<extra></extra>")
       )
@@ -122,7 +122,7 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
               text = data@misc[[IC_C]]$IC_weight,
               customdata = names(data@misc[[IC_C]]$IC_weight),
               hoverinfo = "text",
-              hovertemplate = paste("Cell : %{customdata}<br>",
+              hovertemplate = paste0("Cell : %{customdata}<br>",
                                     "Expression: %{text}",
                                     "<extra></extra>")
       )

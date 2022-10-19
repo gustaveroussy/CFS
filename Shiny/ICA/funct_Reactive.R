@@ -92,11 +92,21 @@ current_plot_pie_plot <- reactive({
   
   ####
   
-  fig <- plot_ly(type = "scatter")
+  fig <- plot_ly()
   
   
   for (i in 1:nrow(ic_types)) {
     r=sum_IC
+    
+    t = colnames(ic_types[i,1:length(type)+2][which(ic_types[i,1:length(type)+2] != 0)])
+    v = round(as.double(ic_types[i,1:length(type)+2][which(ic_types[i,1:length(type)+2] != 0)])/sum(as.double(ic_types[i,1:length(type)+2][which(ic_types[i,1:length(type)+2] != 0)]))*100,2)
+    
+    text_final = ""
+    
+    for(k in 1:length(t)) {
+      text_final = paste(text_final,paste0(t[k]," : ",v[k],"%<br>"))
+    }
+    
     
     col_coordinates = (ic_types[i,"imagecol"])/dim(data@images$slice1@image)[1]
     row_coordinates = (ic_types[i,"imagerow"])/dim(data@images$slice1@image)[2]
@@ -107,7 +117,10 @@ current_plot_pie_plot <- reactive({
     fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = colnames(ic_types[i,1:length(type)+2][which(ic_types[i,1:length(type)+2] != 0)])
                            , values = as.double(ic_types[i,1:length(type)+2][which(ic_types[i,1:length(type)+2] != 0)]),
                            name = rownames(ic_types[i,]), domain = list(x = x, y = y),
-                           showlegend = TRUE, text = NULL, textposition = "none")
+                           showlegend = TRUE, textposition = "none", textinfo = "none",
+                           text = text_final,
+                           hovertemplate = paste0("%{text}",
+                                                 "<extra></extra>"))
   }
   
   fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
@@ -126,8 +139,8 @@ current_plot_pie_plot <- reactive({
                           y = 1,   
                           yanchor = 'top',
                           xanchor = 'left'
+                          )
                         )
-  )
   
   return(fig)
 })
