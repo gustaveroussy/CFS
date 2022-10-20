@@ -16,7 +16,7 @@ Clustering_UMAP <- reactive({
   data <- Launch_analysis()
   
   data=Cluster_ICA(adata=data,ICs=as.integer(gsub('[IC_]','',input$gene_projection_gene_choice)),res=input$Plot_resolution)
-  if ("aneuploid" %in% colnames(data@meta.data$aneuploid)) {
+  if ("aneuploid" %in% colnames(data@meta.data)) {
     data@meta.data$aneuploid <- as.character(data@meta.data$aneuploid)
     data@meta.data$aneuploid[which(is.na(data@meta.data$aneuploid))] = "unknown"
     data@meta.data$aneuploid <- as.factor(data@meta.data$aneuploid)
@@ -130,7 +130,7 @@ current_plot_spatial <- reactive({
               size = 10
             ),
             showlegend = T,
-            text = data@meta.data[["aneuploid"]],
+            text = data@meta.data[["aneuploid"]][which(data@meta.data[["aneuploid"]]==i)],
             customdata = rownames(data@meta.data)[which(data@meta.data[["aneuploid"]]==i)],
             hovertemplate = paste("Cell : %{customdata}<br>",
                                   "Ploïdie : %{text}<br>",
