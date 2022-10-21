@@ -1,4 +1,4 @@
-CopyKat_all=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,genome="hg20"){
+Ploidie_search=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,genome="hg20"){
   copykat.test <- copykat(rawmat=as.matrix(data@assays$Spatial@counts), id.type=species, ngene.chr=5, win.size=25, KS.cut=0.1, sam.name="test", distance="euclidean", norm.cell.names="",output.seg="TRUE", plot.genes="TRUE", genome=genome,n.cores=threads)
   saveRDS(copykat.test, file = "./copykat.test.RDS")
   gc()
@@ -40,11 +40,6 @@ CopyKat_all=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,geno
   data@meta.data$aneuploid<-as.factor(Aneuploid)
   
   
-  # end copykat here for data treatment ?
-  ## plot for plotly
-  paneuploid_spatial<-SpatialDimPlot(data,group.by="aneuploid") 
-  paneuploid_umap<-DimPlot(data,group.by="aneuploid")    
-  
   #SubClone classification
   tumor.cells <- pred.test$cell.names[which(pred.test$copykat.pred=="aneuploid")]
   tumor.mat <- CNA.test %>% dplyr::select(one_of(gsub("-",".",tumor.cells)))
@@ -72,8 +67,6 @@ CopyKat_all=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,geno
   data@meta.data$SubClone<-as.factor(SubClone)
   pSubClone_spatial<-SpatialDimPlot(data,group.by="SubClone")
   pCount_spatial<-SpatialFeaturePlot(data,features="nCount_Spatial")
-  pSubClone_umap<-DimPlot(data,group.by="SubClone")
-  pCount_umap<-FeaturePlot(data,features="nCount_Spatial")
   tmp<-merge(data.frame(Cells=colnames(data@assays$Spatial@counts)),data.frame(Cells=gsub("\\.","-",names(hc.umap)),SubClone=hc.umap),all.y=T)
   pBoxSubCount<-data.frame(nCount=data$nCount_SCT[tmp$Cells],SubClone=hc.umap) %>% ggplot(aes(as.factor(SubClone),nCount)) +geom_boxplot(outlier.shape=NA) +geom_jitter(width=0.2,alpha=0.4)
   cbind(CNA.test[,1:3],tumor.mat) %>% gather(key=Cells,value=LR, -chrom,-chrompos,-abspos) -> tumor.mat.s
@@ -82,8 +75,8 @@ CopyKat_all=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,geno
   
   LR<-data.frame(CNA.test[,1:3], Med= apply(tumor.mat[],1,function(x){median(abs(diff(x)))}))
   Region_Amp_CNA<-LR %>% arrange(desc(Med)) %>% head(n=40)
-  data@misc$copykat = list(copykat.test,paneuploid,laneuploid,hcc,pSubClone,lSubClone,pSubClone_spatial,pCount_spatial,pSubClone_umap,pCount_umap,pBoxSubCount,pCNA_scater,LR,Region_Amp_CNA)
+  COPYKAT_FINAL = list(copykat.test = copykat.test,paneuploid = paneuploid,laneuploid = laneuploid,hcc = hcc,pSubClone = pSubClone,lSubClone = lSubClone,pSubClone_spatial = pSubClone_spatial,pCount_spatial = pCount_spatial,pBoxSubCount = pBoxSubCount,pCNA_scater = pCNA_scater,LR = LR,Region_Amp_CNA = Region_Amp_CNA)
   
-  return(data)
+  return(COPYKAT_FINAL)
 }
 

@@ -128,7 +128,7 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
       i = i+1
     }
     
-    subplot(plotList) %>% layout(showlegend = FALSE)
+    subplot(plotList, nrows = ceiling(length(input$gene_projection_gene_choice)/3)) %>% layout(showlegend = FALSE)
     
   }
 })

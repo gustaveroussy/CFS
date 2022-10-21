@@ -1,11 +1,11 @@
-output[["Plot_Spatial_UI"]] <- renderUI({
+output[["trajectory_Spatial_UI"]] <- renderUI({
   fluidRow(
     column(width = 12, offset = 0, style = "padding: 0px;",
-      box(id = "Plot_spatial_container",
+      box(id = "trajectory_spatial_container",
         title = tagList(
-          p("Plot_Spatial", style = "padding-right: 5px; display: inline"),
+          p("trajectory_Spatial", style = "padding-right: 5px; display: inline"),
           actionButton(
-            inputId = "Plot_info",
+            inputId = "trajectory_Spatial_info",
             label = "info",
             icon = NULL,
             class = "btn-xs",
@@ -25,7 +25,7 @@ output[["Plot_Spatial_UI"]] <- renderUI({
         height = NULL,
         collapsible = TRUE,
         collapsed = FALSE,
-        uiOutput("Plot_Spatial_or_message")
+        uiOutput("trajectory_Spatial_or_message")
       )
     )
   )
@@ -36,9 +36,9 @@ output[["Plot_Spatial_UI"]] <- renderUI({
 ## available.
 ##----------------------------------------------------------------------------##
 
-output[["Plot_Spatial_or_message"]] <- renderUI({
+output[["trajectory_Spatial_or_message"]] <- renderUI({
     tagList(
-      plotly::plotlyOutput("Plot_Spatial", height = 'auto', width = 'auto')
+      plotly::plotlyOutput("trajectory_Spatial", height = '900px', width = 'auto')
     )
 })
 
@@ -50,11 +50,11 @@ output[["Plot_Spatial_or_message"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["Plot_Spatial_info"]], {
+observeEvent(input[["trajectory_Spatial_info"]], {
   showModal(
     modalDialog(
-      IC_top_gene_info[["text"]],
-      title = IC_top_gene_info[["title"]],
+      trajectory_spatial_info[["text"]],
+      title = trajectory_spatial_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
@@ -65,7 +65,7 @@ observeEvent(input[["Plot_Spatial_info"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-IC_top_gene_info <- list(
-  title = "Plot Spatial",
+trajectory_spatial_info <- list(
+  title = "trajectory Spatial",
   text = p("Heatmap representation of the expression of the overall top genes overs all IC")
 )

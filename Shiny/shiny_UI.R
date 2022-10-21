@@ -14,6 +14,7 @@ library(RColorBrewer)
 library(magick)
 library(scatterpie)
 library(OpenImageR)
+library(destiny)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny
@@ -50,7 +51,8 @@ ui <- dashboardPage(
       menuItem("Load Data", tabName = "Load_file", icon = icon("spinner")),
       menuItem("ICA", tabName = "ICA", icon = icon("wave-square")),
       menuItem("Display", tabName = "Display", icon = icon("display"))
-    )
+    ),
+    uiOutput("IC_list_UI")
   ),
   dashboardBody(
     tags$head(tags$script('
@@ -63,8 +65,25 @@ ui <- dashboardPage(
 
         $("#heatmap_container").height(boxHeight);
         $("#top_gene_IC_plot").height(boxHeight - 20);
+        
+        $("#IC_plot_container").height(boxHeight);
+        $("#Spatial_IC_plot").height(boxHeight - 20);
+        
+        $("#gene_plot_container").height(boxHeight);
+        $("#Spatial_gene_plot").height(boxHeight - 20);
+        
         $("#Plot_container").height(boxHeight);
+        $("#Plot").height(boxHeight - 20);
+        
         $("#Plot_spatial_container").height(boxHeight);
+        $("#Plot_Spatial").height(boxHeight - 20);
+        
+        $("#trajectory_spatial_container").height(boxHeight);
+        $("#trajectory").height(boxHeight - 20);
+        
+        $("#trajectory_container").height(boxHeight);
+        $("#trajectory_Spatial").height(boxHeight - 20);
+        
       };
 
       // Set input$box_height when the connection is established

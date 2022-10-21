@@ -45,6 +45,7 @@ current_plot_umap <- reactive({
           add_trace(
             x = data[["umap"]]@cell.embeddings[which(data@meta.data[["seurat_clusters"]]==i),1],
             y = data[["umap"]]@cell.embeddings[which(data@meta.data[["seurat_clusters"]]==i),2],
+            name = i,
             marker = list(
               color = palette()[i+1],
               size = 10
@@ -107,6 +108,7 @@ current_plot_spatial <- reactive({
           add_trace(
             x = TissueCoordinates()[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)],
             y = TissueCoordinates()[,"imagerow"][which(data@meta.data[["seurat_clusters"]]==i)],
+            name = i,
             marker = list(
               color = palette()[i+1],
               size = 10
@@ -165,3 +167,15 @@ output$download_RDS <- downloadHandler(
     saveRDS(Clustering_UMAP(), file)
   }
 )
+
+##----------------------------------------------------------------------------##
+## trajectory
+##----------------------------------------------------------------------------##
+
+output[["trajectory"]] <- plotly::renderPlotly({
+  plots$spatial
+})
+
+output[["trajectory_Spatial"]] <- plotly::renderPlotly({
+  plots$spatial
+})

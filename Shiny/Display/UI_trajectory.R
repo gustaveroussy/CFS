@@ -1,11 +1,11 @@
-output[["Plot_UI"]] <- renderUI({
+output[["trajectory_UI"]] <- renderUI({
   fluidRow(
     column(width = 3, offset = 0, style = "padding: 0px;",
-           box(id = "Plot_main_parameters_UI",
+           box(id = "trajectory_main_parameters_UI",
                title = tagList(
                  "Main parameters",
                  actionButton(
-                   inputId = "Plot_main_parameters_info",
+                   inputId = "trajectory_main_parameters_info",
                    label = "info",
                    icon = NULL,
                    class = "btn-xs",
@@ -25,15 +25,15 @@ output[["Plot_UI"]] <- renderUI({
                height = NULL,
                collapsible = TRUE,
                collapsed = FALSE,
-               uiOutput("Plot_main_parameters_UI")
+               uiOutput("trajectory_main_parameters_UI")
            )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",
-      box(id = "Plot_container",
+      box(id = "trajectory_container",
         title = tagList(
-          p("Plot", style = "padding-right: 5px; display: inline"),
+          p("Trajectory", style = "padding-right: 5px; display: inline"),
           actionButton(
-            inputId = "Plot_info",
+            inputId = "trajectory_info",
             label = "info",
             icon = NULL,
             class = "btn-xs",
@@ -53,7 +53,7 @@ output[["Plot_UI"]] <- renderUI({
         height = NULL,
         collapsible = TRUE,
         collapsed = FALSE,
-        uiOutput("Plot_or_message")
+        uiOutput("trajectory_or_message")
       )
     )
   )
@@ -64,20 +64,20 @@ output[["Plot_UI"]] <- renderUI({
 ## available.
 ##----------------------------------------------------------------------------##
 
-output[["Plot_or_message"]] <- renderUI({
+output[["trajectory_or_message"]] <- renderUI({
     tagList(
-      plotly::plotlyOutput("Plot", height = "auto", width = 'auto')
+      plotly::plotlyOutput("trajectory", height = "900px", width = 'auto')
     )
 })
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["Plot_info"]], {
+observeEvent(input[["trajectory_info"]], {
   showModal(
     modalDialog(
-      IC_top_gene_info[["text"]],
-      title = IC_top_gene_info[["title"]],
+      trajectory_info[["text"]],
+      title = trajectory_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
@@ -88,7 +88,7 @@ observeEvent(input[["Plot_info"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-IC_top_gene_info <- list(
+trajectory_info <- list(
   title = "Plot",
   text = p("Heatmap representation of the expression of the overall top genes overs all IC")
 )
