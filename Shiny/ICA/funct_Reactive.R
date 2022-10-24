@@ -3,7 +3,7 @@
 ########################################
 
 colfunc <- reactive({
-  color <- colorRampPalette(c("blue", "yellow","red"))
+  color <- colorRampPalette(c("blue", "green", "yellow", "orange", "red"))
   return(color)
 })
 

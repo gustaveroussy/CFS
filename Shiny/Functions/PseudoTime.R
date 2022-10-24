@@ -2,7 +2,7 @@
 #ICI un essai de calcul de pseudotime a partir des IC, en utilisant une parti de monocle.
 Spatial_pseudotime=function(data=NULL, IC=NULL){
   
-  data_2=data@reductions$ica@cell.embeddings[which(data@meta.data$aneuploid=="aneuploid"),IC]
+  data_2=data@reductions$ica@cell.embeddings[which(data@meta.data$aneuploid=="aneuploid"),c(2,3,4,5,7,10,11,12,15,17,18)]
   dm=DiffusionMap(data_2)
   dpt <- DPT(dm,w_width = 0.1)
   pseudotime_dpt <- rank(dpt$dpt)

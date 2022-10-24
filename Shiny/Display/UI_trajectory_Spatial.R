@@ -38,7 +38,7 @@ output[["trajectory_Spatial_UI"]] <- renderUI({
 
 output[["trajectory_Spatial_or_message"]] <- renderUI({
     tagList(
-      plotly::plotlyOutput("trajectory_Spatial", height = '900px', width = 'auto')
+      plotly::plotlyOutput("trajectory_Spatial", height = 'auto', width = 'auto')
     )
 })
 

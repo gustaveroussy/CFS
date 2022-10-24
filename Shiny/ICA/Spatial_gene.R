@@ -85,13 +85,14 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
     
     fig <- plot_ly()
     
-    fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)))
+    fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)), hoverinfo = 'skip')
     
     fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
                              x = TissueCoordinates()[,"imagecol"],
                              y = TissueCoordinates()[,"imagerow"],
                              marker = list(color = data@misc[[IC_C]]$spot_top_genes_weight[input$gene_projection_gene_choice,],
-                                           colorscale = input$select_color_gene_projection),
+                                           colorscale = input$select_color_gene_projection,
+                                           showscale = TRUE),
                              text = data@misc[[IC_C]]$spot_top_genes_weight[input$gene_projection_gene_choice,],
                              customdata = names(data@misc[[IC_C]]$spot_top_genes_weight[input$gene_projection_gene_choice,]),
                              hovertemplate = paste("Cell : %{customdata}<br>",
@@ -113,7 +114,7 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
     i = 1
     for ( x in input$gene_projection_gene_choice ) {
       plotList[[i]] <-  plot_ly() %>%
-        add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image))
+        add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)), hoverinfo = 'skip'
                   ) %>% add_trace(x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
                                   marker = list(color = data@misc[[IC_C]]$spot_top_genes_weight[x,],
                                                 colorscale = input$select_color_gene_projection),

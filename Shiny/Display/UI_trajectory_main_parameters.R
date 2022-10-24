@@ -8,7 +8,13 @@ output[["trajectory_main_parameters_UI"]] <- renderUI({
                 selected = "2D"),
     selectInput("trajectory_color_by", label = "Select how to color", 
                 choices = list("Clustering"), 
-                selected = "Clustering")
+                selected = "Clustering"),
+    selectizeInput("trajectory_dimension_choice", label = "Choose dimension to spatial plot",
+                   choices = c("dm","Branch",colnames(Launch_analysis()@misc$dpt@dm@eigenvectors)),
+                   selected = NULL,
+                   multiple = FALSE,
+                   options = NULL),
+    actionButton("start_plot_trajectory", "Start plot")
     )
 })
 

@@ -72,6 +72,15 @@ ui <- dashboardPage(
         $("#gene_plot_container").height(boxHeight);
         $("#Spatial_gene_plot").height(boxHeight - 20);
         
+        $("#spot_gene_heatmap_container").height(boxHeight);
+        $("#spot_gene_heatmap").height(boxHeight - 20);
+        
+        $("#IC_gene_heatmap_container").height(boxHeight);
+        $("#IC_gene_heatmap").height(boxHeight - 20);
+        
+        $("#IC_enrichment_container").height(boxHeight);
+        $("#IC_enrichment").height(boxHeight - 20);
+        
         $("#Plot_container").height(boxHeight);
         $("#Plot").height(boxHeight - 20);
         

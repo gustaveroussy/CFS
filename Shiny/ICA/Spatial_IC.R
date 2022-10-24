@@ -91,13 +91,14 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
       
       fig <- plot_ly()
       
-      fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)))
+      fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)), hoverinfo = 'skip')
       
       fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
                        x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
               marker = list(color = data@misc[[IC_C]]$IC_weight,
                             colorscale = input$select_color_IC_projection,
-                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2]),
+                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
+                            showscale = TRUE),
               text = data@misc[[IC_C]]$IC_weight,
               customdata = names(data@misc[[IC_C]]$IC_weight),
               hovertemplate = paste0("Cell : %{customdata}<br>",
@@ -113,12 +114,13 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
       
       fig <- plot_ly()
       
-      fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)))
+      fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)), hoverinfo = 'skip')
       
       fig <- fig %>% add_trace(type = "scatter", mode = "markers", x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
               marker = list(color = data@misc[[IC_C]]$IC_weight,
                             colors = colfunc(),
-                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2]),
+                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
+                            showscale = TRUE),
               text = data@misc[[IC_C]]$IC_weight,
               customdata = names(data@misc[[IC_C]]$IC_weight),
               hoverinfo = "text",

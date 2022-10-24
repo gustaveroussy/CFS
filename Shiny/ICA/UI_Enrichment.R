@@ -92,6 +92,7 @@ output[["IC_enrichment"]] <- plotly::renderPlotly({
   y <- table["Term"][1:30,]
   
   fig <- plot_ly(type = "bar", orientation = 'h')
+  
   fig <- fig %>% add_trace(
     x = x, 
     y = y,
@@ -101,6 +102,7 @@ output[["IC_enrichment"]] <- plotly::renderPlotly({
     marker = list(color = table["Adjusted.P.value"][1:30,], colorscale = "Viridis",
                   colorbar = list(title = "P-value"), showscale = TRUE, reversescale=TRUE)
   )
+  
   fig <- fig %>% layout(yaxis = list(title = 'Enrichment', tickfont = list(size = 7)),
                xaxis = list(title = 'Nb genes', tickfont = list(size = 10))
   )

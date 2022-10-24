@@ -8,6 +8,7 @@ server <- function(input, output, session) {
 ##--------------------------------------------------------------------------##
   
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/Cluster_ICA.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "/Functions/PseudoTime.R"), local = TRUE)
 
 ##--------------------------------------------------------------------------##
 ## Tabs.
