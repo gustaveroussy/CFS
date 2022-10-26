@@ -13,13 +13,13 @@ palette <- reactive({
 
 Clustering_UMAP <- reactive({
   
-  if (is.null(input$gene_projection_gene_choice)) {
+  if (is.null(input$Plot_display_IC_choice)) {
     return(Launch_analysis())
   }
 
   data <- Launch_analysis()
   
-  data=Cluster_ICA(adata=data,ICs=as.integer(gsub('[IC_]','',input$gene_projection_gene_choice)),res=input$Plot_resolution)
+  data=Cluster_ICA(adata=data,ICs=as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)),res=input$Plot_resolution)
   
   if ("aneuploid" %in% colnames(data@meta.data)) {
     data@meta.data$aneuploid <- as.character(data@meta.data$aneuploid)
@@ -122,6 +122,27 @@ current_plot_umap <- reactive({
                                      "<extra></extra>")
             )
         }
+      } else if (input$Plot_display_type == "Ploïdie") {
+        c = 1
+        for (i in unique(metadata[["aneuploid"]])){
+          fig <- fig %>%
+            add_trace(
+              x = table[which(metadata[["aneuploid"]]==i),1],
+              y = table[which(metadata[["aneuploid"]]==i),2],
+              name = i,
+              marker = list(
+                color = palette()[c],
+                size = 10
+              ),
+              showlegend = T,
+              text = i,
+              customdata = rownames(metadata)[which(metadata[["aneuploid"]]==i)],
+              hovertemplate = paste0("Cell : %{customdata}<br>",
+                                     "Cluster : %{text}",
+                                     "<extra></extra>")
+            )
+          c = c+1
+        }
       }
     }
   return(fig)
@@ -185,7 +206,7 @@ current_plot_spatial <- reactive({
             y = TissueCoordinates()[,"imagerow"][which(data@meta.data[["aneuploid"]]==i)],
             name = i,
             marker = list(
-              color = palette()[sub_UMAP_plotc],
+              color = palette()[c],
               size = 10
             ),
             showlegend = T,
@@ -234,7 +255,7 @@ current_plot_trajectory <- reactive({
   req(Launch_analysis()@reductions[["umap"]])
   data <- Clustering_UMAP()
   
-  data <- Spatial_pseudotime(data,input$gene_projection_gene_choice)
+  data <- Spatial_pseudotime(data,input$Plot_display_IC_choice)
   
   if (input$trajectory_dimension_type == "2D"){
     
@@ -298,7 +319,7 @@ current_plot_spatial_trajectory <- reactive({
   req(Launch_analysis()@reductions[["umap"]])
   data <- Clustering_UMAP()
   
-  data <- Spatial_pseudotime(data,input$gene_projection_gene_choice)
+  data <- Spatial_pseudotime(data,input$Plot_display_IC_choice)
   
   DC = input$trajectory_dimension_choice
   

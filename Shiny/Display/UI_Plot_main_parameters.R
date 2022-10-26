@@ -9,7 +9,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     selectInput("Plot_display_type", label = "Select what to color", 
                 choices = list("Clustering", "Ploïdie"), 
                 selected = "Clustering"),
-    selectizeInput("gene_projection_gene_choice", label = "Choose IC to plot",
+    selectizeInput("Plot_display_IC_choice", label = "Choose IC to plot",
                    choices = names(Launch_analysis()@misc)[-1],
                    selected = input$Ic_list,
                    multiple = TRUE,
