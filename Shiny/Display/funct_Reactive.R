@@ -13,15 +13,21 @@ palette <- reactive({
 
 Clustering_UMAP <- reactive({
   
+  if (is.null(input$gene_projection_gene_choice)) {
+    return(Launch_analysis())
+  }
+
   data <- Launch_analysis()
   
   data=Cluster_ICA(adata=data,ICs=as.integer(gsub('[IC_]','',input$gene_projection_gene_choice)),res=input$Plot_resolution)
+  
   if ("aneuploid" %in% colnames(data@meta.data)) {
     data@meta.data$aneuploid <- as.character(data@meta.data$aneuploid)
     data@meta.data$aneuploid[which(is.na(data@meta.data$aneuploid))] = "unknown"
     data@meta.data$aneuploid <- as.factor(data@meta.data$aneuploid)
   }
 
+  data <- Spatial_pseudotime(data)
   
   return(data)
   
@@ -32,10 +38,14 @@ Clustering_UMAP <- reactive({
 ##----------------------------------------------------------------------------##
 
 current_plot_umap <- reactive({
+  
+  req(Launch_analysis()@reductions[["umap"]])
   data <- Clustering_UMAP()
   
+  
   fig <- plot_ly(type = 'scatter',
-                 mode='markers'
+                 mode='markers',
+                 source = "A"
   )
   
   if (input$Plot_analysis_type == "UMAP"){
@@ -50,7 +60,12 @@ current_plot_umap <- reactive({
               color = palette()[i+1],
               size = 10
             ),
-            showlegend = T
+            showlegend = T,
+            text = i,
+            customdata = rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)],
+            hovertemplate = paste0("Cell : %{customdata}<br>",
+                                   "Cluster : %{text}",
+                                   "<extra></extra>")
           )
       }
     } else if (input$Plot_display_type == "Ploïdie"){
@@ -65,9 +80,47 @@ current_plot_umap <- reactive({
               color = palette()[c],
               size = 10
             ),
-            showlegend = T
+            showlegend = T,
+            text = i,
+            customdata = rownames(data@meta.data)[which(data@meta.data[["aneuploid"]]==i)],
+            hovertemplate = paste0("Cell : %{customdata}<br>",
+                                   "Cluster : %{text}",
+                                   "<extra></extra>")
           )
         c = c+1
+        }
+      }
+    
+    fig <- fig %>% event_register('plotly_selected')
+    
+    } else if (input$Plot_analysis_type == "sub UMAP") { # En chantier : voir si on fait ça avec un traitement additionnel ou directement dans shiny
+      
+      data <- sub_UMAP_plot()
+      
+      table <- data[["umap"]]@cell.embeddings
+      table <- table[(row.names(table) %in% selected_cells_plot()$customdata),]
+      
+      metadata <- data@meta.data
+      metadata <- metadata[(row.names(metadata) %in% selected_cells_plot()$customdata),]
+      
+      if (input$Plot_display_type == "Clustering"){
+        for (i in 0:length(summary(metadata[["seurat_clusters"]]))-1){
+          fig <- fig %>%
+            add_trace(
+              x = table[which(metadata[["seurat_clusters"]]==i),1],
+              y = table[which(metadata[["seurat_clusters"]]==i),2],
+              name = i,
+              marker = list(
+                color = palette()[i+1],
+                size = 10
+              ),
+              showlegend = T,
+              text = i,
+              customdata = rownames(metadata)[which(metadata[["seurat_clusters"]]==i)],
+              hovertemplate = paste0("Cell : %{customdata}<br>",
+                                     "Cluster : %{text}",
+                                     "<extra></extra>")
+            )
         }
       }
     }
@@ -93,6 +146,8 @@ output[["Plot"]] <- plotly::renderPlotly({
 ##----------------------------------------------------------------------------##
 
 current_plot_spatial <- reactive({
+  
+  req(Launch_analysis()@reductions[["umap"]])
   data <- Clustering_UMAP()
   
   fig <- plot_ly(type = 'scatter',
@@ -114,8 +169,10 @@ current_plot_spatial <- reactive({
               size = 10
             ),
             showlegend = T,
+            text = i,
             customdata = rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)],
-            hovertemplate = paste("Cell : %{customdata}<br>",
+            hovertemplate = paste0("Cell : %{customdata}<br>",
+                                  "Cluster : %{text}",
                                   "<extra></extra>")
           )
     } 
@@ -128,7 +185,7 @@ current_plot_spatial <- reactive({
             y = TissueCoordinates()[,"imagerow"][which(data@meta.data[["aneuploid"]]==i)],
             name = i,
             marker = list(
-              color = palette()[c],
+              color = palette()[sub_UMAP_plotc],
               size = 10
             ),
             showlegend = T,
@@ -173,6 +230,8 @@ output$download_RDS <- downloadHandler(
 ##----------------------------------------------------------------------------##
 
 current_plot_trajectory <- reactive({
+
+  req(Launch_analysis()@reductions[["umap"]])
   data <- Clustering_UMAP()
   
   data <- Spatial_pseudotime(data,input$gene_projection_gene_choice)
@@ -194,14 +253,17 @@ current_plot_trajectory <- reactive({
               color = palette()[i+1],
               size = 10
             ),
-            showlegend = T
+            showlegend = T,
+            hovertemplate = paste0("DC1 : %{x}<br>",
+                                   "DC2 : %{y}",
+                                   "<extra></extra>")
           )
       }
     } else {
     }
   } else if (input$trajectory_dimension_type == "3D") {
     
-    fig <- plot_ly(type = 'scatter3d')
+    fig <- plot_ly(type = 'scatter3d', mode = "markers")
     
     if (input$trajectory_color_by == "Clustering"){
       for (i in 0:length(summary(data@meta.data[["seurat_clusters"]]))-1){
@@ -215,16 +277,25 @@ current_plot_trajectory <- reactive({
             color = palette()[i+1],
             size = 2
           ),
-          showlegend = T
+          showlegend = T,
+          hovertemplate = paste0("DC1 : %{x}<br>",
+                                "DC2 : %{y}<br>",
+                                "DC3 : %{z}",
+                                "<extra></extra>")
         )
-        
       }
+      
+      fig <- fig %>% layout(scene = list(xaxis = list(title = 'DC1'), yaxis = list(title = 'DC2'), zaxis = list(title = 'DC3')))
+      
+    } else {
     }
   }
   return(fig)
 })
 
 current_plot_spatial_trajectory <- reactive({
+  
+  req(Launch_analysis()@reductions[["umap"]])
   data <- Clustering_UMAP()
   
   data <- Spatial_pseudotime(data,input$gene_projection_gene_choice)
@@ -278,7 +349,7 @@ observeEvent(input$start_plot_trajectory, {
   if (input$start_plot_trajectory == trajectory_plots$button_check) {
     trajectory_plots$trajectory = current_plot_trajectory()
     trajectory_plots$spatial_trajectory = current_plot_spatial_trajectory()
-    trajectory_plots$button_check <- input$start_plot + 1
+    trajectory_plots$button_check <- input$start_plot_trajectory + 1
   }
 })
 
@@ -288,4 +359,27 @@ output[["trajectory"]] <- plotly::renderPlotly({
 
 output[["trajectory_Spatial"]] <- plotly::renderPlotly({
   trajectory_plots$spatial_trajectory
+})
+
+##----------------------------------------------------------------------------##
+## sub-clustering
+##----------------------------------------------------------------------------##
+
+observeEvent(input$start_plot, {
+  updateSelectInput(session, "Plot_analysis_type", label = "Select method to use", 
+                    choices = list("UMAP","sub UMAP"), 
+                    selected = "UMAP")
+})
+
+selected_cells_plot <- reactive({
+  return(plotly::event_data(c("plotly_selected"), source = "A"))
+})
+
+sub_UMAP_plot <- reactive({
+  
+  data <- Clustering_UMAP()
+  
+  data <- data[,(colnames(data@assays$Spatial) %in% selected_cells_plot()$customdata)]
+  
+  return(data)
 })
