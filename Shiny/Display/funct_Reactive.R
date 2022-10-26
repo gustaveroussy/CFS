@@ -25,9 +25,9 @@ Clustering_UMAP <- reactive({
     data@meta.data$aneuploid <- as.character(data@meta.data$aneuploid)
     data@meta.data$aneuploid[which(is.na(data@meta.data$aneuploid))] = "unknown"
     data@meta.data$aneuploid <- as.factor(data@meta.data$aneuploid)
+    
+    data <- Spatial_pseudotime(data)
   }
-
-  data <- Spatial_pseudotime(data)
   
   return(data)
   
@@ -234,19 +234,6 @@ output[["Plot_Spatial"]] <- plotly::renderPlotly({
 })
 
 ##----------------------------------------------------------------------------##
-## Handler for the download for RDS
-##----------------------------------------------------------------------------##
-
-output$download_RDS <- downloadHandler(
-  filename = function() {
-    paste("data", ".RDS", sep = "")
-  },
-  content = function(file) {
-    saveRDS(Clustering_UMAP(), file)
-  }
-)
-
-##----------------------------------------------------------------------------##
 ## trajectory
 ##----------------------------------------------------------------------------##
 
@@ -404,3 +391,22 @@ sub_UMAP_plot <- reactive({
   
   return(data)
 })
+
+##----------------------------------------------------------------------------##
+## Handler for the download for RDS
+##----------------------------------------------------------------------------##
+
+output$download_RDS <- downloadHandler(
+  filename = function() {
+    paste("data", ".RDS", sep = "")
+  },
+  content = function(file) {
+    data <- Clustering_UMAP()
+    if (!is.null(input$Ic_list)) {
+      data@misc$IC <- input$Ic_list
+    } else if (!is.null(input$Plot_display_IC_choice)) {
+      data@misc$IC <- input$Plot_display_IC_choice
+    }
+    saveRDS(data, file)
+  }
+)
