@@ -41,6 +41,10 @@ output[["ICA_top_IC_UI"]] <- renderUI({
             style = "margin-right: 3px"
           ),
           shinyWidgets::dropdownButton(
+            tags$div(
+              style = "color: black !important;",
+              uiOutput("heatmap_top_IC_column_organization_UI")
+            ),
             circle = FALSE,
             icon = icon("cog"),
             inline = TRUE,
@@ -58,6 +62,25 @@ output[["ICA_top_IC_UI"]] <- renderUI({
     )
   )
 })
+
+##----------------------------------------------------------------------------##
+## Drop down column organization
+##----------------------------------------------------------------------------##
+
+output[["heatmap_top_IC_column_organization_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "top_IC_column_organization",
+    label = "Try to organize column based on proximity",
+    value = FALSE
+    )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "heatmap_top_IC_column_organization_UI",
+  suspendWhenHidden = FALSE
+)
 
 ##----------------------------------------------------------------------------##
 ## UI element that either shows a plot or a text message if data is not
@@ -79,9 +102,13 @@ output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
   
   p <- pheatmap(data@misc[["top_gene_ICA"]],clustering_method = "ward.D",clustering_distance_cols = "correlation")
   
-  col_order <- p[["tree_col"]][["order"]]
   row_order <- p[["tree_row"]][["order"]]
-  data@misc[["top_gene_ICA"]] <- data@misc[["top_gene_ICA"]][,col_order]
+  
+  if (input$top_IC_column_organization == TRUE){
+    col_order <- p[["tree_col"]][["order"]]
+    data@misc[["top_gene_ICA"]] <- data@misc[["top_gene_ICA"]][,col_order]
+  }
+  
   data@misc[["top_gene_ICA"]] <- data@misc[["top_gene_ICA"]][row_order,]
   
   fig <- plot_ly(
@@ -95,6 +122,10 @@ output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
       "<extra></extra>"
     )
   )
+  
+  fig <- fig %>% layout(yaxis = list(title = 'Genes', tickfont = list(size = 7)),
+                        xaxis = list(title = 'IC')
+                        )
 })
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.

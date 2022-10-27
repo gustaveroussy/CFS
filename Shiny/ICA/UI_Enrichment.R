@@ -103,7 +103,7 @@ output[["IC_enrichment"]] <- plotly::renderPlotly({
                   colorbar = list(title = "P-value"), showscale = TRUE, reversescale=TRUE)
   )
   
-  fig <- fig %>% layout(yaxis = list(title = 'Enrichment', tickfont = list(size = 7)),
+  fig <- fig %>% layout(yaxis = list(autorange = "reversed", title = 'Enrichment', tickfont = list(size = 7)),
                xaxis = list(title = 'Nb genes', tickfont = list(size = 10))
   )
   

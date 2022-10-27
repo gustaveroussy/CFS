@@ -13,7 +13,6 @@ library(raster)
 library(RColorBrewer)
 library(magick)
 library(scatterpie)
-library(OpenImageR)
 library(destiny)
 
 ##--------------------------------------------------------------------------##

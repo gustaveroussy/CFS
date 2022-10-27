@@ -43,6 +43,10 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
             style = "margin-right: 3px"
           ),
           shinyWidgets::dropdownButton(
+            tags$div(
+              style = "color: black !important;",
+              uiOutput("heatmap_IC_gene_column_organization_UI")
+            ),
             circle = FALSE,
             icon = icon("cog"),
             inline = TRUE,
@@ -60,6 +64,25 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
     )
   )
 })
+
+##----------------------------------------------------------------------------##
+## Drop down column organization
+##----------------------------------------------------------------------------##
+
+output[["heatmap_IC_gene_column_organization_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "IC_gene_column_organization",
+    label = "Try to organize column based on proximity",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "heatmap_IC_gene_column_organization_UI",
+  suspendWhenHidden = FALSE
+)
 
 ##----------------------------------------------------------------------------##
 ## UI element that either shows a plot or a text message if data is not
@@ -83,10 +106,13 @@ output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
   
   p <- pheatmap(data@misc[[IC_C]]$IC_top_genes_weight,clustering_method = "ward.D",clustering_distance_cols = "correlation")
   
-  col_order <- p[["tree_col"]][["order"]]
   row_order <- p[["tree_row"]][["order"]]
-  data@misc[[IC_C]]$IC_top_genes_weight <- data@misc[[IC_C]]$IC_top_genes_weight[,col_order]
   data@misc[[IC_C]]$IC_top_genes_weight <- data@misc[[IC_C]]$IC_top_genes_weight[row_order,]
+  
+  if (input$IC_gene_column_organization == TRUE){
+    col_order <- p[["tree_col"]][["order"]]
+    data@misc[[IC_C]]$IC_top_genes_weight <- data@misc[[IC_C]]$IC_top_genes_weight[,col_order]
+  }
   
   
   plot_ly(
