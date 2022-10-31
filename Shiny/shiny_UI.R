@@ -14,6 +14,8 @@ library(RColorBrewer)
 library(magick)
 library(scatterpie)
 library(destiny)
+library(rclipboard)
+library(tibble)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny
@@ -74,7 +76,7 @@ ui <- dashboardPage(
         $("#spot_gene_heatmap_container").height(boxHeight);
         $("#spot_gene_heatmap").height(boxHeight - 20);
         
-        $("#IC_gene_heatmap_container").height(boxHeight);
+        $("#IC_gene_heatmap_container").height(boxHeight + 50);
         $("#IC_gene_heatmap").height(boxHeight - 20);
         
         $("#IC_enrichment_container").height(boxHeight);

@@ -79,7 +79,7 @@ output[["spot_gene_heatmap_plot_or_message"]] <- renderUI({
 output[["spot_gene_heatmap"]] <- plotly::renderPlotly({
   
   data <- Launch_analysis()
-  IC_C = input[["spot_gene_heatmap_IC_choice"]]
+  IC_C = input[["IC_choice"]]
   
   p <- pheatmap(data@misc[[IC_C]]$spot_top_genes_weight,clustering_method = "ward.D",clustering_distance_cols = "correlation")
   

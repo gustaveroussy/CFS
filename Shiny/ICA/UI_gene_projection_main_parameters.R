@@ -1,19 +1,10 @@
 ##----------------------------------------------------------------------------##
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
-output[["gene_IC_main_parameters_UI"]] <- renderUI({
-  tagList(
-    selectInput(
-      "gene_projection_IC_choice",
-      label = "Choose IC related to genes to plot",
-      choices = names(Launch_analysis()@misc)[-1]
-    )
-  )
-})
 
 output[["gene_choice_main_parameters_UI"]] <- renderUI({
   selectizeInput("gene_projection_gene_choice", label = "Choose gene to plot",
-                 choices = Launch_analysis()@misc[[input$gene_projection_IC_choice]]$IC_top_genes[1:100],
+                 choices = Launch_analysis()@misc[[input$IC_choice]]$IC_top_genes[1:100],
                  selected = NULL,
                  multiple = TRUE,
                  options = NULL)

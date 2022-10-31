@@ -1,23 +1,18 @@
 ##----------------------------------------------------------------------------##
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
-output[["IC_projection_main_parameters_UI"]] <- renderUI({
-  tagList(
-    selectInput(
-      "IC_projection_IC_choice",
-      label = "Choose IC to plot",
-      choices = c("All", names(Launch_analysis()@misc)[-1])
-    )
-  )
+
+output$pie_chart_confirm <- renderUI({
+  checkboxInput("pie_plot", label = "Pie Plot", value = FALSE)
 })
 
-observeEvent(input$IC_projection_IC_choice, {
-  if (input$IC_projection_IC_choice != "All") {
+observeEvent(input$pie_plot, {
+  if (input$pie_plot == FALSE) {
     updateSliderInput(session, "slider_IC_spatial_range", label = "Color range",
-                      min = round(min(Launch_analysis()@misc[[input$IC_projection_IC_choice]]$IC_weight), digits = 0), 
-                      max = round(max(Launch_analysis()@misc[[input$IC_projection_IC_choice]]$IC_weight), digits = 0),
-                      value = c(round(min(Launch_analysis()@misc[[input$IC_projection_IC_choice]]$IC_weight),digits = 0),
-                                round(max(Launch_analysis()@misc[[input$IC_projection_IC_choice]]$IC_weight), digits = 0)))
+                      min = round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0), 
+                      max = round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0),
+                      value = c(round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_weight),digits = 0),
+                                round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0)))
   } else {
     updateSliderInput(session, "slider_IC_spatial_range", label = "Color range",
                       min = 0, 
@@ -28,8 +23,7 @@ observeEvent(input$IC_projection_IC_choice, {
 })
 
 output$pie_chart_check <- renderUI({
-  req(input$IC_projection_IC_choice)
-  if (input$IC_projection_IC_choice != "All"){
+  if (input$pie_plot == FALSE){
     tagList(
       sliderInput("slider_IC_spatial_range", label = "Color range",step = 1, min = 0,
                   max = 1, value = c(0,1)),
@@ -53,8 +47,7 @@ output$pie_chart_check <- renderUI({
 })
 
 output$select_all_input_control <- renderUI({
-  req(input$IC_projection_IC_choice)
-  if (input$IC_projection_IC_choice == "All"){
+  if (input$pie_plot == TRUE){
     tagList(
       selectizeInput("All_IC_chosen_projection", label = "Choose IC to plot", choices = names(Launch_analysis()@misc)[-1],
                      selected = NULL, multiple = TRUE,

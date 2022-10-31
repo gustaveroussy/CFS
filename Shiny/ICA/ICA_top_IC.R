@@ -40,6 +40,15 @@ output[["ICA_top_IC_UI"]] <- renderUI({
             title = "Show additional information for this panel.",
             style = "margin-right: 3px"
           ),
+          shinyFiles::shinySaveButton(
+            "top_IC_heatmap_export",
+            label = "export to PDF",
+            title = "Export dimensional reduction to PDF file.",
+            filetype = "pdf",
+            viewtype = "icon",
+            class = "btn-xs",
+            style = "margin-right: 3px"
+          ),
           shinyWidgets::dropdownButton(
             tags$div(
               style = "color: black !important;",
@@ -81,6 +90,62 @@ outputOptions(
   "heatmap_top_IC_column_organization_UI",
   suspendWhenHidden = FALSE
 )
+
+##----------------------------------------------------------------------------##
+## Export projection plot to PDF when pressing the "export to PDF" button.
+##----------------------------------------------------------------------------##
+observeEvent(input[["top_IC_heatmap_export"]], {
+  req(Launch_analysis())
+  
+  input_data <- Launch_analysis()
+  
+  available_storage_volumes <- getVolumes()
+  
+  ## open dialog to select where plot should be saved and how the file should
+  ## be named
+  shinyFiles::shinyFileSave(
+    input,
+    id = "top_IC_heatmap_export",
+    roots = available_storage_volumes,
+    session = session,
+    restrictions = system.file(package = "base")
+  )
+  
+  ## retrieve info from dialog
+  save_file_input <- shinyFiles::parseSavePath(
+    available_storage_volumes,
+    input[["top_IC_heatmap_export"]]
+  )
+  
+  ## extract specified file path
+  save_file_path <- as.character(save_file_input$datapath[1])
+  
+  ## create heatmap
+  
+  ###
+  input_data <- data
+  Stats <- ICGeneAndStats(data = input_data)
+  ngenes = 10
+  list_gene = c()
+  ###
+
+  for(nics in colnames(input_data@misc[["top_gene_ICA"]])) {
+    
+    list_gene <- append(list_gene, head(Stats$Contrib_gene[[nics]][rev(order(abs(Stats$Contrib_gene[[nics]]$Sig))),1],n=10))
+    
+  }
+  list_gene <- list_gene %>% unlist %>% unique
+  
+  paletteLength <- 50
+  myColor <- colorRampPalette(c("violet","black","yellow"))(paletteLength)
+  data_heat=input_data@reductions$ica@feature.loadings[as.matrix(list_gene),]
+    
+  myBreaks <- c(seq(min(data_heat), 0, length.out=ceiling(paletteLength/2) + 1), 
+                seq(max(data_heat)/paletteLength, max(data_heat), length.out=floor(paletteLength/2)))
+    
+  pheatmap(data_heat,clustering_method = "ward.D",color=myColor, breaks=myBreaks,,clustering_distance_cols = "correlation",filename=paste0(save_file_path, "/Heatmap_loadings_gene_All_IC_best,",ngenes,".pdf"),width = 15,height=30)
+  
+})
 
 ##----------------------------------------------------------------------------##
 ## UI element that either shows a plot or a text message if data is not

@@ -1,6 +1,6 @@
-Ploidie_search=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,genome="hg20"){
-  copykat.test <- copykat(rawmat=as.matrix(data@assays$Spatial@counts), id.type=species, ngene.chr=5, win.size=25, KS.cut=0.1, sam.name="test", distance="euclidean", norm.cell.names="",output.seg="TRUE", plot.genes="TRUE", genome=genome,n.cores=threads)
-  saveRDS(copykat.test, file = "./copykat.test.RDS")
+Ploidie_search=function(data=NULL, copykat.test = NULL, species="S", threads=4,kcut=2,annotate=TRUE,genome="hg20"){
+  #copykat.test <- copykat(rawmat=as.matrix(data@assays$Spatial@counts), id.type=species, ngene.chr=5, win.size=25, KS.cut=0.1, sam.name="test", distance="euclidean", norm.cell.names="",output.seg="TRUE", plot.genes="TRUE", genome=genome,n.cores=threads)
+  #saveRDS(copykat.test, file = "./copykat.test.RDS")
   gc()
   #predict aneuploid cells
   pred.test <- data.frame(copykat.test$prediction)
@@ -21,10 +21,10 @@ Ploidie_search=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,g
   
   cells <- rbind(pred,pred)
   col_breaks = c(seq(-1,-0.4,length=50),seq(-0.4,-0.2,length=150),seq(-0.2,0.2,length=600),seq(0.2,0.4,length=150),seq(0.4, 1,length=50))
-  Dist_CNA= parallelDist::parDist(t(CNA.test[,4:ncol(CNA.test)]),threads =threads, method = "euclidean")
+  Dist_CNA= parallelDist::parDist(t(CNA.test[!grepl("[a-z]" ,names(CNA.test))]),threads =threads, method = "euclidean")
   
   # Copykat copy heatmap for plotly
-  paneuploid <-heatmap.3(t(CNA.test[,4:ncol(CNA.test)]),dendrogram="r", distfun = function(x){return(Dist_CNA)}, hclustfun = function(x) hclust(x, method="ward.D2"),
+  paneuploid <-heatmap.3(t(CNA.test[!grepl("[a-z]" ,names(CNA.test))]),dendrogram="r", distfun = function(x){return(Dist_CNA)}, hclustfun = function(x) hclust(x, method="ward.D2"),
                          ColSideColors=chr1,RowSideColors=cells,Colv=NA, Rowv=TRUE,
                          notecol="black",col=my_palette,breaks=col_breaks, key=TRUE,
                          keysize=1, density.info="none", trace="none",
@@ -69,11 +69,17 @@ Ploidie_search=function(data=NULL, species="S", threads=4,kcut=2,annotate=TRUE,g
   pCount_spatial<-SpatialFeaturePlot(data,features="nCount_Spatial")
   tmp<-merge(data.frame(Cells=colnames(data@assays$Spatial@counts)),data.frame(Cells=gsub("\\.","-",names(hc.umap)),SubClone=hc.umap),all.y=T)
   pBoxSubCount<-data.frame(nCount=data$nCount_SCT[tmp$Cells],SubClone=hc.umap) %>% ggplot(aes(as.factor(SubClone),nCount)) +geom_boxplot(outlier.shape=NA) +geom_jitter(width=0.2,alpha=0.4)
-  cbind(CNA.test[,1:3],tumor.mat) %>% gather(key=Cells,value=LR, -chrom,-chrompos,-abspos) -> tumor.mat.s
-  #view of CNAs along crhomosomes
-  pCNA_scater=data.frame(CNA.test[,1:3], Med= apply(tumor.mat[],1,function(x){median(abs(diff(x)))})) %>% ggplot(aes(chrompos,Med)) + geom_line() +facet_wrap(~chrom,scale="free_x")
   
-  LR<-data.frame(CNA.test[,1:3], Med= apply(tumor.mat[],1,function(x){median(abs(diff(x)))}))
+  if (ncol(CNA.test[grepl("[a-z]" ,names(CNA.test))]) == 3) {
+    cbind(CNA.test[grepl("[a-z]" ,names(CNA.test))],tumor.mat) %>% gather(key=Cells,value=LR, -chrom,-chrompos,-abspos) -> tumor.mat.s
+  } else if (ncol(CNA.test[grepl("[a-z]" ,names(CNA.test))]) == 7) {
+    cbind(CNA.test[grepl("[a-z]" ,names(CNA.test))],tumor.mat) %>% gather(key=Cells,value=LR, -abspos, -chromosome_name, -start_position, -end_position, -ensembl_gene_id, -mgi_symbol, -band) -> tumor.mat.s
+  }
+  
+  #view of CNAs along crhomosomes
+  pCNA_scater=data.frame(CNA.test[grepl("[a-z]" ,names(CNA.test))], Med= apply(tumor.mat[],1,function(x){median(abs(diff(x)))})) %>% ggplot(aes(chrompos,Med)) + geom_line() +facet_wrap(~chrom,scale="free_x")
+  
+  LR<-data.frame(CNA.test[grepl("[a-z]" ,names(CNA.test))], Med= apply(tumor.mat[],1,function(x){median(abs(diff(x)))}))
   Region_Amp_CNA<-LR %>% arrange(desc(Med)) %>% head(n=40)
   COPYKAT_FINAL = list(copykat.test = copykat.test,paneuploid = paneuploid,laneuploid = laneuploid,hcc = hcc,pSubClone = pSubClone,lSubClone = lSubClone,pSubClone_spatial = pSubClone_spatial,pCount_spatial = pCount_spatial,pBoxSubCount = pBoxSubCount,pCNA_scater = pCNA_scater,LR = LR,Region_Amp_CNA = Region_Amp_CNA)
   

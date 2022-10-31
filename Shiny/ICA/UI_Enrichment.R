@@ -26,8 +26,9 @@ output[["IC_enrichment_UI"]] <- renderUI({
           collapsible = TRUE,
           collapsed = FALSE,
           uiOutput("IC_enrichment_main_parameters_UI"),
-          uiOutput("IC_enrichment_slider_main_parameters_UI"),
-          uiOutput("IC_enrichment_color_main_parameters_UI")
+          uiOutput("IC_enrichment_color_main_parameters_UI"),
+          uiOutput("IC_enrichment_display_number_main_parameters_UI"),
+          uiOutput("IC_enrichment_p_n_main_parameters_UI")
       )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",
@@ -79,28 +80,31 @@ output[["IC_enrichment_plot_or_message"]] <- renderUI({
 output[["IC_enrichment"]] <- plotly::renderPlotly({
   
   data <- Launch_analysis()
-  IC_C = input[["IC_enrichment_IC_choice"]]
+  IC_C = input[["IC_choice"]]
   database_C = input[["IC_enrichment_database_choice"]]
+  p_n = input[["p_n_enrichment"]]
   
-  table <- data@misc[[IC_C]]$en[[database_C]]
+  table <- data@misc[[IC_C]][[p_n]][[database_C]]
   
   number_of_genes <- table["Overlap"]
   
   table["Overlap"] <- lapply(table["Overlap"], sub, pattern="/.*", replacement="")
   
-  x <- table["Overlap"][1:30,]
-  y <- table["Term"][1:30,]
+  number_enrichr <- input$enrichment_disp_number
+  
+  x <- table["Overlap"][1:number_enrichr,]
+  y <- table["Term"][1:number_enrichr,]
   
   fig <- plot_ly(type = "bar", orientation = 'h')
   
   fig <- fig %>% add_trace(
     x = x, 
     y = y,
-    hovertext = paste0(y,"\nnumber of genes: ", number_of_genes[1:30,],"\nP-value: ",table["Adjusted.P.value"][1:30,]),
+    hovertext = paste0(y,"\nnumber of genes: ", number_of_genes[1:number_enrichr,],"\nP-value: ",table["Adjusted.P.value"][1:number_enrichr,]),
     hoverinfo = 'text', 
     showlegend=FALSE,
-    marker = list(color = table["Adjusted.P.value"][1:30,], colorscale = "Viridis",
-                  colorbar = list(title = "P-value"), showscale = TRUE, reversescale=TRUE)
+    marker = list(color = table["Adjusted.P.value"][1:number_enrichr,], colorscale = input$select_color_IC_enrichment,
+                  colorbar = list(title = "P-value", exponentformat = "power"), showscale = TRUE, reversescale=TRUE)
   )
   
   fig <- fig %>% layout(yaxis = list(autorange = "reversed", title = 'Enrichment', tickfont = list(size = 7)),

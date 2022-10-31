@@ -4,22 +4,9 @@
 output[["IC_enrichment_main_parameters_UI"]] <- renderUI({
   tagList(
     selectInput(
-      "IC_enrichment_IC_choice",
-      label = "Choose IC related to enrichment",
-      choices = names(Launch_analysis()@misc)[-1]
-    ),
-    selectInput(
       "IC_enrichment_database_choice",
       label = "Choose database related to enrichment",
       choices = names(Launch_analysis()@misc$IC_1$en)
-    )
-  )
-})
-
-output[["IC_enrichment_slider_main_parameters_UI"]] <- renderUI({
-  tagList(
-    sliderInput("slider_IC_enrichment_range", label = "Color range", min = round(min(Launch_analysis()@misc[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0), 
-                max = round(max(Launch_analysis()@misc[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0), value = c(round(min(Launch_analysis()@misc[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0), round(max(Launch_analysis()@misc[[input$IC_enrichment_IC_choice]]$IC_top_genes_weight), digits = 0))
     )
   )
 })
@@ -29,6 +16,20 @@ output[["IC_enrichment_color_main_parameters_UI"]] <- renderUI({
     selectInput("select_color_IC_enrichment", label = "Select color", 
                 choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
                 selected = "Viridis")
+  )
+})
+
+output[["IC_enrichment_display_number_main_parameters_UI"]] <- renderUI({
+  tagList(
+    numericInput("enrichment_disp_number", label = "Enrichment to display", value = 30, min = 1, max = length(Launch_analysis()@misc[[input$IC_choice]][[input$p_n_enrichment]][[input$IC_enrichment_database_choice]]), step = 1)
+  )
+})
+
+output[["IC_enrichment_p_n_main_parameters_UI"]] <- renderUI({
+  tagList(
+    radioButtons("p_n_enrichment", label = "Gene expression", 
+                 choices = list("All" = "en", "Positive" = "en_p", "Negative" = "en_n"),
+                 selected = "en")
   )
 })
 

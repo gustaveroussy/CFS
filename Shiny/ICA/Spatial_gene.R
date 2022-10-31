@@ -25,7 +25,6 @@ output[["Spatial_gene_UI"]] <- renderUI({
           height = NULL,
           collapsible = TRUE,
           collapsed = FALSE,
-          uiOutput("gene_IC_main_parameters_UI"),
           uiOutput("gene_choice_main_parameters_UI"),
           uiOutput("gene_color_choice_main_parameters_UI")
       )
@@ -79,7 +78,7 @@ output[["Spatial_gene_plot_or_message"]] <- renderUI({
 output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
   data <- Launch_analysis()
   
-  IC_C = input[["gene_projection_IC_choice"]]
+  IC_C = input[["IC_choice"]]
   
   if (length(input$gene_projection_gene_choice) == 1){
     
@@ -95,7 +94,7 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
                                            showscale = TRUE),
                              text = data@misc[[IC_C]]$spot_top_genes_weight[input$gene_projection_gene_choice,],
                              customdata = names(data@misc[[IC_C]]$spot_top_genes_weight[input$gene_projection_gene_choice,]),
-                             hovertemplate = paste("Cell : %{customdata}<br>",
+                             hovertemplate = paste0("Cell : %{customdata}<br>",
                                                    "Expression: %{text}",
                                                    "<extra></extra>")
                              )
@@ -121,7 +120,7 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
                                   type = 'scatter', mode = "markers",
                                   text = data@misc[[IC_C]]$spot_top_genes_weight[x,],
                                   customdata = names(data@misc[[IC_C]]$spot_top_genes_weight[x,]),
-                                  hovertemplate = paste("Cell : %{customdata}<br>",
+                                  hovertemplate = paste0("Cell : %{customdata}<br>",
                                                         "Expression: %{text}",
                                                         "<extra></extra>")
                                   ) %>% layout(title = input$gene_projection_gene_choice, xaxis=list(showgrid = FALSE, showticklabels=FALSE),

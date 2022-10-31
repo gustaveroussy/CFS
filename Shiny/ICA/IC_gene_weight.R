@@ -25,7 +25,6 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
           height = NULL,
           collapsible = TRUE,
           collapsed = FALSE,
-          uiOutput("IC_gene_heatmap_main_parameters_UI"),
           uiOutput("IC_gene_heatmap_slider_main_parameters_UI"),
           uiOutput("IC_gene_heatmap_color_main_parameters_UI")
       )
@@ -59,7 +58,16 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
         height = NULL,
         collapsible = TRUE,
         collapsed = FALSE,
-        uiOutput("IC_gene_heatmap_plot_or_message")
+        uiOutput("IC_gene_heatmap_plot_or_message"),
+        fluidRow(
+          column(width = 6, offset = 1, style = "padding: 0px;",
+                 uiOutput("IC_text_output")
+          ),
+          column(width = 5, offset = 0, style = "padding: 0px;",
+                 uiOutput("clip_all"),
+                 uiOutput("clip_p")
+          )
+        )
       )
     )
   )
@@ -96,13 +104,76 @@ output[["IC_gene_heatmap_plot_or_message"]] <- renderUI({
 })
 
 ##----------------------------------------------------------------------------##
-## Relationship tree.
+## gene heatmap text
+##----------------------------------------------------------------------------##
+
+output[["IC_text_output"]] <- renderUI({
+  IC_C = input[["IC_choice"]]
+  Gene <- GeneList_heatmap_IC()
+  text <- paste0("Number of genes playing in ", IC_C, " : ", length(Gene),
+                 "<br><br>", "Number of genes playing positively in ", IC_C, " : ", length(Gene[Gene > 0])
+                 )
+  return(HTML(text))
+})
+
+##----------------------------------------------------------------------------##
+## gene list
+##----------------------------------------------------------------------------##
+
+GeneList_heatmap_IC <- reactive({
+  IC_C = input[["IC_choice"]]
+  data <- Launch_analysis()
+  GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC_C]]
+  GeneList <- GeneList %>% as.tibble %>%arrange(desc(abs(Sig)))
+  Gene <- data@reductions$ica@feature.loadings[GeneList$gene,][,IC_C]
+  return(Gene)
+})
+
+
+##----------------------------------------------------------------------------##
+## gene heatmap clipboard
+##----------------------------------------------------------------------------##
+
+# Add clipboard buttons
+output$clip_all <- renderUI({
+  output$clip_all <- renderUI({
+    rclipButton(
+      inputId = "clipa",
+      label = "Gene Clipboard",
+      clipText = toString(names(GeneList_heatmap_IC())), 
+      icon = icon("clipboard")
+    )
+  })
+})
+
+if (interactive()){
+  observeEvent(input$clipa, clipr::write_clip(toString(names(GeneList_heatmap_IC()))))
+}
+
+# Add clipboard buttons
+output$clip_p <- renderUI({
+  output$clip_p <- renderUI({
+    rclipButton(
+      inputId = "clipp",
+      label = "Positive Gene Clipboard",
+      clipText = toString(names(GeneList_heatmap_IC())), 
+      icon = icon("clipboard")
+    )
+  })
+})
+
+if (interactive()){
+  observeEvent(input$clipp, clipr::write_clip(toString(names(GeneList_heatmap_IC()[GeneList_heatmap_IC() > 0]))))
+}
+
+##----------------------------------------------------------------------------##
+## gene heatmap
 ##----------------------------------------------------------------------------##
 
 output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
   
   data <- Launch_analysis()
-  IC_C = input[["IC_gene_heatmap_IC_choice"]]
+  IC_C = input[["IC_choice"]]
   
   p <- pheatmap(data@misc[[IC_C]]$IC_top_genes_weight,clustering_method = "ward.D",clustering_distance_cols = "correlation")
   
@@ -118,7 +189,13 @@ output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
   plot_ly(
     x = colnames(data@misc[[IC_C]]$IC_top_genes_weight), y = rownames(data@misc[[IC_C]]$IC_top_genes_weight),
     z = data@misc[[IC_C]]$IC_top_genes_weight, type = "heatmap", zmin = input$slider_IC_gene_heatmap_range[1], zmax = input$slider_IC_gene_heatmap_range[2],
-    colorscale = input$select_color_IC_gene_heatmap
+    colorscale = input$select_color_IC_gene_heatmap,
+    hovertemplate = paste(
+      "Gene: %{y:.2f%}<br>",
+      "IC: %{x:.2f%}<br>",
+      "Value: %{z:.2f%}",
+      "<extra></extra>"
+    )
   )
 })
 

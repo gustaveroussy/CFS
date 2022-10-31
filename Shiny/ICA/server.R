@@ -1,6 +1,7 @@
 ##----------------------------------------------------------------------------##
 ## Tab: Groups
 ##----------------------------------------------------------------------------##
+source(paste0(Shiny.options[["shiny_root"]], "/ICA/IC_choice.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/ICA/ICA_top_IC.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/ICA/Spatial_IC.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/ICA/Spatial_gene.R"), local = TRUE)

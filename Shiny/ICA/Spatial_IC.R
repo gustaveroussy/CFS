@@ -25,6 +25,7 @@ output[["Spatial_IC_UI"]] <- renderUI({
           height = NULL,
           collapsible = TRUE,
           collapsed = FALSE,
+          uiOutput("pie_chart_confirm"),
           uiOutput("IC_projection_main_parameters_UI"),
           uiOutput("pie_chart_check"),
           uiOutput("select_all_input_control")
@@ -77,7 +78,7 @@ output[["Spatial_IC_plot_or_message"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 
 output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
-  if (input$IC_projection_IC_choice == "All"){
+  if (input$pie_plot == TRUE){
     
     req(pie_plots$pie_plot)
     pie_plots$pie_plot
@@ -85,7 +86,7 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
   }else{
     data <- Launch_analysis()
     
-    IC_C = input[["IC_projection_IC_choice"]]
+    IC_C = input[["IC_choice"]]
     
     if(input$select_color_IC_projection != "Range"){
       
