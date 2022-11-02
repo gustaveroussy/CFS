@@ -39,8 +39,9 @@ Clustering_UMAP <- reactive({
 
 current_plot_umap <- reactive({
   
-  req(Launch_analysis()@reductions[["umap"]])
   data <- Clustering_UMAP()
+  
+  req(Clustering_UMAP()@reductions[["umap"]])
   
   
   fig <- plot_ly(type = 'scatter',
