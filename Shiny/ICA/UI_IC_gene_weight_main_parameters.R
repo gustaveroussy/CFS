@@ -4,9 +4,15 @@
 
 output[["IC_gene_heatmap_slider_main_parameters_UI"]] <- renderUI({
   tagList(
-    sliderInput("slider_IC_gene_heatmap_range", label = "Color range", min = round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_top_genes_weight), digits = 0), 
-                max = round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_top_genes_weight), digits = 0), value = c(round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_top_genes_weight), digits = 0), round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_top_genes_weight), digits = 0))
+    sliderInput("slider_IC_gene_heatmap_range", label = "Color range", min = round(min(table_ic_gene_to_return()), digits = 0), 
+                max = round(max(table_ic_gene_to_return()), digits = 0), value = c(round(min(table_ic_gene_to_return()), digits = 0), round(max(table_ic_gene_to_return()), digits = 0))
     )
+  )
+})
+
+output[["IC_gene_heatmap_number_main_parameters_UI"]] <- renderUI({
+  tagList(
+    numericInput("select_number_IC_gene_heatmap", label = "Number of genes to display", value = 20, min = 2, max = NA, step = 1)
   )
 })
 

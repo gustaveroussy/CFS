@@ -26,6 +26,7 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
           collapsible = TRUE,
           collapsed = FALSE,
           uiOutput("IC_gene_heatmap_slider_main_parameters_UI"),
+          uiOutput("IC_gene_heatmap_number_main_parameters_UI"),
           uiOutput("IC_gene_heatmap_color_main_parameters_UI")
       )
     ),
@@ -129,6 +130,29 @@ GeneList_heatmap_IC <- reactive({
   return(Gene)
 })
 
+table_ic_gene_to_return <- reactive({
+  
+  Gene_names <- names(GeneList_heatmap_IC())
+  
+  z <- head(Launch_analysis()@reductions$ica@feature.loadings[Gene_names,],input$select_number_IC_gene_heatmap)
+  
+  p <- pheatmap(z,clustering_method = "ward.D",clustering_distance_cols = "correlation")
+  
+  row_order <- p[["tree_row"]][["order"]]
+  z <- z[row_order,]
+  
+  if (input$IC_gene_column_organization == TRUE){
+    col_order <- p[["tree_col"]][["order"]]
+    z <- z[,col_order]
+  }
+  
+  # only keep IC of interest
+  z <- z[,head(names(Launch_analysis()@misc)[-1],-1)]
+  
+  return(z)
+})
+
+
 
 ##----------------------------------------------------------------------------##
 ## gene heatmap clipboard
@@ -175,20 +199,11 @@ output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
   data <- Launch_analysis()
   IC_C = input[["IC_choice"]]
   
-  p <- pheatmap(data@misc[[IC_C]]$IC_top_genes_weight,clustering_method = "ward.D",clustering_distance_cols = "correlation")
-  
-  row_order <- p[["tree_row"]][["order"]]
-  data@misc[[IC_C]]$IC_top_genes_weight <- data@misc[[IC_C]]$IC_top_genes_weight[row_order,]
-  
-  if (input$IC_gene_column_organization == TRUE){
-    col_order <- p[["tree_col"]][["order"]]
-    data@misc[[IC_C]]$IC_top_genes_weight <- data@misc[[IC_C]]$IC_top_genes_weight[,col_order]
-  }
-  
+  z <- table_ic_gene_to_return()
   
   plot_ly(
-    x = colnames(data@misc[[IC_C]]$IC_top_genes_weight), y = rownames(data@misc[[IC_C]]$IC_top_genes_weight),
-    z = data@misc[[IC_C]]$IC_top_genes_weight, type = "heatmap", zmin = input$slider_IC_gene_heatmap_range[1], zmax = input$slider_IC_gene_heatmap_range[2],
+    x = colnames(z), y = rownames(z),
+    z = z, type = "heatmap", zmin = input$slider_IC_gene_heatmap_range[1], zmax = input$slider_IC_gene_heatmap_range[2],
     colorscale = input$select_color_IC_gene_heatmap,
     hovertemplate = paste(
       "Gene: %{y:.2f%}<br>",
