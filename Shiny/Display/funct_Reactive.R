@@ -169,8 +169,9 @@ output[["Plot"]] <- plotly::renderPlotly({
 
 current_plot_spatial <- reactive({
   
-  req(Launch_analysis()@reductions[["umap"]])
   data <- Clustering_UMAP()
+  
+  req(Clustering_UMAP()@reductions[["umap"]])
   
   fig <- plot_ly(type = 'scatter',
                  mode='markers'

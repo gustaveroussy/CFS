@@ -6,6 +6,14 @@ output$pie_chart_confirm <- renderUI({
   checkboxInput("pie_plot", label = "Pie Plot", value = FALSE)
 })
 
+observeEvent(input$IC_choice, {
+  updateSliderInput(session, "slider_IC_spatial_range", label = "Color range",
+                    min = round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0), 
+                    max = round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0),
+                    value = c(round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_weight),digits = 0),
+                              round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0)))
+})
+
 observeEvent(input$pie_plot, {
   if (input$pie_plot == FALSE) {
     updateSliderInput(session, "slider_IC_spatial_range", label = "Color range",
@@ -13,7 +21,7 @@ observeEvent(input$pie_plot, {
                       max = round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0),
                       value = c(round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_weight),digits = 0),
                                 round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0)))
-  } else {
+  } else if (input$pie_plot == TRUE) {
     updateSliderInput(session, "slider_IC_spatial_range", label = "Color range",
                       min = 0, 
                       max = 1,

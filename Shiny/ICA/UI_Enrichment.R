@@ -92,6 +92,26 @@ output[["IC_enrichment"]] <- plotly::renderPlotly({
   
   number_enrichr <- input$enrichment_disp_number
   
+  # create list of genes
+  for (k in 1:length(rownames(table))) {
+    gene_text = c()
+    u <- unlist(strsplit(table["Genes"][k,][1], split = ";"))
+    for (v in 1:length(u)) {
+      gene_text <- append(gene_text,u[v])
+      if (v %% 5 == 0) {
+        gene_text <- append(gene_text,"<br>")
+      }
+    }
+    u <- paste(gene_text,collapse = ",")
+    
+    # Replace all characters occurrence in a string
+    u <- gsub('<br>,','<br>',u)
+    
+    table["Genes"][k,] <- u
+  }
+  
+  genes <- table["Genes"]
+  
   x <- table["Overlap"][1:number_enrichr,]
   y <- table["Term"][1:number_enrichr,]
   
@@ -100,7 +120,8 @@ output[["IC_enrichment"]] <- plotly::renderPlotly({
   fig <- fig %>% add_trace(
     x = x, 
     y = y,
-    hovertext = paste0(y,"\nnumber of genes: ", number_of_genes[1:number_enrichr,],"\nP-value: ",table["Adjusted.P.value"][1:number_enrichr,]),
+    hovertext = paste0(y,"\nnumber of genes: ", number_of_genes[1:number_enrichr,],"\nP-value: ",table["Adjusted.P.value"][1:number_enrichr,]
+                       , "\ngenes : ", genes[1:number_enrichr,]),
     hoverinfo = 'text', 
     showlegend=FALSE,
     marker = list(color = table["Adjusted.P.value"][1:number_enrichr,], colorscale = input$select_color_IC_enrichment,

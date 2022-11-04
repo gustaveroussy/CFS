@@ -147,7 +147,8 @@ table_ic_gene_to_return <- reactive({
   }
   
   # only keep IC of interest
-  z <- z[,head(names(Launch_analysis()@misc)[-1],-1)]
+  
+  z <- z[,names(Launch_analysis()@misc)[startsWith(names(Launch_analysis()@misc), "IC_")]]
   
   return(z)
 })

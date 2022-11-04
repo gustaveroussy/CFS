@@ -2,7 +2,7 @@ output[["IC_choice_UI"]] <- renderUI({
   selectInput(
     "IC_choice",
     label = "Choose IC to observe",
-    choices = head(names(Launch_analysis()@misc)[-1],-1),
+    choices = names(Launch_analysis()@misc)[startsWith(names(Launch_analysis()@misc), "IC_")],
     width = '100%'
   )
 })
