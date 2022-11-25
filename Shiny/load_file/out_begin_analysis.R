@@ -15,11 +15,12 @@ Launch_analysis <- reactive({
   data@misc$annotation = matrix(data = NA, nrow = length(row_names), ncol = 3)
   rownames(data@misc$annotation) = row_names
   colnames(data@misc$annotation) = c('Use','Type','Annotation')
+  data@misc$annotation[,'Use'] = TRUE
   
   return(data)
 })
 
-values <- reactiveValues(data = NULL,IC_names = NULL, Stat = NULL)
+values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL, UMAP = NULL)
 
 observeEvent(input$input_file, {
   
@@ -29,6 +30,8 @@ observeEvent(input$input_file, {
   values$IC_names = rownames(values$data@misc$annotation)
   
   values$Stat = values$data@misc[["GeneAndStat"]]
+  
+  values$Annotation = values$data@misc$annotation
   
   updateSelectizeInput(session, "Ic_list", label = "list of IC",
                        choices = values$IC_names,

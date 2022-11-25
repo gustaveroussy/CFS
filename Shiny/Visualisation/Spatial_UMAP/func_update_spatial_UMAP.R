@@ -4,9 +4,9 @@
 
 current_plot_spatial <- reactive({
   
-  data <- Clustering_UMAP()
+  data <- values$UMAP
   
-  req(Clustering_UMAP()@reductions[["umap"]])
+  req(values$UMAP@reductions[["umap"]])
   
   fig <- plot_ly(type = 'scatter',
                  mode='markers'

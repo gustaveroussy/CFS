@@ -1,19 +1,9 @@
-table <- reactiveValues(annotation = NULL)
-
-observeEvent(input[["input_file"]], {
-  req(Launch_analysis())
-  
-  table$annotation <- Launch_analysis()@misc$annotation
-})
-
 output[["Annotation_table_UI"]] <- renderDT({
-  DT = table$annotation
-  datatable(DT, editable = TRUE)
+  DT = matrix(values$Annotation[input$IC_choice,], nrow = 1, ncol = 3, dimnames = list(c(input$IC_choice), c('Use','Type','Annotation')))
+  datatable(DT, editable = list(target = 'cell', disable = list(columns = c(0))), class = 'cell-border stripe', colnames = c('IC' = 1))
 })
 
 observeEvent(input$Annotation_table_UI_cell_edit, {
-  row  <- input$Annotation_table_UI_cell_edit$row
   clmn <- input$Annotation_table_UI_cell_edit$col
-  table$annotation[row, clmn] <- input$Annotation_table_UI_cell_edit$value
-  print(table$annotation)
+  values$Annotation[input$IC_choice, clmn] <- input$Annotation_table_UI_cell_edit$value
 })

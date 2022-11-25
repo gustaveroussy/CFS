@@ -4,8 +4,8 @@
 
 current_plot_trajectory <- reactive({
 
-  req(Launch_analysis()@reductions[["umap"]])
-  data <- Clustering_UMAP()
+  data <- values$data
+  req(data@reductions[["umap"]])
   
   data <- Spatial_pseudotime(data,input$Plot_display_IC_choice)
   

@@ -9,6 +9,7 @@ observeEvent(input$start_plot, {
     plots$umap = current_plot_umap()
     plots$spatial = current_plot_spatial()
     plots$button_check <- input$start_plot + 1
+    values$data <- data
   }
 })
 
