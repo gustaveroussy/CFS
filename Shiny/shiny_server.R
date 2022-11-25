@@ -16,17 +16,16 @@ server <- function(input, output, session) {
   source(paste0(Shiny.options[["shiny_root"]], "/load_file/server.R"), local = TRUE)
 
   source(paste0(Shiny.options[["shiny_root"]], "/ICA/server.R"), local = TRUE)
-  source(paste0(Shiny.options[["shiny_root"]], "/Display/server.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "/Visualisation/server.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "/Output/server.R"), local = TRUE)
   
-  ICA_list <- reactive({
-    req(input$input_file$datapath)
-    x <- names(Launch_analysis()@misc[3:length(Launch_analysis()@misc)-1])
-    return(x)
-  })
+########################################
+# IC_list
+########################################
   
   output[["IC_list_UI"]] <- renderUI({
     selectizeInput("Ic_list", label = "list of IC",
-                    choices = ICA_list(),
+                    choices = values$IC_names,
                     selected = NULL,
                     multiple = TRUE,
                     options = NULL)

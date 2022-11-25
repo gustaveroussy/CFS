@@ -16,6 +16,7 @@ library(scatterpie)
 library(destiny)
 library(rclipboard)
 library(tibble)
+library(DT)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny
@@ -42,7 +43,8 @@ source(paste0(Shiny.options[["shiny_root"]], "/Functions/Copykat.R"), local = TR
 ##----------------------------------------------------------------------------##
 source(paste0(Shiny.options[["shiny_root"]], "/load_file/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/ICA/UI.R"), local = TRUE)
-source(paste0(Shiny.options[["shiny_root"]], "/Display/UI.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/Visualisation/UI.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/Output/UI.R"), local = TRUE)
 
 # Define UI for app that draws a histogram ----
 ui <- dashboardPage(
@@ -51,7 +53,8 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Load Data", tabName = "Load_file", icon = icon("spinner")),
       menuItem("ICA", tabName = "ICA", icon = icon("wave-square")),
-      menuItem("Display", tabName = "Display", icon = icon("display"))
+      menuItem("Visualisation", tabName = "Visualisation", icon = icon("display")),
+      menuItem("Ouput", tabName = "Output", icon = icon("arrow-up-from-bracket"))
     ),
     uiOutput("IC_list_UI")
   ),
@@ -109,7 +112,8 @@ ui <- dashboardPage(
     tabItems(
       tab_load,
       tab_ICA,
-      tab_display
+      tab_visualisation,
+      tab_output
     )
   )
 )

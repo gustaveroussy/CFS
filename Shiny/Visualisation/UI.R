@@ -1,8 +1,8 @@
 ##----------------------------------------------------------------------------##
 ## Tab: ICA
 ##----------------------------------------------------------------------------##
-tab_display <- tabItem(
-  tabName = "Display",
+tab_visualisation <- tabItem(
+  tabName = "Visualisation",
   uiOutput("Plot_UI"),
   uiOutput("Plot_Spatial_UI"),
   uiOutput("trajectory_UI"),

@@ -2,8 +2,20 @@
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
 
+output$plot_ICA_confirm <- renderUI({
+  checkboxInput("select_plot_ICA_spatial", label = "Plot", value = TRUE)
+})
+
 output$pie_chart_confirm <- renderUI({
-  checkboxInput("pie_plot", label = "Pie Plot", value = FALSE)
+  checkboxInput("pie_plot", label = "Scatter Pie", value = FALSE)
+})
+
+output$density_ICA_confirm <- renderUI({
+  checkboxInput("select_density_ICA_spatial", label = "Density", value = FALSE)
+})
+
+output$annotation_ICA_confirm <- renderUI({
+  checkboxInput("select_annotation_ICA_spatial", label = "Annotation", value = FALSE)
 })
 
 observeEvent(input$IC_choice, {

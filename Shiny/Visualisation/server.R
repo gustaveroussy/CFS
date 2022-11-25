@@ -1,9 +1,8 @@
 ##----------------------------------------------------------------------------##
-## Tab: Groups
+## Tab: Display
 ##----------------------------------------------------------------------------##
 files_to_load <- list.files(
-  paste0(Shiny.options[["shiny_root"]], "/ICA"),
-  recursive = TRUE,
+  paste0(Shiny.options[["shiny_root"]], "/Visualisation"),
   pattern = "func_|obj_|UI_|out_|event_",
   full.names = TRUE
 )

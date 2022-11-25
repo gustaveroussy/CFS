@@ -94,68 +94,6 @@ outputOptions(
 )
 
 ##----------------------------------------------------------------------------##
-## UI element that either shows a plot or a text message if data is not
-## available.
-##----------------------------------------------------------------------------##
-
-output[["IC_gene_heatmap_plot_or_message"]] <- renderUI({
-    tagList(
-      plotly::plotlyOutput("IC_gene_heatmap")
-    )
-})
-
-##----------------------------------------------------------------------------##
-## gene heatmap text
-##----------------------------------------------------------------------------##
-
-output[["IC_text_output"]] <- renderUI({
-  IC_C = input[["IC_choice"]]
-  Gene <- GeneList_heatmap_IC()
-  text <- paste0("Number of genes playing in ", IC_C, " : ", length(Gene),
-                 "<br><br>", "Number of genes playing positively in ", IC_C, " : ", length(Gene[Gene > 0])
-                 )
-  return(HTML(text))
-})
-
-##----------------------------------------------------------------------------##
-## gene list
-##----------------------------------------------------------------------------##
-
-GeneList_heatmap_IC <- reactive({
-  IC_C = input[["IC_choice"]]
-  data <- Launch_analysis()
-  GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC_C]]
-  GeneList <- GeneList %>% as.tibble %>%arrange(desc(abs(Sig)))
-  Gene <- data@reductions$ica@feature.loadings[GeneList$gene,][,IC_C]
-  return(Gene)
-})
-
-table_ic_gene_to_return <- reactive({
-  
-  Gene_names <- names(GeneList_heatmap_IC())
-  
-  z <- head(Launch_analysis()@reductions$ica@feature.loadings[Gene_names,],input$select_number_IC_gene_heatmap)
-  
-  p <- pheatmap(z,clustering_method = "ward.D",clustering_distance_cols = "correlation")
-  
-  row_order <- p[["tree_row"]][["order"]]
-  z <- z[row_order,]
-  
-  if (input$IC_gene_column_organization == TRUE){
-    col_order <- p[["tree_col"]][["order"]]
-    z <- z[,col_order]
-  }
-  
-  # only keep IC of interest
-  
-  z <- z[,names(Launch_analysis()@misc)[startsWith(names(Launch_analysis()@misc), "IC_")]]
-  
-  return(z)
-})
-
-
-
-##----------------------------------------------------------------------------##
 ## gene heatmap clipboard
 ##----------------------------------------------------------------------------##
 
@@ -171,10 +109,6 @@ output$clip_all <- renderUI({
   })
 })
 
-if (interactive()){
-  observeEvent(input$clipa, clipr::write_clip(toString(names(GeneList_heatmap_IC()))))
-}
-
 # Add clipboard buttons
 output$clip_p <- renderUI({
   output$clip_p <- renderUI({
@@ -185,34 +119,6 @@ output$clip_p <- renderUI({
       icon = icon("clipboard")
     )
   })
-})
-
-if (interactive()){
-  observeEvent(input$clipp, clipr::write_clip(toString(names(GeneList_heatmap_IC()[GeneList_heatmap_IC() > 0]))))
-}
-
-##----------------------------------------------------------------------------##
-## gene heatmap
-##----------------------------------------------------------------------------##
-
-output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
-  
-  data <- Launch_analysis()
-  IC_C = input[["IC_choice"]]
-  
-  z <- table_ic_gene_to_return()
-  
-  plot_ly(
-    x = colnames(z), y = rownames(z),
-    z = z, type = "heatmap", zmin = input$slider_IC_gene_heatmap_range[1], zmax = input$slider_IC_gene_heatmap_range[2],
-    colorscale = input$select_color_IC_gene_heatmap,
-    hovertemplate = paste(
-      "Gene: %{y:.2f%}<br>",
-      "IC: %{x:.2f%}<br>",
-      "Value: %{z:.2f%}",
-      "<extra></extra>"
-    )
-  )
 })
 
 ##----------------------------------------------------------------------------##
