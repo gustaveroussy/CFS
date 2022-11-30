@@ -1,25 +1,49 @@
 ##----------------------------------------------------------------------------##
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
-output[["Plot_main_parameters_UI"]] <- renderUI({
+output[["Plot_type_UI"]] <- renderUI({
   tagList(
     selectInput("Plot_analysis_type", label = "Select method to use", 
-                choices = list("UMAP"), 
-                selected = "UMAP"),
-    selectInput("Plot_display_type", label = "Select what to color", 
-                choices = list("Clustering", "Ploïdie"), 
-                selected = "Clustering"),
-    selectizeInput("Plot_display_IC_choice", label = "Choose IC to plot",
-                   choices = values$IC_names,
-                   selected = input$Ic_list,
-                   multiple = TRUE,
-                   options = NULL),
-    numericInput("Plot_resolution", "Enter Plot resolution", 1.2,
-      min = 0.1, max = 2, step = 0.1
-    ),
-    actionButton("start_plot", "Start plot")
+                choices = list("UMAP","Density"),
+                selected = "UMAP")
     )
 })
+
+output[["Plot_main_parameters_UI"]] <- renderUI({
+  if (input$Plot_analysis_type == "UMAP"){
+    tagList(
+      selectInput("Plot_display_type", label = "Select what to color", 
+                  choices = list("Clustering", "Ploïdie"), 
+                  selected = "Clustering"),
+      selectizeInput("Plot_display_IC_choice", label = "Choose IC to plot",
+                     choices = values$IC_names,
+                     selected = input$Ic_list,
+                     multiple = TRUE,
+                     options = NULL),
+      numericInput("Plot_resolution", "Enter Plot resolution", 1.2,
+                   min = 0.1, max = 2, step = 0.1
+      )
+    )
+  } else if (input$Plot_analysis_type == "Density") {
+    tagList(
+      selectizeInput("Plot_display_type_choice", label = "Choose IC to plot",
+                     choices = unique(values$Annotation[,'Type'][!is.na(values$Annotation[,'Type'])]),
+                     selected = NULL,
+                     multiple = TRUE,
+                     options = NULL),
+      checkboxInput("Plot_contour_density", label = "Contour", value = FALSE),
+      numericInput("Plot_thresh_density", label = "threshold", value = 0.3, min = 0, max = 1),
+      numericInput("Plot_thresh_alpha_density", label = "alpha", value = 0.5, min = 0, max = 1)
+    )
+  }
+})
+
+output[["start_plot_UI"]] <- renderUI({
+  tagList(
+    actionButton("start_plot", "Start plot")
+  )
+})
+
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.

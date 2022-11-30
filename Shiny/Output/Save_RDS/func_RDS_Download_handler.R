@@ -35,3 +35,32 @@ output$download_RDS <- downloadHandler(
     })
   }
 )
+
+output$download_subcluster_RDS <- downloadHandler(
+  filename = function() {
+    paste("data", ".RDS", sep = "")
+  },
+  content = function(file) {
+
+      data <- Launch_analysis()
+      
+      if(input$output_UMAP_RDS == TRUE){
+        data@meta.data <- values$UMAP@meta.data
+        data@active.ident <- values$UMAP@active.ident
+        data@graphs <- values$UMAP@graphs
+        data@reductions$umap <- values$UMAP@reductions$umap
+        data@commands <- values$UMAP@commands
+      }
+      
+      if(input$output_annotation_RDS == TRUE){
+        data@misc$annotation <- values$Annotation
+      }
+      
+      data <- subset(
+        x = data,
+        idents = input$subclustering_cluster_export_choose
+      )
+      
+      saveRDS(data, file)
+  }
+)

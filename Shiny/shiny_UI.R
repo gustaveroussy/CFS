@@ -17,6 +17,7 @@ library(destiny)
 library(rclipboard)
 library(tibble)
 library(DT)
+library(interp)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny

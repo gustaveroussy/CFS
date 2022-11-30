@@ -25,7 +25,9 @@ output[["Plot_UI"]] <- renderUI({
                height = NULL,
                collapsible = TRUE,
                collapsed = FALSE,
-               uiOutput("Plot_main_parameters_UI")
+               uiOutput("Plot_type_UI"),
+               uiOutput("Plot_main_parameters_UI"),
+               uiOutput("start_plot_UI")
            )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",
