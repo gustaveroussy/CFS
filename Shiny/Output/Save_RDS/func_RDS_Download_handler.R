@@ -36,12 +36,45 @@ output$download_RDS <- downloadHandler(
   }
 )
 
+# search for the cells that were selected while in density
+selected_cells_subcluster <- reactive({
+  return(plotly::event_data(c("plotly_selected"), source = "B"))
+})
+
 output$download_subcluster_RDS <- downloadHandler(
   filename = function() {
     paste("data", ".RDS", sep = "")
   },
   content = function(file) {
-
+    if (input$export_sub_IC == "IC Cell types"){
+      
+      data <- Launch_analysis()
+      threshold = input$Cell_type_subclustering_density_export_choose
+      Cell_type = input$Cell_type_subclustering_IC_export_choose
+      
+      if (input$Plot_display_type_density_manual == "Manual"){
+        selected_cells = selected_cells_subcluster()$customdata
+        ## if cells were manually selected
+        # filter object
+        data <- subset(
+          x = data,
+          cells = selected_cells
+        )
+        
+        if(input$output_annotation_RDS == TRUE){
+          data@misc$annotation <- values$Annotation
+        }
+        
+        saveRDS(data, file)
+        
+      } else if (input$Plot_display_type_density_manual == "Automated"){
+        
+        shinyalert("Oops!", "This function isn't available yet.", type = "error")
+        
+      }
+      
+    } else if (input$export_sub_IC == "UMAP Cluster"){
+      
       data <- Launch_analysis()
       
       if(input$output_UMAP_RDS == TRUE){
@@ -62,5 +95,7 @@ output$download_subcluster_RDS <- downloadHandler(
       )
       
       saveRDS(data, file)
+      
+    }
   }
 )

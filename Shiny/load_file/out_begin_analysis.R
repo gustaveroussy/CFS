@@ -8,7 +8,7 @@
 ## UI element to select data to load into Shiny.
 ##----------------------------------------------------------------------------##
 
-values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL, UMAP = NULL)
+values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL, UMAP = NULL, annotation_for_output = list())
 
 Launch_analysis <- reactive({
   data <- readRDS(input$input_file$datapath)
@@ -28,7 +28,7 @@ observeEvent(input$input_file, {
   
   values$data = Launch_analysis()
   
-  if (!is.null(data@reductions$umap)){
+  if (!is.null(values$data@reductions$umap)){
     values$UMAP = values$data
   }
   
@@ -43,9 +43,22 @@ observeEvent(input$input_file, {
                        selected = NULL)
   
   if(!exists("values$data@misc$annotation")){
-    values$data@misc$annotation = matrix(NA, nrow = length(values$IC_names), ncol = 3)
+    values$data@misc$annotation = matrix("", nrow = length(values$IC_names), ncol = 3)
     rownames(values$data@misc$annotation) = values$IC_names
     colnames(values$data@misc$annotation) = c('Use','Type','Annotation')
   }
   
+  # Get All annotations and their associated ICs
+  list_names_IC = str_split(values$Annotation[,"Type"], pattern = ',', n = Inf, simplify = FALSE)
+  
+  for (i in 1:length(values$IC_names)) {
+    for (j in 1:length(list_names_IC[[i]])) {
+      if(!is.null(values$annotation_for_output[[list_names_IC[[i]][j]]])){
+        values$annotation_for_output[[list_names_IC[[i]][j]]] = append(values$annotation_for_output[[list_names_IC[[i]][j]]], c(values$IC_names[i]))
+        values$annotation_for_output[[list_names_IC[[i]][j]]] = unique(values$annotation_for_output[[list_names_IC[[i]][j]]])
+      } else {
+        values$annotation_for_output[[list_names_IC[[i]][j]]] = c(values$IC_names[i])
+      }
+    }
+  }
 })

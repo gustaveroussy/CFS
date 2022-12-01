@@ -6,6 +6,7 @@ library(shiny)
 library(shinydashboard)
 library(shinyFiles)
 library(shinyWidgets)
+library(shinyalert)
 library(pheatmap)
 library(Seurat)
 library(plotly)
@@ -18,6 +19,7 @@ library(rclipboard)
 library(tibble)
 library(DT)
 library(interp)
+library(stringr)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny

@@ -4,7 +4,19 @@
 
 current_plot_density <- reactive({
   if (!is.null(values$UMAP)){
-    type = rownames(values$Annotation)[which(values$Annotation[,'Type'] == input$Plot_display_type_choice)]
+    if(length(input$Plot_display_type_choice) != 1){
+      for (n_cell_type in 1:length(input$Plot_display_type_choice)) {
+        if(n_cell_type == 1) {
+          type = values$annotation_for_output[[n_cell_type]]
+        } else {
+          type = append(type, values$annotation_for_output[[n_cell_type]])
+        }
+      }
+      type = unique(type)
+    } else {
+      type = values$annotation_for_output[[input$Plot_display_type_choice]]
+    }
+    
     l=length(type)
     ic_types=values$UMAP@reductions$ica@cell.embeddings[,type]
     
@@ -27,7 +39,7 @@ current_plot_density <- reactive({
     # Add density
     if (input$Plot_contour_density == TRUE){
       
-      p1<-   ggplot( data = ic_types,aes(x = imagecol, y = imagerow)) +
+      p1 <- ggplot( data = ic_types,aes(x = UMAP_1, y = UMAP_2)) +
         annotation_raster(img,xmin = 0,xmax = Inf,ymin = 0,ymax = Inf)+
         geom_contour(data = griddf,aes(x = x, y = y , z=z2),breaks = input$Plot_thresh_density)  + 
         coord_equal()+
@@ -80,7 +92,5 @@ current_plot_density <- reactive({
                           yaxis = list(showgrid = FALSE, showticklabels=FALSE),
                           autosize = TRUE
     )
-    
   }
-  
 })

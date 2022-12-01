@@ -34,9 +34,13 @@ output$subclustering_choice <- renderUI({
   req(input$export_sub_IC)
   if (input$export_sub_IC == "IC Cell types"){
     tagList(
+      selectInput("Plot_display_type_density_manual", label = 'select method', 
+                  choices = list("Manual", "Automated"), 
+                  selected = "Manual"),
       selectizeInput("Cell_type_subclustering_IC_export_choose", label = "Choose cell type to export",
                      choices = unique(as.vector(values$Annotation[,'Type']))[!NA %in% unique(as.vector(values$Annotation[,'Type']))], selected = NULL, multiple = TRUE,
-                     options = NULL)
+                     options = NULL),
+      numericInput("Cell_type_subclustering_density_export_choose", label = "Density threshold", value = 0.4)
     )
   } else if (input$export_sub_IC == "UMAP Cluster"){
     tagList(
