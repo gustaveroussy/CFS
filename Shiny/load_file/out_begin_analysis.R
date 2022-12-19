@@ -40,12 +40,6 @@ observeEvent(input$input_file, {
                        choices = values$IC_names,
                        selected = NULL)
   
-  if(is.null(values$data@misc$annotation)){
-    values$data@misc$annotation = matrix("", nrow = length(values$IC_names), ncol = 3)
-    rownames(values$data@misc$annotation) = values$IC_names
-    colnames(values$data@misc$annotation) = c('Use','Type','Annotation')
-  }
-  
   values$Annotation = values$data@misc$annotation
   
   # Get All annotations and their associated ICs
@@ -55,7 +49,7 @@ observeEvent(input$input_file, {
     list_annotation = list_names_IC[[i]]
     for (j in list_annotation) {
       if(is.null(values$annotation_for_output[[j]]) && j != ""){
-        values$annotation_for_output[[j]] = rownames(data@misc$annotation)[grep(j, data@misc$annotation)-length(data@misc$annotation[,'Use'])]
+        values$annotation_for_output[[j]] = rownames(values$data@misc$annotation)[grep(j, values$data@misc$annotation)-length(values$data@misc$annotation[,'Use'])]
       }
     }
   }
