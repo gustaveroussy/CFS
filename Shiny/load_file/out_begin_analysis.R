@@ -15,7 +15,7 @@ Launch_analysis <- reactive({
   
   if (is.null(data@misc$annotation)){
     row_names = names(data@misc)[grep('IC_', names(data@misc))]
-    data@misc$annotation = matrix(data = NA, nrow = length(row_names), ncol = 3)
+    data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
     rownames(data@misc$annotation) = row_names
     colnames(data@misc$annotation) = c('Use','Type','Annotation')
     data@misc$annotation[,'Use'] = TRUE
@@ -49,6 +49,7 @@ observeEvent(input$input_file, {
     list_annotation = list_names_IC[[i]]
     for (j in list_annotation) {
       if(is.null(values$annotation_for_output[[j]]) && j != ""){
+        j <- gsub("\\+", "\\\\+", j)
         values$annotation_for_output[[j]] = rownames(values$data@misc$annotation)[grep(j, values$data@misc$annotation)-length(values$data@misc$annotation[,'Use'])]
       }
     }

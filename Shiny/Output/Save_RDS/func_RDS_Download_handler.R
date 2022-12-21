@@ -15,7 +15,7 @@ output$download_RDS <- downloadHandler(
       
       incProgress(0.25, detail = paste("Preparing UMAP"))
       
-      if(input$output_UMAP_RDS == TRUE){
+      if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
         data@meta.data <- values$UMAP@meta.data
         data@active.ident <- values$UMAP@active.ident
         data@graphs <- values$UMAP@graphs
@@ -77,7 +77,7 @@ output$download_subcluster_RDS <- downloadHandler(
       
       data <- Launch_analysis()
       
-      if(input$output_UMAP_RDS == TRUE){
+      if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
         data@meta.data <- values$UMAP@meta.data
         data@active.ident <- values$UMAP@active.ident
         data@graphs <- values$UMAP@graphs

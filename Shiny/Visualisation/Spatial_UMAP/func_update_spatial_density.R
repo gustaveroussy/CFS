@@ -98,22 +98,39 @@ current_plot_spatial_density <- reactive({
       fig <- fig %>% colorbar(title = "Cell type\ndensity")
     }
     
-    
-    for (i in 0:length(summary(values$data@meta.data[["seurat_clusters"]]))-1){
+    if (!is.null(values$UMAP)){
+      for (i in 0:length(summary(values$UMAP@meta.data[["seurat_clusters"]]))-1){
+        fig <- fig %>%
+          add_trace(
+            x = TissueCoordinates()[,"imagecol"][which(values$UMAP@meta.data[["seurat_clusters"]]==i)],
+            y = TissueCoordinates()[,"imagerow"][which(values$UMAP@meta.data[["seurat_clusters"]]==i)],
+            name = i,
+            marker = list(
+              color = palette()[i+1],
+              size = 10
+            ),
+            showlegend = T,
+            text = i,
+            customdata = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[["seurat_clusters"]]==i)],
+            hovertemplate = paste0("Cell : %{customdata}<br>",
+                                   "Cluster : %{text}",
+                                   "<extra></extra>"),
+            opacity=input$Plot_thresh_alpha_density
+          )
+      }
+    } else {
       fig <- fig %>%
         add_trace(
-          x = TissueCoordinates()[,"imagecol"][which(values$data@meta.data[["seurat_clusters"]]==i)],
-          y = TissueCoordinates()[,"imagerow"][which(values$data@meta.data[["seurat_clusters"]]==i)],
-          name = i,
+          x = TissueCoordinates()[,"imagecol"],
+          y = TissueCoordinates()[,"imagerow"],
           marker = list(
-            color = palette()[i+1],
+            color = 'black',
             size = 10
           ),
           showlegend = T,
           text = i,
-          customdata = rownames(values$data@meta.data)[which(values$data@meta.data[["seurat_clusters"]]==i)],
+          customdata = rownames(values$data@meta.data),
           hovertemplate = paste0("Cell : %{customdata}<br>",
-                                 "Cluster : %{text}",
                                  "<extra></extra>"),
           opacity=input$Plot_thresh_alpha_density
         )
