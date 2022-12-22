@@ -48,6 +48,7 @@ source(paste0(Shiny.options[["shiny_root"]], "/load_file/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/ICA/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Visualisation/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Output/UI.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/Table/UI.R"), local = TRUE)
 
 # Define UI for app that draws a histogram ----
 ui <- dashboardPage(
@@ -57,7 +58,8 @@ ui <- dashboardPage(
       menuItem("Load Data", tabName = "Load_file", icon = icon("spinner")),
       menuItem("ICA", tabName = "ICA", icon = icon("wave-square")),
       menuItem("Visualisation", tabName = "Visualisation", icon = icon("display")),
-      menuItem("Ouput", tabName = "Output", icon = icon("arrow-up-from-bracket"))
+      menuItem("Ouput", tabName = "Output", icon = icon("arrow-up-from-bracket")),
+      menuItem("Table", tabName = "Table", icon = icon("table-list"))
     ),
     uiOutput("IC_list_UI")
   ),
@@ -116,7 +118,8 @@ ui <- dashboardPage(
       tab_load,
       tab_ICA,
       tab_visualisation,
-      tab_output
+      tab_output,
+      tab_table
     )
   )
 )

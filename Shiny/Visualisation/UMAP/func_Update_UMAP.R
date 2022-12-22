@@ -3,11 +3,43 @@
 ##----------------------------------------------------------------------------##
 
 current_plot_umap <- reactive({
-  
   if (!is.null(input$Plot_display_IC_choice)) {
-    values$UMAP=Cluster_ICA(adata=values$data,ICs=as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)),res=input$Plot_resolution)
+    if (!is.null(input$Plot_display_type_UMAP_choice)){
+      if(length(input$Plot_display_type_UMAP_choice) != 1){
+        for (n_cell_type in 1:length(input$Plot_display_type_UMAP_choice)) {
+          if(n_cell_type == 1) {
+            type = values$annotation_for_output[[n_cell_type]]
+          } else {
+            type = append(type, values$annotation_for_output[[n_cell_type]])
+          }
+        }
+        type = unique(type)
+      } else {
+        type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
+      }
+      values$UMAP=Cluster_ICA(adata=values$data,ICs=as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))),res=input$Plot_resolution)
+    } else {
+      values$UMAP=Cluster_ICA(adata=values$data,ICs=as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)),res=input$Plot_resolution)
+    }
   } else {
-    values$UMAP = values$data
+    if (!is.null(input$Plot_display_type_UMAP_choice)){
+      if(length(input$Plot_display_type_UMAP_choice) != 1){
+        name = paste(input$Plot_display_type_UMAP_choice,collapse = ",")
+        for (n_cell_type in 1:length(input$Plot_display_type_UMAP_choice)) {
+          if(n_cell_type == 1) {
+            type = values$annotation_for_output[[n_cell_type]]
+          } else {
+            type = append(type, values$annotation_for_output[[n_cell_type]])
+          }
+        }
+        type = unique(type)
+      } else {
+        type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
+      }
+      values$UMAP=Cluster_ICA(adata=values$data,ICs=as.integer(gsub('[IC_]','',type)),res=input$Plot_resolution)
+    } else {
+      values$UMAP = values$data
+    }
   }
   
   if ("aneuploid" %in% colnames(values$UMAP@meta.data)) {

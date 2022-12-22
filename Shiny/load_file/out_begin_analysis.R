@@ -26,6 +26,13 @@ Launch_analysis <- reactive({
 
 observeEvent(input$input_file, {
   
+  values$annotation_for_output = list()
+  values$data = NULL
+  values$IC_names = NULL
+  values$Stat = NULL
+  values$Annotation = NULL
+  values$UMAP = NULL
+  
   values$data = Launch_analysis()
   
   if (!is.null(values$data@reductions$umap)){

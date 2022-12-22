@@ -18,6 +18,7 @@ current_plot_density <- reactive({
       name = input$Plot_display_type_choice
       type = values$annotation_for_output[[input$Plot_display_type_choice]]
     }
+    
     l=length(type)
     
     if (l > 1){
