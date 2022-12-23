@@ -14,7 +14,6 @@ observeEvent(input$start_plot, {
       plots$spatial_density = current_plot_spatial_density()
     }
     plots$button_check <- input$start_plot + 1
-    values$data <- data
   }
 })
 

@@ -31,7 +31,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     )
   } else if (input$Plot_analysis_type == "Density") {
     tagList(
-      selectizeInput("Plot_display_type_choice", label = "Choose IC to plot",
+      selectizeInput("Plot_display_type_choice", label = "Choose cell type to plot",
                      choices = unique(names(values$annotation_for_output)),
                      selected = NULL,
                      multiple = TRUE,
