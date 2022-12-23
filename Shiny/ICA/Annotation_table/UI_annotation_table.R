@@ -17,7 +17,7 @@ observeEvent(input$Annotation_table_UI_cell_edit, {
     for (j in list_annotation) {
       if(is.null(values$annotation_for_output[[j]]) && j != ""){
         j <- gsub("\\+", "\\\\+", j)
-        values$annotation_for_output[[j]] = na.omit(rownames(values$Annotation)[grep(j, values$Annotation)-length(values$Annotation[,'Use'])])
+        values$annotation_for_output[[j]] = na.omit(rownames(values$Annotation)[grep("TRUE", values$Annotation)[grep(j, values$Annotation)-length(values$Annotation[,'Use'])]])
       }
     }
   }

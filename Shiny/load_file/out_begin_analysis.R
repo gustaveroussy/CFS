@@ -57,7 +57,7 @@ observeEvent(input$input_file, {
     for (j in list_annotation) {
       if(is.null(values$annotation_for_output[[j]]) && j != ""){
         j <- gsub("\\+", "\\\\+", j)
-        values$annotation_for_output[[j]] = na.omit(rownames(values$data@misc$annotation)[grep(j, values$data@misc$annotation)-length(values$data@misc$annotation[,'Use'])])
+        values$annotation_for_output[[j]] = na.omit(rownames(values$data@misc$annotation)[grep("TRUE", values$Annotation)[grep(j, values$Annotation)-length(values$Annotation[,'Use'])]])
       }
     }
   }

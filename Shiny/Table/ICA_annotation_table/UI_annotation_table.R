@@ -51,6 +51,12 @@ observeEvent(input[["table_info"]], {
 ## Text in info box.
 ##----------------------------------------------------------------------------##
 table_info <- list(
-  title = "Table",
-  text = p("Heatmap representation of the expression of the overall top genes overs all IC")
+  title = "Annotation table",
+  text = HTML("Annotation table of all the ICA:
+              <ul>
+                <li><b>Use</b>: Indicates whether or not the ICA is used when displaying or exporting data based on the associated cell type</li>
+                <li><b>Type</b>: Indicate cell type or biological process associated with the ICA, if multiple, separate them with a comma (,) without spaces</li>
+                <li><b>Annotation</b>: Complementary information for the user</li>
+              </ul>
+              ")
 )
