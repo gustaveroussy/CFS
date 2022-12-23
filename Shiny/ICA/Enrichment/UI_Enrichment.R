@@ -97,6 +97,6 @@ observeEvent(input[["IC_enrichment_info"]], {
 ## Text in info box.
 ##----------------------------------------------------------------------------##
 IC_enrichment_info <- list(
-  title = "Plot gene weight",
-  text = p("Plot of gene weight over spatial imagery")
+  title = "Enrichment",
+  text = HTML("Bar plot display of the enrichment of the main genes of the IC")
 )

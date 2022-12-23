@@ -54,5 +54,5 @@ observeEvent(input[["ouput_info"]], {
 ##----------------------------------------------------------------------------##
 ouput_info <- list(
   title = "Output",
-  text = p("Heatmap representation of the expression of the overall top genes overs all IC")
+  text = p("Choose to save data or subcluster data")
 )

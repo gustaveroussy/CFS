@@ -33,8 +33,8 @@ ICA_top_IC_main_parameters_info <- list(
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
-      <li><b>Projection:</b> Select here which projection you want to see in the scatter plot on the right.</li>
-      <li><b>Color cells by:</b> Select which variable, categorical or continuous, from the meta data should be used to color the cells.</li>
+      <li><b>Select color:</b> Select here which color scale you want to use in the heatmap on the right.</li>
+      <li><b>Color range:</b> Select the range of color to use.</li>
     </ul>
     "
   )

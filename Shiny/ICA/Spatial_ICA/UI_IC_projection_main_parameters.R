@@ -10,14 +10,6 @@ output$pie_chart_confirm <- renderUI({
   checkboxInput("pie_plot", label = "Scatter Pie", value = FALSE)
 })
 
-output$density_ICA_confirm <- renderUI({
-  checkboxInput("select_density_ICA_spatial", label = "Density", value = FALSE)
-})
-
-output$annotation_ICA_confirm <- renderUI({
-  checkboxInput("select_annotation_ICA_spatial", label = "Annotation", value = FALSE)
-})
-
 observeEvent(input$IC_choice, {
   updateSliderInput(session, "slider_IC_spatial_range", label = "Color range",
                     min = round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0), 
@@ -100,8 +92,10 @@ IC_projection_main_parameters_info <- list(
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
-      <li><b>Projection:</b> Select here which projection you want to see in the scatter plot on the right.</li>
-      <li><b>Color cells by:</b> Select which variable, categorical or continuous, from the meta data should be used to color the cells.</li>
+    <li><b>Plot:</b> This option allows to plot the IC over the spatial data</li>
+    <li><b>Scatter pie:</b> This option allows to plot a scatter pie of multiple ICs at once</li>
+    <li><b>Color range:</b> Color range of the plot</li>
+    <li><b>Select color:</b> Type of color scale of the plot</li>
     </ul>
     "
   )

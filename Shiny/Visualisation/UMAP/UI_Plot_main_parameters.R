@@ -73,8 +73,22 @@ Plot_main_parameters_info <- list(
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
-      <li><b>Projection:</b> Select here which projection you want to see in the scatter plot on the right.</li>
-      <li><b>Color cells by:</b> Select which variable, categorical or continuous, from the meta data should be used to color the cells.</li>
+      <li><b>Select method to use:</b> Select here which projection you want to see in the scatter plot on the right.</li>
+      <li><b>UMAP:</b></li>
+      <ul>
+        <li><b>Select what to color:</b> Select which category, to use to color the spots.</li>
+        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for UMAP generation.</li>
+        <li><b>Choose IC to plot:</b> Select which IC to use for UMAP generation.</li>
+        <li><b>Enter Plot resolution:</b> Select clustering resolution to use.</li>
+      </ul>
+      <li><b>Density:</b></li>
+      <ul>
+        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for density generation.</li>
+        <li><b>Contour:</b> Only display density area limits.</li>
+        <li><b>Display image:</b> Display the histological image under the density display.</li>
+        <li><b>threshold:</b> Select the limits of density display.</li>
+        <li><b>alpha:</b> Select the density display transparency.</li>
+      </ul>
     </ul>
     "
   )

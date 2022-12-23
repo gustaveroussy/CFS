@@ -27,8 +27,6 @@ output[["Spatial_IC_UI"]] <- renderUI({
           collapsed = FALSE,
           uiOutput("plot_ICA_confirm"),
           uiOutput("pie_chart_confirm"),
-          uiOutput("density_ICA_confirm"),
-          uiOutput("annotation_ICA_confirm"),
           uiOutput("IC_projection_main_parameters_UI"),
           uiOutput("pie_chart_check"),
           uiOutput("select_all_input_control")
@@ -90,5 +88,5 @@ observeEvent(input[["Spatial_IC_info"]], {
 ##----------------------------------------------------------------------------##
 Spatial_IC_info <- list(
   title = "Plot IC weight",
-  text = p("Plot of IC weight over spatial imagery")
+  text = HTML("Plot of IC weight over spatial imagery")
 )

@@ -55,8 +55,10 @@ IC_enrichment_main_parameters_info <- list(
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
-      <li><b>Projection:</b> Select here which projection you want to see in the scatter plot on the right.</li>
-      <li><b>Color cells by:</b> Select which variable, categorical or continuous, from the meta data should be used to color the cells.</li>
+    <li><b>Choose database related to enrichment:</b> Choose one of the database that was used in the enrichment process</li>
+    <li><b>Select color:</b> Choose the color scale for the P-value</li>
+    <li><b>Enrichment to display:</b> Number of enrichment result to display from the most significant to the least significant</li>
+    <li><b>Gene expression:</b> choose positively associated or negatively associated genes enrichment to the IC</li>
     </ul>
     "
   )

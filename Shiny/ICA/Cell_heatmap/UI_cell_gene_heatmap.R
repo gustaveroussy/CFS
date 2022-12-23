@@ -96,6 +96,6 @@ observeEvent(input[["spot_gene_heatmap_info"]], {
 ## Text in info box.
 ##----------------------------------------------------------------------------##
 spot_gene_heatmap_info <- list(
-  title = "Plot gene weight",
-  text = p("Plot of gene weight over spatial imagery")
+  title = "Cell genes based heatmap",
+  text = p("Heatmap display of main gene of the currently selected IC in cells")
 )

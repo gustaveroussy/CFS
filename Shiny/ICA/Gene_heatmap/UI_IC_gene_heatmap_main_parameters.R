@@ -46,8 +46,9 @@ IC_gene_heatmap_main_parameters_info <- list(
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
-      <li><b>Projection:</b> Select here which projection you want to see in the scatter plot on the right.</li>
-      <li><b>Color cells by:</b> Select which variable, categorical or continuous, from the meta data should be used to color the cells.</li>
+      <li><b>Color range:</b> Select the range of color to use.</li>
+      <li><b>Number of genes to display:</b> Select the number of top genes from the IC to display.</li>
+      <li><b>Select color:</b> Select here which color scale you want to use in the spatial plot on the right.</li>
     </ul>
     "
   )

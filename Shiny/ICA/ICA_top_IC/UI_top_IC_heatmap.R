@@ -116,5 +116,5 @@ observeEvent(input[["IC_top_gene_info"]], {
 ##----------------------------------------------------------------------------##
 IC_top_gene_info <- list(
   title = "IC top genes heatmap",
-  text = p("Heatmap representation of the expression of the overall top genes overs all IC")
+  text = p("Heatmap representation of the expression of the overall top genes over all IC")
 )

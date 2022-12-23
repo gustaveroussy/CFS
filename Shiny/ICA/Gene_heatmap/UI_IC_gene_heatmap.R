@@ -146,5 +146,5 @@ observeEvent(input[["IC_gene_heatmap_info"]], {
 ##----------------------------------------------------------------------------##
 IC_gene_heatmap_info <- list(
   title = "Plot gene weight",
-  text = p("Heatmap display of IC's main genes weight")
+  text = p("Heatmap display of genes associated to the IC")
 )

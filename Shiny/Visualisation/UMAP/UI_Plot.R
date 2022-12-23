@@ -92,5 +92,5 @@ observeEvent(input[["Plot_info"]], {
 ##----------------------------------------------------------------------------##
 IC_top_gene_info <- list(
   title = "Plot",
-  text = p("Heatmap representation of the expression of the overall top genes overs all IC")
+  text = p("Window displaying UMAP representation of data")
 )

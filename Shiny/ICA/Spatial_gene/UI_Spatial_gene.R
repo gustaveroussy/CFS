@@ -85,5 +85,5 @@ observeEvent(input[["Spatial_gene_info"]], {
 ##----------------------------------------------------------------------------##
 Spatial_gene_info <- list(
   title = "Plot gene weight",
-  text = p("Plot of gene weight over spatial imagery")
+  text = p("Plot of gene association with IC over spatial imagery")
 )
