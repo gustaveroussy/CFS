@@ -27,7 +27,7 @@ current_plot_spatial_density <- reactive({
     sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
     sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
     ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
-    ic_types<-cbind(GetTissueCoordinates(values$data),t(ic_types)) %>%  cbind(.,sum_IC) %>% as.tibble()
+    ic_types<-cbind(TissueCoordinates(),t(ic_types)) %>%  cbind(.,sum_IC) %>% as.tibble()
     grid=interp(ic_types$imagecol,ic_types$imagerow,ic_types$sum_IC)
     griddf <- data.frame(x = rep(grid$x, ncol(grid$z)), 
                          y = rep(grid$y, each = nrow(grid$z)), 
@@ -138,7 +138,11 @@ current_plot_spatial_density <- reactive({
     
     # Add image in the background
     if (input$Plot_show_image_density == TRUE) {
-      fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(values$data@images$slice1@image)), hoverinfo = "skip")
+      if (is.null(values$HD_image)){
+        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+      } else {
+        fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+      }
     }
     
     fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
@@ -158,8 +162,8 @@ current_plot_spatial_density <- reactive({
     # Add spot
      fig <- fig %>%
        add_trace(
-         x = GetTissueCoordinates(values$data)[,"imagecol"],
-         y = GetTissueCoordinates(values$data)[,"imagerow"],
+         x = TissueCoordinates()[,"imagecol"],
+         y = TissueCoordinates()[,"imagerow"],
          name = name,
          marker = list(
            color = ic_types
@@ -174,7 +178,11 @@ current_plot_spatial_density <- reactive({
     
     # Add image in the background
     if (input$Plot_show_image_density == TRUE) {
-      fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(values$data@images$slice1@image)), hoverinfo = "skip")
+      if (is.null(values$HD_image)){
+        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+      } else {
+        fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+      }
     }
     
     fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),

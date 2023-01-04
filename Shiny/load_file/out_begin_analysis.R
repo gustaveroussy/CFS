@@ -8,7 +8,8 @@
 ## UI element to select data to load into Shiny.
 ##----------------------------------------------------------------------------##
 
-values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL, UMAP = NULL, annotation_for_output = list())
+values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL, UMAP = NULL,
+                         annotation_for_output = list(), low_image = NULL, HD_image = NULL)
 
 Launch_analysis <- reactive({
   data <- readRDS(input$input_file$datapath)
@@ -32,6 +33,8 @@ observeEvent(input$input_file, {
   values$Stat = NULL
   values$Annotation = NULL
   values$UMAP = NULL
+  values$low_image = NULL
+  values$HD_image = NULL
   
   values$data = Launch_analysis()
   
@@ -61,4 +64,10 @@ observeEvent(input$input_file, {
       }
     }
   }
+  
+  values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))
+})
+
+observeEvent(input$input_image, {
+  values$HD_image <- raster2uri(raster::as.raster(readPNG(input$input_image$datapath)))
 })

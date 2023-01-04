@@ -20,6 +20,7 @@ library(tibble)
 library(DT)
 library(interp)
 library(stringr)
+library(png)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny

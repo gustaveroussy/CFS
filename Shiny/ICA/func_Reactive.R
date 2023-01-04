@@ -12,7 +12,11 @@ colfunc <- reactive({
 ########################################
 
 TissueCoordinates <- reactive({
-  c <- GetTissueCoordinates(Launch_analysis())
+  if(is.null(values$HD_image)){
+    c <- GetTissueCoordinates(values$data)
+  } else {
+    c <- values$data@images$slice1@coordinates * values$data@images$slice1@scale.factors$hires
+  }
   return(c)
 })
 

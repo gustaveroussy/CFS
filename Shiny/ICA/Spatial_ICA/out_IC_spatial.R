@@ -17,7 +17,11 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
       
       fig <- plot_ly()
       
-      fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)), hoverinfo = 'skip')
+      if (is.null(values$HD_image)){
+        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+      } else {
+        fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+      }
       
       fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
                                x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
@@ -40,7 +44,11 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
       
       fig <- plot_ly()
       
-      fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)), hoverinfo = 'skip')
+      if (is.null(values$HD_image)){
+        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+      } else {
+        fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+      }
       
       fig <- fig %>% add_trace(type = "scatter", mode = "markers", x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
                                marker = list(color = data@misc[[IC_C]]$IC_weight,

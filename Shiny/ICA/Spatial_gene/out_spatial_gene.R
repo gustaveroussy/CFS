@@ -11,7 +11,11 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
     
     fig <- plot_ly()
     
-    fig <- fig %>% add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)), hoverinfo = 'skip')
+    if (is.null(values$HD_image)){
+      fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+    } else {
+      fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+    }
     
     fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
                              x = TissueCoordinates()[,"imagecol"],
@@ -39,9 +43,15 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
     plotList <- list()
     i = 1
     for ( x in input$gene_projection_gene_choice ) {
-      plotList[[i]] <-  plot_ly() %>%
-        add_trace(type="image", source = raster2uri(raster::as.raster(data@images$slice1@image)), hoverinfo = 'skip'
-        ) %>% add_trace(x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
+      plotList[[i]] <- plot_ly()
+      
+      if (is.null(values$HD_image)){
+        plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+      } else {
+        plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+      }
+      
+      plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
                         marker = list(color = data@misc[[IC_C]]$spot_top_genes_weight[x,],
                                       colorscale = input$select_color_gene_projection),
                         type = 'scatter', mode = "markers",
