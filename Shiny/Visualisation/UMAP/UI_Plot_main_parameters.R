@@ -4,7 +4,7 @@
 output[["Plot_type_UI"]] <- renderUI({
   tagList(
     selectInput("Plot_analysis_type", label = "Select method to use", 
-                choices = list("UMAP","Density"),
+                choices = list("UMAP","Density","Scatter pie"),
                 selected = "UMAP")
     )
 })
@@ -41,6 +41,23 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
       numericInput("Plot_thresh_density", label = "threshold", value = 0.3, min = 0, step = 0.1),
       numericInput("Plot_thresh_alpha_density", label = "alpha", value = 0.5, min = 0, max = 1, step = 0.1)
     )
+  } else if (input$Plot_analysis_type == "Scatter pie") {
+    tagList(
+      numericInput(
+        "pieplot_size",
+        label = "Pie size",
+        value = 50,
+        min = 1,
+        max = 1000,
+        step = 1
+      ),
+      selectizeInput("Scatter_pie_cell_type", label = "choose cell type",
+                     choices = unique(names(values$annotation_for_output)),
+                     selected = NULL, multiple = TRUE, options = NULL),
+      selectizeInput("All_IC_chosen_projection", label = "Choose IC to plot", choices = values$IC_names,
+                     selected = NULL, multiple = TRUE,
+                     options = NULL)
+    )
   }
 })
 
@@ -49,7 +66,6 @@ output[["start_plot_UI"]] <- renderUI({
     actionButton("start_plot", "Start plot")
   )
 })
-
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.

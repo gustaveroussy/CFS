@@ -46,7 +46,8 @@ output[["Plot_UI"]] <- renderUI({
             circle = FALSE,
             icon = icon("cog"),
             inline = TRUE,
-            size = "xs"
+            size = "xs",
+            uiOutput("ggplot_scatter_pie_UI")
           )
         ),
         status = "primary",
@@ -58,6 +59,12 @@ output[["Plot_UI"]] <- renderUI({
         uiOutput("Plot_or_message")
       )
     )
+  )
+})
+
+output[["ggplot_scatter_pie_UI"]] <- renderUI({
+  tagList(
+    checkboxInput("ggplot_scatter_pie", label = HTML("<font color=\"#FFFFFF\">Use ggplot scatter pie</font>"), value = FALSE)
   )
 })
 

@@ -5,7 +5,7 @@
 # make Annotation table
 output[["Table_or_message"]] <- renderDT({
   DT = values$Annotation
-  datatable(DT, editable = list(target = 'cell', disable = list(columns = c(0))), class = 'cell-border stripe', colnames = c('IC' = 1))
+  datatable(DT, editable = list(target = 'cell', disable = list(columns = c(0))), options = list(pageLength = 100), class = 'cell-border stripe', colnames = c('IC' = 1))
 })
 
 observeEvent(input$Table_or_message_cell_edit, {

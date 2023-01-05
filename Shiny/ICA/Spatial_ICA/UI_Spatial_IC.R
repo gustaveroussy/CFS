@@ -25,11 +25,8 @@ output[["Spatial_IC_UI"]] <- renderUI({
           height = NULL,
           collapsible = TRUE,
           collapsed = FALSE,
-          uiOutput("plot_ICA_confirm"),
-          uiOutput("pie_chart_confirm"),
           uiOutput("IC_projection_main_parameters_UI"),
-          uiOutput("pie_chart_check"),
-          uiOutput("select_all_input_control")
+          uiOutput("pie_chart_check")
       )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",

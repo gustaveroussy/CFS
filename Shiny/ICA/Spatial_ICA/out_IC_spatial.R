@@ -3,71 +3,65 @@
 ##----------------------------------------------------------------------------##
 
 output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
-  if (input$pie_plot == TRUE){
+
+  data <- Launch_analysis()
+  
+  IC_C = input[["IC_choice"]]
+  
+  if(input$select_color_IC_projection != "Range"){
     
-    req(pie_plots$pie_plot)
-    pie_plots$pie_plot
+    fig <- plot_ly()
     
-  }else{
-    data <- Launch_analysis()
-    
-    IC_C = input[["IC_choice"]]
-    
-    if(input$select_color_IC_projection != "Range"){
-      
-      fig <- plot_ly()
-      
-      if (is.null(values$HD_image)){
-        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
-      } else {
-        fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
-      }
-      
-      fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
-                               x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
-                               marker = list(color = data@misc[[IC_C]]$IC_weight,
-                                             colorscale = input$select_color_IC_projection,
-                                             cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
-                                             showscale = TRUE),
-                               text = data@misc[[IC_C]]$IC_weight,
-                               customdata = names(data@misc[[IC_C]]$IC_weight),
-                               hovertemplate = paste0("Cell : %{customdata}<br>",
-                                                      "Expression: %{text}",
-                                                      "<extra></extra>")
-      )
-      
-      fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                            yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                            showlegend = FALSE
-      )
+    if (is.null(values$HD_image)){
+      fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
     } else {
-      
-      fig <- plot_ly()
-      
-      if (is.null(values$HD_image)){
-        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
-      } else {
-        fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
-      }
-      
-      fig <- fig %>% add_trace(type = "scatter", mode = "markers", x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
-                               marker = list(color = data@misc[[IC_C]]$IC_weight,
-                                             colors = colfunc(),
-                                             cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
-                                             showscale = TRUE),
-                               text = data@misc[[IC_C]]$IC_weight,
-                               customdata = names(data@misc[[IC_C]]$IC_weight),
-                               hoverinfo = "text",
-                               hovertemplate = paste0("Cell : %{customdata}<br>",
-                                                      "Expression: %{text}",
-                                                      "<extra></extra>")
-      )
-      
-      fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                            yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                            showlegend = FALSE
-      ) # add trace, show legend
+      fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
     }
+    
+    fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
+                             x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
+                             marker = list(color = data@misc[[IC_C]]$IC_weight,
+                                           colorscale = input$select_color_IC_projection,
+                                           cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
+                                           showscale = TRUE),
+                             text = data@misc[[IC_C]]$IC_weight,
+                             customdata = names(data@misc[[IC_C]]$IC_weight),
+                             hovertemplate = paste0("Cell : %{customdata}<br>",
+                                                    "Expression: %{text}",
+                                                    "<extra></extra>")
+    )
+    
+    fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                          yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                          showlegend = FALSE
+    )
+  } else {
+    
+    fig <- plot_ly()
+    
+    if (is.null(values$HD_image)){
+      fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+    } else {
+      fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+    }
+    
+    fig <- fig %>% add_trace(type = "scatter", mode = "markers", x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
+                             marker = list(color = data@misc[[IC_C]]$IC_weight,
+                                           colors = colfunc(),
+                                           cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
+                                           showscale = TRUE),
+                             text = data@misc[[IC_C]]$IC_weight,
+                             customdata = names(data@misc[[IC_C]]$IC_weight),
+                             hoverinfo = "text",
+                             hovertemplate = paste0("Cell : %{customdata}<br>",
+                                                    "Expression: %{text}",
+                                                    "<extra></extra>")
+    )
+    
+    fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                          yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                          showlegend = FALSE
+    ) # add trace, show legend
   }
 })
 

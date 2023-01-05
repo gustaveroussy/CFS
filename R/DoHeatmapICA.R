@@ -1,5 +1,5 @@
-DoHeatmapICA=function(data="NULL",nics="IC_1",GeneStatICA="NULL",ngenes=10){
-  list_gene <-  purrr::map(GeneStatICA$Contrib_gene[nics],function(.x){x<-.x %>% arrange(desc(abs(Sig))) %>% head(n=ngenes) ;return(x$gene)}) %>% unlist %>% unique 
+DoHeatmapICA=function(data="NULL",nics="IC_1",ngenes=10){
+  list_gene <-  purrr::map(data@misc$GeneAndStat$Contrib_gene[nics],function(.x){x<-.x %>% arrange(desc(abs(Sig))) %>% head(n=ngenes) ;return(x$gene)}) %>% unlist %>% unique 
   
   # paletteLength <- 50
   # myColor <- colorRampPalette(c("violet","black","yellow"))(paletteLength)

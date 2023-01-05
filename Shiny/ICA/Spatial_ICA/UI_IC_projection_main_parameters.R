@@ -2,71 +2,19 @@
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
 
-output$plot_ICA_confirm <- renderUI({
-  checkboxInput("select_plot_ICA_spatial", label = "Plot", value = TRUE)
-})
-
-output$pie_chart_confirm <- renderUI({
-  checkboxInput("pie_plot", label = "Scatter Pie", value = FALSE)
-})
-
-observeEvent(input$IC_choice, {
-  updateSliderInput(session, "slider_IC_spatial_range", label = "Color range",
-                    min = round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0), 
-                    max = round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0),
-                    value = c(round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_weight),digits = 0),
-                              round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0)))
-})
-
-observeEvent(input$pie_plot, {
-  if (input$pie_plot == FALSE) {
-    updateSliderInput(session, "slider_IC_spatial_range", label = "Color range",
-                      min = round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0), 
-                      max = round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0),
-                      value = c(round(min(Launch_analysis()@misc[[input$IC_choice]]$IC_weight),digits = 0),
-                                round(max(Launch_analysis()@misc[[input$IC_choice]]$IC_weight), digits = 0)))
-  } else if (input$pie_plot == TRUE) {
-    updateSliderInput(session, "slider_IC_spatial_range", label = "Color range",
-                      min = 0, 
-                      max = 1,
-                      value = c(0,1)
-                      )
-  }
-})
-
 output$pie_chart_check <- renderUI({
-  if (input$pie_plot == FALSE){
-    tagList(
-      sliderInput("slider_IC_spatial_range", label = "Color range",step = 1, min = 0,
-                  max = 1, value = c(0,1)),
-      
-      selectInput("select_color_IC_projection", label = "Select color", 
-                  choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd","Range"), 
-                  selected = "Viridis")
-    )
-  } else {
-    tagList(
-      numericInput(
-        "pieplot_size",
-        label = "Pie size",
-        value = 50,
-        min = 1,
-        max = 1000,
-        step = 1
-      )
-    )
-  }
-})
-
-output$select_all_input_control <- renderUI({
-  if (input$pie_plot == TRUE){
-    tagList(
-      selectizeInput("All_IC_chosen_projection", label = "Choose IC to plot", choices = names(Launch_analysis()@misc)[-1],
-                     selected = NULL, multiple = TRUE,
-                     options = NULL),
-      actionButton("start_pieplot", "Start plot")
-    )
-  }
+  tagList(
+    sliderInput("slider_IC_spatial_range", label = "Color range",
+                min = round(min(values$data@misc[[input$IC_choice]]$IC_weight), digits = 0), 
+                max = round(max(values$data@misc[[input$IC_choice]]$IC_weight), digits = 0),
+                value = c(round(min(values$data@misc[[input$IC_choice]]$IC_weight),digits = 0),
+                          round(max(values$data@misc[[input$IC_choice]]$IC_weight), digits = 0)),
+                step = 0.01),
+    
+    selectInput("select_color_IC_projection", label = "Select color", 
+                choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd","Range"), 
+                selected = "Viridis")
+  )
 })
 
 ##----------------------------------------------------------------------------##

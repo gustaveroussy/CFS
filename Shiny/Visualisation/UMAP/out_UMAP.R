@@ -2,7 +2,7 @@
 ## Prepare the output of the UMAP
 ##----------------------------------------------------------------------------##
 
-plots <- reactiveValues(button_check = 1, umap = NULL, spatial = NULL, density = NULL, spatial_density = NULL)
+plots <- reactiveValues(button_check = 1, umap = NULL, spatial = NULL, density = NULL, spatial_density = NULL, spatial_scatter_pie = NULL)
 
 observeEvent(input$start_plot, {
   if (input$start_plot == plots$button_check) {
@@ -12,6 +12,8 @@ observeEvent(input$start_plot, {
     } else if (input$Plot_analysis_type == "Density") {
       plots$density = current_plot_density()
       plots$spatial_density = current_plot_spatial_density()
+    } else if (input$Plot_analysis_type == "Scatter pie") {
+      plots$spatial_scatter_pie = current_plot_spatial_scatter_pie()
     }
     plots$button_check <- input$start_plot + 1
   }
@@ -22,6 +24,8 @@ output[["Plot"]] <- plotly::renderPlotly({
     return(plots$umap)
   } else if (input$Plot_analysis_type == "Density") {
     return(plots$density)
+  } else if (input$Plot_analysis_type == "Scatter pie") {
+    return(NULL)
   }
 })
 
@@ -30,5 +34,7 @@ output[["Plot_Spatial"]] <- plotly::renderPlotly({
     return(plots$spatial)
   } else if (input$Plot_analysis_type == "Density") {
     return(plots$spatial_density)
+  } else if (input$Plot_analysis_type == "Scatter pie") {
+    return(plots$spatial_scatter_pie)
   }
 })

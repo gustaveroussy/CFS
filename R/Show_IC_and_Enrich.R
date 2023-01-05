@@ -1,8 +1,8 @@
-Show_IC_and_Enrich=function(data=NULL,Stat_data=NULL,dbs=c("GO_Biological_Process_2015"),nb_genes=10,ProjectName="Default"){
+Show_IC_and_Enrich=function(data=NULL,dbs=c("GO_Biological_Process_2015"),nb_genes=10,ProjectName="Default"){
   print("Start printing")
   i = 1
-  for (IC in names(Stat_data$Contrib_gene[names(which(Stat_data$Kurtosis_ICs>3))])){
-    GeneList <- Stat_data$Contrib_gene[names(which(Stat_data$Kurtosis_ICs>3))][[IC]]
+  for (IC in names(data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))])){
+    GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC]]
     dbs_size=c(1:length(dbs))
     GeneList <- GeneList %>% as.tibble %>%arrange(desc(abs(Sig)))
     if (websiteLive) {

@@ -1,8 +1,10 @@
 Show_IC_and_Enrich_S=function(data=NULL,IC="IC_1",GeneList=NULL,dbs=c( "GO_Biological_Process_2015"),nb_genes=10,ProjectName="Default"){
   print("Start printing")
   
-    DirIC=paste0(ProjectName)
-    dir.create(DirIC, recursive=FALSE)
+  
+  
+  DirIC=paste0(ProjectName)
+  dir.create(DirIC, recursive=FALSE)
   
   dbs_size=c(1:length(dbs))
   GeneList <- GeneList %>% as.tibble %>%arrange(desc(abs(Sig)))
