@@ -10,7 +10,7 @@ output[["trajectory_main_parameters_UI"]] <- renderUI({
                 choices = list("Clustering"), 
                 selected = "Clustering"),
     selectizeInput("trajectory_dimension_choice", label = "Choose dimension to spatial plot",
-                   choices = c("dm","Branch",colnames(Launch_analysis()@misc$dpt@dm@eigenvectors)),
+                   choices = c("dm","Branch",if(!is.null(values$data@misc$dpt)){colnames(values$data@misc$dpt@dm@eigenvectors)}),
                    selected = NULL,
                    multiple = FALSE,
                    options = NULL),

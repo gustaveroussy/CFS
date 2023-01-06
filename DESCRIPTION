@@ -1,5 +1,12 @@
-Package: SCCTempConverter
+Package: SpICA
 Type: Package
-Title: Temperature Conversion Package for Demonstration
 Version: 0.0.1.0
-RoxygenNote: 7.2.1
+Date: 2023-01-06
+Title: Spatial single cells analysis Package using ICA
+Authors@R: c(person("First", "Last", email = "first.last@example.com", role = c("aut", "cre")))
+Author: Corentin Thuilliez [aut, cre]
+Maintainer: Corentin Thuilliez [aut, cre]
+Description: Allows for the analysis of spatial seurat objects using ICA
+License: GPL (>= 2)
+RoxygenNote: 7.2.2
+Encoding: UTF-8

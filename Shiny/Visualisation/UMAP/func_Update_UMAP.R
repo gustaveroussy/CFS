@@ -17,9 +17,9 @@ current_plot_umap <- reactive({
       } else {
         type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
       }
-      values$UMAP=Cluster_ICA(adata=values$data,ICs=as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))),res=input$Plot_resolution)
+      values$UMAP=Cluster_ICA(data=values$data,ICs=as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))),res=input$Plot_resolution)
     } else {
-      values$UMAP=Cluster_ICA(adata=values$data,ICs=as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)),res=input$Plot_resolution)
+      values$UMAP=Cluster_ICA(data=values$data,ICs=as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)),res=input$Plot_resolution)
     }
   } else {
     if (!is.null(input$Plot_display_type_UMAP_choice)){
@@ -36,23 +36,22 @@ current_plot_umap <- reactive({
       } else {
         type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
       }
-      values$UMAP=Cluster_ICA(adata=values$data,ICs=as.integer(gsub('[IC_]','',type)),res=input$Plot_resolution)
+      values$UMAP=Cluster_ICA(data=values$data,ICs=as.integer(gsub('[IC_]','',type)),res=input$Plot_resolution)
     } else {
       values$UMAP = values$data
     }
   }
   
-  if ("aneuploid" %in% colnames(values$UMAP@meta.data)) {
-    values$UMAP@meta.data$aneuploid <- as.character(values$UMAP@meta.data$aneuploid)
-    values$UMAP@meta.data$aneuploid[which(is.na(values$UMAP@meta.data$aneuploid))] = "unknown"
-    values$UMAP@meta.data$aneuploid <- as.factor(values$UMAP@meta.data$aneuploid)
-    
-    values$UMAP <- Spatial_pseudotime(values$UMAP)
-  }
+#  if ("aneuploid" %in% colnames(values$UMAP@meta.data)) {
+#    values$UMAP@meta.data$aneuploid <- as.character(values$UMAP@meta.data$aneuploid)
+#    values$UMAP@meta.data$aneuploid[which(is.na(values$UMAP@meta.data$aneuploid))] = "unknown"
+#    values$UMAP@meta.data$aneuploid <- as.factor(values$UMAP@meta.data$aneuploid)
+#    
+#    values$UMAP <- Spatial_pseudotime(values$UMAP)
+#  }
   
-  req(values$UMAP@reductions[["umap"]])
-  
-  
+  req(values$UMAP)
+
   fig <- plot_ly(type = 'scatter',
                  mode='markers',
                  source = "A"

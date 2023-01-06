@@ -1,3 +1,16 @@
+#' Ploidie search for cancer cells.
+#'
+#' Search for ploidie alteration within the sample.
+#' @param data Seurat object to analyse
+#' @param species ???
+#' @param threads Number of threads to use
+#' @param kcut ???
+#' @param annotate chose whether or not to annotate the analysis, of return the Copykat object.
+#' @param genome Genome to use for the analysis, either "hg20" or "mm"
+#' @return A list of analysis object
+#' @examples 
+#' data <- Ploidie_search(data=data, species="S", threads=4, kcut=2, annotate=TRUE, genome="hg20")
+#' @export
 Ploidie_search=function(data=NULL, copykat.test = NULL, species="S", threads=4,kcut=2,annotate=TRUE,genome="hg20"){
   #copykat.test <- copykat(rawmat=as.matrix(data@assays$Spatial@counts), id.type=species, ngene.chr=5, win.size=25, KS.cut=0.1, sam.name="test", distance="euclidean", norm.cell.names="",output.seg="TRUE", plot.genes="TRUE", genome=genome,n.cores=threads)
   #saveRDS(copykat.test, file = "./copykat.test.RDS")

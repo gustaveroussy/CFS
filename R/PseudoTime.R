@@ -7,7 +7,7 @@ Spatial_pseudotime=function(data=NULL, IC=NULL){
   dpt <- DPT(dm,w_width = 0.1)
   pseudotime_dpt <- rank(dpt$dpt)
   
-  # AFFICHAGE des differents variables calculés
+  # AFFICHAGE des differents variables calcules
   data@meta.data$dm=rep(NA,length(data$seurat_clusters))
   data@meta.data$dm[which(data@meta.data$aneuploid=="aneuploid")]=pseudotime_dpt
   data@meta.data$DC1=rep(NA,length( data$seurat_clusters))

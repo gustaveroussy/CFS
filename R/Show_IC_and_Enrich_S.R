@@ -60,7 +60,7 @@ Show_IC_and_Enrich_S=function(data=NULL,IC="IC_1",GeneList=NULL,dbs=c( "GO_Biolo
   
   dev.off()
   
-  # plot les gènes pour chaques IC dans l'espace
+  # plot les genes pour chaques IC dans l'espace
   message("Plotting Spatial genes")
   pdf(paste0(DirIC,"/First",nb_genes,"_Gene_contr_",IC,".pdf"),width=20,height=20)  
   sort(abs(data@reductions$ica@feature.loadings[,IC]),decreasing = T) %>% names -> nICq
@@ -83,7 +83,7 @@ Show_IC_and_Enrich_S=function(data=NULL,IC="IC_1",GeneList=NULL,dbs=c( "GO_Biolo
   myBreaks <- c(seq(min(data_heat), 0, length.out=ceiling(paletteLength/2) + 1), 
                 seq(max(data_heat)/paletteLength, max(data_heat), length.out=floor(paletteLength/2)))
   
-  # Plot the heatmap des 10 gènes les plus importants par IC
+  # Plot the heatmap des 10 genes les plus importants par IC
   
   pheatmap(data_heat,clustering_method = "ward.D",color=myColor, breaks=myBreaks,,clustering_distance_cols = "correlation",filename=paste0(DirIC,"/Heatmap_loadings_gene_",IC,".pdf"))
   
@@ -97,7 +97,7 @@ Show_IC_and_Enrich_S=function(data=NULL,IC="IC_1",GeneList=NULL,dbs=c( "GO_Biolo
   
   myBreaks <- c(seq(min(data_heat), 0, length.out=ceiling(paletteLength/2) + 1), 
                 seq(max(data_heat)/paletteLength, max(data_heat), length.out=floor(paletteLength/2)))
-  # Plot the heatmap des gènes par IC pour chaques cellules du single cell
+  # Plot the heatmap des genes par IC pour chaques cellules du single cell
   pheatmap(data_heat,clustering_method = "ward.D",color=myColor, breaks=myBreaks,clustering_distance_cols = "correlation",filename=paste0(DirIC,"/Heatmap_Exp_",IC,".pdf"))
   
   

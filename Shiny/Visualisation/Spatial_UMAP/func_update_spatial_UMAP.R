@@ -6,10 +6,9 @@ current_plot_spatial <- reactive({
   
   data <- values$UMAP
   
-  req(values$UMAP@reductions[["umap"]])
-  
   fig <- plot_ly(type = 'scatter',
-                 mode='markers'
+                 mode='markers',
+                 source = "C"
   )
   
   if (is.null(values$HD_image)){
@@ -67,5 +66,8 @@ current_plot_spatial <- reactive({
                  autosize = TRUE
   )
   
+  fig <- fig %>% event_register('plotly_click')
+  
   return(fig)
 })
+

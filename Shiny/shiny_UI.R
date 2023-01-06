@@ -32,15 +32,7 @@ setClass("shiny_visium", slots=list(ica="list", images="list"))
 ## Functions.
 ##--------------------------------------------------------------------------##
 
-source(paste0(Shiny.options[["shiny_root"]], "/Functions/DoHeatmapICA.R"), local = TRUE)
-source(paste0(Shiny.options[["shiny_root"]], "/Functions/Minor_functions.R"), local = TRUE)
-source(paste0(Shiny.options[["shiny_root"]], "/Functions/prepare_data.R"), local = TRUE)
-source(paste0(Shiny.options[["shiny_root"]], "/Functions/RunICA.R"), local = TRUE)
-source(paste0(Shiny.options[["shiny_root"]], "/Functions/IC_Stat.R"), local = TRUE)
-source(paste0(Shiny.options[["shiny_root"]], "/Functions/Show_IC_and_Enrich.R"), local = TRUE)
-source(paste0(Shiny.options[["shiny_root"]], "/Functions/Cluster_ICA.R"), local = TRUE)
-source(paste0(Shiny.options[["shiny_root"]], "/Functions/Markers_Clusters_ICA.R"), local = TRUE)
-source(paste0(Shiny.options[["shiny_root"]], "/Functions/Copykat.R"), local = TRUE)
+
 
 ##----------------------------------------------------------------------------##
 ## Load UI content for each tab.

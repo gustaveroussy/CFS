@@ -12,17 +12,27 @@ values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation =
                          annotation_for_output = list(), low_image = NULL, HD_image = NULL)
 
 Launch_analysis <- reactive({
-  data <- readRDS(input$input_file$datapath)
-  
-  if (is.null(data@misc$annotation)){
-    row_names = names(data@misc)[grep('IC_', names(data@misc))]
-    data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
-    rownames(data@misc$annotation) = row_names
-    colnames(data@misc$annotation) = c('Use','Type','Annotation')
-    data@misc$annotation[,'Use'] = TRUE
+  if (grep('.RDS',input$input_file$datapath) == 1) {
+    
+    data <- readRDS(input$input_file$datapath)
+    
+    if (is.null(data@misc$annotation)){
+      row_names = names(data@misc)[grep('IC_', names(data@misc))]
+      data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
+      rownames(data@misc$annotation) = row_names
+      colnames(data@misc$annotation) = c('Use','Type','Annotation')
+      data@misc$annotation[,'Use'] = TRUE
+    }
+    
+    return(data)
+    
+  } else {
+    
+    shinyalert("Wrong format", "requires .RDS.", type = "error")
+    
+    return(NULL)
   }
   
-  return(data)
 })
 
 observeEvent(input$input_file, {

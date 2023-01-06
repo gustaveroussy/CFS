@@ -1,3 +1,13 @@
+#' Launch Shiny
+#'
+#' Start the shiny for visualization and annotation purposes
+#' 
+#' @return None
+#' 
+#' @examples 
+#' launchShiny()
+#' 
+#' @export
 launchShiny <- function(
     mode = "open",
     maxFileSize = 15000,

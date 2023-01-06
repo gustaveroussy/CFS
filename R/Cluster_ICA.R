@@ -1,17 +1,18 @@
-#' Fahrenheit conversion
+#' Cluster ICA
 #'
-#' Convert degrees Fahrenheit temperatures to degrees Celsius
-#' @param F_temp The temperature in degrees Fahrenheit
-#' @return The temperature in degrees Celsius
+#' Clusters cells and run UMAP
+#' @param data Seurat object to clusterise
+#' @param ICs Vector of IC numbers to use for the clusterisation and UMAP
+#' @param res Resolution of the clusterisation
+#' @return Seurat object with clustered cells and UMAP
 #' @examples 
-#' temp1 <- F_to_C(50);
-#' temp2 <- F_to_C( c(50, 63, 23) );
+#' data <- Cluster_ICA(data=data,ICs=c(1,2,3,4,5,6,7,8,9),res=1.2)
 #' @export
-Cluster_ICA=function(adata=NULL,ICs=c(1),res=1.2){
+Cluster_ICA=function(data=NULL,ICs=c(1),res=1.2){
   
-  adata <- FindNeighbors(adata, reduction = "ica",dims = ICs)
-  adata <- FindClusters(adata, verbose = FALSE,resolution=res)
-  adata <- RunUMAP(adata, reduction = "ica",dims = ICs)
+  data <- FindNeighbors(data, reduction = "ica",dims = ICs)
+  data <- FindClusters(data, verbose = FALSE,resolution=res)
+  data <- RunUMAP(data, reduction = "ica",dims = ICs)
   
-  return(adata)
+  return(data)
 }
