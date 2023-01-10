@@ -37,13 +37,6 @@ Show_IC_and_Enrich=function(data=NULL,dbs=c("GO_Biological_Process_2015"),nb_gen
     }else{
       data@misc[[IC]][["IC_top_genes_weight"]]=data@reductions$ica@feature.loadings[GeneList$gene[1:L_IC],]
     }
-    
-    # heatmap spot/gene
-    if (nb_genes<L_IC){
-      data@misc[[IC]][["spot_top_genes_weight"]]=data@assays$SCT@scale.data[GeneList$gene[1:nb_genes],]
-    }else{
-      data@misc[[IC]][["spot_top_genes_weight"]]=data@assays$SCT@scale.data[GeneList$gene[1:L_IC],]
-    }
   }
   
   return(data)

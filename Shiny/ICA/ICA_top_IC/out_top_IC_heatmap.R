@@ -16,9 +16,12 @@ output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
   
   data@misc[["top_gene_ICA"]] <- data@misc[["top_gene_ICA"]][row_order,]
   
+  b = log10(data@misc[["top_gene_ICA"]])
+  b[is.nan(b)] <- 0
+  
   fig <- plot_ly(
     x = colnames(data@misc[["top_gene_ICA"]]), y = rownames(data@misc[["top_gene_ICA"]]),
-    z = data@misc[["top_gene_ICA"]], type = "heatmap", zmin = input$slider_IC_top_range[1], zmax = input$slider_IC_top_range[2],
+    z = if(input$log_top_IC_heatmap == TRUE){b}else{data@misc[["top_gene_ICA"]]}, type = "heatmap", zmin = input$slider_IC_top_range[1], zmax = input$slider_IC_top_range[2],
     colorscale = input$select_color_IC_top,
     hovertemplate = paste(
       "Gene: %{y:.2f%}<br>",

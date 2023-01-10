@@ -4,7 +4,7 @@
 
 output[["gene_choice_main_parameters_UI"]] <- renderUI({
   selectizeInput("gene_projection_gene_choice", label = "Choose gene to plot",
-                 choices = Launch_analysis()@misc[[input$IC_choice]]$IC_top_genes[1:100],
+                 choices = values$data@misc[[input$IC_choice]]$IC_top_genes,
                  selected = NULL,
                  multiple = TRUE,
                  options = NULL)

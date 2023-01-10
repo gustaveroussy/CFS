@@ -68,6 +68,13 @@ output[["ggplot_scatter_pie_UI"]] <- renderUI({
   )
 })
 
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "ggplot_scatter_pie_UI",
+  suspendWhenHidden = FALSE
+)
+
 ##----------------------------------------------------------------------------##
 ## UI element that either shows a plot or a text message if data is not
 ## available.

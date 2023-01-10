@@ -52,6 +52,10 @@ output[["ICA_top_IC_UI"]] <- renderUI({
           shinyWidgets::dropdownButton(
             tags$div(
               style = "color: black !important;",
+              uiOutput("log_top_IC_heatmap_UI")
+            ),
+            tags$div(
+              style = "color: black !important;",
               uiOutput("heatmap_top_IC_column_organization_UI")
             ),
             circle = FALSE,
@@ -88,6 +92,19 @@ output[["heatmap_top_IC_column_organization_UI"]] <- renderUI({
 outputOptions(
   output,
   "heatmap_top_IC_column_organization_UI",
+  suspendWhenHidden = FALSE
+)
+
+output[["log_top_IC_heatmap_UI"]] <- renderUI({
+  tagList(
+    checkboxInput("log_top_IC_heatmap", label = HTML("<font color=\"#FFFFFF\">Display data as log scale</font>"), value = FALSE)
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "log_top_IC_heatmap_UI",
   suspendWhenHidden = FALSE
 )
 

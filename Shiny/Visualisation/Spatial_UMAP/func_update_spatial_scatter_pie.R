@@ -33,7 +33,7 @@ current_plot_spatial_scatter_pie <- reactive({
     #We extract the image
     #img<-grDevices::as.raster(data@images$slice1@image)
     
-    img <- readPNG('/home/c_thuilliez/Desktop/Work/output/Spatial_Patient/MAP330/tissue_hires_image.png')
+    img = readPNG('/media/c_thuilliez/data/Data_visium/MAP177/spatial/tissue_lowres_image.png')
     g <- rasterGrob(img, interpolate=TRUE)
     g = as.raster(img)
     # We build the plot
@@ -67,13 +67,13 @@ current_plot_spatial_scatter_pie <- reactive({
     # We build the final object
     ic_types<-cbind(GetTissueCoordinates(data),ic_types) %>%  cbind(.,sum_IC)
     
-    ic_types <- ic_types[rowSums(ic_types[,1:length(type)+2])>0,]
+    ic_types <- ic_types[ic_types$sum_IC>0.1,]
     
     #We build the plot
     
     #img<-grDevices::as.raster(data@images$slice1@image)
     
-    ic_types$imagerow = max(ic_types$imagerow) - ic_types$imagerow + min(ic_types$imagerow)
+    #ic_types$imagerow = max(ic_types$imagerow) - ic_types$imagerow + min(ic_types$imagerow)
     
     ####
     
@@ -81,10 +81,9 @@ current_plot_spatial_scatter_pie <- reactive({
     
     
     for (i in 1:nrow(ic_types)) {
-      r=sum_IC
       
-      t = colnames(ic_types[i,1:length(type)+2][which(ic_types[i,1:length(type)+2] != 0)])
-      v = round(as.double(ic_types[i,1:length(type)+2][which(ic_types[i,1:length(type)+2] != 0)])/sum(as.double(ic_types[i,1:length(type)+2][which(ic_types[i,1:length(type)+2] != 0)]))*100,2)
+      t = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
+      v = round(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])/sum(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]))*100,2)
       
       text_final = ""
       
@@ -93,14 +92,14 @@ current_plot_spatial_scatter_pie <- reactive({
       }
       
       
-      col_coordinates = (ic_types[i,"imagecol"])/dim(data@images$slice1@image)[1]
-      row_coordinates = (ic_types[i,"imagerow"])/dim(data@images$slice1@image)[2]
+      col_coordinates = (ic_types[i,"imagecol"])
+      row_coordinates = (ic_types[i,"imagerow"])
       
       x = c(col_coordinates-(ic_types[i,"sum_IC"]/input$pieplot_size),col_coordinates+ic_types[i,"sum_IC"]/input$pieplot_size)
       y = c(row_coordinates-(ic_types[i,"sum_IC"]/input$pieplot_size),row_coordinates+ic_types[i,"sum_IC"]/input$pieplot_size)
       
-      fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = colnames(ic_types[i,1:length(type)+2][which(ic_types[i,1:length(type)+2] != 0)])
-                               , values = as.double(ic_types[i,1:length(type)+2][which(ic_types[i,1:length(type)+2] != 0)]),
+      fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
+                               , values = as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),
                                name = rownames(ic_types[i,]), domain = list(x = x, y = y),
                                showlegend = TRUE, textposition = "none", textinfo = "none",
                                text = text_final,

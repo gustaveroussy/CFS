@@ -3,7 +3,7 @@
 ##----------------------------------------------------------------------------##
 
 output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
-  data <- Launch_analysis()
+  data <- values$data
   
   IC_C = input[["IC_choice"]]
   
@@ -20,11 +20,11 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
     fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
                              x = TissueCoordinates()[,"imagecol"],
                              y = TissueCoordinates()[,"imagerow"],
-                             marker = list(color = data@misc[[IC_C]]$spot_top_genes_weight[input$gene_projection_gene_choice,],
+                             marker = list(color = data@assays$SCT@scale.data[input$gene_projection_gene_choice,],
                                            colorscale = input$select_color_gene_projection,
                                            showscale = TRUE),
-                             text = data@misc[[IC_C]]$spot_top_genes_weight[input$gene_projection_gene_choice,],
-                             customdata = names(data@misc[[IC_C]]$spot_top_genes_weight[input$gene_projection_gene_choice,]),
+                             text = data@assays$SCT@scale.data[input$gene_projection_gene_choice,],
+                             customdata = names(data@assays$SCT@scale.data[input$gene_projection_gene_choice,]),
                              hovertemplate = paste0("Cell : %{customdata}<br>",
                                                     "Expression: %{text}",
                                                     "<extra></extra>")
@@ -52,11 +52,11 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
       }
       
       plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
-                        marker = list(color = data@misc[[IC_C]]$spot_top_genes_weight[x,],
+                        marker = list(color = data@assays$SCT@scale.data[x,],
                                       colorscale = input$select_color_gene_projection),
                         type = 'scatter', mode = "markers",
-                        text = data@misc[[IC_C]]$spot_top_genes_weight[x,],
-                        customdata = names(data@misc[[IC_C]]$spot_top_genes_weight[x,]),
+                        text = data@assays$SCT@scale.data[x,],
+                        customdata = names(data@assays$SCT@scale.data[x,]),
                         hovertemplate = paste0("Cell : %{customdata}<br>",
                                                "Expression: %{text}",
                                                "<extra></extra>")

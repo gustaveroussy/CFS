@@ -2,12 +2,14 @@
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
 output[["ICA_top_IC_main_parameters_UI"]] <- renderUI({
+  if(input$log_top_IC_heatmap == TRUE){res = log10(values$data@misc$top_gene_ICA)}else{res = values$data@misc$top_gene_ICA}
+  res[is.nan(res)] <- 0
   tagList(
     selectInput("select_color_IC_top", label = "Select color", 
                 choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
                 selected = "Viridis"),
-    sliderInput("slider_IC_top_range", label = "Color range", min = round(min(Launch_analysis()@misc$top_gene_ICA), digits = 0), 
-                max = round(max(Launch_analysis()@misc$top_gene_ICA), digits = 0), value = c(round(min(Launch_analysis()@misc$top_gene_ICA), digits = 0), round(max(Launch_analysis()@misc$top_gene_ICA), digits = 0)))
+    sliderInput("slider_IC_top_range", label = "Color range", min = round(min(res), digits = 0), 
+                max = round(max(res), digits = 0), value = c(round(min(res), digits = 0), round(max(res), digits = 0)))
   )
 })
 
