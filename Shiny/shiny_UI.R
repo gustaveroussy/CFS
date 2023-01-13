@@ -21,6 +21,7 @@ library(DT)
 library(interp)
 library(stringr)
 library(png)
+library(jpeg)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny

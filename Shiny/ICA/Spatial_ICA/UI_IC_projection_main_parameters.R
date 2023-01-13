@@ -10,7 +10,9 @@ output$pie_chart_check <- renderUI({
                 value = c(round(min(values$data@misc[[input$IC_choice]]$IC_weight),digits = 0),
                           round(max(values$data@misc[[input$IC_choice]]$IC_weight), digits = 0)),
                 step = 0.01),
-    
+    sliderInput("transparency_IC_spatial_range", "Transparency",
+                min = 0, max = 1,
+                value = 1, step = 0.01),
     selectInput("select_color_IC_projection", label = "Select color", 
                 choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd","Range"), 
                 selected = "Viridis")

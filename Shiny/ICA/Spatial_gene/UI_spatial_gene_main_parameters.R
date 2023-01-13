@@ -3,11 +3,16 @@
 ##----------------------------------------------------------------------------##
 
 output[["gene_choice_main_parameters_UI"]] <- renderUI({
-  selectizeInput("gene_projection_gene_choice", label = "Choose gene to plot",
-                 choices = values$data@misc[[input$IC_choice]]$IC_top_genes,
-                 selected = NULL,
-                 multiple = TRUE,
-                 options = NULL)
+  tagList(
+    selectizeInput("gene_projection_gene_choice", label = "Choose gene to plot",
+                   choices = values$data@misc[[input$IC_choice]]$IC_top_genes,
+                   selected = NULL,
+                   multiple = TRUE,
+                   options = NULL),
+    sliderInput("transparency_gene_projection", "Transparency",
+                min = 0, max = 1,
+                value = 1, step = 0.01)
+  )
 })
 
 output[["gene_color_choice_main_parameters_UI"]] <- renderUI({

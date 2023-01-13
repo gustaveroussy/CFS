@@ -11,10 +11,12 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
     
     fig <- plot_ly()
     
-    if (is.null(values$HD_image)){
-      fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
-    } else {
+    if (!is.null(values$HD_image_2)){
+      fig <- fig %>% add_trace(type="image", source = values$HD_image_2, hoverinfo = 'skip')
+    } else if (!is.null(values$HD_image)) {
       fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+    } else {
+      fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
     }
     
     fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
@@ -23,6 +25,7 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
                              marker = list(color = data@assays$SCT@scale.data[input$gene_projection_gene_choice,],
                                            colorscale = input$select_color_gene_projection,
                                            showscale = TRUE),
+                             opacity = input$transparency_gene_projection,
                              text = data@assays$SCT@scale.data[input$gene_projection_gene_choice,],
                              customdata = names(data@assays$SCT@scale.data[input$gene_projection_gene_choice,]),
                              hovertemplate = paste0("Cell : %{customdata}<br>",
@@ -45,15 +48,18 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
     for ( x in input$gene_projection_gene_choice ) {
       plotList[[i]] <- plot_ly()
       
-      if (is.null(values$HD_image)){
-        plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
-      } else {
+      if (!is.null(values$HD_image_2)){
+        plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$HD_image_2, hoverinfo = 'skip')
+      } else if (!is.null(values$HD_image)) {
         plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+      } else {
+        plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
       }
       
       plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
                         marker = list(color = data@assays$SCT@scale.data[x,],
                                       colorscale = input$select_color_gene_projection),
+                        opacity = input$transparency_gene_projection,
                         type = 'scatter', mode = "markers",
                         text = data@assays$SCT@scale.data[x,],
                         customdata = names(data@assays$SCT@scale.data[x,]),
