@@ -24,8 +24,8 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
                                            colorscale = input$select_color_IC_projection,
                                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
                                            showscale = TRUE),
-                             text = data@misc[[IC_C]]$IC_weight,
-                             customdata = names(data@misc[[IC_C]]$IC_weight),
+                             text = data@misc[[IC_C]]$IC_weight[rownames(TissueCoordinates())],
+                             customdata = names(data@misc[[IC_C]]$IC_weight[rownames(TissueCoordinates())]),
                              hovertemplate = paste0("Cell : %{customdata}<br>",
                                                     "Expression: %{text}",
                                                     "<extra></extra>")

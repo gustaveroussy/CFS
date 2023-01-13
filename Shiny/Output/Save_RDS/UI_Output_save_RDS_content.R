@@ -14,7 +14,8 @@ output[["Output_or_message"]] <- renderUI({
     column(width = 8,
            HTML("<b>Type of Data to subcluster :</b>"),
            uiOutput("subclustering_type"),
-           uiOutput("subclustering_choice")
+           uiOutput("subclustering_choice"),
+           uiOutput("subclustering_automated")
     )
   )
   
@@ -36,17 +37,24 @@ output$subclustering_choice <- renderUI({
     tagList(
       selectInput("Plot_display_type_density_manual", label = 'select method', 
                   choices = list("Manual", "Automated"), 
-                  selected = "Manual"),
-      selectizeInput("Cell_type_subclustering_IC_export_choose", label = "Choose cell type to export",
-                     choices = names(values$annotation_for_output), selected = NULL, multiple = TRUE,
-                     options = NULL),
-      numericInput("Cell_type_subclustering_density_export_choose", label = "Density threshold", value = 0.4, step = 0.1)
+                  selected = "Manual")
     )
   } else if (input$export_sub_IC == "UMAP Cluster"){
     tagList(
       selectizeInput("subclustering_cluster_export_choose", label = "Choose cluster to export",
                      choices = sort(unique(values$UMAP@meta.data$seurat_clusters)), selected = NULL, multiple = TRUE,
                      options = NULL)
+    )
+  }
+})
+
+output$subclustering_automated <- renderUI({
+  if (input$Plot_display_type_density_manual == "Automated"){
+    tagList(
+      selectizeInput("Cell_type_subclustering_IC_export_choose", label = "Choose cell type to export",
+                     choices = names(values$annotation_for_output), selected = NULL, multiple = TRUE,
+                     options = NULL),
+      numericInput("Cell_type_subclustering_density_export_choose", label = "Density threshold", value = 0.4, step = 0.1)
     )
   }
 })

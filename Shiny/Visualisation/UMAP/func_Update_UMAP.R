@@ -17,9 +17,9 @@ current_plot_umap <- reactive({
       } else {
         type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
       }
-      values$UMAP=Cluster_ICA(data=values$data,ICs=as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))),res=input$Plot_resolution)
+      values$UMAP=Cluster_ICA(data=values$data,ICs=as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))),res=input$Plot_resolution, spread = input$Plot_spread)
     } else {
-      values$UMAP=Cluster_ICA(data=values$data,ICs=as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)),res=input$Plot_resolution)
+      values$UMAP=Cluster_ICA(data=values$data,ICs=as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)),res=input$Plot_resolution, spread = input$Plot_spread)
     }
   } else {
     if (!is.null(input$Plot_display_type_UMAP_choice)){
@@ -36,7 +36,7 @@ current_plot_umap <- reactive({
       } else {
         type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
       }
-      values$UMAP=Cluster_ICA(data=values$data,ICs=as.integer(gsub('[IC_]','',type)),res=input$Plot_resolution)
+      values$UMAP=Cluster_ICA(data=values$data,ICs=as.integer(gsub('[IC_]','',type)),res=input$Plot_resolution, spread = input$Plot_spread)
     } else {
       values$UMAP = values$data
     }

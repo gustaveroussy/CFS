@@ -69,7 +69,55 @@ output$download_subcluster_RDS <- downloadHandler(
         
       } else if (input$Plot_display_type_density_manual == "Automated"){
         
-        shinyalert("Oops!", "This function isn't available yet.", type = "error")
+        data <- Launch_analysis()
+        
+        threshold = input$Cell_type_subclustering_density_export_choose
+        Cell_type = input$Cell_type_subclustering_IC_export_choose
+        
+        if(length(Cell_type) > 1){
+          for (n in 1:length(Cell_type)) {
+            if(n == 1) {
+              type = values$annotation_for_output[[n]]
+            } else {
+              type = append(type, values$annotation_for_output[[n]])
+            }
+          }
+          type = unique(type)
+        } else if (length(Cell_type) == 1) {
+          type = values$annotation_for_output[[Cell_type]]
+        } else {
+          shinyalert("Oops!", "Enter a cell type to sub.", type = "error")
+        }
+        
+        if (length(type) >= 1){
+          ic_types=data@reductions$ica@cell.embeddings[,type]
+          ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
+          sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
+          sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
+          sum_IC = GetTissueCoordinates(data) %>%  cbind(.,sum_IC)
+          identity = rownames(sum_IC)[which(sum_IC[,'sum_IC'] >= input$Cell_type_subclustering_density_export_choose)]
+        } else {
+          identity = rownames(data@reductions$ica@cell.embeddings)
+        }
+        
+        if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
+          data@meta.data <- values$UMAP@meta.data
+          data@active.ident <- values$UMAP@active.ident
+          data@graphs <- values$UMAP@graphs
+          data@reductions$umap <- values$UMAP@reductions$umap
+          data@commands <- values$UMAP@commands
+        }
+        
+        if(input$output_annotation_RDS == TRUE){
+          data@misc$annotation <- values$Annotation
+        }
+        
+        data <- subset(
+          x = data,
+          cells = identity
+        )
+        
+        saveRDS(data, file)
         
       }
       

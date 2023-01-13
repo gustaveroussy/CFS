@@ -25,8 +25,11 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
                      selected = input$Ic_list,
                      multiple = TRUE,
                      options = NULL),
-      numericInput("Plot_resolution", "Enter Plot resolution", 1.2,
+      numericInput("Plot_resolution", "Plot resolution", 1.2,
                    min = 0.1, max = 2, step = 0.1
+      ),
+      numericInput("Plot_spread", "Spread", 3,
+                   min = 0.1, step = 0.1
       )
     )
   } else if (input$Plot_analysis_type == "Density") {
@@ -43,18 +46,10 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     )
   } else if (input$Plot_analysis_type == "Scatter pie") {
     tagList(
-      numericInput(
-        "pieplot_size",
-        label = "Pie size",
-        value = 50,
-        min = 1,
-        max = 1000,
-        step = 1
-      ),
       selectizeInput("Scatter_pie_cell_type", label = "choose cell type",
                      choices = unique(names(values$annotation_for_output)),
                      selected = NULL, multiple = TRUE, options = NULL),
-      selectizeInput("All_IC_chosen_projection", label = "Choose IC to plot", choices = values$IC_names,
+      selectizeInput("Scatter_pie__IC_chosen_projection", label = "Choose IC to plot", choices = values$IC_names,
                      selected = NULL, multiple = TRUE,
                      options = NULL)
     )

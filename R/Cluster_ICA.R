@@ -8,11 +8,11 @@
 #' @examples 
 #' data <- Cluster_ICA(data=data,ICs=c(1,2,3,4,5,6,7,8,9),res=1.2)
 #' @export
-Cluster_ICA=function(data=NULL,ICs=c(1),res=1.2){
+Cluster_ICA=function(data=NULL,ICs=c(1),res=1.2, spread = 3){
   
   data <- FindNeighbors(data, reduction = "ica",dims = ICs)
   data <- FindClusters(data, verbose = FALSE,resolution=res)
-  data <- RunUMAP(data, reduction = "ica",dims = ICs)
+  data <- RunUMAP(data, reduction = "ica",dims = ICs, spread = spread)
   
   return(data)
 }
