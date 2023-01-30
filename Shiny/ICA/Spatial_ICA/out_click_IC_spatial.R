@@ -1,14 +1,17 @@
 ##----------------------------------------------------------------------------##
-## Plot the plotly scatter plot
+## Element that calls the HD image on click
 ##----------------------------------------------------------------------------##
 
-# search for the cells that were selected while in density
-clicked_cell_UMAP <- reactive({
-  return(plotly::event_data(c("plotly_click"), source = "C"))
+# search for the cells that were selected while in IC display in spatial
+clicked_cell_ICA <- reactive({
+  return(plotly::event_data(c("plotly_click"), source = "E"))
 })
 
-observeEvent(clicked_cell_UMAP(), {
-  table = plotly::event_data(c("plotly_click"), source = "C")
+# Create the image to display in plotly 
+observeEvent(clicked_cell_ICA(), {
+  print(plotly::event_data(c("plotly_click"), source = "E"))
+
+  table = plotly::event_data(c("plotly_click"), source = "E")
   
   table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
   table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
@@ -19,20 +22,15 @@ observeEvent(clicked_cell_UMAP(), {
   max_y = table$y+ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
   
   cropped_image = crop.image(values$HD_image_2, min_y, min_x, max_y, max_x)
-
+  
   values$cropped_image = raster2uri(raster::as.raster(cropped_image$img.crop))
   
   shinyalert(html = TRUE, text = tagList(
-    plotlyOutput('mini_plot_UMAP')
+    plotlyOutput('mini_plot_ICA')
   ))
 })
 
-output[["mini_plot_UMAP"]] <- renderPlotly({
-  table = plotly::event_data(c("plotly_click"), source = "C")
-  
-  table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
-  table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
-  
+output[["mini_plot_ICA"]] <- plotly::renderPlotly({
   fig = plot_ly()
   fig <- fig %>% add_trace(type="image", source = values$cropped_image, hoverinfo = 'skip')
   # add shapes to the layout
@@ -45,3 +43,4 @@ output[["mini_plot_UMAP"]] <- renderPlotly({
                        y0 = ceiling(1/(values$data@images[["slice1"]]@spot.radius)),
                        y1 = ceiling(1/(values$data@images[["slice1"]]@spot.radius))*3, yref = "y")))
 })
+

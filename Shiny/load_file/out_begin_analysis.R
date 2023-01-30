@@ -9,7 +9,8 @@
 ##----------------------------------------------------------------------------##
 
 values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL, UMAP = NULL,
-                         annotation_for_output = list(), low_image = NULL, HD_image = NULL, HD_image_2 = NULL)
+                         annotation_for_output = list(), low_image = NULL, HD_image = NULL, HD_image_2 = NULL,
+                         cropped_image = NULL)
 
 Launch_analysis <- reactive({
   if (grep('.RDS',input$input_file$datapath) == 1) {
@@ -44,8 +45,6 @@ observeEvent(input$input_file, {
   values$Annotation = NULL
   values$UMAP = NULL
   values$low_image = NULL
-  values$HD_image = NULL
-  values$HD_image_2 = NULL
   
   values$data = Launch_analysis()
   
@@ -80,9 +79,11 @@ observeEvent(input$input_file, {
 })
 
 observeEvent(input$input_image, {
+  values$HD_image = NULL
   values$HD_image <- raster2uri(raster::as.raster(readPNG(input$input_image$datapath)))
 })
 
 observeEvent(input$input_image_2, {
-  values$HD_image_2 <- raster2uri(raster::as.raster(readJPEG(input$input_image_2$datapath)))
+  values$HD_image_2 = NULL
+  values$HD_image_2 <- readJPEG(input$input_image_2$datapath)
 })

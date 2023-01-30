@@ -22,6 +22,7 @@ library(interp)
 library(stringr)
 library(png)
 library(jpeg)
+library(imagefx)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny
@@ -46,7 +47,7 @@ source(paste0(Shiny.options[["shiny_root"]], "/Table/UI.R"), local = TRUE)
 
 # Define UI for app that draws a histogram ----
 ui <- dashboardPage(
-  dashboardHeader(title = "Shiny"),
+  dashboardHeader(title = "SpICA"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("Load Data", tabName = "Load_file", icon = icon("spinner")),

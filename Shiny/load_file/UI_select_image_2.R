@@ -16,9 +16,9 @@ output[["load_image_2_UI"]] <- renderUI({
            titlePanel("Load high res image"),
            fileInput(
              inputId = "input_image_2",
-             label = "Select image (.png file)",
+             label = "Select image (.jpg file)",
              multiple = FALSE,
-             accept = c(".png"),
+             accept = c(".jpg"),
              width = '350px',
              buttonLabel = "Browse...",
              placeholder = "No file selected"

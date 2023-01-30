@@ -11,9 +11,10 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
     
     fig <- plot_ly()
     
-    if (!is.null(values$HD_image_2)){
-      fig <- fig %>% add_trace(type="image", source = values$HD_image_2, hoverinfo = 'skip')
-    } else if (!is.null(values$HD_image)) {
+    # if (!is.null(values$HD_image_2)){
+    #   fig <- fig %>% add_trace(type="image", source = values$HD_image_2, hoverinfo = 'skip')
+    # }
+    if (!is.null(values$HD_image)) {
       fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
     } else {
       fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
