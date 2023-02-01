@@ -1,16 +1,20 @@
 ##----------------------------------------------------------------------------##
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
-output[["ICA_top_IC_main_parameters_UI"]] <- renderUI({
-  if(input$log_top_IC_heatmap == TRUE){res = log10(values$data@misc$top_gene_ICA)}else{res = values$data@misc$top_gene_ICA}
-  res[is.nan(res)] <- 0
+output[["ICA_top_IC_main_parameters_gene_number_UI"]] <- renderUI({
   tagList(
-    numericInput("select_number_IC_top_heatmap", label = "Number of top genes per IC", value = 10, min = 2, max = NA, step = 1),
+    numericInput("select_number_IC_top_heatmap", label = "Number of top genes per IC", value = 10, min = 2, max = NA, step = 1)
+  )
+})
+
+output[["ICA_top_IC_main_parameters_UI"]] <- renderUI({
+  tagList(
     selectInput("select_color_IC_top", label = "Select color", 
-                choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
+                choices = list("Viridis" = "viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
                 selected = "Viridis"),
-    sliderInput("slider_IC_top_range", label = "Color range", min = round(min(res), digits = 0), 
-                max = round(max(res), digits = 0), value = c(round(min(res), digits = 0), round(max(res), digits = 0)))
+    sliderInput("slider_IC_top_range", label = "Color range", min = round(min(top_IC_heatmap_table()), digits = 0), 
+                max = round(max(top_IC_heatmap_table()), digits = 0),
+                value = c(round(min(top_IC_heatmap_table()), digits = 0), round(max(top_IC_heatmap_table()), digits = 0)))
   )
 })
 

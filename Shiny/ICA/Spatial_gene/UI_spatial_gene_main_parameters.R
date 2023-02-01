@@ -5,7 +5,7 @@
 output[["gene_choice_main_parameters_UI"]] <- renderUI({
   tagList(
     selectizeInput("gene_projection_gene_choice", label = "Choose gene to plot",
-                   choices = values$data@misc[[input$IC_choice]]$IC_top_genes,
+                   choices = names(sort(abs(data@reductions$ica@feature.loadings[,input$IC_choice]),decreasing = T)),
                    selected = NULL,
                    multiple = TRUE,
                    options = NULL),

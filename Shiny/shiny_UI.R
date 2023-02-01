@@ -23,6 +23,8 @@ library(stringr)
 library(png)
 library(jpeg)
 library(imagefx)
+library(heatmaply)
+library(scales)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny

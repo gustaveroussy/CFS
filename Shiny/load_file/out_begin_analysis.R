@@ -10,7 +10,7 @@
 
 values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL, UMAP = NULL,
                          annotation_for_output = list(), low_image = NULL, HD_image = NULL, HD_image_2 = NULL,
-                         cropped_image = NULL)
+                         cropped_image = NULL, ic_dendro = NULL)
 
 Launch_analysis <- reactive({
   if (grep('.RDS',input$input_file$datapath) == 1) {

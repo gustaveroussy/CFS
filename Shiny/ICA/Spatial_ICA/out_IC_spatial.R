@@ -4,7 +4,7 @@
 
 output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
 
-  data <- Launch_analysis()
+  data <- values$data
   
   IC_C = input[["IC_choice"]]
   
@@ -23,13 +23,13 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
     
     fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
                              x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
-                             marker = list(color = data@misc[[IC_C]]$IC_weight,
+                             marker = list(color = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())],
                                            colorscale = input$select_color_IC_projection,
                                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
                                            showscale = TRUE),
                              opacity = input$transparency_IC_spatial_range,
-                             text = data@misc[[IC_C]]$IC_weight[rownames(TissueCoordinates())],
-                             customdata = names(data@misc[[IC_C]]$IC_weight[rownames(TissueCoordinates())]),
+                             text = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())],
+                             customdata = names(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())]),
                              hovertemplate = paste0("Cell : %{customdata}<br>",
                                                     "Expression: %{text}",
                                                     "<extra></extra>")
@@ -53,13 +53,13 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
     }
     
     fig <- fig %>% add_trace(type = "scatter", mode = "markers", x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
-                             marker = list(color = data@misc[[IC_C]]$IC_weight,
+                             marker = list(color = data@reductions$ica@cell.embeddings[, IC_C],
                                            colors = colfunc(),
                                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
                                            showscale = TRUE),
                              opacity = input$transparency_IC_spatial_range,
-                             text = data@misc[[IC_C]]$IC_weight,
-                             customdata = names(data@misc[[IC_C]]$IC_weight),
+                             text = data@reductions$ica@cell.embeddings[, IC_C],
+                             customdata = names(data@reductions$ica@cell.embeddings[, IC_C]),
                              hoverinfo = "text",
                              hovertemplate = paste0("Cell : %{customdata}<br>",
                                                     "Expression: %{text}",

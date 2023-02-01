@@ -25,6 +25,7 @@ output[["ICA_top_IC_UI"]] <- renderUI({
                height = NULL,
                collapsible = TRUE,
                collapsed = FALSE,
+               uiOutput("ICA_top_IC_main_parameters_gene_number_UI"),
                uiOutput("ICA_top_IC_main_parameters_UI")
            )
     ),
@@ -68,7 +69,9 @@ output[["ICA_top_IC_UI"]] <- renderUI({
         height = NULL,
         collapsible = TRUE,
         collapsed = FALSE,
-        uiOutput("top_IC_plot_or_message")
+        tags$div(
+          uiOutput("top_IC_plot_or_message")
+        )
       )
     )
   )

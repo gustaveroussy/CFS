@@ -4,7 +4,6 @@
 
 output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
   
-  data <- Launch_analysis()
   IC_C = input[["IC_choice"]]
   
   z <- table_ic_gene_to_return()
