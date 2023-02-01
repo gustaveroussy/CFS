@@ -5,6 +5,7 @@ output[["ICA_top_IC_main_parameters_UI"]] <- renderUI({
   if(input$log_top_IC_heatmap == TRUE){res = log10(values$data@misc$top_gene_ICA)}else{res = values$data@misc$top_gene_ICA}
   res[is.nan(res)] <- 0
   tagList(
+    numericInput("select_number_IC_top_heatmap", label = "Number of top genes per IC", value = 10, min = 2, max = NA, step = 1),
     selectInput("select_color_IC_top", label = "Select color", 
                 choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
                 selected = "Viridis"),

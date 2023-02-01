@@ -52,11 +52,9 @@ output[["ICA_top_IC_UI"]] <- renderUI({
           shinyWidgets::dropdownButton(
             tags$div(
               style = "color: black !important;",
-              uiOutput("log_top_IC_heatmap_UI")
-            ),
-            tags$div(
-              style = "color: black !important;",
-              uiOutput("heatmap_top_IC_column_organization_UI")
+              uiOutput("log_top_IC_heatmap_UI"),
+              uiOutput("heatmap_top_IC_column_organization_UI"),
+              uiOutput("top_IC_kurtosis_filter_UI")
             ),
             circle = FALSE,
             icon = icon("cog"),
@@ -83,7 +81,7 @@ output[["ICA_top_IC_UI"]] <- renderUI({
 output[["heatmap_top_IC_column_organization_UI"]] <- renderUI({
   shinyWidgets::awesomeCheckbox(
     inputId = "top_IC_column_organization",
-    label = "Try to organize column based on proximity",
+    label = "Cluster IC",
     value = FALSE
     )
 })
@@ -96,8 +94,10 @@ outputOptions(
 )
 
 output[["log_top_IC_heatmap_UI"]] <- renderUI({
-  tagList(
-    checkboxInput("log_top_IC_heatmap", label = HTML("<font color=\"#FFFFFF\">Display data as log scale</font>"), value = FALSE)
+  shinyWidgets::awesomeCheckbox(
+    inputId = "log_top_IC_heatmap",
+    label = "Log Scale",
+    value = FALSE
   )
 })
 
@@ -108,6 +108,21 @@ outputOptions(
   suspendWhenHidden = FALSE
 )
 
+# kurtosis filter
+output[["top_IC_kurtosis_filter_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "top_IC_kurtosis_filter",
+    label = "Kurtosis filter",
+    value = TRUE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "top_IC_kurtosis_filter_UI",
+  suspendWhenHidden = FALSE
+)
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.
 ##----------------------------------------------------------------------------##

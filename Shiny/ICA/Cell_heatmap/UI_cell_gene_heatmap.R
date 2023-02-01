@@ -43,6 +43,10 @@ output[["spot_gene_heatmap_UI"]] <- renderUI({
             style = "margin-right: 3px"
           ),
           shinyWidgets::dropdownButton(
+            tags$div(
+              style = "color: black !important;",
+              uiOutput("heatmap_cells_column_organization_UI")
+            ),
             circle = FALSE,
             icon = icon("cog"),
             inline = TRUE,
@@ -60,6 +64,23 @@ output[["spot_gene_heatmap_UI"]] <- renderUI({
     )
   )
 })
+
+## organize row based on proximity
+output[["heatmap_cells_column_organization_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "cells_column_organization",
+    label = "Cluster cells",
+    value = TRUE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "heatmap_cells_column_organization_UI",
+  suspendWhenHidden = FALSE
+)
+
 
 ##----------------------------------------------------------------------------##
 ## UI element that either shows a plot or a text message if data is not
