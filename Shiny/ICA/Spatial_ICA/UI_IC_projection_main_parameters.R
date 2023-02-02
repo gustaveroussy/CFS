@@ -3,13 +3,15 @@
 ##----------------------------------------------------------------------------##
 
 output$pie_chart_check <- renderUI({
+  req(values$data)
+  req(input$IC_choice)
   IC_C = input[["IC_choice"]]
   tagList(
     sliderInput("slider_IC_spatial_range", label = "Color range",
-                min = round(min(data@reductions$ica@cell.embeddings[, IC_C]), digits = 0), 
-                max = round(max(data@reductions$ica@cell.embeddings[, IC_C]), digits = 0),
-                value = c(round(min(data@reductions$ica@cell.embeddings[, IC_C]),digits = 0),
-                          round(max(data@reductions$ica@cell.embeddings[, IC_C]), digits = 0)),
+                min = round(min(values$data@reductions$ica@cell.embeddings[, IC_C]), digits = 0), 
+                max = round(max(values$data@reductions$ica@cell.embeddings[, IC_C]), digits = 0),
+                value = c(round(min(values$data@reductions$ica@cell.embeddings[, IC_C]),digits = 0),
+                          round(max(values$data@reductions$ica@cell.embeddings[, IC_C]), digits = 0)),
                 step = 0.01),
     sliderInput("transparency_IC_spatial_range", "Transparency",
                 min = 0, max = 1,

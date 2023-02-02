@@ -3,9 +3,10 @@
 ##----------------------------------------------------------------------------##
 
 output[["gene_choice_main_parameters_UI"]] <- renderUI({
+  req(values$data)
   tagList(
     selectizeInput("gene_projection_gene_choice", label = "Choose gene to plot",
-                   choices = names(sort(abs(data@reductions$ica@feature.loadings[,input$IC_choice]),decreasing = T)),
+                   choices = names(sort(abs(values$data@reductions$ica@feature.loadings[,input$IC_choice]),decreasing = T)),
                    selected = NULL,
                    multiple = TRUE,
                    options = NULL),

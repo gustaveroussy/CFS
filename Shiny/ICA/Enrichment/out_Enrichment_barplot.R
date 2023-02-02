@@ -3,8 +3,12 @@
 ##----------------------------------------------------------------------------##
 
 output[["IC_enrichment"]] <- plotly::renderPlotly({
+  req(values$data)
+  req(input$IC_choice)
+  req(input$IC_enrichment_database_choice)
+  req(input$p_n_enrichment)
   
-  data <- Launch_analysis()
+  data <- values$data
   IC_C = input[["IC_choice"]]
   database_C = input[["IC_enrichment_database_choice"]]
   p_n = input[["p_n_enrichment"]]

@@ -3,10 +3,20 @@
 ##----------------------------------------------------------------------------##
 
 output[["spot_gene_heatmap_slider_main_parameters_UI"]] <- renderUI({
+  req(values$data)
+  req(input$select_number_spot_gene_heatmap)
+  Gene_names <- names(GeneList_heatmap_IC())
   tagList(
-    sliderInput("slider_spot_gene_heatmap_range", label = "Color range", min = round(min(Launch_analysis()@misc[[input$IC_choice]]$spot_top_genes_weight), digits = 0), 
-                max = round(max(Launch_analysis()@misc[[input$IC_choice]]$spot_top_genes_weight), digits = 0), value = c(round(min(Launch_analysis()@misc[[input$IC_choice]]$spot_top_genes_weight), digits = 0), round(max(Launch_analysis()@misc[[input$IC_choice]]$spot_top_genes_weight), digits = 0))
-    ),
+    sliderInput("slider_spot_gene_heatmap_range", label = "Color range", min = round(min(head(values$data@assays$SCT@scale.data[Gene_names,],input$select_number_spot_gene_heatmap)), digits = 0), 
+                max = round(max(head(values$data@assays$SCT@scale.data[Gene_names,],input$select_number_spot_gene_heatmap)), digits = 0),
+                value = c(round(min(head(values$data@assays$SCT@scale.data[Gene_names,],input$select_number_spot_gene_heatmap)), digits = 0),
+                          round(max(head(values$data@assays$SCT@scale.data[Gene_names,],input$select_number_spot_gene_heatmap)), digits = 0))
+    )
+  )
+})
+
+output[["spot_gene_heatmap_gene_main_parameters_UI"]] <- renderUI({
+  tagList(
     numericInput("select_number_spot_gene_heatmap", label = "Number of genes to display", value = 50, min = 2, max = NA, step = 1)
   )
 })

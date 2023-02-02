@@ -7,11 +7,17 @@ output[["ICA_top_IC_main_parameters_gene_number_UI"]] <- renderUI({
   )
 })
 
-output[["ICA_top_IC_main_parameters_UI"]] <- renderUI({
+output[["ICA_top_IC_main_parameters_colorscale_UI"]] <- renderUI({
   tagList(
     selectInput("select_color_IC_top", label = "Select color", 
                 choices = list("Viridis" = "viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
-                selected = "Viridis"),
+                selected = "Viridis")
+  )
+})
+
+output[["ICA_top_IC_main_parameters_slider_UI"]] <- renderUI({
+  req(values$data)
+  tagList(
     sliderInput("slider_IC_top_range", label = "Color range", min = round(min(top_IC_heatmap_table()), digits = 0), 
                 max = round(max(top_IC_heatmap_table()), digits = 0),
                 value = c(round(min(top_IC_heatmap_table()), digits = 0), round(max(top_IC_heatmap_table()), digits = 0)))

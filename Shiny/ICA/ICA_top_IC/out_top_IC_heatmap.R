@@ -45,6 +45,10 @@ output[["top_IC_plot_or_message"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 
 top_IC_heatmap_table <- reactive({
+  
+  req(values$data)
+  req(input$select_number_IC_top_heatmap)
+  
   data <- values$data
   
   list_gene <-  purrr::map(data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))],function(.x){x<-.x %>% arrange(desc(abs(Sig))) %>% head(n=input$select_number_IC_top_heatmap) ;return(x$gene)}) %>% unlist %>% unique

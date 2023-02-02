@@ -26,7 +26,8 @@ output[["ICA_top_IC_UI"]] <- renderUI({
                collapsible = TRUE,
                collapsed = FALSE,
                uiOutput("ICA_top_IC_main_parameters_gene_number_UI"),
-               uiOutput("ICA_top_IC_main_parameters_UI")
+               uiOutput("ICA_top_IC_main_parameters_colorscale_UI"),
+               uiOutput("ICA_top_IC_main_parameters_slider_UI")
            )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",

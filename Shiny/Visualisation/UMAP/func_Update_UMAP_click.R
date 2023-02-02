@@ -8,6 +8,7 @@ clicked_cell_UMAP <- reactive({
 })
 
 observeEvent(clicked_cell_UMAP(), {
+  req(values$HD_image_2)
   table = plotly::event_data(c("plotly_click"), source = "C")
   
   table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])

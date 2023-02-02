@@ -27,6 +27,7 @@ output[["spot_gene_heatmap_UI"]] <- renderUI({
           collapsed = FALSE,
           uiOutput("spot_gene_heatmap_main_parameters_UI"),
           uiOutput("spot_gene_heatmap_slider_main_parameters_UI"),
+          uiOutput("spot_gene_heatmap_gene_main_parameters_UI"),
           uiOutput("spot_gene_heatmap_color_main_parameters_UI")
       )
     ),

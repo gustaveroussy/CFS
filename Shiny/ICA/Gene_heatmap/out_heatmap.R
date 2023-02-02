@@ -3,6 +3,8 @@
 ##----------------------------------------------------------------------------##
 
 output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
+  req(values$data)
+  req(input$IC_choice)
   
   IC_C = input[["IC_choice"]]
   

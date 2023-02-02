@@ -2,11 +2,12 @@
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
 output[["IC_enrichment_main_parameters_UI"]] <- renderUI({
+  req(values$data)
   tagList(
     selectInput(
       "IC_enrichment_database_choice",
       label = "Choose database related to enrichment",
-      choices = names(Launch_analysis()@misc$IC_1$en)
+      choices = names(values$data@misc$IC_1$en)
     )
   )
 })
@@ -20,8 +21,11 @@ output[["IC_enrichment_color_main_parameters_UI"]] <- renderUI({
 })
 
 output[["IC_enrichment_display_number_main_parameters_UI"]] <- renderUI({
+  req(input$IC_choice)
+  req(input$p_n_enrichment)
+  req(input$IC_enrichment_database_choice)
   tagList(
-    numericInput("enrichment_disp_number", label = "Enrichment to display", value = 30, min = 1, max = length(Launch_analysis()@misc[[input$IC_choice]][[input$p_n_enrichment]][[input$IC_enrichment_database_choice]]), step = 1)
+    numericInput("enrichment_disp_number", label = "Enrichment to display", value = 30, min = 1, max = length(values$data@misc[[input$IC_choice]][[input$p_n_enrichment]][[input$IC_enrichment_database_choice]]), step = 1)
   )
 })
 

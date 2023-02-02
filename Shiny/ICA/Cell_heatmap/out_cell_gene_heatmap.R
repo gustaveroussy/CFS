@@ -3,6 +3,8 @@
 ##----------------------------------------------------------------------------##
 
 output[["spot_gene_heatmap"]] <- plotly::renderPlotly({
+  req(values$data)
+  req(input$select_number_spot_gene_heatmap)
   
   Gene_names <- names(GeneList_heatmap_IC())
   

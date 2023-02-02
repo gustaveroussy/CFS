@@ -9,6 +9,7 @@ clicked_cell_ICA <- reactive({
 
 # Create the image to display in plotly 
 observeEvent(clicked_cell_ICA(), {
+  req(values$HD_image_2)
   print(plotly::event_data(c("plotly_click"), source = "E"))
 
   table = plotly::event_data(c("plotly_click"), source = "E")

@@ -3,7 +3,8 @@
 ##----------------------------------------------------------------------------##
 
 output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
-
+  req(values$data)
+  
   data <- values$data
   
   IC_C = input[["IC_choice"]]
