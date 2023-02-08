@@ -36,7 +36,9 @@ output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
 
 output[["top_IC_plot_or_message"]] <- renderUI({
   tagList(
-    plotly::plotlyOutput("top_gene_IC_plot")
+    plotly::plotlyOutput("top_gene_IC_plot",
+                         width = "auto",
+                         height = "85vh")
   )
 })
 

@@ -13,6 +13,10 @@ output[["Plot_Spatial_UI"]] <- renderUI({
             style = "margin-right: 3px"
           ),
           shinyWidgets::dropdownButton(
+            tags$div(
+              style = "color: black !important;",
+              uiOutput("Spatial_display_image_UI")
+            ),
             circle = FALSE,
             icon = icon("cog"),
             inline = TRUE,
@@ -38,14 +42,30 @@ output[["Plot_Spatial_UI"]] <- renderUI({
 
 output[["Plot_Spatial_or_message"]] <- renderUI({
     tagList(
-      plotly::plotlyOutput("Plot_Spatial", height = 'auto', width = 'auto')
+      plotly::plotlyOutput("Plot_Spatial",
+                           width = "auto",
+                           height = "120vh")
     )
 })
 
 ##----------------------------------------------------------------------------##
-## Alternative text message if data is missing.
+## Drop down column organization
 ##----------------------------------------------------------------------------##
-#output[["groups_tree_text"]] <- renderText({ "Data not available." })
+
+output[["Spatial_display_image_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "Spatial_display_image",
+    label = "Display image",
+    value = TRUE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "Spatial_display_image_UI",
+  suspendWhenHidden = FALSE
+)
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.

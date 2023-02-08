@@ -9,6 +9,8 @@ server <- function(input, output, session) {
   
   source(paste0(Shiny.options[["shiny_root"]], "../R/Cluster_ICA.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "../R/PseudoTime.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "./Functions/Prepare_table_marker.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "./Functions/Plotly_line.R"), local = TRUE)
 
 ##--------------------------------------------------------------------------##
 ## Tabs.
@@ -18,6 +20,7 @@ server <- function(input, output, session) {
   source(paste0(Shiny.options[["shiny_root"]], "/Visualisation/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Output/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Table/server.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "/Marker_table/server.R"), local = TRUE)
   
 ########################################
 # IC_list

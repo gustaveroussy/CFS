@@ -28,7 +28,7 @@ current_plot_spatial_density <- reactive({
     sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
     ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
     ic_types<-cbind(TissueCoordinates(),t(ic_types)) %>%  cbind(.,sum_IC) %>% as.tibble()
-    grid=interp(ic_types$imagecol,ic_types$imagerow,ic_types$sum_IC)
+    grid=interp(ic_types$imagecol,ic_types$imagerow,ic_types$sum_IC, nx = 400, ny = 400)
     griddf <- data.frame(x = rep(grid$x, ncol(grid$z)), 
                          y = rep(grid$y, each = nrow(grid$z)), 
                          z = as.numeric(grid$z))

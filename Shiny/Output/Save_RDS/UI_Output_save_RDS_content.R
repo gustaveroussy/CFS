@@ -9,7 +9,8 @@ output[["Output_or_message"]] <- renderUI({
     column(width = 4,
            HTML("<b>Type of Data to add to the downloaded data :</b>"),
            checkboxInput("output_annotation_RDS", label = "Output Annotation table", value = TRUE),
-           checkboxInput("output_UMAP_RDS", label = "Output UMAP + Clustering", value = TRUE)
+           checkboxInput("output_UMAP_RDS", label = "Output UMAP + Clustering", value = TRUE),
+           checkboxInput("output_markers_RDS", label = "Output marker genes", value = TRUE)
     ),
     column(width = 8,
            HTML("<b>Type of Data to subcluster :</b>"),

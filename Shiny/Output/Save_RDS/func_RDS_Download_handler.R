@@ -29,6 +29,10 @@ output$download_RDS <- downloadHandler(
         data@misc$annotation <- values$Annotation
       }
       
+      if(input$output_markers_RDS == TRUE){
+        data@misc$markers <- values$marker_gene
+      }
+      
       incProgress(0.20, detail = paste("Saving RDS"))
       saveRDS(data, file)
       incProgress(0.05, detail = paste("Done"))

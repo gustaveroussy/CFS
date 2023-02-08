@@ -10,7 +10,7 @@
 
 values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL, UMAP = NULL,
                          annotation_for_output = list(), low_image = NULL, HD_image = NULL, HD_image_2 = NULL,
-                         cropped_image = NULL, ic_dendro = NULL)
+                         cropped_image = NULL, marker_gene = NULL)
 
 Launch_analysis <- reactive({
   if (grep('.RDS',input$input_file$datapath) == 1) {
@@ -50,6 +50,10 @@ observeEvent(input$input_file, {
   
   if (!is.null(values$data@reductions$umap)){
     values$UMAP = values$data
+  }
+  
+  if (!is.null(values$data@misc$markers)){
+    values$marker_gene = values$data@misc$markers
   }
   
   values$IC_names = rownames(values$data@misc$annotation)

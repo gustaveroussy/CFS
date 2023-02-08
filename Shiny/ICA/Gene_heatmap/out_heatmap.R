@@ -30,7 +30,9 @@ output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
 
 output[["IC_gene_heatmap_plot_or_message"]] <- renderUI({
   tagList(
-    plotly::plotlyOutput("IC_gene_heatmap")
+    plotly::plotlyOutput("IC_gene_heatmap",
+                         width = "auto",
+                         height = "85vh")
   )
 })
 

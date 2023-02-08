@@ -10,7 +10,7 @@ output[["gene_choice_main_parameters_UI"]] <- renderUI({
                    selected = NULL,
                    multiple = TRUE,
                    options = NULL),
-    sliderInput("transparency_gene_projection", "Transparency",
+    sliderInput("transparency_gene_projection", "Alpha",
                 min = 0, max = 1,
                 value = 1, step = 0.01)
   )

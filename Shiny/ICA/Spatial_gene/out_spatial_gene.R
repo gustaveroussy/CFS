@@ -85,6 +85,8 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
 
 output[["Spatial_gene_plot_or_message"]] <- renderUI({
   tagList(
-    plotly::plotlyOutput("Spatial_gene_plot")
+    plotly::plotlyOutput("Spatial_gene_plot",
+                         width = "auto",
+                         height = "85vh")
   )
 })

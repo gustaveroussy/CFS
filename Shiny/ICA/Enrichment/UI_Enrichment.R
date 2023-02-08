@@ -69,7 +69,9 @@ output[["IC_enrichment_UI"]] <- renderUI({
 
 output[["IC_enrichment_plot_or_message"]] <- renderUI({
     tagList(
-      plotly::plotlyOutput("IC_enrichment")
+      plotly::plotlyOutput("IC_enrichment",
+                           width = "auto",
+                           height = "85vh")
     )
 })
 

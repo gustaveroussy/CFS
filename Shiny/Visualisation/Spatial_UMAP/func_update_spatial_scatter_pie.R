@@ -79,25 +79,52 @@ current_plot_spatial_scatter_pie <- reactive({
                                hovertemplate = paste0("%{text}",
                                                       "<extra></extra>"))
     }
-    
-    fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                          yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                          grid = list(columns = max_row_img, rows = max_col_img),
-                          images = list(
-                            source = raster2uri(raster::as.raster(data@images$slice1@image)),
-                            xref = 'paper',
-                            yref =  'paper',
-                            sizex = 1,
-                            sizey = 1,
-                            sizing = 'stretch',
-                            opacity = 1,
-                            layer= 'below',
-                            x = 0,
-                            y = 1,   
-                            yanchor = 'top',
-                            xanchor = 'left'
-                          )
-    )
+    if (input$Spatial_display_image == TRUE){
+      if (is.null(values$HD_image)){
+        fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                              yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                              grid = list(columns = max_row_img, rows = max_col_img),
+                              images = list(
+                                source = values$low_image,
+                                xref = 'paper',
+                                yref =  'paper',
+                                sizex = 1,
+                                sizey = 1,
+                                sizing = 'stretch',
+                                opacity = 1,
+                                layer= 'below',
+                                x = 0,
+                                y = 1,   
+                                yanchor = 'top',
+                                xanchor = 'left'
+                              )
+        ) 
+      } else {
+        fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                              yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                              grid = list(columns = max_row_img, rows = max_col_img),
+                              images = list(
+                                source = values$HD_image,
+                                xref = 'paper',
+                                yref =  'paper',
+                                sizex = 1,
+                                sizey = 1,
+                                sizing = 'stretch',
+                                opacity = 1,
+                                layer= 'below',
+                                x = 0,
+                                y = 1,   
+                                yanchor = 'top',
+                                xanchor = 'left'
+                              )
+        )
+      }
+    } else {
+      fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                            yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                            grid = list(columns = max_row_img, rows = max_col_img)
+      )
+    }
   } else {
     ic_types=data@reductions$ica@cell.embeddings
     
@@ -158,25 +185,52 @@ current_plot_spatial_scatter_pie <- reactive({
                                hovertemplate = paste0("%{text}",
                                                       "<extra></extra>"))
     }
-    
-    fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                          yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                          grid = list(columns = max_row_img, rows = max_col_img),
-                          images = list(
-                            source = raster2uri(raster::as.raster(data@images$slice1@image)),
-                            xref = 'paper',
-                            yref =  'paper',
-                            sizex = 1,
-                            sizey = 1,
-                            sizing = 'stretch',
-                            opacity = 1,
-                            layer= 'below',
-                            x = 0,
-                            y = 1,   
-                            yanchor = 'top',
-                            xanchor = 'left'
-                          )
-    )
+    if (input$Spatial_display_image == TRUE){
+      if (is.null(values$HD_image)){
+        fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                              yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                              grid = list(columns = max_row_img, rows = max_col_img),
+                              images = list(
+                                source = values$low_image,
+                                xref = 'paper',
+                                yref =  'paper',
+                                sizex = 1,
+                                sizey = 1,
+                                sizing = 'stretch',
+                                opacity = 1,
+                                layer= 'below',
+                                x = 0,
+                                y = 1,   
+                                yanchor = 'top',
+                                xanchor = 'left'
+                              )
+        )
+      } else {
+        fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                              yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                              grid = list(columns = max_row_img, rows = max_col_img),
+                              images = list(
+                                source = values$HD_image,
+                                xref = 'paper',
+                                yref =  'paper',
+                                sizex = 1,
+                                sizey = 1,
+                                sizing = 'stretch',
+                                opacity = 1,
+                                layer= 'below',
+                                x = 0,
+                                y = 1,   
+                                yanchor = 'top',
+                                xanchor = 'left'
+                              )
+        )
+      }
+    } else {
+      fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                            yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                            grid = list(columns = max_row_img, rows = max_col_img)
+      )
+    }
   }
   return(fig)
 })

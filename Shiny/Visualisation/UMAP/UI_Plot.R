@@ -82,7 +82,9 @@ outputOptions(
 
 output[["Plot_or_message"]] <- renderUI({
     tagList(
-      plotly::plotlyOutput("Plot", height = "auto", width = 'auto')
+      plotly::plotlyOutput("Plot",
+                           width = "auto",
+                           height = "85vh")
     )
 })
 

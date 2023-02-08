@@ -81,6 +81,8 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
 
 output[["Spatial_IC_plot_or_message"]] <- renderUI({
   tagList(
-    plotly::plotlyOutput("Spatial_IC_plot")
+    plotly::plotlyOutput("Spatial_IC_plot",
+                         width = "auto",
+                         height = "85vh")
   )
 })
