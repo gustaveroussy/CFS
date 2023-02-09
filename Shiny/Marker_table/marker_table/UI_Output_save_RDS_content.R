@@ -19,7 +19,7 @@ marker_table <- reactive({
       if (!is.null(values$UMAP)){
         for (i in 1:length(unique(values$UMAP@meta.data$seurat_clusters))){
           incProgress((1/as.integer(length(unique(values$UMAP@meta.data$seurat_clusters)))), detail = paste(paste0("Working on cluster ",(i-1))))
-          list_marker[[i]] = FindMarkers(values$UMAP, ident.1 = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data$seurat_clusters == (i-1))], logfc.threshold = 0)
+          list_marker[[i]] = FindMarkers(values$UMAP, ident.1 = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data$seurat_clusters == (i-1))], logfc.threshold = 0.25)
         }
       }
     } else {

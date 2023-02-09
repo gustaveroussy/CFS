@@ -12,7 +12,7 @@ library(Seurat)
 library(plotly)
 library(raster)
 library(RColorBrewer)
-library(magick)
+# library(magick)
 library(scatterpie)
 library(destiny)
 library(rclipboard)
@@ -47,6 +47,7 @@ source(paste0(Shiny.options[["shiny_root"]], "/Visualisation/UI.R"), local = TRU
 source(paste0(Shiny.options[["shiny_root"]], "/Output/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Table/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Marker_table/UI.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/About/UI.R"), local = TRUE)
 
 # Define UI for app that draws a histogram ----
 ui <- dashboardPage(
@@ -58,7 +59,8 @@ ui <- dashboardPage(
       menuItem("ICA Table", tabName = "Table", icon = icon("table-list")),
       menuItem("Visualisation", tabName = "Visualisation", icon = icon("display")),
       menuItem("Marker table", tabName = "Marker_table", icon = icon("table-list")),
-      menuItem("Ouput", tabName = "Output", icon = icon("arrow-up-from-bracket"))
+      menuItem("Ouput", tabName = "Output", icon = icon("arrow-up-from-bracket")),
+      menuItem("About", tabName = "About", icon = icon("arrow-up-from-bracket"))
     ),
     uiOutput("IC_list_UI")
   ),
@@ -69,7 +71,8 @@ ui <- dashboardPage(
       tab_table,
       tab_visualisation,
       tab_marker_table,
-      tab_output
+      tab_output,
+      tab_about
     )
   )
 )

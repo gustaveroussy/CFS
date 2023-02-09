@@ -13,7 +13,7 @@
 output[["load_image_2_UI"]] <- renderUI({
   fluidRow(
     column(12,
-           titlePanel("Load high res image"),
+           titlePanel("Load full res image"),
            fileInput(
              inputId = "input_image_2",
              label = "Select image (.jpg file)",

@@ -17,6 +17,7 @@ observeEvent(input$start_plot, {
       plots$spatial_scatter_pie = current_plot_spatial_scatter_pie()
     }
     plots$button_check <- input$start_plot + 1
+    
   }
 })
 

@@ -81,7 +81,7 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
 output[["heatmap_IC_gene_column_organization_UI"]] <- renderUI({
   shinyWidgets::awesomeCheckbox(
     inputId = "IC_gene_column_organization",
-    label = "Cluster IC",
+    label = "Cluster ICs",
     value = FALSE
   )
 })

@@ -23,9 +23,10 @@ output[["Volcano_plot"]] <- plotly::renderPlotly({
                                          showscale = TRUE),
                            opacity = input$Volcano_plot_alpha,
                            text = gene[(fold_change > input_log_fold_change)&(p_value >input_p_value)],
+                           customdata = formatC(table$p_val_adj[(fold_change > input_log_fold_change)&(p_value >input_p_value)], format = "e", digits = 2),
                            hovertemplate = paste0("gene: %{text}<br>",
                                                   "Log2 Fold change : %{x}<br>",
-                                                  "-log10 p-value: %{y}",
+                                                  "p-value: %{customdata}",
                                                   "<extra></extra>")
   )
   
@@ -36,9 +37,10 @@ output[["Volcano_plot"]] <- plotly::renderPlotly({
                                          showscale = TRUE),
                            opacity = input$Volcano_plot_alpha,
                            text = gene[(fold_change < (-input_log_fold_change))&(p_value >input_p_value)],
+                           customdata = formatC(table$p_val_adj[(fold_change < (-input_log_fold_change))&(p_value >input_p_value)], format = "e", digits = 2),
                            hovertemplate = paste0("gene: %{text}<br>",
                                                   "Log2 Fold change : %{x}<br>",
-                                                  "-log10 p-value: %{y}",
+                                                  "p-value: %{customdata}",
                                                   "<extra></extra>")
   )
   
@@ -49,9 +51,10 @@ output[["Volcano_plot"]] <- plotly::renderPlotly({
                                          showscale = TRUE),
                            opacity = input$Volcano_plot_alpha,
                            text = gene[(fold_change > (-input_log_fold_change))&(fold_change < input_log_fold_change)|(p_value < input_p_value)],
+                           customdata = formatC(table$p_val_adj[(fold_change > (-input_log_fold_change))&(fold_change < input_log_fold_change)|(p_value < input_p_value)], format = "e", digits = 2),
                            hovertemplate = paste0("gene: %{text}<br>",
                                                   "Log2 Fold change : %{x}<br>",
-                                                  "-log10 p-value: %{y}",
+                                                  "p-value: %{customdata}",
                                                   "<extra></extra>")
   )
 
@@ -72,6 +75,8 @@ output[["Volcano_plot"]] <- plotly::renderPlotly({
 
 output[["Volcano_plot_or_message"]] <- renderUI({
   tagList(
-    plotly::plotlyOutput("Volcano_plot")
+    plotly::plotlyOutput("Volcano_plot",
+                         width = "auto",
+                         height = "85vh")
   )
 })
