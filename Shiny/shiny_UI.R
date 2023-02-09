@@ -12,7 +12,6 @@ library(Seurat)
 library(plotly)
 library(raster)
 library(RColorBrewer)
-# library(magick)
 library(scatterpie)
 library(destiny)
 library(rclipboard)
@@ -42,6 +41,7 @@ setClass("shiny_visium", slots=list(ica="list", images="list"))
 ## Load UI content for each tab.
 ##----------------------------------------------------------------------------##
 source(paste0(Shiny.options[["shiny_root"]], "/load_file/UI.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/Preprocessing/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/ICA/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Visualisation/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Output/UI.R"), local = TRUE)
@@ -55,18 +55,20 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("Load Data", tabName = "Load_file", icon = icon("spinner")),
+      menuItem("Pre-Processing", tabName = "Preprocessing", icon = icon("gears")),
       menuItem("ICA", tabName = "ICA", icon = icon("wave-square")),
       menuItem("ICA Table", tabName = "Table", icon = icon("table-list")),
       menuItem("Visualisation", tabName = "Visualisation", icon = icon("display")),
       menuItem("Marker table", tabName = "Marker_table", icon = icon("table-list")),
       menuItem("Ouput", tabName = "Output", icon = icon("arrow-up-from-bracket")),
-      menuItem("About", tabName = "About", icon = icon("arrow-up-from-bracket"))
+      menuItem("About", tabName = "About", icon = icon("bars"))
     ),
     uiOutput("IC_list_UI")
   ),
   dashboardBody(
     tabItems(
       tab_load,
+      tab_preprocessing,
       tab_ICA,
       tab_table,
       tab_visualisation,

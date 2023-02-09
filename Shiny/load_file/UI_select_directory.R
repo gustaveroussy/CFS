@@ -10,19 +10,11 @@
 
 # input directory
 
-output[["load_data_UI"]] <- renderUI({
+output[["load_data_2_UI"]] <- renderUI({
   fluidRow(
     column(12,
-           titlePanel("Load processed data"),
-           fileInput(
-             inputId = "input_file",
-             label = "Select input data (.rds file)",
-             multiple = FALSE,
-             accept = c(".rds"),
-             width = '350px',
-             buttonLabel = "Browse...",
-             placeholder = "No file selected"
-           )
+           titlePanel("Load Visium output folder"),
+           shinyDirButton('load_data_file_select', label='Select a folder', title='Please select a folder', multiple=FALSE)
     )
   )
 })

@@ -13,7 +13,7 @@ values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation =
                          cropped_image = NULL, marker_gene = NULL)
 
 Launch_analysis <- reactive({
-  if (grep('.RDS',input$input_file$datapath) == 1) {
+  if (length(grep('.RDS',input$input_file$datapath)) != 0) {
     
     data <- readRDS(input$input_file$datapath)
     
@@ -28,9 +28,6 @@ Launch_analysis <- reactive({
     return(data)
     
   } else {
-    
-    shinyalert("Wrong format", "requires .RDS.", type = "error")
-    
     return(NULL)
   }
   
@@ -45,41 +42,51 @@ observeEvent(input$input_file, {
   values$Annotation = NULL
   values$UMAP = NULL
   values$low_image = NULL
+  values$HD_image = NULL
+  values$HD_image_2 = NULL
   
   values$data = Launch_analysis()
   
-  if (!is.null(values$data@reductions$umap)){
-    values$UMAP = values$data
-  }
-  
-  if (!is.null(values$data@misc$markers)){
-    values$marker_gene = values$data@misc$markers
-  }
-  
-  values$IC_names = rownames(values$data@misc$annotation)
-  
-  values$Stat = values$data@misc[["GeneAndStat"]]
-  
-  updateSelectizeInput(session, "Ic_list", label = "list of IC",
-                       choices = values$IC_names,
-                       selected = NULL)
-  
-  values$Annotation = values$data@misc$annotation
-  
-  # Get All annotations and their associated ICs
-  list_names_IC = str_split(values$Annotation[,"Type"], pattern = ',', n = Inf, simplify = FALSE)
-  
-  for (i in 1:length(list_names_IC)) {
-    list_annotation = list_names_IC[[i]]
-    for (j in list_annotation) {
-      if(is.null(values$annotation_for_output[[j]]) && j != ""){
-        j <- gsub("\\+", "\\\\+", j)
-        values$annotation_for_output[[j]] = na.omit(rownames(values$data@misc$annotation)[grep("TRUE", values$Annotation)[grep(j, values$Annotation)-length(values$Annotation[,'Use'])]])
+  if (!is.null(values$data)){
+    if (!is.null(values$data@reductions$umap)){
+      values$UMAP = values$data
+    } else {
+      values$UMAP = NULL
+    }
+    
+    if (!is.null(values$data@misc$markers)){
+      values$marker_gene = values$data@misc$markers
+    } else {
+      values$marker_gene = NULL
+    }
+    
+    values$IC_names = rownames(values$data@misc$annotation)
+    
+    values$Stat = values$data@misc[["GeneAndStat"]]
+    
+    updateSelectizeInput(session, "Ic_list", label = "list of IC",
+                         choices = values$IC_names,
+                         selected = NULL)
+    
+    values$Annotation = values$data@misc$annotation
+    
+    # Get All annotations and their associated ICs
+    list_names_IC = str_split(values$Annotation[,"Type"], pattern = ',', n = Inf, simplify = FALSE)
+    
+    for (i in 1:length(list_names_IC)) {
+      list_annotation = list_names_IC[[i]]
+      for (j in list_annotation) {
+        if(is.null(values$annotation_for_output[[j]]) && j != ""){
+          j <- gsub("\\+", "\\\\+", j)
+          values$annotation_for_output[[j]] = na.omit(rownames(values$data@misc$annotation)[grep("TRUE", values$Annotation)[grep(j, values$Annotation)-length(values$Annotation[,'Use'])]])
+        }
       }
     }
+    
+    values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))
+  } else {
+    shinyalert("Wrong format", "requires .RDS.", type = "error")
   }
-  
-  values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))
 })
 
 observeEvent(input$input_image, {
