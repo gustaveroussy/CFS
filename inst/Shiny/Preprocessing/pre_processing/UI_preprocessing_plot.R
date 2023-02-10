@@ -53,7 +53,7 @@ output[["preprocessing_UI"]] <- renderUI({
         height = NULL,
         collapsible = TRUE,
         collapsed = FALSE,
-        #uiOutput("preprocessing_or_message")
+        uiOutput("preprocessing_or_message")
       )
     )
   )
@@ -62,7 +62,7 @@ output[["preprocessing_UI"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.
 ##----------------------------------------------------------------------------##
-#output[["groups_tree_text"]] <- renderText({ "Data not available." })
+output[["preprocessing_or_message"]] <- renderText({ preprocessing_values$preprocessing_text_display })
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.

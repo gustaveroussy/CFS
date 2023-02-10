@@ -4,7 +4,12 @@
 ##----------------------------------------------------------------------------##
 # make Annotation table
 output[["Marker_table_or_message"]] <- renderDT({
+  
+  req(values$UMAP)
+  
   values$marker_gene = marker_table()
+  
+  req(values$marker_gene)
   
   DT = Prepare_table_marker(table = values$marker_gene[[(as.integer(input$marker_cluster_choice)+1)]])
   
@@ -13,6 +18,7 @@ output[["Marker_table_or_message"]] <- renderDT({
 
 # loading time/button
 marker_table <- reactive({
+  req(values$UMAP)
   list_marker = list()
   withProgress(message = 'Preparing table', value = 0, {
     if(is.null(values$marker_gene)){

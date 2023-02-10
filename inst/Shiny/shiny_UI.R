@@ -24,6 +24,12 @@ library(jpeg)
 library(imagefx)
 library(heatmaply)
 library(scales)
+library(enrichR)
+library(e1071)
+
+setEnrichrSite("Enrichr")
+dbs <- listEnrichrDbs()
+websiteLive <- TRUE
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny

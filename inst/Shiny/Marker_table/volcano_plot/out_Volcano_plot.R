@@ -3,6 +3,8 @@
 ##----------------------------------------------------------------------------##
 
 output[["Volcano_plot"]] <- plotly::renderPlotly({
+  req(values$marker_gene)
+  req(values$UMAP)
   
   table <- values$marker_gene[[(as.integer(input$marker_cluster_choice)+1)]]
   

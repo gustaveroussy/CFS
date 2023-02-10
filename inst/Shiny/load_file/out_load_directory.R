@@ -10,7 +10,7 @@
 
 volumes <- getVolumes()
 
-observe({
+observeEvent(input$load_data_file_select, {
   shinyDirChoose(input, 'load_data_file_select', roots=volumes(), session=session)
   if(!is.null(input$load_data_file_select)){
     path = parseDirPath(volumes(), input$load_data_file_select)

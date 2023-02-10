@@ -23,4 +23,10 @@ observeEvent(input$Annotation_table_UI_cell_edit, {
       }
     }
   }
+  
+  annotation = values$Annotation
+  
+  save(annotation,
+       file = paste0(Shiny.options[["shiny_root"]], "../tmp_data/annotation_table.RData")
+       )
 })

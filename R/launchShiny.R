@@ -24,7 +24,7 @@ launchShiny <- function(
     "mode" = mode,
     "file_to_load" = file_to_load,
     "welcome_message" = welcome_message,
-    "shiny_root" = "/home/c_thuilliez/Desktop/scRNAS_CT/Shiny/",
+    "shiny_root" = "/home/c_thuilliez/Desktop/scRNAS_CT/inst/Shiny/",
     "projections_show_hover_info" = projections_show_hover_info
   )
   
@@ -37,11 +37,11 @@ launchShiny <- function(
   ## Load server and UI functions.
   ##--------------------------------------------------------------------------##
   source(
-    "/home/c_thuilliez/Desktop/scRNAS_CT/Shiny/shiny_UI.R",
+    "/home/c_thuilliez/Desktop/scRNAS_CT/inst/Shiny/shiny_UI.R",
     local = TRUE
   )
   source(
-    "/home/c_thuilliez/Desktop/scRNAS_CT/Shiny/shiny_server.R",
+    "/home/c_thuilliez/Desktop/scRNAS_CT/inst/Shiny/shiny_server.R",
     local = TRUE
   )
   

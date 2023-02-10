@@ -4,13 +4,13 @@
 
 output[["preprocessing_main_parameters_UI"]] <- renderUI({
   tagList(
-    HTML("Normalisation process"),
+    HTML("<h3><b>Normalisation process</b></h3>"),
     selectInput("preprocessing_specie_select", label = "Select organism", 
                 choices = list("Human" = "Hs", "Mice" = "Mm"), 
                 selected = "Hs"),
     numericInput("preprocessing_variable_features", label = "Variable Features", value = 2000,
                  min = 10, step = 1),
-    HTML("ICA process"),
+    HTML("<h3><b>ICA process</b></h3>"),
     numericInput("preprocessing_number_of_ICs", label = "Number of ICs", value = 100,
                  min = 2, step = 1),
     numericInput("preprocessing_maxit", label = "Maximum iterations", value = 100,
@@ -20,7 +20,7 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
                 selected = "icafast"),
     numericInput("preprocessing_kurtosis", label = "Kurtosis filter", value = 3,
                  min = 0, step = 0.01),
-    HTML("Enrichment process"),
+    HTML("<h3><b>Enrichment process</b></h3>"),
     selectizeInput("preprocessing_database", label = "Enrichment database",
                    choices = readRDS(paste0(Shiny.options[["shiny_root"]],"/Preprocessing/pre_processing/EnrichR_database.RDS")),
                    selected = NULL, multiple = TRUE,
