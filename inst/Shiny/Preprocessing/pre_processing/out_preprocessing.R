@@ -55,9 +55,9 @@ observeEvent(input$preprocessing_action_button, {
 
 observe({
   if(!is.null(values$data)){
-    if(is.null(data@assays$SCT@counts)){
-      preprocessing_values$preprocessing_text_display = paste0("Number of spots : ", dim(values$data@assays$Spatial@counts)[2],
-                                                               "<br>Number of features : ", dim(values$data@assays$Spatial@counts)[1]
+    if(is.null(values$data@assays$SCT@counts)){
+      preprocessing_values$preprocessing_text_display = paste0("<b>Number of spots : </b>", dim(values$data@assays$Spatial@counts)[2],
+                                                               "<br><b>Number of features : </b>", dim(values$data@assays$Spatial@counts)[1]
       )
     } else {
       preprocessing_values$preprocessing_text_display = paste0("<b>Number of spots : </b>", dim(values$data@assays$SCT@scale.data)[2],

@@ -4,12 +4,13 @@
 
 # search for the cells that were selected while in density
 clicked_cell_UMAP <- reactive({
+  req(plots$spatial)
   return(plotly::event_data(c("plotly_click"), source = "C"))
 })
 
 observeEvent(clicked_cell_UMAP(), {
   req(values$HD_image_2)
-  table = plotly::event_data(c("plotly_click"), source = "C")
+  table = clicked_cell_UMAP()
   
   table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
   table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
@@ -29,7 +30,7 @@ observeEvent(clicked_cell_UMAP(), {
 })
 
 output[["mini_plot_UMAP"]] <- renderPlotly({
-  table = plotly::event_data(c("plotly_click"), source = "C")
+  table = clicked_cell_UMAP()
   
   table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
   table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])

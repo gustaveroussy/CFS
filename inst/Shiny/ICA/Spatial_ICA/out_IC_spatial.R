@@ -71,6 +71,7 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
                           yaxis = list(showgrid = FALSE, showticklabels=FALSE),
                           showlegend = FALSE
     ) # add trace, show legend
+    
   }
 })
 

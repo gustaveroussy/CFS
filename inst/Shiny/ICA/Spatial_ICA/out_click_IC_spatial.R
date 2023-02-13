@@ -4,15 +4,15 @@
 
 # search for the cells that were selected while in IC display in spatial
 clicked_cell_ICA <- reactive({
+  req(values$HD_image_2)
+  #req(input$slider_IC_spatial_range)
   return(plotly::event_data(c("plotly_click"), source = "E"))
 })
 
 # Create the image to display in plotly 
 observeEvent(clicked_cell_ICA(), {
-  req(values$HD_image_2)
-  print(plotly::event_data(c("plotly_click"), source = "E"))
-
-  table = plotly::event_data(c("plotly_click"), source = "E")
+  
+  table = clicked_cell_ICA()
   
   table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
   table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])

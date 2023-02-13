@@ -10,7 +10,8 @@ output[["Plot_type_UI"]] <- renderUI({
 })
 
 output[["Plot_main_parameters_UI"]] <- renderUI({
-  if (input$Plot_analysis_type == "UMAP"){
+  if (req(input$Plot_analysis_type == "UMAP")){
+    req(values$annotation_for_output)
     tagList(
       selectInput("Plot_display_type", label = "Select what to color", 
                   choices = list("Clustering", "Ploïdie"), 
