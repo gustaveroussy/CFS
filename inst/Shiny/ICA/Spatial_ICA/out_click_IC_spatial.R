@@ -37,7 +37,7 @@ output[["mini_plot_ICA"]] <- plotly::renderPlotly({
   # add shapes to the layout
   fig <- layout(fig,
                 shapes = list(
-                  list(type = "rect",
+                  list(type = "circle",
                        fillcolor = NULL, line = list(color = "black"), opacity = 0.5,
                        x0 = ceiling(1/(values$data@images[["slice1"]]@spot.radius)),
                        x1 = ceiling(1/(values$data@images[["slice1"]]@spot.radius))*3, xref = "x",

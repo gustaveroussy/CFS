@@ -6,26 +6,28 @@ output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
   
   data_heat = top_IC_heatmap_table()
   
-  # if (input$top_IC_column_organization == TRUE){
-  #   col_order <- p[["tree_col"]][["order"]]
-  #   data_heat <- data_heat[,col_order]
-  # }
+  if (input$top_IC_column_organization == TRUE){
+    fig = heatmaply(data_heat,
+                    xlab = "ICs",
+                    ylab = "Genes",
+                    colors = eval(parse(text=paste0(input$select_color_IC_top,"(n=256)"))),
+                    scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colours = eval(parse(text=paste0(input$select_color_IC_top,"(n=256)"))), limits=c(input$slider_IC_top_range[1], input$slider_IC_top_range[2]), oob=squish),
+                    hclust_method = "ward.D"
+    )
+  } else {
+    fig <- plot_ly(
+      x = colnames(data_heat), y = rownames(data_heat),
+      z = data_heat, type = "heatmap", zmin = input$slider_IC_top_range[1], zmax = input$slider_IC_top_range[2],
+      colorscale = if(input$select_color_IC_top == "viridis"){"Viridis"}else{input$select_color_IC_top},
+      hovertemplate = paste(
+        "Gene: %{y:.2f%}<br>",
+        "IC: %{x:.2f%}<br>",
+        "Value: %{z:.2f%}",
+        "<extra></extra>"
+      )
+    )
+  }
   
-  fig = heatmaply(data_heat,
-            xlab = "ICs",
-            ylab = "Genes",
-            colors = eval(parse(text=paste0(input$select_color_IC_top,"(n=256)"))),
-            scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colours = eval(parse(text=paste0(input$select_color_IC_top,"(n=256)"))), limits=c(input$slider_IC_top_range[1], input$slider_IC_top_range[2]), oob=squish),
-            hclust_method = "ward.D"
-            )
-  # fig <- plot_ly(
-  #   hovertemplate = paste(
-  #     "Gene: %{y:.2f%}<br>",
-  #     "IC: %{x:.2f%}<br>",
-  #     "Value: %{z:.2f%}",
-  #     "<extra></extra>"
-  #   )
-  # )
   return(fig)
 })
 

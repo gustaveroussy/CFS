@@ -33,7 +33,7 @@ output[["IC_enrichment_p_n_main_parameters_UI"]] <- renderUI({
   tagList(
     radioButtons("p_n_enrichment", label = "Gene expression", 
                  choices = list("All" = "en", "Positive" = "en_p", "Negative" = "en_n"),
-                 selected = "en")
+                 selected = "en_p")
   )
 })
 
