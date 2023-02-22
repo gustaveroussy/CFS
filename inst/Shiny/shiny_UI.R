@@ -2,40 +2,36 @@
 ## Load shiny library.
 ##--------------------------------------------------------------------------##
 
-library(shiny)
-library(shinydashboard)
-library(shinyFiles)
-library(shinyWidgets)
-library(shinyalert)
-library(pheatmap)
-library(Seurat)
-library(plotly)
-library(raster)
-library(RColorBrewer)
-library(scatterpie)
-library(destiny)
-library(rclipboard)
-library(tibble)
-library(DT)
-library(interp)
-library(stringr)
-library(png)
-library(jpeg)
-library(imagefx)
-library(heatmaply)
-library(scales)
-library(enrichR)
-library(e1071)
-
-setEnrichrSite("Enrichr")
-dbs <- listEnrichrDbs()
-websiteLive <- TRUE
+# library(shiny)
+# library(shinydashboard)
+# library(shinyFiles)
+# library(shinyWidgets)
+# library(shinyalert)
+# library(pheatmap)
+# library(Seurat)
+# library(plotly)
+# library(raster)
+# library(RColorBrewer)
+# library(scatterpie)
+# library(destiny)
+# library(rclipboard)
+# library(tibble)
+# library(DT)
+# library(interp)
+# library(stringr)
+# library(png)
+# library(jpeg)
+# library(imagefx)
+# library(heatmaply)
+# library(scales)
+# library(enrichR)
+# library(e1071)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny
 ##--------------------------------------------------------------------------##
 
-setClass("shiny_visium", slots=list(ica="list", images="list"))
+#setClass("shiny_visium", slots=list(ica="list", images="list"))
 
 ##--------------------------------------------------------------------------##
 ## Functions.

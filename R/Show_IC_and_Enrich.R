@@ -1,3 +1,13 @@
+#' enrich IC
+#'
+#' Search and enrich IC using IC genes using EnrichR. Result saved in misc$IC_X$en
+#' 
+#' @return datatables of enrichment intro the seurat object
+#' 
+#' @examples 
+#' data = Show_IC_and_Enrich(data=data,dbs=c("GO_Biological_Process_2015"))
+#' 
+#' @export
 Show_IC_and_Enrich=function(data=NULL,dbs=c("GO_Biological_Process_2015")){
   print("Start printing")
   for (IC in names(data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))])){

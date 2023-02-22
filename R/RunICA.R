@@ -10,6 +10,7 @@
 #' @return A list of analysis object
 #' @examples 
 #' data <- Ploidie_search(data=data, species="S", threads=4, kcut=2, annotate=TRUE, genome="hg20")
+#' 
 #' @export
 ICASpatial=function(data=NULL,ncis=100,maxit=600,method="icafast",sd=3,...){
   
