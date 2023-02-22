@@ -11,7 +11,7 @@ clicked_cell_ICA <- reactive({
 
 # Create the image to display in plotly 
 observeEvent(clicked_cell_ICA(), {
-  
+  req(values$HD_image_2)
   table = clicked_cell_ICA()
   
   table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
@@ -22,9 +22,9 @@ observeEvent(clicked_cell_ICA(), {
   max_x = table$x+ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
   max_y = table$y+ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
   
-  cropped_image = crop.image(values$HD_image_2, min_y, min_x, max_y, max_x)
+  cropped_image = values$HD_image_2[min_y:max_y,min_x:max_x,]
   
-  values$cropped_image = raster2uri(raster::as.raster(cropped_image$img.crop))
+  values$cropped_image = raster2uri(raster::as.raster(cropped_image))
   
   shinyalert(html = TRUE, text = tagList(
     plotlyOutput('mini_plot_ICA')

@@ -24,7 +24,7 @@ launchShiny <- function(
     "mode" = mode,
     "file_to_load" = file_to_load,
     "welcome_message" = welcome_message,
-    "shiny_root" = "/home/c_thuilliez/Desktop/scRNAS_CT/inst/Shiny/",
+    "shiny_root" = paste0(system.file(package = "SpICA"),"/Shiny"),
     "projections_show_hover_info" = projections_show_hover_info
   )
   
@@ -32,19 +32,18 @@ launchShiny <- function(
   ## Allow upload of files up to 800 MB.
   ##--------------------------------------------------------------------------##
   options(shiny.maxRequestSize = maxFileSize * 1024^2)
-
+  
   ##--------------------------------------------------------------------------##
   ## Load server and UI functions.
   ##--------------------------------------------------------------------------##
   source(
-    "/home/c_thuilliez/Desktop/scRNAS_CT/inst/Shiny/shiny_UI.R",
+    paste0(paste0(system.file(package = "SpICA"),"/Shiny"),"/shiny_UI.R"),
     local = TRUE
   )
   source(
-    "/home/c_thuilliez/Desktop/scRNAS_CT/inst/Shiny/shiny_server.R",
+    paste0(paste0(system.file(package = "SpICA"),"/Shiny"),"/shiny_server.R"),
     local = TRUE
   )
-  
   ##--------------------------------------------------------------------------##
   ## Launch Shiny.
   ##--------------------------------------------------------------------------##

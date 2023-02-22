@@ -4,7 +4,7 @@
 \alias{Cluster_ICA}
 \title{Cluster ICA}
 \usage{
-Cluster_ICA(data = NULL, ICs = c(1), res = 1.2)
+Cluster_ICA(data = NULL, ICs = c(1), res = 1.2, spread = 3)
 }
 \arguments{
 \item{data}{Seurat object to clusterise}
