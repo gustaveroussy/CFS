@@ -5,11 +5,12 @@
 plots <- reactiveValues(button_check = 1, umap = NULL, spatial = NULL, density = NULL, spatial_density = NULL, scatter_pie = NULL, spatial_scatter_pie = NULL)
 
 observeEvent(input$start_plot, {
-  if (input$start_plot == plots$button_check) {
+  if (input$start_plot >= plots$button_check) {
     if (input$Plot_analysis_type == "UMAP"){
       plots$umap = current_plot_umap()
       plots$spatial = current_plot_spatial()
     } else if (input$Plot_analysis_type == "Density") {
+      req(input$Plot_display_type_choice)
       plots$density = current_plot_density()
       plots$spatial_density = current_plot_spatial_density()
     } else if (input$Plot_analysis_type == "Scatter pie") {

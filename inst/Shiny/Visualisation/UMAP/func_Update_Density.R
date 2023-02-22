@@ -41,14 +41,39 @@ current_plot_density <- reactive({
       
       # Add density
       if (input$Plot_contour_density == TRUE){
+        # continuer à faire des formes
+        x = data@reductions$ica@cell.embeddings[,type]
+        x$sum = as.vector(lapply(x,sum))
         
-        p1 <- ggplot( data = ic_types,aes(x = UMAP_1, y = UMAP_2)) +
-          annotation_raster(img,xmin = 0,xmax = Inf,ymin = 0,ymax = Inf)+
-          geom_contour(data = griddf,aes(x = x, y = y , z=z2),breaks = input$Plot_thresh_density)  + 
-          coord_equal()+
-          theme_void()
+        fig <- fig %>% add_trace(
+          type = "scatter",
+          mode = "lines",
+          fill = "toself",
+          x = c(2,4,6,4,2),
+          y = c(2,4,2,0,2),
+          # x = griddf$x,
+          # y = griddf$y,
+          # z = griddf$z2,
+          showlegend = T,
+          # contours = list(
+          #   end = 1,
+          #   size = 0.1,
+          #   start = input$Plot_thresh_density
+          # ),
+          opacity=1
+        )
+
+        fig <- fig %>% colorbar(title = "UMAP\ndensity")
         
-        fig = ggplotly(p1)
+        # fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+        #                       yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+        #                       autosize = TRUE,
+        #                       shapes = list(
+        #                         list(type = "rect",
+        #                              fillcolor = "blue", line = list(color = "blue"), opacity = 0.3,
+        #                              x0 = "1980-01-01", x1 = "1985-01-01", xref = "x",
+        #                              y0 = 4, y1 = 12.5, yref = "y"))
+        # )
         
       } else {
         

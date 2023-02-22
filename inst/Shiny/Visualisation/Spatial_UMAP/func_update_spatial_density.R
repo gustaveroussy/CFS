@@ -27,7 +27,7 @@ current_plot_spatial_density <- reactive({
     sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
     sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
     ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
-    ic_types<-cbind(TissueCoordinates(),t(ic_types)) %>%  cbind(.,sum_IC) %>% as.tibble()
+    ic_types<-cbind(TissueCoordinates(),t(ic_types)) %>%  cbind(.,sum_IC) %>% as_tibble()
     grid=interp(ic_types$imagecol,ic_types$imagerow,ic_types$sum_IC, nx = 400, ny = 400)
     griddf <- data.frame(x = rep(grid$x, ncol(grid$z)), 
                          y = rep(grid$y, each = nrow(grid$z)), 
@@ -35,11 +35,7 @@ current_plot_spatial_density <- reactive({
     griddf$z2=ifelse(griddf$z<quantile(griddf$z,na.rm = TRUE,probs = seq(0, 1, 1/10))[2],0,griddf$z)
     
     # Create plotly object
-    fig <- plot_ly(type = 'scatter',
-                    mode='markers',
-                   source = "B"
-    )
-    
+    fig <- plot_ly(source = "B")
     
     # Add spot
   #  fig <- fig %>%
@@ -102,6 +98,8 @@ current_plot_spatial_density <- reactive({
       for (i in 0:length(summary(values$UMAP@meta.data[["seurat_clusters"]]))-1){
         fig <- fig %>%
           add_trace(
+            type = "scatter",
+            mode = "markers",
             x = TissueCoordinates()[,"imagecol"][which(values$UMAP@meta.data[["seurat_clusters"]]==i)],
             y = TissueCoordinates()[,"imagerow"][which(values$UMAP@meta.data[["seurat_clusters"]]==i)],
             name = i,
@@ -121,6 +119,8 @@ current_plot_spatial_density <- reactive({
     } else {
       fig <- fig %>%
         add_trace(
+          type = "scatter",
+          mode = "markers",
           x = TissueCoordinates()[,"imagecol"],
           y = TissueCoordinates()[,"imagerow"],
           marker = list(
@@ -153,15 +153,14 @@ current_plot_spatial_density <- reactive({
     ic_types=values$data@reductions$ica@cell.embeddings[,type]
     
     # Create plotly object
-    fig <- plot_ly(type = 'scatter',
-                   mode='markers',
-                   source = "B"
-    )
+    fig <- plot_ly(source = "B")
     
     
     # Add spot
      fig <- fig %>%
        add_trace(
+         type = "scatter",
+         mode = "markers",
          x = TissueCoordinates()[,"imagecol"],
          y = TissueCoordinates()[,"imagerow"],
          name = name,
@@ -175,15 +174,15 @@ current_plot_spatial_density <- reactive({
                                 "Level : %{text}",
                                 "<extra></extra>")
        )
-    
-    # Add image in the background
-    if (input$Plot_show_image_density == TRUE) {
-      if (is.null(values$HD_image)){
-        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
-      } else {
-        fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
-      }
-    }
+     
+     # Add image in the background
+     if (input$Plot_show_image_density == TRUE) {
+       if (is.null(values$HD_image)){
+         fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+       } else {
+         fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+       }
+     }
     
     fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                           yaxis = list(showgrid = FALSE, showticklabels=FALSE),

@@ -7,10 +7,10 @@ Display_enrichment = function(data = NULL, dbs = c("GO_Biological_Process_2015")
     expression = 'en'
   }
   table = data@misc[[IC]][[expression]][[dbs]]
-  plotEnrich(table, showTerms = 30, numChar = 40, y = "Count", orderBy = "P.value",title=paste0("All gene functionnal enrichment for ",IC))
+  plotEnrich(table, showTerms = n, numChar = 40, y = "Count", orderBy = "P.value",title=paste0("All gene functionnal enrichment for ",IC))
 }
 
-Display_topgenes_IC = function(data = NULL, IC = c('IC_1'), n = 10, palette = 'viridis'){
+Display_topgenes_IC = function(data = NULL, IC = c('IC_1'),clustering_method = "ward.D", n = 10, palette = 'viridis'){
   GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC]]
   GeneList <- GeneList %>% as.tibble %>%arrange(desc(abs(Sig)))
   Gene <- data@reductions$ica@feature.loadings[GeneList$gene,][,IC]
@@ -28,7 +28,7 @@ Display_topgenes_IC = function(data = NULL, IC = c('IC_1'), n = 10, palette = 'v
   pheatmap(z,clustering_method = "ward.D",clustering_distance_cols = "correlation", color=myColor, breaks=myBreaks)
 }
 
-Display_topgenes_cells = function(data = NULL, IC = c('IC_1'), n = 10, palette = 'viridis'){
+Display_topgenes_cells = function(data = NULL, IC = c('IC_1'),clustering_method = "ward.D", n = 10, palette = 'viridis'){
   GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC]]
   GeneList <- GeneList %>% as.tibble %>%arrange(desc(abs(Sig)))
   Gene <- data@reductions$ica@feature.loadings[GeneList$gene,][,IC]
@@ -47,6 +47,27 @@ Display_topgenes_cells = function(data = NULL, IC = c('IC_1'), n = 10, palette =
 }
 
 Display_spatial_ICA = function(data = NULL, IC = c('IC_1'), palette = 'viridis'){
-  plot(as.raster(data@images$slice1@image))
+  image = rasterGrob(data@images$slice1@image, interpolate=TRUE)
   coordinates = GetTissueCoordinates(data)
+  color = pmax(data@reductions[["ica"]]@cell.embeddings[,IC],0)
+  ggplot(coordinates) + annotation_custom(image, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf) +
+    geom_point(aes(x = imagecol, y = -imagerow, color = color)) +
+    scale_color_gradientn(colours = eval(parse(text=paste0(palette,"(n=256)")))) +
+    scale_x_continuous(expand=c(0, 0), limits=c(0, dim(data@images$slice1@image)[2])) +
+    scale_y_continuous(expand=c(0, 0), limits=c(-dim(data@images$slice1@image)[1], 0)) +
+    coord_fixed()
+  #SpatialFeaturePlot(data, features = "IC_1")
+}
+
+Display_spatial_gene = function(data = NULL, gene = NULL, palette = 'viridis'){
+  image = rasterGrob(data@images$slice1@image, interpolate=TRUE)
+  coordinates = GetTissueCoordinates(data)
+  color = data@assays$SCT@scale.data[gene,]
+  ggplot(coordinates) + annotation_custom(image, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf) +
+    geom_point(aes(x = imagecol, y = -imagerow, color = color)) +
+    scale_color_gradientn(colours = eval(parse(text=paste0(palette,"(n=256)")))) +
+    scale_x_continuous(expand=c(0, 0), limits=c(0, dim(data@images$slice1@image)[2])) +
+    scale_y_continuous(expand=c(0, 0), limits=c(-dim(data@images$slice1@image)[1], 0)) +
+    coord_fixed()
+  #SpatialFeaturePlot(data, features = "IC_1")
 }

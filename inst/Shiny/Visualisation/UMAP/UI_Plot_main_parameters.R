@@ -10,7 +10,7 @@ output[["Plot_type_UI"]] <- renderUI({
 })
 
 output[["Plot_main_parameters_UI"]] <- renderUI({
-  if (req(input$Plot_analysis_type == "UMAP")){
+  if (input$Plot_analysis_type == "UMAP"){
     req(values$annotation_for_output)
     tagList(
       selectInput("Plot_display_type", label = "Select what to color", 
@@ -34,6 +34,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
       )
     )
   } else if (input$Plot_analysis_type == "Density") {
+    req(values$annotation_for_output)
     tagList(
       selectizeInput("Plot_display_type_choice", label = "Choose cell type to plot",
                      choices = unique(names(values$annotation_for_output)),
@@ -46,6 +47,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
       numericInput("Plot_thresh_alpha_density", label = "alpha", value = 0.5, min = 0, max = 1, step = 0.1)
     )
   } else if (input$Plot_analysis_type == "Scatter pie") {
+    req(values$annotation_for_output)
     tagList(
       selectizeInput("Scatter_pie_cell_type", label = "choose cell type",
                      choices = unique(names(values$annotation_for_output)),
