@@ -8,7 +8,7 @@ GeneList_heatmap_IC <- reactive({
   IC_C = input[["IC_choice"]]
   data <- values$data
   GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC_C]]
-  GeneList <- GeneList %>% as.tibble %>%arrange(desc(abs(Sig)))
+  GeneList <- GeneList %>% as_tibble %>%arrange(desc(abs(Sig)))
   Gene <- data@reductions$ica@feature.loadings[GeneList$gene,][,IC_C]
   return(Gene)
 })

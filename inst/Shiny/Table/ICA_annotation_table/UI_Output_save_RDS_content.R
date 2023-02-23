@@ -30,7 +30,7 @@ observeEvent(input$Table_or_message_cell_edit, {
   annotation = values$Annotation
   
   save(annotation,
-       file = paste0(Shiny.options[["shiny_root"]], "../tmp_data/annotation_table.RData")
+       file = paste0(Shiny.options[["shiny_root"]], "/../tmp_data/annotation_table.RData")
   )
   
 })

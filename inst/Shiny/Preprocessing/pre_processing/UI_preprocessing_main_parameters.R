@@ -22,7 +22,7 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
                  min = 0, step = 0.01),
     HTML("<h3><b>Enrichment process</b></h3>"),
     selectizeInput("preprocessing_database", label = "Enrichment database",
-                   choices = listEnrichrDbs()$libraryName,
+                   choices = enrichR::listEnrichrDbs()$libraryName,
                    selected = NULL, multiple = TRUE,
                    options = NULL),
     actionButton("preprocessing_action_button", label = "Process")

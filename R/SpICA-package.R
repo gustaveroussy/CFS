@@ -11,6 +11,7 @@
 #' @import interp
 #' @import stringr
 #' @import scales
+#' @importFrom viridis viridis
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG
 #' @importFrom heatmaply heatmaply

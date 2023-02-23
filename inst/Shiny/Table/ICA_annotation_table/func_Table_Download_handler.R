@@ -9,6 +9,5 @@ output$download_table <- downloadHandler(
   content = function(file) {
     table = values$Annotation
     write.csv(table, file, row.names=TRUE)
-    
   }
 )

@@ -12,7 +12,7 @@ Display_enrichment = function(data = NULL, dbs = c("GO_Biological_Process_2015")
 
 Display_topgenes_IC = function(data = NULL, IC = c('IC_1'),clustering_method = "ward.D", n = 10, palette = 'viridis'){
   GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC]]
-  GeneList <- GeneList %>% as.tibble %>%arrange(desc(abs(Sig)))
+  GeneList <- GeneList %>% as_tibble %>%arrange(desc(abs(Sig)))
   Gene <- data@reductions$ica@feature.loadings[GeneList$gene,][,IC]
   
   Gene_names <- names(Gene)
@@ -30,7 +30,7 @@ Display_topgenes_IC = function(data = NULL, IC = c('IC_1'),clustering_method = "
 
 Display_topgenes_cells = function(data = NULL, IC = c('IC_1'),clustering_method = "ward.D", n = 10, palette = 'viridis'){
   GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC]]
-  GeneList <- GeneList %>% as.tibble %>%arrange(desc(abs(Sig)))
+  GeneList <- GeneList %>% as_tibble %>%arrange(desc(abs(Sig)))
   Gene <- data@reductions$ica@feature.loadings[GeneList$gene,][,IC]
   
   Gene_names <- names(Gene)

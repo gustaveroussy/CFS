@@ -5,6 +5,7 @@
 preprocessing_values <- reactiveValues(button_check = 1, preprocessing_text_display = "<b>Data not available.</b>")
 
 observeEvent(input$preprocessing_action_button, {
+  req(values$data)
   if (input$preprocessing_action_button == preprocessing_values$button_check) {
     withProgress(message = 'Pre-processing', value = 0, {
       incProgress(0.2, detail = "Normalize")
@@ -12,8 +13,7 @@ observeEvent(input$preprocessing_action_button, {
       incProgress(0.4, detail = "Calculating ICs")
       values$data=ICASpatial(data=values$data,ncis=input$preprocessing_number_of_ICs,maxit=input$preprocessing_maxit,method=input$preprocessing_ICA_function,sd=input$preprocessing_kurtosis)
       incProgress(0.3, detail = "Enriching")
-      setEnrichrSite("Enrichr")
-      websiteLive <- TRUE
+      
       values$data = Show_IC_and_Enrich(data=values$data,dbs=input$preprocessing_database)
       incProgress(0.1, detail = "Done")
     

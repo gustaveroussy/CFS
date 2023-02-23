@@ -3,6 +3,7 @@
 ##############################
 
 current_plot_scatter_pie <- reactive({
+  req(values$data)
   if (!is.null(values$UMAP)) {
     data <- values$UMAP
     max_col_img = ceiling(max(data[["umap"]]@cell.embeddings[,'UMAP_2']))
@@ -79,6 +80,16 @@ current_plot_scatter_pie <- reactive({
                                  hovertemplate = paste0("%{text}",
                                                         "<extra></extra>"))
       }
+      
+      # fig = plotly::plot_ly()
+      # working on mignature pie
+      # fig <- fig %>% add_markers(x = NULL, y = NULL, showlegend = F,
+      #                            xaxis = 'x2', yaxis = 'y2') %>%
+      #   layout(xaxis2 = list(domain = c(0.7, 0.95), anchor='y2', range=c(-1,1), title = "Effect Size",
+      #                        zeroline = T, showticklabels = T),
+      #          yaxis2 = list(domain = c(0.5, 0.95), anchor='x2', title = NA, zeroline = F,
+      #                        showticklabels = T))
+      
     } else {
       ic_types=data@reductions$ica@cell.embeddings
       
