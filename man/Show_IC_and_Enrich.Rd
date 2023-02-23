@@ -10,7 +10,7 @@ Show_IC_and_Enrich(data = NULL, dbs = c("GO_Biological_Process_2015"))
 datatables of enrichment intro the seurat object
 }
 \description{
-Search and enrich IC using IC genes using EnrichR. Result saved in misc$IC_X$en
+Search and enrich IC genes using EnrichR. Result saved in misc$IC_X$en
 }
 \examples{
 data = Show_IC_and_Enrich(data=data,dbs=c("GO_Biological_Process_2015"))

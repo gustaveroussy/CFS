@@ -1,6 +1,6 @@
 #' enrich IC
 #'
-#' Search and enrich IC using IC genes using EnrichR. Result saved in misc$IC_X$en
+#' Search and enrich IC genes using EnrichR. Result saved in misc$IC_X$en
 #' 
 #' @return datatables of enrichment intro the seurat object
 #' 
@@ -13,7 +13,7 @@ Show_IC_and_Enrich=function(data=NULL,dbs=c("GO_Biological_Process_2015")){
   for (IC in names(data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))])){
     GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC]]
     dbs_size=c(1:length(dbs))
-    GeneList <- GeneList %>% as.tibble %>%arrange(desc(abs(Sig)))
+    GeneList <- GeneList %>% as_tibble %>%arrange(desc(abs(Sig)))
     if (websiteLive) {
       tryCatch(
         expr = {

@@ -10,10 +10,10 @@
 #' @import tibble
 #' @import interp
 #' @import stringr
-#' @import png
-#' @import jpeg
-#' @import heatmaply
 #' @import scales
+#' @importFrom png readPNG
+#' @importFrom jpeg readJPEG
+#' @importFrom heatmaply heatmaply
 #' @importFrom e1071 kurtosis
 #' @importFrom enrichR listEnrichrDbs setEnrichrSite enrichr
 #' @importFrom pheatmap pheatmap

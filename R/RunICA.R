@@ -1,20 +1,20 @@
-#' Ploidie search for cancer cells.
+#' ICA Spatial
 #'
-#' Search for ploidie alteration within the sample.
+#' Complete ICA analysis on the spatial sample after normalisation and regression. Then correct sign and determine stats from IC and Genes
 #' @param data Seurat object to analyse
-#' @param species ???
-#' @param threads Number of threads to use
-#' @param kcut ???
-#' @param annotate chose whether or not to annotate the analysis, of return the Copykat object.
+#' @param ncis Number of independant component to separate in the sample
+#' @param maxit Number of iterations
+#' @param method Method to use between "icafast", "icaimax", "icajade"
+#' @param sd Value of the kurtosis filter on IC
 #' 
-#' @return A list of analysis object
+#' @return An analysed Seurat object
 #' @examples 
-#' data <- Ploidie_search(data=data, species="S", threads=4, kcut=2, annotate=TRUE, genome="hg20")
+#' data = ICASpatial(data=data,ncis=100,maxit=600,method="icafast",sd=3)
 #' 
 #' @export
 ICASpatial=function(data=NULL,ncis=100,maxit=600,method="icafast",sd=3,...){
   
-  data<-RunICA(data,verbose = FALSE,nics = ncis,maxit=maxit,ica.function = "icafast")
+  data<-RunICA(data,verbose = FALSE,nics = ncis,maxit=maxit,ica.function = method)
   data@reductions$ica@feature.loadings=correct_sign(data@reductions$ica@feature.loadings)
   data@reductions$ica@cell.embeddings=correct_sign(data@reductions$ica@cell.embeddings)
   rownames(data@reductions$ica@cell.embeddings)=colnames(data@assays$Spatial@data)

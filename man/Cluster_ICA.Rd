@@ -12,6 +12,8 @@ Cluster_ICA(data = NULL, ICs = c(1), res = 1.2, spread = 3)
 \item{ICs}{Vector of IC numbers to use for the clusterisation and UMAP}
 
 \item{res}{Resolution of the clusterisation}
+
+\item{spread}{Spread of the final UMAP}
 }
 \value{
 Seurat object with clustered cells and UMAP
@@ -21,4 +23,5 @@ Clusters cells and run UMAP
 }
 \examples{
 data <- Cluster_ICA(data=data,ICs=c(1,2,3,4,5,6,7,8,9),res=1.2)
+
 }

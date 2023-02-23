@@ -6,14 +6,14 @@ server <- function(input, output, session) {
 ##--------------------------------------------------------------------------##
 ## Functions
 ##--------------------------------------------------------------------------##
-  
-  # source(paste0(Shiny.options[["shiny_root"]], "../../R/Cluster_ICA.R"), local = TRUE)
-  # source(paste0(Shiny.options[["shiny_root"]], "../../R/PseudoTime.R"), local = TRUE)
-  # source(paste0(Shiny.options[["shiny_root"]], "../../R/prepare_data.R"), local = TRUE)
-  # source(paste0(Shiny.options[["shiny_root"]], "../../R/Cluster_ICA.R"), local = TRUE)
-  # source(paste0(Shiny.options[["shiny_root"]], "../../R/RunICA.R"), local = TRUE)
-  # source(paste0(Shiny.options[["shiny_root"]], "../../R/Show_IC_and_Enrich.R"), local = TRUE)
-  # source(paste0(Shiny.options[["shiny_root"]], "../../R/Minor_functions.R"), local = TRUE)
+
+  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/Cluster_ICA.R"), local = TRUE)
+  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/PseudoTime.R"), local = TRUE)
+  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/prepare_data.R"), local = TRUE)
+  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/Cluster_ICA.R"), local = TRUE)
+  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/RunICA.R"), local = TRUE)
+  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/Show_IC_and_Enrich.R"), local = TRUE)
+  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/Minor_functions.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/Prepare_table_marker.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/Plotly_line.R"), local = TRUE)
 

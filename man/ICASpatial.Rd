@@ -2,7 +2,7 @@
 % Please edit documentation in R/RunICA.R
 \name{ICASpatial}
 \alias{ICASpatial}
-\title{Ploidie search for cancer cells.}
+\title{ICA Spatial}
 \usage{
 ICASpatial(
   data = NULL,
@@ -16,21 +16,21 @@ ICASpatial(
 \arguments{
 \item{data}{Seurat object to analyse}
 
-\item{species}{???}
+\item{ncis}{Number of independant component to separate in the sample}
 
-\item{threads}{Number of threads to use}
+\item{maxit}{Number of iterations}
 
-\item{kcut}{???}
+\item{method}{Method to use between "icafast", "icaimax", "icajade"}
 
-\item{annotate}{chose whether or not to annotate the analysis, of return the Copykat object.}
+\item{sd}{Value of the kurtosis filter on IC}
 }
 \value{
-A list of analysis object
+An analysed Seurat object
 }
 \description{
-Search for ploidie alteration within the sample.
+Complete ICA analysis on the spatial sample after normalisation and regression. Then correct sign and determine stats from IC and Genes
 }
 \examples{
-data <- Ploidie_search(data=data, species="S", threads=4, kcut=2, annotate=TRUE, genome="hg20")
+data = ICASpatial(data=data,ncis=100,maxit=600,method="icafast",sd=3)
 
 }
