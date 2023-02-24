@@ -45,5 +45,6 @@ Visualisation of the UMAP reduction, density and Scatter Pie representation of c
 Once clusterisation analysis has been carried out, this tab will display marker genes of each clusters.
 ### Output
 Tab used to download the RDS output of the analysis, as well as subclusters of the object by cluster of cell types.
-## Exemple
-## Citation
+## Exemple  
+
+## Citation  
