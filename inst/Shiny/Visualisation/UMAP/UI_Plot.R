@@ -94,8 +94,8 @@ output[["Plot_or_message"]] <- renderUI({
 observeEvent(input[["Plot_info"]], {
   showModal(
     modalDialog(
-      IC_top_gene_info[["text"]],
-      title = IC_top_gene_info[["title"]],
+      Plot_info[["text"]],
+      title = Plot_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
@@ -106,7 +106,7 @@ observeEvent(input[["Plot_info"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-IC_top_gene_info <- list(
+Plot_info <- list(
   title = "Plot",
-  text = p("Window displaying UMAP representation of data")
+  text = p("Window displaying diverse representation of data")
 )

@@ -50,12 +50,22 @@ observeEvent(input[["preprocessing_main_parameters_info"]], {
 preprocessing_main_parameters_info <- list(
   title = "Main parameters for Pre-processing",
   text = HTML("
-    The elements in this panel allow you to control what and how results are displayed across the whole tab.
+    Pre-Processing tab.<br>
+    <b>Normalisation process :</b>
     <ul>
-    <li><b>Plot:</b> This option allows to plot the IC over the spatial data</li>
-    <li><b>Scatter pie:</b> This option allows to plot a scatter pie of multiple ICs at once</li>
-    <li><b>Color range:</b> Color range of the plot</li>
-    <li><b>Select color:</b> Type of color scale of the plot</li>
+    <li><b>Select organism:</b> Organism for which the sample originate from</li>
+    <li><b>Variable Features:</b> Number of features to pick for SCTransform</li>
+    </ul>
+    <b>ICA process :</b>
+    <ul>
+    <li><b>Number of ICs:</b> Number of ICs to extract from the sample</li>
+    <li><b>Maximum iterations:</b> Number of iterations of the ICA</li>
+    <li><b>ICA fonction to run:</b> Method of ICA</li>
+    <li><b>Kurtosis filter:</b> Hurtosis filter to apply at the end of the analysis over ICs</li>
+    </ul>
+    <b>Enrichment process :</b>
+    <ul>
+    <li><b>Enrichment database:</b> Database to use for enrichment analysis</li>
     </ul>
     "
   )

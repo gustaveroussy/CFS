@@ -88,12 +88,13 @@ Plot_main_parameters_info <- list(
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
       <li><b>Select method to use:</b> Select here which projection you want to see in the scatter plot on the right.</li>
-      <li><b>UMAP:</b></li>
+      <li><b>UMAP:</b> UMAP display, if data have already been generated, leaving it empty will reagenerate the previous one.</li>
       <ul>
         <li><b>Select what to color:</b> Select which category, to use to color the spots.</li>
         <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for UMAP generation.</li>
         <li><b>Choose IC to plot:</b> Select which IC to use for UMAP generation.</li>
         <li><b>Enter Plot resolution:</b> Select clustering resolution to use.</li>
+        <li><b>Spread:</b> Select clustering resolution to use.</li>
       </ul>
       <li><b>Density:</b></li>
       <ul>
@@ -102,6 +103,11 @@ Plot_main_parameters_info <- list(
         <li><b>Display image:</b> Display the histological image under the density display.</li>
         <li><b>threshold:</b> Select the limits of density display.</li>
         <li><b>alpha:</b> Select the density display transparency.</li>
+      </ul>
+      <li><b>Scatter pie:</b></li>
+      <ul>
+        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for density generation.</li>
+        <li><b>Choose IC to plot:</b> Select which IC to use for density generation.</li>
       </ul>
     </ul>
     "

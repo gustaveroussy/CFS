@@ -46,6 +46,7 @@ ICA_top_IC_main_parameters_info <- list(
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
+      <li><b>Number of top genes per IC:</b> Select how many genes are selected from the top genes of each ICs.</li>
       <li><b>Select color:</b> Select here which color scale you want to use in the heatmap on the right.</li>
       <li><b>Color range:</b> Select the range of color to use.</li>
     </ul>

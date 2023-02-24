@@ -60,7 +60,7 @@ output[["Volcano_plot"]] <- plotly::renderPlotly({
                                                   "<extra></extra>")
   )
 
-  fig <- fig %>% layout(xaxis=list(showgrid = TRUE, showticklabels=TRUE),
+  fig <- fig %>% layout(xaxis=list(showgrid = TRUE, showticklabels=TRUE, range = list(-max(abs(fold_change))-(max(abs(fold_change))/10), max(abs(fold_change))+(max(abs(fold_change))/10))),
                         yaxis = list(showgrid = TRUE, showticklabels=TRUE),
                         showlegend = FALSE, shapes = list(vline(input_log_fold_change, dash="dash"),
                                                           vline((-input_log_fold_change), dash="dash"),

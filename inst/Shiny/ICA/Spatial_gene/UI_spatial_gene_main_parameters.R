@@ -46,6 +46,7 @@ gene_projection_main_parameters_info <- list(
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
       <li><b>Choose gene to plot:</b> Select here which genes you want to use in the plot on the right</li>
+      <li><b>Alpha:</b> Change spot transparency</li>
       <li><b>Select color:</b> Select here which color scale you want to use in the plot on the right.</li>
     </ul>
     "

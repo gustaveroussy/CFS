@@ -82,7 +82,7 @@ observeEvent(input[["Volcano_plot_info"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-Spatial_IC_info <- list(
+Volcano_plot_info <- list(
   title = "Volcano Plot",
   text = HTML("Plot volcanoplot of DEG")
 )

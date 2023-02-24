@@ -41,10 +41,9 @@ Volcano_plot_main_parameters_info <- list(
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
-    <li><b>Plot:</b> This option allows to plot the IC over the spatial data</li>
-    <li><b>Scatter pie:</b> This option allows to plot a scatter pie of multiple ICs at once</li>
-    <li><b>Color range:</b> Color range of the plot</li>
-    <li><b>Select color:</b> Type of color scale of the plot</li>
+    <li><b>Log2 fold change:</b> Select log2 fold change threshold (filters table)</li>
+    <li><b>P-value:</b> Select p-value threshold  (filters table)</li>
+    <li><b>Alpha:</b> Select plot transparency</li>
     </ul>
     "
   )
