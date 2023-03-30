@@ -25,6 +25,8 @@ Launch_analysis <- reactive({
       data@misc$annotation[,'Use'] = TRUE
     }
     
+    data@misc$annotation = as.matrix(data@misc$annotation)
+    
     return(data)
     
   } else {
@@ -79,7 +81,7 @@ observeEvent(input$input_file, {
           result = values$Annotation[,'Use'] == TRUE & values$Annotation[,'Type'] == list_annotation
           values$annotation_for_output[[list_annotation]] = names(result[result])
         }
-      }
+    }
     
     values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))
   } else {
