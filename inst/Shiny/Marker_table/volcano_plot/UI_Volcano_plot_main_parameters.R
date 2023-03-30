@@ -14,7 +14,8 @@ output[["Volcano_plot_main_parameters_UI"]] <- renderUI({
                 value = 0.05, step = 0.01),
     sliderInput("Volcano_plot_alpha", "Alpha",
                 min = 0, max = 1,
-                value = 1, step = 0.01)
+                value = 1, step = 0.01),
+    actionButton("start_marker", "Start")
   )
 })
 

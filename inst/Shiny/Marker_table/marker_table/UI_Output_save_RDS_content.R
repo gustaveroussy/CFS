@@ -17,7 +17,7 @@ output[["Marker_table_or_message"]] <- renderDT({
 })
 
 # loading time/button
-marker_table <- reactive({
+marker_table <- eventReactive(input$start_marker, {
   req(values$UMAP)
   list_marker = list()
   withProgress(message = 'Preparing table', value = 0, {

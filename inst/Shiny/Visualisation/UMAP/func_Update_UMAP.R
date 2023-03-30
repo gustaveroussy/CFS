@@ -41,10 +41,13 @@ current_plot_umap <- reactive({
       values$UMAP=Cluster_ICA(data=values$data,ICs=as.integer(gsub('[IC_]','',type)),res=input$Plot_resolution, spread = input$Plot_spread)
     } else {
       values$UMAP = values$data
+      if(!("umap" %in% names(values$data@reductions))){
+        shinyalert("UMAP error", "No UMAP can be calculated", type = "error")
+      }
     }
   }
   
-  req(values$UMAP)
+  req(values$UMAP@reductions$umap)
 
   fig <- plot_ly(type = 'scatter',
                  mode='markers',
