@@ -18,13 +18,15 @@ observeEvent(input$preprocessing_action_button, {
       incProgress(0.1, detail = "Done")
     
       
-      if (is.null(values$data@misc$annotation)){
-        row_names = names(values$data@misc)[grep('IC_', names(values$data@misc))]
-        values$data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
-        rownames(values$data@misc$annotation) = row_names
-        colnames(values$data@misc$annotation) = c('Use','Type','Annotation')
-        values$data@misc$annotation[,'Use'] = TRUE
+      if (is.null(data@misc$annotation)){
+        row_names = names(data@misc)[grep('IC_', names(data@misc))]
+        data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
+        rownames(data@misc$annotation) = row_names
+        colnames(data@misc$annotation) = c('Use','Type','Annotation')
+        data@misc$annotation[,'Use'] = TRUE
       }
+      
+      data@misc$annotation = as.matrix(data@misc$annotation)
       
       values$IC_names = rownames(values$data@misc$annotation)
       
@@ -37,15 +39,13 @@ observeEvent(input$preprocessing_action_button, {
       values$Annotation = values$data@misc$annotation
       
       # Get All annotations and their associated ICs
-      list_names_IC = str_split(values$Annotation[,"Type"], pattern = ',', n = Inf, simplify = FALSE)
+      list_names_IC = unique(unlist(str_split(values$Annotation[,"Type"], pattern = ',', n = Inf, simplify = FALSE)))
       
-      for (i in 1:length(list_names_IC)) {
-        list_annotation = list_names_IC[[i]]
-        for (j in list_annotation) {
-          if(is.null(values$annotation_for_output[[j]]) && j != ""){
-            j <- gsub("\\+", "\\\\+", j)
-            values$annotation_for_output[[j]] = na.omit(rownames(values$data@misc$annotation)[grep("TRUE", values$Annotation)[grep(j, values$Annotation)-length(values$Annotation[,'Use'])]])
-          }
+      for (list_annotation in list_names_IC) {
+        if(list_annotation != ""){
+          list_annotation <- gsub("\\+", "\\\\+", list_annotation)
+          result = values$Annotation[,'Use'] == TRUE & values$Annotation[,'Type'] == list_annotation
+          values$annotation_for_output[[list_annotation]] = names(result[result])
         }
       }
       
@@ -57,7 +57,7 @@ observeEvent(input$preprocessing_action_button, {
 
 observe({
   if(!is.null(values$data)){
-    if(names(values$data@assays) %in% "SCT"){
+    if("SCT" %in% names(values$data@assays)){
       preprocessing_values$preprocessing_text_display = paste0("<b>Number of spots : </b>", dim(values$data@assays$SCT@scale.data)[2],
                                                                "<br><b>Number of features : </b>", dim(values$data@assays$SCT@scale.data)[1]
       )

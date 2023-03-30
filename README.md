@@ -1,13 +1,13 @@
-spICA
+CFS
 ===
-spICA is an R package for spatial single cell genomics.
+CFS is an R package for spatial single cell genomics.
 Documentation can be found at:
 [Tutorial and instructions](https://codimd.univ-rouen.fr/s/w0oZMV6fz)
 
-# SpICA
+# CFS
 # Table of Contents
 - [Installation](#Installation)
-- [SpICA's interface](#SpICA’s-interface)
+- [CFS's interface](#CFS’s-interface)
 - [Exemple](#Exemple)
 - [Citation](#Citation)
 
@@ -16,13 +16,13 @@ Installing the package from the github repository requires the package devtools 
 ```{r}
 install.packages("devtools")
 ```
-The command line to install SpICA :
+The command line to install CFS :
 ```{r}
-devtools::install_github("c-thuil/SpICA"
+devtools::install_github("c-thuil/CFS"
                          ,ref="main"
                          ,auth_token = "token")
 ```
-## SpICA's interface
+## CFS's interface
 ### Load data
 The load data tab is plit into 4 loadable objects.
 - **Load Visium output folder**

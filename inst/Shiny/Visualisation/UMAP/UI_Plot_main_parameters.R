@@ -10,6 +10,7 @@ output[["Plot_type_UI"]] <- renderUI({
 })
 
 output[["Plot_main_parameters_UI"]] <- renderUI({
+  req(input$Plot_analysis_type)
   if (input$Plot_analysis_type == "UMAP"){
     req(values$annotation_for_output)
     tagList(
