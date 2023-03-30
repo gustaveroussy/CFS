@@ -71,17 +71,15 @@ observeEvent(input$input_file, {
     values$Annotation = values$data@misc$annotation
     
     # Get All annotations and their associated ICs
-    list_names_IC = str_split(values$Annotation[,"Type"], pattern = ',', n = Inf, simplify = FALSE)
+    list_names_IC = unique(unlist(str_split(values$Annotation[,"Type"], pattern = ',', n = Inf, simplify = FALSE)))
     
-    for (i in 1:length(list_names_IC)) {
-      list_annotation = list_names_IC[[i]]
-      for (j in list_annotation) {
-        if(is.null(values$annotation_for_output[[j]]) && j != ""){
-          j <- gsub("\\+", "\\\\+", j)
-          values$annotation_for_output[[j]] = na.omit(rownames(values$data@misc$annotation)[grep("TRUE", values$Annotation)[grep(j, values$Annotation)-length(values$Annotation[,'Use'])]])
+    for (list_annotation in list_names_IC) {
+        if(list_annotation != ""){
+          list_annotation <- gsub("\\+", "\\\\+", list_annotation)
+          result = values$Annotation[,'Use'] == TRUE & values$Annotation[,'Type'] == list_annotation
+          values$annotation_for_output[[list_annotation]] = names(result[result])
         }
       }
-    }
     
     values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))
   } else {

@@ -3,11 +3,13 @@
 ##----------------------------------------------------------------------------##
 
 current_plot_umap <- reactive({
+  type = NULL
+  
   if (!is.null(input$Plot_display_IC_choice)) {
     if (!is.null(input$Plot_display_type_UMAP_choice)){
       if(length(input$Plot_display_type_UMAP_choice) != 1){
-        for (n_cell_type in 1:length(input$Plot_display_type_UMAP_choice)) {
-          if(n_cell_type == 1) {
+        for (n_cell_type in input$Plot_display_type_UMAP_choice) {
+          if(is.null(type)) {
             type = values$annotation_for_output[[n_cell_type]]
           } else {
             type = append(type, values$annotation_for_output[[n_cell_type]])
@@ -25,8 +27,8 @@ current_plot_umap <- reactive({
     if (!is.null(input$Plot_display_type_UMAP_choice)){
       if(length(input$Plot_display_type_UMAP_choice) != 1){
         name = paste(input$Plot_display_type_UMAP_choice,collapse = ",")
-        for (n_cell_type in 1:length(input$Plot_display_type_UMAP_choice)) {
-          if(n_cell_type == 1) {
+        for (n_cell_type in input$Plot_display_type_UMAP_choice) {
+          if(is.null(type)) {
             type = values$annotation_for_output[[n_cell_type]]
           } else {
             type = append(type, values$annotation_for_output[[n_cell_type]])
@@ -41,14 +43,6 @@ current_plot_umap <- reactive({
       values$UMAP = values$data
     }
   }
-  
-#  if ("aneuploid" %in% colnames(values$UMAP@meta.data)) {
-#    values$UMAP@meta.data$aneuploid <- as.character(values$UMAP@meta.data$aneuploid)
-#    values$UMAP@meta.data$aneuploid[which(is.na(values$UMAP@meta.data$aneuploid))] = "unknown"
-#    values$UMAP@meta.data$aneuploid <- as.factor(values$UMAP@meta.data$aneuploid)
-#    
-#    values$UMAP <- Spatial_pseudotime(values$UMAP)
-#  }
   
   req(values$UMAP)
 
