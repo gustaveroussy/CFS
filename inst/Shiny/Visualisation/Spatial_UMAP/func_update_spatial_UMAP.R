@@ -17,7 +17,9 @@ current_plot_spatial <- reactive({
   if (!is.null(values$HD_image)) {
     fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
   } else {
-    fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+    if(!is.null(values$low_image)){
+      fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+    }
   }
   
   if (input$Plot_analysis_type == "UMAP"){

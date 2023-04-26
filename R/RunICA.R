@@ -14,7 +14,7 @@
 #' @export
 ICASpatial=function(data=NULL,ncis=100,maxit=600,method="icafast",sd=3,...){
   
-  data<-RunICA(data,verbose = FALSE,nics = ncis,maxit=maxit,ica.function = method)
+  data<-RunICA(data,verbose = TRUE,nics = ncis,maxit=maxit,ica.function = method)
   data@reductions$ica@feature.loadings=correct_sign(data@reductions$ica@feature.loadings)
   data@reductions$ica@cell.embeddings=correct_sign(data@reductions$ica@cell.embeddings)
   rownames(data@reductions$ica@cell.embeddings)=colnames(data@assays$Spatial@data)

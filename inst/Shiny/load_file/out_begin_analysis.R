@@ -13,7 +13,7 @@ values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation =
                          cropped_image = NULL, marker_gene = NULL)
 
 Launch_analysis <- reactive({
-  if (length(grep('.RDS',input$input_file$datapath)) != 0) {
+  if (length(grep('.RDS',toupper(input$input_file$datapath))) != 0) {
     
     data <- readRDS(input$input_file$datapath)
     
@@ -83,7 +83,11 @@ observeEvent(input$input_file, {
         }
     }
     
-    values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))
+    
+    if('image' %in% names(attributes(values$data@images[[1]]))){
+      values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))
+    }
+    
   } else {
     shinyalert("Wrong format", "requires .RDS.", type = "error")
   }

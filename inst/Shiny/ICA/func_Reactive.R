@@ -19,6 +19,8 @@ TissueCoordinates <- reactive({
     c <- values$data@images$slice1@coordinates * values$data@images$slice1@scale.factors$hires
   } else {
     c <- GetTissueCoordinates(values$data)
+    names(c)[names(c) == "x"] <- "imagerow"
+    names(c)[names(c) == "y"] <- "imagecol"
   }
   return(c)
 })

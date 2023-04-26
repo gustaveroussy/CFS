@@ -17,7 +17,9 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
     if (!is.null(values$HD_image)) {
       fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
     } else {
-      fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+      if(!is.null(values$low_image)){
+        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+      }
     }
     
     fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
@@ -55,7 +57,9 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
       if (!is.null(values$HD_image)) {
         plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
       } else {
-        plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+        if(!is.null(values$low_image)){
+          plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+        }
       }
       
       plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],

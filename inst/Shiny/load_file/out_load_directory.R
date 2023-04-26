@@ -37,7 +37,11 @@ observeEvent(input$load_data_file_select, {
           incProgress(0.2, detail = "Loading spatial 10X")
           # load the seurat object
           values$data = Load10X_Spatial(path)
-          values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))
+          
+          if('image' %in% names(attributes(values$data@images[[1]]))){
+            values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))
+          }
+          
           incProgress(0.4, detail = "Done")
         })
       } else {

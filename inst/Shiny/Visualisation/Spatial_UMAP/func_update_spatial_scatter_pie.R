@@ -5,8 +5,8 @@
 current_plot_spatial_scatter_pie <- reactive({
   
   data <- values$data
-  max_col_img = dim(data@images$slice1@image)[2]
-  max_row_img = dim(data@images$slice1@image)[1]
+  max_col_img = dim(data@images[[1]]@image)[2]
+  max_row_img = dim(data@images[[1]]@image)[1]
   
   if (!is.null(input$Scatter_pie_cell_type)){
     type = unlist(values$annotation_for_output[input$Scatter_pie_cell_type], use.names=FALSE)
@@ -38,7 +38,7 @@ current_plot_spatial_scatter_pie <- reactive({
     
     #We build the plot
     
-    #img<-grDevices::as.raster(data@images$slice1@image)
+    #img<-grDevices::as.raster(data@images[[1]]@image)
     
     #ic_types$imagerow = max(ic_types$imagerow) - ic_types$imagerow + min(ic_types$imagerow)
     
@@ -49,7 +49,7 @@ current_plot_spatial_scatter_pie <- reactive({
     
     fig <- plot_ly()
     
-    #Radius(data@images$slice1)
+    #Radius(data@images[[1]])
     for (i in 1:nrow(ic_types)) {
       
       t = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
@@ -68,8 +68,8 @@ current_plot_spatial_scatter_pie <- reactive({
       col_coordinates = (ic_types[i,"imagecol"])
       row_coordinates = max_row_img-(ic_types[i,"imagerow"])
       
-      x = c((col_coordinates/max_col_img)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col_img)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
-      y = c((row_coordinates/max_row_img)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row_img)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
+      x = c((col_coordinates/max_col_img)-(Radius(data@images[[1]])*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col_img)+(Radius(data@images[[1]])*ic_types[i,"sum_IC"])/2)
+      y = c((row_coordinates/max_row_img)-(Radius(data@images[[1]])*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row_img)+(Radius(data@images[[1]])*ic_types[i,"sum_IC"])/2)
       
       fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = values$Annotation[colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),'Annotation']
                                , values = as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),
@@ -81,24 +81,26 @@ current_plot_spatial_scatter_pie <- reactive({
     }
     if (input$Spatial_display_image == TRUE){
       if (is.null(values$HD_image)){
-        fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                              yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                              grid = list(columns = max_row_img, rows = max_col_img),
-                              images = list(
-                                source = values$low_image,
-                                xref = 'paper',
-                                yref =  'paper',
-                                sizex = 1,
-                                sizey = 1,
-                                sizing = 'stretch',
-                                opacity = 1,
-                                layer= 'below',
-                                x = 0,
-                                y = 1,   
-                                yanchor = 'top',
-                                xanchor = 'left'
-                              )
-        ) 
+        if(!is.null(values$low_image)){
+          fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                                yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                                grid = list(columns = max_row_img, rows = max_col_img),
+                                images = list(
+                                  source = values$low_image,
+                                  xref = 'paper',
+                                  yref =  'paper',
+                                  sizex = 1,
+                                  sizey = 1,
+                                  sizing = 'stretch',
+                                  opacity = 1,
+                                  layer= 'below',
+                                  x = 0,
+                                  y = 1,   
+                                  yanchor = 'top',
+                                  xanchor = 'left'
+                                )
+          ) 
+        }
       } else {
         fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                               yaxis = list(showgrid = FALSE, showticklabels=FALSE),
@@ -141,7 +143,7 @@ current_plot_spatial_scatter_pie <- reactive({
     
     #We build the plot
     
-    #img<-grDevices::as.raster(data@images$slice1@image)
+    #img<-grDevices::as.raster(data@images[[1]]@image)
     
     #ic_types$imagerow = max(ic_types$imagerow) - ic_types$imagerow + min(ic_types$imagerow)
     
@@ -154,7 +156,7 @@ current_plot_spatial_scatter_pie <- reactive({
     
     fig <- plot_ly()
     
-    #Radius(data@images$slice1)
+    #Radius(data@images[[1]])
     for (i in 1:nrow(ic_types)) {
       
       t = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
@@ -174,8 +176,8 @@ current_plot_spatial_scatter_pie <- reactive({
       row_coordinates = max_row_img-(ic_types[i,"imagerow"])
       
       
-      x = c((col_coordinates/max_col_img-(Radius(data@images$slice1))/2),(col_coordinates/max_col_img+Radius(data@images$slice1)/2))
-      y = c((row_coordinates/max_row_img-(Radius(data@images$slice1))/2),(row_coordinates/max_row_img+Radius(data@images$slice1)/2))
+      x = c((col_coordinates/max_col_img-(Radius(data@images[[1]]))/2),(col_coordinates/max_col_img+Radius(data@images[[1]])/2))
+      y = c((row_coordinates/max_row_img-(Radius(data@images[[1]]))/2),(row_coordinates/max_row_img+Radius(data@images[[1]])/2))
       
       fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
                                , values = as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),
@@ -187,24 +189,26 @@ current_plot_spatial_scatter_pie <- reactive({
     }
     if (input$Spatial_display_image == TRUE){
       if (is.null(values$HD_image)){
-        fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                              yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                              grid = list(columns = max_row_img, rows = max_col_img),
-                              images = list(
-                                source = values$low_image,
-                                xref = 'paper',
-                                yref =  'paper',
-                                sizex = 1,
-                                sizey = 1,
-                                sizing = 'stretch',
-                                opacity = 1,
-                                layer= 'below',
-                                x = 0,
-                                y = 1,   
-                                yanchor = 'top',
-                                xanchor = 'left'
-                              )
+        if(!is.null(values$low_image)){
+          fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                                yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                                grid = list(columns = max_row_img, rows = max_col_img),
+                                images = list(
+                                  source = values$low_image,
+                                  xref = 'paper',
+                                  yref =  'paper',
+                                  sizex = 1,
+                                  sizey = 1,
+                                  sizing = 'stretch',
+                                  opacity = 1,
+                                  layer= 'below',
+                                  x = 0,
+                                  y = 1,   
+                                  yanchor = 'top',
+                                  xanchor = 'left'
+                                )
         )
+        }
       } else {
         fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                               yaxis = list(showgrid = FALSE, showticklabels=FALSE),
