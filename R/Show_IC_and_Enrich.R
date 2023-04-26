@@ -9,10 +9,10 @@
 #' 
 #' @export
 Show_IC_and_Enrich=function(data=NULL,dbs=c("GO_Biological_Process_2015")){
+  websiteLive = TRUE
   print("Start printing")
   for (IC in names(data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))])){
     GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC]]
-    dbs_size=c(1:length(dbs))
     GeneList <- GeneList %>% as_tibble %>%arrange(desc(abs(Sig)))
     if (websiteLive) {
       tryCatch(

@@ -3,11 +3,12 @@
 ##----------------------------------------------------------------------------##
 output[["IC_enrichment_main_parameters_UI"]] <- renderUI({
   req(values$data)
+  IC = input$IC_choice
   tagList(
     selectInput(
       "IC_enrichment_database_choice",
       label = "Choose database related to enrichment",
-      choices = names(values$data@misc$IC_1$en)
+      choices = names(data@misc[IC][[1]][[1]])
     )
   )
 })
