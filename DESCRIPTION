@@ -1,12 +1,12 @@
 Package: CFS
 Type: Package
-Version: 0.7.6.0
+Version: 0.8.0.0
 Date: 2023-02-22
 Title: Spatial single cells analysis Package using ICA
 Authors@R: c(person("Corentin", "Thuilliez", email = "Corentin.THUILLIEZ@gustaveroussy.fr", role = c("aut", "cre")))
 Description: Allows for the analysis of spatial seurat objects using ICA
 License: GPL (>= 2)
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Encoding: UTF-8
 Depends:
     R (>= 3.5.1)

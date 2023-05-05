@@ -22,19 +22,19 @@ table_ic_gene_to_return <- reactive({
   
   z <- head(values$data@reductions$ica@feature.loadings[Gene_names,],input$select_number_IC_gene_heatmap)
   
-  p <- pheatmap(z,clustering_method = "ward.D",clustering_distance_cols = "correlation")
-  
-  row_order <- p[["tree_row"]][["order"]]
+  # gene order
+  dist = dist(z, method = 'euclidean')
+  y = hclust(dist, method = "ward.D")
+  row_order <- y$labels[y$order]
   z <- z[row_order,]
   
+  # IC order
   if (input$IC_gene_column_organization == TRUE){
-    col_order <- p[["tree_col"]][["order"]]
+    dist = dist(t(z), method = 'euclidean')
+    y = hclust(dist, method = "ward.D")
+    col_order <- y$labels[y$order]
     z <- z[,col_order]
   }
-  
-  # only keep IC of interest
-  
-  # z <- z[,names(Launch_analysis()@misc)[startsWith(names(Launch_analysis()@misc), "IC_")]]
   
   return(z)
 })

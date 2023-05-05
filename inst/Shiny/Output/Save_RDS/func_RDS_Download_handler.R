@@ -10,8 +10,12 @@ output$download_RDS <- downloadHandler(
     withProgress(message = 'Preparing RDS', value = 0, {
       
       incProgress(0.25, detail = paste("Preparing base data"))
-        
-      data <- Launch_analysis()
+      
+      if(!is.null(Launch_analysis())){
+        data <- Launch_analysis()
+      } else {
+        data = values$data
+      }
       
       incProgress(0.25, detail = paste("Preparing UMAP"))
       

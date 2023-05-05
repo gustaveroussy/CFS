@@ -8,10 +8,18 @@
 #' data = Show_IC_and_Enrich(data=data,dbs=c("GO_Biological_Process_2015"))
 #' 
 #' @export
-Show_IC_and_Enrich=function(data=NULL,dbs=c("GO_Biological_Process_2015")){
+Show_IC_and_Enrich=function(data=NULL, dbs=c("GO_Biological_Process_2015"), kurtosis = 3){
+  
+  #check if online
+  websiteLive <- getOption("enrichR.live")
+  if (websiteLive) {
+    listEnrichrSites()
+    setEnrichrSite("Enrichr") # Human genes   
+  }
+  
   print("Start printing")
-  for (IC in names(data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))])){
-    GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))][[IC]]
+  for (IC in names(data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>kurtosis))])){
+    GeneList <- data@misc$GeneAndStat$Contrib_gene[[IC]]
     GeneList <- GeneList %>% as_tibble %>%arrange(desc(abs(Sig)))
     tryCatch(
       expr = {

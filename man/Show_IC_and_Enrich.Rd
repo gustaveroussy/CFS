@@ -4,7 +4,11 @@
 \alias{Show_IC_and_Enrich}
 \title{enrich IC}
 \usage{
-Show_IC_and_Enrich(data = NULL, dbs = c("GO_Biological_Process_2015"))
+Show_IC_and_Enrich(
+  data = NULL,
+  dbs = c("GO_Biological_Process_2015"),
+  kurtosis = 3
+)
 }
 \value{
 datatables of enrichment intro the seurat object

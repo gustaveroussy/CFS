@@ -17,8 +17,15 @@ Launch_analysis <- reactive({
     
     data <- readRDS(input$input_file$datapath)
     
+    if(is.null(data@misc$GeneAndStat$kurtosis_value)){
+      values$IC_names = names(data@misc$GeneAndStat$Kurtosis_ICs)[data@misc$GeneAndStat$Kurtosis_ICs > 3]
+    } else {
+      values$IC_names = names(data@misc$GeneAndStat$Kurtosis_ICs)[data@misc$GeneAndStat$Kurtosis_ICs > data@misc$GeneAndStat$kurtosis_value]
+    }
+    
+    
     if (is.null(data@misc$annotation)){
-      row_names = names(data@misc)[grep('IC_', names(data@misc))]
+      row_names = values$IC_names
       data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
       rownames(data@misc$annotation) = row_names
       colnames(data@misc$annotation) = c('Use','Type','Annotation')
@@ -61,8 +68,6 @@ observeEvent(input$input_file, {
     } else {
       values$marker_gene = NULL
     }
-    
-    values$IC_names = rownames(values$data@misc$annotation)
     
     values$Stat = values$data@misc[["GeneAndStat"]]
     

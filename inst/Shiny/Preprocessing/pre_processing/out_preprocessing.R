@@ -11,24 +11,28 @@ observeEvent(input$preprocessing_action_button, {
       incProgress(0.2, detail = "Normalize")
       values$data = PrepNormData(data=values$data,organism=input$preprocessing_specie_select,variable_features=input$preprocessing_variable_features)
       incProgress(0.4, detail = "Calculating ICs")
-      values$data=ICASpatial(data=values$data,ncis=input$preprocessing_number_of_ICs,maxit=input$preprocessing_maxit,method=input$preprocessing_ICA_function,sd=input$preprocessing_kurtosis)
+      values$data=ICASpatial(data=values$data,ncis=input$preprocessing_number_of_ICs,maxit=input$preprocessing_maxit,method=input$preprocessing_ICA_function, kurtosis = input$preprocessing_kurtosis, sd = input$preprocessing_sd)
       incProgress(0.3, detail = "Enriching")
-      
-      values$data = Show_IC_and_Enrich(data=values$data,dbs=input$preprocessing_database)
+      if(!is.null(input$preprocessing_database)){
+        values$data = Show_IC_and_Enrich(data=values$data,dbs=input$preprocessing_database, kurtosis = values$data@misc$GeneAndStat$kurtosis_value)
+      }
       incProgress(0.1, detail = "Done")
-    
       
-      if (is.null(data@misc$annotation)){
-        row_names = names(data@misc)[grep('IC_', names(data@misc))]
-        data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
-        rownames(data@misc$annotation) = row_names
-        colnames(data@misc$annotation) = c('Use','Type','Annotation')
-        data@misc$annotation[,'Use'] = TRUE
+      if(is.null(values$data@misc$GeneAndStat$kurtosis_value)){
+        values$IC_names = names(values$data@misc$GeneAndStat$Kurtosis_ICs)[values$data@misc$GeneAndStat$Kurtosis_ICs > 3]
+      } else {
+        values$IC_names = names(values$data@misc$GeneAndStat$Kurtosis_ICs)[values$data@misc$GeneAndStat$Kurtosis_ICs > values$data@misc$GeneAndStat$kurtosis_value]
+      }
+    
+      if (is.null(values$data@misc$annotation)){
+        row_names = values$IC_names
+        values$data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
+        rownames(values$data@misc$annotation) = row_names
+        colnames(values$data@misc$annotation) = c('Use','Type','Annotation')
+        values$data@misc$annotation[,'Use'] = TRUE
       }
       
-      data@misc$annotation = as.matrix(data@misc$annotation)
-      
-      values$IC_names = rownames(values$data@misc$annotation)
+      values$data@misc$annotation = as.matrix(values$data@misc$annotation)
       
       values$Stat = values$data@misc[["GeneAndStat"]]
       

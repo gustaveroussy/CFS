@@ -9,6 +9,7 @@ ICASpatial(
   ncis = 100,
   maxit = 600,
   method = "icafast",
+  kurtosis = 3,
   sd = 3,
   ...
 )

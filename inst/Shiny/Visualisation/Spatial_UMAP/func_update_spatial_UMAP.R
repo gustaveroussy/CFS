@@ -72,6 +72,7 @@ current_plot_spatial <- reactive({
   )
   
   fig <- fig %>% event_register('plotly_click')
+  fig <- fig %>% event_register('plotly_brushed')
   
   return(fig)
 })

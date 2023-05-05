@@ -3,6 +3,7 @@
 ##----------------------------------------------------------------------------##
 
 output[["preprocessing_main_parameters_UI"]] <- renderUI({
+  websiteLive <- getOption("enrichR.live")
   tagList(
     HTML("<h3><b>Normalisation process</b></h3>"),
     selectInput("preprocessing_specie_select", label = "Select organism", 
@@ -20,9 +21,11 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
                 selected = "icafast"),
     numericInput("preprocessing_kurtosis", label = "Kurtosis filter", value = 3,
                  min = 0, step = 0.01),
+    numericInput("preprocessing_sd", label = "Standard deviation filter", value = 3,
+                 min = 0, step = 0.01),
     HTML("<h3><b>Enrichment process</b></h3>"),
     selectizeInput("preprocessing_database", label = "Enrichment database",
-                   choices = enrichR::listEnrichrDbs()$libraryName,
+                   choices = if (websiteLive){enrichR::listEnrichrDbs()$libraryName} else {NULL},
                    selected = NULL, multiple = TRUE,
                    options = NULL),
     actionButton("preprocessing_action_button", label = "Process")
