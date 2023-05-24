@@ -25,7 +25,8 @@ output[["Volcano_plot_UI"]] <- renderUI({
           height = NULL,
           collapsible = TRUE,
           collapsed = FALSE,
-          uiOutput("Volcano_plot_main_parameters_UI")
+          uiOutput("Volcano_plot_main_parameters_1_UI"),
+          uiOutput("Volcano_plot_main_parameters_2_UI")
       )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",

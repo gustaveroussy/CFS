@@ -16,9 +16,9 @@ output[["load_image_2_UI"]] <- renderUI({
            titlePanel("Load full res image"),
            fileInput(
              inputId = "input_image_2",
-             label = "Select image (.jpg file)",
+             label = "Select image (.png/.jpg file)",
              multiple = FALSE,
-             accept = c(".jpg"),
+             accept = c(".png",".jpg"),
              width = '350px',
              buttonLabel = "Browse...",
              placeholder = "No file selected"

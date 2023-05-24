@@ -4,6 +4,8 @@
 
 current_plot_spatial_scatter_pie <- reactive({
   
+  withProgress(message = 'Preparing Scatterpie', value = 0, {
+  
   data <- values$data
   max_col_img = dim(data@images[[1]]@image)[2]
   max_row_img = dim(data@images[[1]]@image)[1]
@@ -20,6 +22,8 @@ current_plot_spatial_scatter_pie <- reactive({
       type = NULL
     }
   }
+  
+  incProgress(0.1, detail = "getting ICs")
   
   if(!is.null(type)){
 
@@ -51,7 +55,7 @@ current_plot_spatial_scatter_pie <- reactive({
     
     #Radius(data@images[[1]])
     for (i in 1:nrow(ic_types)) {
-      
+      incProgress(0.7/nrow(ic_types), detail = "Preparing scatterpie data")
       t = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
       v = round(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])/sum(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]))*100,2)
       q = list()
@@ -79,6 +83,9 @@ current_plot_spatial_scatter_pie <- reactive({
                                hovertemplate = paste0("%{text}",
                                                       "<extra></extra>"))
     }
+    
+    incProgress(0.1, detail = "Preparing image")
+    
     if (input$Spatial_display_image == TRUE){
       if (is.null(values$HD_image)){
         if(!is.null(values$low_image)){
@@ -158,7 +165,7 @@ current_plot_spatial_scatter_pie <- reactive({
     
     #Radius(data@images[[1]])
     for (i in 1:nrow(ic_types)) {
-      
+      incProgress(0.7/nrow(ic_types), detail = "Preparing scatterpie data")
       t = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
       v = round(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])/sum(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]))*100,2)
       q = list()
@@ -187,6 +194,9 @@ current_plot_spatial_scatter_pie <- reactive({
                                hovertemplate = paste0("%{text}",
                                                       "<extra></extra>"))
     }
+    
+    incProgress(0.1/nrow(ic_types), detail = "Preparing image")
+    
     if (input$Spatial_display_image == TRUE){
       if (is.null(values$HD_image)){
         if(!is.null(values$low_image)){
@@ -236,5 +246,10 @@ current_plot_spatial_scatter_pie <- reactive({
       )
     }
   }
+  
+  incProgress(0.1, detail = "Done")
+  
+  })
+  
   return(fig)
 })

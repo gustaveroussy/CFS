@@ -14,10 +14,25 @@ output[["Volcano_plot"]] <- plotly::renderPlotly({
   
   input_log_fold_change = input$Volcano_plot_log_fold_change
   input_p_value = -log10(input$Volcano_plot_p_value)
+  
+  table_2 = head(table,input$Volcano_plot_top_gene)
+  
+  a <- list(
+    x = table_2$avg_log2FC,
+    y = -log10(table_2$p_val_adj),
+    text = rownames(table_2),
+    xref = "x",
+    yref = "y",
+    xanchor = 'left',
+    yanchor = 'bottom',
+    showarrow = FALSE,
+    arrowhead = 7,
+    ax = 20,
+    ay = -20
+  )
 
   fig <- plot_ly()
   
-
   fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
                            x = fold_change[(fold_change > input_log_fold_change)&(p_value >input_p_value)],
                            y = p_value[(fold_change > input_log_fold_change)&(p_value >input_p_value)],
@@ -60,7 +75,7 @@ output[["Volcano_plot"]] <- plotly::renderPlotly({
                                                   "<extra></extra>")
   )
 
-  fig <- fig %>% layout(xaxis=list(showgrid = TRUE, showticklabels=TRUE, range = list(-max(abs(fold_change))-(max(abs(fold_change))/10), max(abs(fold_change))+(max(abs(fold_change))/10))),
+  fig <- fig %>% layout(annotations = a, xaxis=list(showgrid = TRUE, showticklabels=TRUE, range = list(-max(abs(fold_change))-(max(abs(fold_change))/10), max(abs(fold_change))+(max(abs(fold_change))/10))),
                         yaxis = list(showgrid = TRUE, showticklabels=TRUE),
                         showlegend = FALSE, shapes = list(vline(input_log_fold_change, dash="dash"),
                                                           vline((-input_log_fold_change), dash="dash"),

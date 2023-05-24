@@ -7,11 +7,13 @@ output[["Marker_table_or_message"]] <- renderDT({
   
   req(values$UMAP)
   
-  values$marker_gene = marker_table()
+  if(is.null(values$marker_gene)){
+    values$marker_gene = marker_table()
+  }
   
   req(values$marker_gene)
   
-  DT = Prepare_table_marker(table = values$marker_gene[[(as.integer(input$marker_cluster_choice)+1)]])
+  DT = Prepare_table_marker(table = values$marker_gene[[(as.integer(input$marker_cluster_choice)+1)]], log = input$Volcano_plot_log_fold_change, pvalue = input$Volcano_plot_p_value)
   
   datatable(DT, options = list(pageLength = 100), class = 'cell-border stripe')#, colnames = c('IC' = 1))
 })

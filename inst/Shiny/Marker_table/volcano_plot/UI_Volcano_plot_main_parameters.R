@@ -2,16 +2,33 @@
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
 
-output[["Volcano_plot_main_parameters_UI"]] <- renderUI({
+output[["Volcano_plot_main_parameters_1_UI"]] <- renderUI({
+  if(!is.null(values$marker_gene)){
+    tagList(
+      sliderInput("Volcano_plot_log_fold_change", "Log2 fold change",
+                  min = 0, max = round(max(c(abs(min(values$marker_gene[[(as.integer(input$marker_cluster_choice)+1)]]$avg_log2FC)),
+                                             max(values$marker_gene[[(as.integer(input$marker_cluster_choice)+1)]]$avg_log2FC))),
+                                       digit = 2),
+                  value = 0.6, step = 0.01)
+    )
+  }
+})
+
+output[["Volcano_plot_main_parameters_2_UI"]] <- renderUI({
   tagList(
-    sliderInput("Volcano_plot_log_fold_change", "Log2 fold change",
-                min = 0, max = round(max(c(abs(min(values$marker_gene[[(as.integer(input$marker_cluster_choice)+1)]]$avg_log2FC)),
-                                           max(values$marker_gene[[(as.integer(input$marker_cluster_choice)+1)]]$avg_log2FC))),
-                                     digit = 2),
-                value = 0.6, step = 0.01),
-    sliderInput("Volcano_plot_p_value", "P-value",
-                min = 0, max = 1,
-                value = 0.05, step = 0.01),
+    numericInput(
+      "Volcano_plot_p_value", "P-value",
+      0.05,
+      min = 0,
+      max = 1,
+      step = 0.01
+    ),
+    numericInput(
+      "Volcano_plot_top_gene", "Top genes",
+      10,
+      min = 0,
+      step = 1
+    ),
     sliderInput("Volcano_plot_alpha", "Alpha",
                 min = 0, max = 1,
                 value = 1, step = 0.01),

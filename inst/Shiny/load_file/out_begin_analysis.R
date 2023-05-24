@@ -100,10 +100,22 @@ observeEvent(input$input_file, {
 
 observeEvent(input$input_image, {
   values$HD_image = NULL
-  values$HD_image <- raster2uri(raster::as.raster(readPNG(input$input_image$datapath)))
+  if (length(grep('.JPG',toupper(input$input_image$datapath))) != 0) {
+    values$HD_image <- raster2uri(raster::as.raster(readJPEG(input$input_image$datapath)))
+  } else if (length(grep('.PNG',toupper(input$input_image$datapath))) != 0){
+    values$HD_image <- raster2uri(raster::as.raster(readPNG(input$input_image$datapath)))
+  } else {
+    shinyalert("Oops!", "Wrong format (expecting .png or .jpg)", type = "error")
+  }
 })
 
 observeEvent(input$input_image_2, {
   values$HD_image_2 = NULL
-  values$HD_image_2 <- readJPEG(input$input_image_2$datapath)
+  if (length(grep('.JPG',toupper(input$input_image_2$datapath))) != 0) {
+    values$HD_image_2 <- readJPEG(input$input_image_2$datapath)
+  } else if (length(grep('.PNG',toupper(input$input_image_2$datapath))) != 0){
+    values$HD_image_2 <- readPNG(input$input_image_2$datapath)
+  } else {
+    shinyalert("Oops!", "Wrong format (expecting .png or .jpg)", type = "error")
+  }
 })
