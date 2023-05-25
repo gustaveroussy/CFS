@@ -51,7 +51,7 @@ current_plot_umap <- reactive({
 
   fig <- plot_ly(type = 'scatter',
                  mode='markers',
-                 source = "A"
+                 source = "G"
   )
   
   if (input$Plot_analysis_type == "UMAP"){

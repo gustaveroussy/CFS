@@ -15,7 +15,7 @@ output[["Volcano_plot"]] <- plotly::renderPlotly({
   input_log_fold_change = input$Volcano_plot_log_fold_change
   input_p_value = -log10(input$Volcano_plot_p_value)
   
-  table_2 = head(table,input$Volcano_plot_top_gene)
+  table_2 = head(table[which(table$p_val_adj < input$Volcano_plot_p_value & ( table$avg_log2FC < -input_log_fold_change | table$avg_log2FC > input_log_fold_change)),],input$Volcano_plot_top_gene)
   
   a <- list(
     x = table_2$avg_log2FC,

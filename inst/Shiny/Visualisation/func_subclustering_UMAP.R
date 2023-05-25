@@ -3,7 +3,7 @@
 ##----------------------------------------------------------------------------##
 
 selected_cells_plot <- reactive({
-  return(plotly::event_data(c("plotly_selected"), source = "A"))
+  return(plotly::event_data(c("plotly_selected"), source = "G"))
 })
 
 sub_UMAP_plot <- reactive({
