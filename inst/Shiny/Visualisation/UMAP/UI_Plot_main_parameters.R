@@ -15,8 +15,11 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     req(values$annotation_for_output)
     tagList(
       selectInput("Plot_display_type", label = "Select what to color", 
-                  choices = list("Clustering", "Ploïdie"), 
-                  selected = "Clustering"),
+                  choices = if(!is.null(values$UMAP)){unique(c("seurat_clusters","gene",colnames(values$UMAP@meta.data)))}else{unique(c("seurat_clusters","gene",colnames(values$data@meta.data)))}, 
+                  selected = "seurat_clusters"),
+      selectInput("select_color_visualisation_projection", label = "Select color", 
+                  choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd","Range"), 
+                  selected = "Viridis"),
       selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type to plot",
                      choices = unique(names(values$annotation_for_output)),
                      selected = NULL,
@@ -60,8 +63,21 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
   }
 })
 
+output[["Plot_main_parameters_2_UI"]] <- renderUI({
+  if(input$Plot_display_type == "gene"){
+    tagList(
+      selectizeInput("gene_UMAP_choice", label = "Choose gene",
+                     choices = rownames(values$data@assays$SCT@scale.data),
+                     selected = NULL,
+                     multiple = FALSE,
+                     options = NULL)
+    )
+  }
+})
+
 output[["start_plot_UI"]] <- renderUI({
   tagList(
+    actionButton("Select_all_ICs_visualisation", "Select all ICs"),
     actionButton("start_plot", "Start plot")
   )
 })

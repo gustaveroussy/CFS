@@ -4,11 +4,14 @@
 
 output[["IC_gene_heatmap_slider_main_parameters_UI"]] <- renderUI({
   req(values$data)
-  tagList(
-    sliderInput("slider_IC_gene_heatmap_range", label = "Color range", min = round(min(table_ic_gene_to_return()), digits = 0), 
-                max = round(max(table_ic_gene_to_return()), digits = 0), value = c(round(min(table_ic_gene_to_return()), digits = 0), round(max(table_ic_gene_to_return()), digits = 0))
+  mm = min_max_gene_heatmap()
+  if(mm$min != mm$max){
+    tagList(
+      sliderInput("slider_IC_gene_heatmap_range", label = "Color range", min = mm$min, 
+                  max = mm$max, value = c(mm$min, mm$max)
+      )
     )
-  )
+  }
 })
 
 output[["IC_gene_heatmap_number_main_parameters_UI"]] <- renderUI({

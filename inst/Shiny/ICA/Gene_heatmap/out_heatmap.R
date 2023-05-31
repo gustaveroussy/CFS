@@ -10,17 +10,36 @@ output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
   
   z <- table_ic_gene_to_return()
   
-  plot_ly(
-    x = colnames(z), y = rownames(z),
-    z = z, type = "heatmap", zmin = input$slider_IC_gene_heatmap_range[1], zmax = input$slider_IC_gene_heatmap_range[2],
-    colorscale = input$select_color_IC_gene_heatmap,
-    hovertemplate = paste(
-      "Gene: %{y:.2f%}<br>",
-      "IC: %{x:.2f%}<br>",
-      "Value: %{z:.2f%}",
-      "<extra></extra>"
+  mm = min_max_gene_heatmap()
+  
+  print(z)
+  
+  if(mm$max == mm$min){
+    plot_ly(
+      x = colnames(z), y = rownames(z),
+      z = z, type = "heatmap",
+      colorscale = input$select_color_IC_gene_heatmap,
+      hovertemplate = paste(
+        "Gene: %{y:.2f%}<br>",
+        "IC: %{x:.2f%}<br>",
+        "Value: %{z:.2f%}",
+        "<extra></extra>"
+      )
     )
-  )
+  } else {
+    plot_ly(
+      x = colnames(z), y = rownames(z),
+      z = z, type = "heatmap", zmin = input$slider_IC_gene_heatmap_range[1], zmax = input$slider_IC_gene_heatmap_range[2],
+      colorscale = input$select_color_IC_gene_heatmap,
+      hovertemplate = paste(
+        "Gene: %{y:.2f%}<br>",
+        "IC: %{x:.2f%}<br>",
+        "Value: %{z:.2f%}",
+        "<extra></extra>"
+      )
+    )
+  }
+
 })
 
 ##----------------------------------------------------------------------------##

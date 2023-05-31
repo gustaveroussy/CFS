@@ -8,6 +8,8 @@ output[["IC_enrichment"]] <- plotly::renderPlotly({
   req(input$IC_enrichment_database_choice)
   req(input$p_n_enrichment)
   
+  req(!is.null(values$data@misc[[input[["IC_choice"]]]][[input$p_n_enrichment]]))
+  
   data <- values$data
   IC_C = input[["IC_choice"]]
   database_C = input[["IC_enrichment_database_choice"]]

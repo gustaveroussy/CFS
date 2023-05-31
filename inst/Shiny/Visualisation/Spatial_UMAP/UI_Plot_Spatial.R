@@ -53,10 +53,13 @@ output[["Plot_Spatial_or_message"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 
 output[["Spatial_display_image_UI"]] <- renderUI({
-  shinyWidgets::awesomeCheckbox(
-    inputId = "Spatial_display_image",
-    label = "Display image",
-    value = TRUE
+  tagList(
+    shinyWidgets::awesomeCheckbox(
+      inputId = "Spatial_display_image",
+      label = "Display image",
+      value = TRUE
+    ),
+    numericInput("Plot_scatter_size_spatial", "Spot size", 10, min = 0, max = NA)
   )
 })
 

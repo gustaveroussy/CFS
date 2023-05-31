@@ -27,6 +27,7 @@ output[["Plot_UI"]] <- renderUI({
                collapsed = FALSE,
                uiOutput("Plot_type_UI"),
                uiOutput("Plot_main_parameters_UI"),
+               uiOutput("Plot_main_parameters_2_UI"),
                uiOutput("start_plot_UI")
            )
     ),
@@ -64,7 +65,12 @@ output[["Plot_UI"]] <- renderUI({
 
 output[["ggplot_scatter_pie_UI"]] <- renderUI({
   tagList(
-    checkboxInput("ggplot_scatter_pie", label = HTML("<font color=\"#FFFFFF\">Use ggplot scatter pie</font>"), value = FALSE)
+    shinyWidgets::awesomeCheckbox(
+      inputId = "ggplot_scatter_pie",
+      label = "Use ggplot scatter pie",
+      value = FALSE
+    ),
+    numericInput("Plot_scatter_size_UMAP", "Spot size", 10, min = 0, max = NA)
   )
 })
 
