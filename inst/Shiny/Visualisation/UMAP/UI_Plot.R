@@ -48,7 +48,10 @@ output[["Plot_UI"]] <- renderUI({
             icon = icon("cog"),
             inline = TRUE,
             size = "xs",
-            uiOutput("ggplot_scatter_pie_UI")
+            tags$div(
+              style = "color: black !important;",
+              uiOutput("ggplot_scatter_pie_UI")
+            )
           )
         ),
         status = "primary",

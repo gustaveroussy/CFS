@@ -157,3 +157,14 @@ current_plot_scatter_pie <- reactive({
     return(NULL)
   }
 })
+
+# for ggplot
+current_plot_spatial_scatter_pie_ggplot <- reactive({
+  req(values$data)
+  
+  fig = ggplot() +
+    geom_scatterpie(aes(x=long, y=lat, group=region), data=d,
+                    cols=LETTERS[1:4]) + coord_equal()
+  
+  return(fig)
+})

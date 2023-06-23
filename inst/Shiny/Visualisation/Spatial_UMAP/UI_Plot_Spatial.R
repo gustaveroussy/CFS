@@ -41,11 +41,17 @@ output[["Plot_Spatial_UI"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 
 output[["Plot_Spatial_or_message"]] <- renderUI({
+  if(input$Spatial_use_ggplot){
+    tagList(
+      plotly::plotOutput("scatter_pie_ggplot_plot")
+    )
+  } else {
     tagList(
       plotly::plotlyOutput("Plot_Spatial",
                            width = "auto",
                            height = "120vh")
     )
+  }
 })
 
 ##----------------------------------------------------------------------------##
@@ -54,6 +60,11 @@ output[["Plot_Spatial_or_message"]] <- renderUI({
 
 output[["Spatial_display_image_UI"]] <- renderUI({
   tagList(
+    shinyWidgets::awesomeCheckbox(
+      inputId = "Spatial_use_ggplot",
+      label = "Use ggplot",
+      value = TRUE
+    ),
     shinyWidgets::awesomeCheckbox(
       inputId = "Spatial_display_image",
       label = "Display image",
