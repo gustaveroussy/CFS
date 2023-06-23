@@ -5,7 +5,7 @@
 #' @return datatables of enrichment intro the seurat object
 #' 
 #' @examples 
-#' data = Show_Enrich(data=data,dbs=c("GO_Biological_Process_2015"))
+#' data = Enrich_ICA(data=data,dbs=c("GO_Biological_Process_2015"))
 #' 
 #' @export
 Enrich_ICA=function(data=NULL, dbs=c("GO_Biological_Process_2015"), kurtosis = 3){
