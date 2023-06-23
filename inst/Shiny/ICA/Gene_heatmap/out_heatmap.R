@@ -12,8 +12,6 @@ output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
   
   mm = min_max_gene_heatmap()
   
-  print(z)
-  
   if(mm$max == mm$min){
     plot_ly(
       x = colnames(z), y = rownames(z),

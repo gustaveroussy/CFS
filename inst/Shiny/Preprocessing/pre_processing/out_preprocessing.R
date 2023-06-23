@@ -7,6 +7,11 @@ preprocessing_values <- reactiveValues(button_check = 1, preprocessing_text_disp
 observeEvent(input$preprocessing_action_button, {
   req(values$data)
   if (input$preprocessing_action_button == preprocessing_values$button_check) {
+    
+    i <- (colSums(values$data@assays$Spatial, na.rm=T) != 0)
+    row_names_df_to_keep<-colnames(values$data@assays$Spatial[, i])
+    values$data = subset(x = values$data, cells = row_names_df_to_keep)
+    
     withProgress(message = 'Pre-processing', value = 0, {
       incProgress(0.2, detail = "Normalize")
       values$data = PrepNormData(data=values$data,organism=input$preprocessing_specie_select,variable_features=input$preprocessing_variable_features)
