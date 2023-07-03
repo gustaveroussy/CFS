@@ -26,7 +26,7 @@ current_plot_spatial <- reactive({
     if (input$Plot_display_type == "seurat_clusters"){
       for (i in 0:length(summary(data@meta.data[["seurat_clusters"]]))-1){
         
-        table = values$UMAP@reductions$ica@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),]
+        table = data@reductions$ica@cell.embeddings[which(data@meta.data[["seurat_clusters"]]==i),]
         list_cells_ICs = c()
         for(k in 1:length(rownames(table))){
           top_10_ICs = head(colnames(table)[order(table[rownames(table)[k], ],decreasing = TRUE)],10)

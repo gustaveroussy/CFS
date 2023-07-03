@@ -29,6 +29,7 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
                              marker = list(color = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())],
                                            colorscale = input$select_color_IC_projection,
                                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
+                                           size = input$Plot_spatial_IC_size,
                                            showscale = TRUE),
                              opacity = input$transparency_IC_spatial_range,
                              text = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())],

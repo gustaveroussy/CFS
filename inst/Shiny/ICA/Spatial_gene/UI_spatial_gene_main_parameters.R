@@ -13,7 +13,7 @@ output[["gene_choice_main_parameters_UI"]] <- renderUI({
     sliderInput("transparency_gene_projection", "Alpha",
                 min = 0, max = 1,
                 value = 1, step = 0.01),
-    numericInput("Plot_spatial_gene_size", "Spot size", 10, min = 0, max = NA)
+    numericInput("Plot_spatial_gene_size", "Spot size", 7, min = 0, max = NA)
   )
 })
 
