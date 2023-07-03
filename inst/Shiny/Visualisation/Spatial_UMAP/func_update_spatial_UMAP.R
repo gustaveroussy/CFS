@@ -25,6 +25,19 @@ current_plot_spatial <- reactive({
   if (input$Plot_analysis_type == "UMAP"){
     if (input$Plot_display_type == "seurat_clusters"){
       for (i in 0:length(summary(data@meta.data[["seurat_clusters"]]))-1){
+        
+        table = values$UMAP@reductions$ica@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),]
+        list_cells_ICs = c()
+        for(k in 1:length(rownames(table))){
+          top_10_ICs = head(colnames(table)[order(table[rownames(table)[k], ],decreasing = TRUE)],10)
+          final_vector = c('Top 10 ICs :\n')
+          for (j in top_10_ICs){
+            final_vector = c(final_vector,j,' : ',table[rownames(table)[k],j],'\n')
+            final_vector = paste(final_vector,collapse = "")
+          }
+          list_cells_ICs = c(list_cells_ICs,final_vector)
+        }
+        
         fig <- fig %>%
           add_trace(
             x = TissueCoordinates()[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)],
@@ -35,11 +48,12 @@ current_plot_spatial <- reactive({
               size = input$Plot_scatter_size_spatial
             ),
             showlegend = T,
-            text = i,
-            customdata = rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)],
-            hovertemplate = paste0("Cell : %{customdata}<br>",
-                                  "Cluster : %{text}",
-                                  "<extra></extra>")
+            text = rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)],#i,
+            customdata = list_cells_ICs,
+            hovertemplate = paste0("Cell : %{g}<br>",
+                                   "Cluster : %{text}<br>",
+                                   "%{customdata}",
+                                   "<extra></extra>")
           )
     } 
   } else if (input$Plot_display_type == "gene") {

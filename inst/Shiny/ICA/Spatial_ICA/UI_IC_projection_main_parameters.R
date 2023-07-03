@@ -16,6 +16,7 @@ output$pie_chart_check <- renderUI({
     sliderInput("transparency_IC_spatial_range", "Alpha",
                 min = 0, max = 1,
                 value = 1, step = 0.01),
+    numericInput("Plot_spatial_IC_size", "Spot size", 10, min = 0, max = NA),
     selectInput("select_color_IC_projection", label = "Select color", 
                 choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd","Range"), 
                 selected = "Viridis")

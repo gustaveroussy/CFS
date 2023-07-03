@@ -60,6 +60,7 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
     fig <- fig %>% add_trace(type = "scatter", mode = "markers", x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
                              marker = list(color = data@reductions$ica@cell.embeddings[, IC_C],
                                            colors = colfunc(),
+                                           size = input$Plot_spatial_IC_size,
                                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
                                            showscale = TRUE),
                              opacity = input$transparency_IC_spatial_range,

@@ -63,7 +63,7 @@ output[["Spatial_display_image_UI"]] <- renderUI({
     shinyWidgets::awesomeCheckbox(
       inputId = "Spatial_use_ggplot",
       label = "Use ggplot",
-      value = TRUE
+      value = FALSE
     ),
     shinyWidgets::awesomeCheckbox(
       inputId = "Spatial_display_image",
