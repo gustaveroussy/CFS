@@ -55,20 +55,41 @@ current_plot_umap <- reactive({
   if (input$Plot_analysis_type == "UMAP"){
     if (input$Plot_display_type == "seurat_clusters"){
       for (i in 0:length(summary(values$UMAP@meta.data[["seurat_clusters"]]))-1){
+        
+        table = values$UMAP@reductions$ica@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),]
+        list_cells_ICs = c()
+        for(k in 1:length(rownames(table))){
+          top_10_ICs = head(colnames(table)[order(table[rownames(table)[k], ],decreasing = TRUE)],10)
+          final_vector = c('Top 10 ICs :\n')
+          for (j in top_10_ICs){
+            final_vector = c(final_vector,j,' : ',table[rownames(table)[k],j],'\n')
+            final_vector = paste(final_vector,collapse = "")
+          }
+          list_cells_ICs = c(list_cells_ICs,final_vector)
+        }
+        
+        datatable <- data.table("x" = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),1],
+                                "y" = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),2],
+                                "cluster" = i,
+                                "cell_name" = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[["seurat_clusters"]]==i)],
+                                "t" = list_cells_ICs)
+        
         fig <- fig %>%
-          add_trace(
-            x = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),1],
-            y = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),2],
+          add_trace(data = datatable,
+            x = ~x,
+            y = ~y,
             name = i,
             marker = list(
               color = palette()[i+1],
               size = input$Plot_scatter_size_UMAP
             ),
+            text = datatable$cluster,
+            #text = datatable$cell_name,
+            customdata = datatable$t,
             showlegend = T,
-            text = i,
-            customdata = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[["seurat_clusters"]]==i)],
-            hovertemplate = paste0("Cell : %{customdata}<br>",
-                                   "Cluster : %{text}",
+            hovertemplate = paste0("Cell : %{g}<br>",
+                                   "Cluster : %{text}<br>",
+                                   "%{customdata}",
                                    "<extra></extra>")
           )
       }

@@ -15,8 +15,7 @@
 ICASpatial=function(data=NULL,ncis=100,maxit=600,method="icafast", kurtosis = 3, sd=3,...){
   
   data<-RunICA(data,verbose = TRUE,nics = ncis,maxit=maxit,ica.function = method)
-  data@reductions$ica@feature.loadings=correct_sign(data@reductions$ica@feature.loadings)
-  data@reductions$ica@cell.embeddings=correct_sign(data@reductions$ica@cell.embeddings)
+  data = correct_sign(data)
   rownames(data@reductions$ica@cell.embeddings)=colnames(data@assays$Spatial@data)
   
   # determine genes stats

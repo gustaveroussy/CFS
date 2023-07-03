@@ -47,7 +47,7 @@ output[["Plot_Spatial"]] <- plotly::renderPlotly({
   }
 })
 
-output[["Plot_Spatial_ggplot"]] <- plotly::renderPlot({
+output[["Plot_Spatial_ggplot"]] <- shiny::renderPlot({
   if (input$Plot_analysis_type == "Scatter pie") {
     return(plots$spatial_scatter_pie)
   }
