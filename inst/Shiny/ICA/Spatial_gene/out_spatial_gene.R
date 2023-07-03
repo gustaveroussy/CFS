@@ -65,7 +65,7 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
       
       plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
                         marker = list(color = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())],
-                                      size = Plot_spatial_gene_size,
+                                      size = input$Plot_spatial_gene_size,
                                       colorscale = input$select_color_gene_projection),
                         opacity = input$transparency_gene_projection,
                         type = 'scatter', mode = "markers",

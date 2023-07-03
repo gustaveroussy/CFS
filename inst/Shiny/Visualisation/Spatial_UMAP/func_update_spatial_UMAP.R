@@ -24,7 +24,7 @@ current_plot_spatial <- reactive({
   
   if (input$Plot_analysis_type == "UMAP"){
     if (input$Plot_display_type == "seurat_clusters"){
-      for (i in 0:length(summary(data@meta.data[["seurat_clusters"]]))-1){
+      for (i in 1:length(summary(data@meta.data[["seurat_clusters"]]))-1){
         
         table = data@reductions$ica@cell.embeddings[which(data@meta.data[["seurat_clusters"]]==i),]
         list_cells_ICs = c()
@@ -38,18 +38,26 @@ current_plot_spatial <- reactive({
           list_cells_ICs = c(list_cells_ICs,final_vector)
         }
         
+        r = length(as.vector(TissueCoordinates[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)]))
+        
+        datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)]),
+                                "y" = as.vector(TissueCoordinates[,"imagerow"][which(data@meta.data[["seurat_clusters"]]==i)]),
+                                "cluster" = rep(c(i),r),
+                                "cell_name" = as.vector(rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)]),
+                                "t" = list_cells_ICs)
+        
         fig <- fig %>%
-          add_trace(
-            x = TissueCoordinates()[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)],
-            y = TissueCoordinates()[,"imagerow"][which(data@meta.data[["seurat_clusters"]]==i)],
+          add_trace(data = datatable,
+            x = ~x,
+            y = ~y,
             name = i,
             marker = list(
               color = palette()[i+1],
               size = input$Plot_scatter_size_spatial
             ),
             showlegend = T,
-            text = rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)],#i,
-            customdata = list_cells_ICs,
+            text = datatable$cluster,#i,
+            customdata = datatable$t,
             hovertemplate = paste0("Cell : %{g}<br>",
                                    "Cluster : %{text}<br>",
                                    "%{customdata}",
