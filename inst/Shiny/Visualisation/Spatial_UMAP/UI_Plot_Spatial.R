@@ -43,7 +43,7 @@ output[["Plot_Spatial_UI"]] <- renderUI({
 output[["Plot_Spatial_or_message"]] <- renderUI({
   if(input$Spatial_use_ggplot){
     tagList(
-      plotly::plotOutput("scatter_pie_ggplot_plot")
+      shiny::plotOutput("scatter_pie_ggplot_plot")
     )
   } else {
     tagList(
