@@ -54,7 +54,7 @@ current_plot_umap <- reactive({
   
   if (input$Plot_analysis_type == "UMAP"){
     if (input$Plot_display_type == "seurat_clusters"){
-      for (i in 0:length(summary(values$UMAP@meta.data[["seurat_clusters"]]))-1){
+      for (i in 1:length(summary(values$UMAP@meta.data[["seurat_clusters"]]))-1){
         
         table = values$UMAP@reductions$ica@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),]
         list_cells_ICs = c()
