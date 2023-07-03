@@ -83,6 +83,25 @@ current_plot_spatial <- reactive({
                                "<extra></extra>")
       )
       
+    }  else if (input$Plot_display_type == "IC") {
+      
+      fig <- fig %>%
+        add_trace(
+          x = TissueCoordinates()[,"imagecol"],
+          y = TissueCoordinates()[,"imagerow"],
+          marker = list(
+            color = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
+            colorscale = input$select_color_visualisation_projection,
+            size = input$Plot_scatter_size_spatial
+          ),
+          showlegend = T,
+          text = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
+          customdata = rownames(values$UMAP@meta.data),
+          hovertemplate = paste0("Cell : %{customdata}<br>",
+                                 "Value : %{text}",
+                                 "<extra></extra>")
+        )
+      
     } else {
     if(typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
       fig <- fig %>%
