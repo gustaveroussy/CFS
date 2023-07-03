@@ -68,9 +68,11 @@ current_plot_umap <- reactive({
           list_cells_ICs = c(list_cells_ICs,final_vector)
         }
         
-        datatable <- data.frame("x" = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),1],
-                                "y" = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),2],
-                                "cluster" = i,
+        r = length(as.vector(values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),2]))
+        
+        datatable <- data.frame("x" = as.vector(values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),1]),
+                                "y" = as.vector(values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),2]),
+                                "cluster" = rep(c(i),r),
                                 "cell_name" = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[["seurat_clusters"]]==i)],
                                 "t" = list_cells_ICs)
         
