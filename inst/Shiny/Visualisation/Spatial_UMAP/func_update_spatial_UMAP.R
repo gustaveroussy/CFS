@@ -38,10 +38,10 @@ current_plot_spatial <- reactive({
           list_cells_ICs = c(list_cells_ICs,final_vector)
         }
         
-        r = length(as.vector(TissueCoordinates[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)]))
+        r = length(as.vector(TissueCoordinates()[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)]))
         
-        datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)]),
-                                "y" = as.vector(TissueCoordinates[,"imagerow"][which(data@meta.data[["seurat_clusters"]]==i)]),
+        datatable <- data.frame("x" = as.vector(TissueCoordinates()[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)]),
+                                "y" = as.vector(TissueCoordinates()[,"imagerow"][which(data@meta.data[["seurat_clusters"]]==i)]),
                                 "cluster" = rep(c(i),r),
                                 "cell_name" = as.vector(rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)]),
                                 "t" = list_cells_ICs)
