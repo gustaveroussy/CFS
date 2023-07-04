@@ -60,7 +60,7 @@ current_plot_umap <- reactive({
         list_cells_ICs = c()
         for(k in 1:length(rownames(table))){
           top_10_ICs = head(colnames(table)[order(table[rownames(table)[k], ],decreasing = TRUE)],10)
-          final_vector = c('Top 10 ICs :\n')
+          final_vector = c('Cluster : ', i,'\nTop 10 ICs :\n')
           for (j in top_10_ICs){
             final_vector = c(final_vector,j,' : ',table[rownames(table)[k],j],'\n')
             final_vector = paste(final_vector,collapse = "")
@@ -72,7 +72,6 @@ current_plot_umap <- reactive({
         
         datatable <- data.frame("x" = as.vector(values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),1]),
                                 "y" = as.vector(values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),2]),
-                                "cluster" = rep(c(i),r),
                                 "cell_name" = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[["seurat_clusters"]]==i)],
                                 "t" = list_cells_ICs)
         
@@ -85,12 +84,10 @@ current_plot_umap <- reactive({
               color = palette()[i+1],
               size = input$Plot_scatter_size_UMAP
             ),
-            text = datatable$cluster,
-            #text = datatable$cell_name,
+            text = datatable$cell_name,
             customdata = datatable$t,
             showlegend = T,
-            hovertemplate = paste0("Cell : %{g}<br>",
-                                   "Cluster : %{text}<br>",
+            hovertemplate = paste0("Cell : %{text}<br>",
                                    "%{customdata}",
                                    "<extra></extra>")
           )
@@ -173,7 +170,12 @@ current_plot_umap <- reactive({
           c = c+1
           }
         }
-      }
+    }
+    
+    fig <- fig %>% layout(xaxis = list(showgrid = input$show_grid_scatter_pie, zeroline=input$show_grid_scatter_pie,
+                                       visible = input$show_grid_scatter_pie),
+                          yaxis = list(showgrid = input$show_grid_scatter_pie, zeroline=input$show_grid_scatter_pie,
+                                       visible = input$show_grid_scatter_pie))
     
     fig <- fig %>% event_register('plotly_selected')
     

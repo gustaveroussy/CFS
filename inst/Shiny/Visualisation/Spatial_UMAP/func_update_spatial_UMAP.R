@@ -30,7 +30,7 @@ current_plot_spatial <- reactive({
         list_cells_ICs = c()
         for(k in 1:length(rownames(table))){
           top_10_ICs = head(colnames(table)[order(table[rownames(table)[k], ],decreasing = TRUE)],10)
-          final_vector = c('Top 10 ICs :\n')
+          final_vector = c('Cluster : ', i,'\nTop 10 ICs :\n')
           for (j in top_10_ICs){
             final_vector = c(final_vector,j,' : ',table[rownames(table)[k],j],'\n')
             final_vector = paste(final_vector,collapse = "")
@@ -42,7 +42,6 @@ current_plot_spatial <- reactive({
         
         datatable <- data.frame("x" = as.vector(TissueCoordinates()[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)]),
                                 "y" = as.vector(TissueCoordinates()[,"imagerow"][which(data@meta.data[["seurat_clusters"]]==i)]),
-                                "cluster" = rep(c(i),r),
                                 "cell_name" = as.vector(rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)]),
                                 "t" = list_cells_ICs)
         
@@ -56,10 +55,9 @@ current_plot_spatial <- reactive({
               size = input$Plot_scatter_size_spatial
             ),
             showlegend = T,
-            text = datatable$cluster,#i,
+            text = datatable$cell_name,#i,
             customdata = datatable$t,
-            hovertemplate = paste0("Cell : %{g}<br>",
-                                   "Cluster : %{text}<br>",
+            hovertemplate = paste0("Cell : %{text}<br>",
                                    "%{customdata}",
                                    "<extra></extra>")
           )

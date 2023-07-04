@@ -69,6 +69,11 @@ output[["Plot_UI"]] <- renderUI({
 output[["ggplot_scatter_pie_UI"]] <- renderUI({
   tagList(
     shinyWidgets::awesomeCheckbox(
+      inputId = "show_grid_scatter_pie",
+      label = "Display plotly grid",
+      value = TRUE
+    ),
+    shinyWidgets::awesomeCheckbox(
       inputId = "ggplot_scatter_pie",
       label = "Use ggplot scatter pie",
       value = FALSE
