@@ -34,65 +34,44 @@ current_plot_spatial_density <- reactive({
                          z = as.numeric(grid$z))
     griddf$z2=ifelse(griddf$z<quantile(griddf$z,na.rm = TRUE,probs = seq(0, 1, 1/10))[2],0,griddf$z)
     
-    # Create plotly object
+    # Add density
+    
     fig <- plot_ly(source = "B")
     
-    # Add spot
-  #  fig <- fig %>%
-  #    add_trace(
-  #      x = GetTissueCoordinates(data)[,"imagecol"],
-  #      y = GetTissueCoordinates(data)[,"imagerow"],
-  #      marker = list(
-  #        color = 'blue'
-  #      ),
-  #      showlegend = F
-  #    )
-    
-    # Add density
-    if (input$Plot_contour_density == TRUE){
-      p1 <- ggplot( data = ic_types,aes(x = imagecol, y = imagerow)) +
-        annotation_raster(img,xmin = 0,xmax = Inf,ymin = 0,ymax = Inf)+
-        geom_contour(data = griddf,aes(x = x, y = y , z=z2),breaks = input$Plot_thresh_density)  +
-        geom_contour_filled(data = griddf,aes(x = x, y = y , z=z2),alpha=input$Plot_thresh_alpha_density, breaks = c(input$Plot_thresh_density,1), fill="blue")+ 
-        coord_equal()+
-        theme_void()
+    if (input$Plot_show_image_density == TRUE) {
       
-      fig = ggplotly(p1)
-      
+      fig <- fig %>%
+        add_trace(
+          type = "contour",
+          x = griddf$x,
+          y = griddf$y,
+          z = griddf$z2,
+          showlegend = T,
+          contours = list(
+            end = 1,
+            size = 0.1,
+            start = input$Plot_thresh_density
+          ),
+          opacity=(input$Plot_thresh_alpha_density + 2)
+        )
     } else {
-      if (input$Plot_show_image_density == TRUE) {
-        fig <- fig %>%
-          add_trace(
-            type = "contour",
-            x = griddf$x,
-            y = griddf$y,
-            z = griddf$z2,
-            showlegend = T,
-            contours = list(
-              end = 1,
-              size = 0.1,
-              start = input$Plot_thresh_density
-            ),
-            opacity=(input$Plot_thresh_alpha_density + 2)
-          )
-      } else {
-        fig <- fig %>%
-          add_trace(
-            type = "contour",
-            x = griddf$x,
-            y = griddf$y,
-            z = griddf$z2,
-            showlegend = T,
-            contours = list(
-              end = 1,
-              size = 0.1,
-              start = input$Plot_thresh_density
-            ),
-            opacity=1
-          )
-      }
-      fig <- fig %>% colorbar(title = "Cell type\ndensity")
+      fig <- fig %>%
+        add_trace(
+          type = "contour",
+          x = griddf$x,
+          y = griddf$y,
+          z = griddf$z2,
+          showlegend = T,
+          contours = list(
+            end = 1,
+            size = 0.1,
+            start = input$Plot_thresh_density
+          ),
+          opacity=1
+        )
     }
+    
+    fig <- fig %>% colorbar(title = "Cell type\ndensity")
     
     if (!is.null(values$UMAP)){
       for (i in 0:length(summary(values$UMAP@meta.data[["seurat_clusters"]]))-1){
@@ -148,9 +127,10 @@ current_plot_spatial_density <- reactive({
     }
     
     fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                   yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                   autosize = TRUE
+                          yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                          autosize = TRUE
     )
+  
   } else {
     ic_types=values$data@reductions$ica@cell.embeddings[,type]
     
@@ -193,5 +173,19 @@ current_plot_spatial_density <- reactive({
                           autosize = TRUE
     )
   }
+  
+  return(fig)
+})
+
+
+current_plot_spatial_density_ggplot <- reactive({
+  
+  fig <- ggplot( data = ic_types,aes(x = imagecol, y = imagerow)) +
+    annotation_raster(if(!is.null(values$HD_image)){as.raster(values$HD_image)}else{raster::as.raster(values$data@images$slice1@image)}, xmin = 0, xmax = Inf, ymin = 0, ymax = Inf)+
+    geom_contour(data = griddf,aes(x = x, y = y , z=z2),breaks = input$Plot_thresh_density)  +
+    geom_contour_filled(data = griddf,aes(x = x, y = y , z=z2),alpha=input$Plot_thresh_alpha_density, breaks = c(input$Plot_thresh_density,1), fill="blue")+ 
+    coord_equal()+
+    theme_void()
+  
   return(fig)
 })

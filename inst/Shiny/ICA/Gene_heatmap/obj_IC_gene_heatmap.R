@@ -7,7 +7,11 @@ GeneList_heatmap_IC <- reactive({
   req(input$IC_choice)
   IC_C = input[["IC_choice"]]
   data <- values$data
-  GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>(data@misc[["GeneAndStat"]][["kurtosis_value"]])))][[IC_C]]
+  if(!is.null(data@misc[["GeneAndStat"]][["kurtosis_value"]])){
+    GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>(data@misc[["GeneAndStat"]][["kurtosis_value"]])))][[IC_C]]
+  } else {
+    GeneList <- data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>(3)))][[IC_C]]
+  }
   GeneList <- GeneList %>% as_tibble %>%arrange(desc(abs(Sig)))
   if(length(GeneList$gene) == 1){
     Gene <- data@reductions$ica@feature.loadings[GeneList$gene,][IC_C]

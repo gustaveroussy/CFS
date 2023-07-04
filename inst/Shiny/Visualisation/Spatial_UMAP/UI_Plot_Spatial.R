@@ -43,7 +43,9 @@ output[["Plot_Spatial_UI"]] <- renderUI({
 output[["Plot_Spatial_or_message"]] <- renderUI({
   if(input$Spatial_use_ggplot){
     tagList(
-      shiny::plotOutput("scatter_pie_ggplot_plot")
+      shiny::plotOutput("Plot_Spatial_ggplot",
+                        width = "auto",
+                        height = "120vh")
     )
   } else {
     tagList(

@@ -45,7 +45,6 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
                      selected = NULL,
                      multiple = TRUE,
                      options = NULL),
-      checkboxInput("Plot_contour_density", label = "Contour", value = FALSE),
       checkboxInput("Plot_show_image_density", label = "Display image", value = TRUE),
       numericInput("Plot_thresh_density", label = "threshold", value = 0.3, min = 0, step = 0.1),
       numericInput("Plot_thresh_alpha_density", label = "alpha", value = 0.5, min = 0, max = 1, step = 0.1)

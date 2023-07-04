@@ -11,8 +11,13 @@ observeEvent(input$start_plot, {
       plots$spatial = current_plot_spatial()
     } else if (input$Plot_analysis_type == "Density") {
       req(input$Plot_display_type_choice)
-      plots$density = current_plot_density()
-      plots$spatial_density = current_plot_spatial_density()
+      if(input$Spatial_use_ggplot){
+        #plots$density = current_plot_density()
+        plots$spatial_density = current_plot_spatial_density_ggplot()
+      } else {
+        plots$density = current_plot_density()
+        plots$spatial_density = current_plot_spatial_density()
+      }
     } else if (input$Plot_analysis_type == "Scatter pie") {
       req(values$data)
       #plots$scatter_pie = current_plot_scatter_pie()
@@ -48,7 +53,9 @@ output[["Plot_Spatial"]] <- plotly::renderPlotly({
 })
 
 output[["Plot_Spatial_ggplot"]] <- shiny::renderPlot({
-  if (input$Plot_analysis_type == "Scatter pie") {
+  if (input$Plot_analysis_type == "Density") {
+    return(plots$spatial_density)
+  } else if (input$Plot_analysis_type == "Scatter pie") {
     return(plots$spatial_scatter_pie)
   }
 })

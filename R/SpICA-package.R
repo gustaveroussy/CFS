@@ -11,6 +11,7 @@
 #' @import interp
 #' @import stringr
 #' @import scales
+#' @import ggplot2
 #' @importFrom viridis viridis
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG

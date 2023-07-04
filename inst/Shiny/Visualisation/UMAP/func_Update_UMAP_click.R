@@ -14,8 +14,13 @@ observeEvent(clicked_cell_UMAP(), {
   req(values$HD_image_2)
   table = clicked_cell_UMAP()
   
-  table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
-  table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
+  if (is.null(values$HD_image)) {
+    table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
+    table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
+  } else {
+    table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["hires"]])
+    table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["hires"]])
+  }
   
   min_x = table$x-ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
   min_y = table$y-ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
