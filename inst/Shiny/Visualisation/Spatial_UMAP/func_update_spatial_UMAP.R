@@ -71,7 +71,8 @@ current_plot_spatial <- reactive({
         marker = list(
           color = values$UMAP@assays$SCT@scale.data[input$gene_UMAP_choice,],
           colorscale = input$select_color_visualisation_projection,
-          size = input$Plot_scatter_size_spatial
+          size = input$Plot_scatter_size_spatial,
+          showscale = T
         ),
         showlegend = T,
         text = values$UMAP@assays$SCT@scale.data[input$gene_UMAP_choice,],
@@ -80,6 +81,8 @@ current_plot_spatial <- reactive({
                                "Value : %{text}",
                                "<extra></extra>")
       )
+    
+    fig <- fig %>% layout(showlegend = F)
       
     }  else if (input$Plot_display_type == "IC") {
       
@@ -90,7 +93,8 @@ current_plot_spatial <- reactive({
           marker = list(
             color = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
             colorscale = input$select_color_visualisation_projection,
-            size = input$Plot_scatter_size_spatial
+            size = input$Plot_scatter_size_spatial,
+            showscale = T
           ),
           showlegend = T,
           text = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
@@ -99,6 +103,8 @@ current_plot_spatial <- reactive({
                                  "Value : %{text}",
                                  "<extra></extra>")
         )
+      
+      fig <- fig %>% layout(showlegend = F)
       
     } else {
     if(typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
@@ -109,7 +115,8 @@ current_plot_spatial <- reactive({
           marker = list(
             color = values$UMAP@meta.data[[input$Plot_display_type]],
             colorscale = input$select_color_visualisation_projection,
-            size = input$Plot_scatter_size_spatial
+            size = input$Plot_scatter_size_spatial,
+            showscale = T
           ),
           showlegend = T,
           text = values$UMAP@meta.data[[input$Plot_display_type]],
@@ -118,6 +125,9 @@ current_plot_spatial <- reactive({
                                 "Value : %{text}<br>",
                                 "<extra></extra>")
         )
+      
+      fig <- fig %>% layout(showlegend = F)
+      
     } else {
         c = 1
         for (i in unique(data@meta.data[[input$Plot_display_type]])){

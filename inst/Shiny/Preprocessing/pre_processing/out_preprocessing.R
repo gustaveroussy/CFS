@@ -8,9 +8,18 @@ observeEvent(input$preprocessing_action_button, {
   req(values$data)
   if (input$preprocessing_action_button == preprocessing_values$button_check) {
     
-    i <- (colSums(values$data@assays$Spatial, na.rm=T) != 0)
+    values$annotation_for_output = list()
+    values$IC_names = NULL
+    values$Stat = NULL
+    values$Annotation = NULL
+    values$UMAP = NULL
+    values$marker_gene = NULL
+    values$HD_image = NULL
+    values$HD_image_2 = NULL
+    
+    i <- (Matrix::colSums(values$data@assays$Spatial@counts, na.rm=T) != 0)
     row_names_df_to_keep<-colnames(values$data@assays$Spatial[, i])
-    values$data = subset(x = values$data, cells = row_names_df_to_keep)
+    values$data = values$data[, row_names_df_to_keep]
     
     withProgress(message = 'Pre-processing', value = 0, {
       incProgress(0.2, detail = "Normalize")
@@ -29,13 +38,11 @@ observeEvent(input$preprocessing_action_button, {
         values$IC_names = names(values$data@misc$GeneAndStat$Kurtosis_ICs)[values$data@misc$GeneAndStat$Kurtosis_ICs > values$data@misc$GeneAndStat$kurtosis_value]
       }
     
-      if (is.null(values$data@misc$annotation)){
-        row_names = values$IC_names
-        values$data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
-        rownames(values$data@misc$annotation) = row_names
-        colnames(values$data@misc$annotation) = c('Use','Type','Annotation')
-        values$data@misc$annotation[,'Use'] = TRUE
-      }
+      row_names = values$IC_names
+      values$data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
+      rownames(values$data@misc$annotation) = row_names
+      colnames(values$data@misc$annotation) = c('Use','Type','Annotation')
+      values$data@misc$annotation[,'Use'] = TRUE
       
       values$data@misc$annotation = as.matrix(values$data@misc$annotation)
       
@@ -65,15 +72,7 @@ observeEvent(input$preprocessing_action_button, {
 })
 
 observe({
-  if(!is.null(values$data)){
-    if("SCT" %in% names(values$data@assays)){
-      preprocessing_values$preprocessing_text_display = paste0("<b>Number of spots : </b>", dim(values$data@assays$SCT@scale.data)[2],
-                                                               "<br><b>Number of features : </b>", dim(values$data@assays$SCT@scale.data)[1]
-      )
-    } else {
-      preprocessing_values$preprocessing_text_display = paste0("<b>Number of spots : </b>", dim(values$data@assays$Spatial@counts)[2],
-                                                               "<br><b>Number of features : </b>", dim(values$data@assays$Spatial@counts)[1]
-      )
-    }
-  }
+    preprocessing_values$preprocessing_text_display = paste0("<b>Number of spots : </b>", dim(values$data)[2],
+                                                             "<br><b>Number of features : </b>", dim(values$data)[1]
+    )
 })

@@ -26,13 +26,10 @@ observeEvent(input$load_data_file_select, {
           values$Annotation = NULL
           values$UMAP = NULL
           values$low_image = NULL
-          values$UMAP = NULL
           values$marker_gene = NULL
           values$IC_names = NULL
-          values$low_image = NULL
           values$HD_image = NULL
           values$HD_image_2 = NULL
-          values$Stat = NULL
           
           incProgress(0.2, detail = "Loading spatial 10X")
           # load the seurat object
