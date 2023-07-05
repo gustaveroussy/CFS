@@ -31,7 +31,7 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
                                            cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
                                            size = input$Plot_spatial_IC_size,
                                            showscale = TRUE,
-                                           opacity = (data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())])/max(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())])*input$transparency_IC_spatial_range),
+                                           opacity = if(input$transparency_IC_spatial_choice == 1){input$transparency_IC_spatial_range}else{(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())])/max(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())])*input$transparency_IC_spatial_range}),
                              text = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())],
                              customdata = names(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())]),
                              hovertemplate = paste0("Cell : %{customdata}<br>",
