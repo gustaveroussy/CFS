@@ -15,7 +15,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     req(values$annotation_for_output)
     tagList(
       selectInput("Plot_display_type", label = "Select what to color", 
-                  choices = if(!is.null(values$UMAP)){unique(c("seurat_clusters","gene","IC",colnames(values$UMAP@meta.data)))}else{unique(c("seurat_clusters","gene",colnames(values$data@meta.data)))}, 
+                  choices = if(!is.null(values$UMAP)){unique(c("seurat_clusters","gene","IC",colnames(values$UMAP@meta.data)))}else{unique(c("seurat_clusters","gene","IC",colnames(values$data@meta.data)))}, 
                   selected = "seurat_clusters"),
       selectInput("select_color_visualisation_projection", label = "Select color", 
                   choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd","Range"), 
@@ -72,12 +72,44 @@ output[["Plot_main_parameters_2_UI"]] <- renderUI({
                      options = NULL)
     )
   } else if (input$Plot_display_type == "IC"){
-    selectizeInput("IC_UMAP_choice", label = "Choose ICs",
-                   choices = values$IC_names,
-                   selected = NULL,
-                   multiple = FALSE,
-                   options = NULL)
+    tagList(
+      selectizeInput("IC_UMAP_choice", label = "Choose ICs",
+                     choices = values$IC_names,
+                     selected = NULL,
+                     multiple = FALSE,
+                     options = NULL)
+    )
   }
+})
+
+output[["Plot_main_parameters_3_UI"]] <- renderUI({
+  if(input$Plot_display_type == "gene"){
+    tagList(
+      sliderInput("slider_visual_spatial_range", label = "Color range",
+                  min = round(min(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0), 
+                  max = round(max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0),
+                  value = c(round(min(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]),digits = 0),
+                            round(max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0)),
+                  step = 0.01)
+    )
+  } else if (input$Plot_display_type == "IC"){
+    req(input$IC_UMAP_choice)
+    tagList(
+      sliderInput("slider_visual_spatial_range", label = "Color range",
+                  min = round(min(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0), 
+                  max = round(max(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0),
+                  value = c(round(min(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]),digits = 0),
+                            round(max(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0)),
+                  step = 0.01)
+      )
+    } else if (typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
+      sliderInput("slider_visual_spatial_range", label = "Color range",
+                  min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
+                  max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
+                  value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
+                            round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
+                  step = 0.01)
+    }
 })
 
 output[["start_plot_UI"]] <- renderUI({

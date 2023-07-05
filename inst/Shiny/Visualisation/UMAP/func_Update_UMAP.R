@@ -102,7 +102,8 @@ current_plot_umap <- reactive({
             color = values$UMAP@assays$SCT@scale.data[input$gene_UMAP_choice,],
             colorscale = input$select_color_visualisation_projection,
             size = input$Plot_scatter_size_UMAP,
-            showscale = T
+            showscale = T,
+            cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2]
           ),
           showlegend = T,
           text = values$UMAP@assays$SCT@scale.data[input$gene_UMAP_choice,],
@@ -124,7 +125,8 @@ current_plot_umap <- reactive({
             color = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
             colorscale = input$select_color_visualisation_projection,
             size = input$Plot_scatter_size_UMAP,
-            showscale = T
+            showscale = T,
+            cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2]
           ),
           showlegend = T,
           text = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
@@ -146,7 +148,8 @@ current_plot_umap <- reactive({
               color = values$UMAP@meta.data[[input$Plot_display_type]],
               colorscale = input$select_color_visualisation_projection,
               size = input$Plot_scatter_size_UMAP,
-              showscale = T
+              showscale = T,
+              cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2]
             ),
             showlegend = T,
             text = values$UMAP@meta.data[[input$Plot_display_type]],

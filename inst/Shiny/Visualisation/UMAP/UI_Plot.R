@@ -27,6 +27,7 @@ output[["Plot_UI"]] <- renderUI({
                collapsed = FALSE,
                uiOutput("Plot_type_UI"),
                uiOutput("Plot_main_parameters_UI"),
+               uiOutput("Plot_main_parameters_3_UI"),
                uiOutput("Plot_main_parameters_2_UI"),
                uiOutput("start_plot_UI")
            )
