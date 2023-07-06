@@ -42,6 +42,19 @@ output[["Spatial_gene_UI"]] <- renderUI({
             style = "margin-right: 3px"
           ),
           shinyWidgets::dropdownButton(
+            tags$div(
+              style = "color: black !important;",
+              numericInput('spatial_gene_export_width','width',640,min = 1,max = NA,step = 1,width = NULL),
+              numericInput('spatial_gene_export_height','height',480,min = 1,max = NA,step = 1,width = NULL),
+              numericInput('spatial_gene_export_scale','scale',1,min = 0.001,max = NA,step = 0.01,width = NULL),
+              uiOutput("spatial_gene_export_UI")
+            ),
+            circle = FALSE,
+            icon = icon("download"),
+            inline = TRUE,
+            size = "xs"
+          ),
+          shinyWidgets::dropdownButton(
             circle = FALSE,
             icon = icon("cog"),
             inline = TRUE,
@@ -63,7 +76,17 @@ output[["Spatial_gene_UI"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.
 ##----------------------------------------------------------------------------##
-#output[["groups_tree_text"]] <- renderText({ "Data not available." })
+output[["spatial_gene_export_UI"]] <- renderUI({
+  shinyFiles::shinySaveButton(
+    "spatial_gene_export",
+    label = HTML("<p style='color:black;'>export</p>"),
+    title = "png, jpg, jpeg, webp, svg, or pdf",
+    filetype = c("png", "jpg", "jpeg", "webp", "svg", "pdf"),
+    viewtype = "icon",
+    class = "btn-xs",
+    style = "margin-right: 3px"
+  )
+})
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.

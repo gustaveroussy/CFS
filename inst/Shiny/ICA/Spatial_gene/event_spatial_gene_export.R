@@ -1,7 +1,7 @@
 ##----------------------------------------------------------------------------##
 ## Export projection plot to PDF when pressing the "export to PDF" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["top_IC_heatmap_export"]], {
+observeEvent(input[["spatial_gene_export"]], {
   req(values$data)
   ## open dialog to select where plot should be saved and how the file should
   ## be named
@@ -12,7 +12,7 @@ observeEvent(input[["top_IC_heatmap_export"]], {
   ## be named
   shinyFiles::shinyFileSave(
     input,
-    id = "top_IC_heatmap_export",
+    id = "spatial_gene_export",
     roots = available_storage_volumes,
     session = session,
     restrictions = system.file(package = "base")
@@ -21,7 +21,7 @@ observeEvent(input[["top_IC_heatmap_export"]], {
   ## retrieve info from dialog
   save_file_input <- shinyFiles::parseSavePath(
     available_storage_volumes,
-    input[["top_IC_heatmap_export"]]
+    input[["spatial_gene_export"]]
   )
   
   ## only proceed if a path has been provided
@@ -34,12 +34,12 @@ observeEvent(input[["top_IC_heatmap_export"]], {
   ## check if selection projection consists of 2 or 3 dimensions
   ## ... selection projection consists of 2 dimensions
   
-  plot <- output_heatmap_all_ICs()
+  plot <- spatial_gene_react()
   
   
   ## save plot
   
-  save_image(plot, save_file_path, width = input$top_IC_heatmap_export_width, height = input$top_IC_heatmap_export_height, scale = input$top_IC_heatmap_export_scale)
+  save_image(plot, save_file_path, width = input$spatial_gene_export_width, height = input$spatial_gene_export_height, scale = input$spatial_gene_export_scale)
   
   ## check if file was succesfully saved
   ## ... successful

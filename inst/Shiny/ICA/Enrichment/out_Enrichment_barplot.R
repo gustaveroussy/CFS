@@ -3,6 +3,10 @@
 ##----------------------------------------------------------------------------##
 
 output[["IC_enrichment"]] <- plotly::renderPlotly({
+  return(enrichment_barplot_react())
+})
+
+enrichment_barplot_react <- reactive({
   req(values$data)
   req(input$IC_choice)
   req(input$IC_enrichment_database_choice)
@@ -62,5 +66,4 @@ output[["IC_enrichment"]] <- plotly::renderPlotly({
   fig <- fig %>% layout(yaxis = list(autorange = "reversed", title = 'Enrichment', tickfont = list(size = 7)),
                         xaxis = list(title = 'Nb genes', tickfont = list(size = 10))
   )
-  
 })

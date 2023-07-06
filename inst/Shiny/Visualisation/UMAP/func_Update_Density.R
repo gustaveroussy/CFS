@@ -18,6 +18,7 @@ current_plot_density <- reactive({
       name = input$Plot_display_type_choice
       type = values$annotation_for_output[[input$Plot_display_type_choice]]
     }
+    
     l=length(type)
     
     if (l > 1){
@@ -40,60 +41,23 @@ current_plot_density <- reactive({
       )
       
       # Add density
-      if (input$Plot_contour_density == TRUE){
-        # continuer à faire des formes
-        x = data@reductions$ica@cell.embeddings[,type]
-        x$sum = as.vector(lapply(x,sum))
         
-        fig <- fig %>% add_trace(
-          type = "scatter",
-          mode = "lines",
-          fill = "toself",
-          x = c(2,4,6,4,2),
-          y = c(2,4,2,0,2),
-          # x = griddf$x,
-          # y = griddf$y,
-          # z = griddf$z2,
+      fig <- fig %>%
+        add_trace(
+          type = "contour",
+          x = griddf$x,
+          y = griddf$y,
+          z = griddf$z2,
           showlegend = T,
-          # contours = list(
-          #   end = 1,
-          #   size = 0.1,
-          #   start = input$Plot_thresh_density
-          # ),
+          contours = list(
+            end = 1, 
+            size = 0.1, 
+            start = input$Plot_thresh_density
+          ),
           opacity=1
         )
-
-        fig <- fig %>% colorbar(title = "UMAP\ndensity")
-        
-        # fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-        #                       yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-        #                       autosize = TRUE,
-        #                       shapes = list(
-        #                         list(type = "rect",
-        #                              fillcolor = "blue", line = list(color = "blue"), opacity = 0.3,
-        #                              x0 = "1980-01-01", x1 = "1985-01-01", xref = "x",
-        #                              y0 = 4, y1 = 12.5, yref = "y"))
-        # )
-        
-      } else {
-        
-        fig <- fig %>%
-          add_trace(
-            type = "contour",
-            x = griddf$x,
-            y = griddf$y,
-            z = griddf$z2,
-            showlegend = T,
-            contours = list(
-              end = 1, 
-              size = 0.1, 
-              start = input$Plot_thresh_density
-            ),
-            opacity=1
-          )
-        
-        fig <- fig %>% colorbar(title = "UMAP\ndensity")
-      }
+      
+      fig <- fig %>% colorbar(title = "UMAP\ndensity")
   
       # ADD umap
       for (i in 0:length(summary(values$UMAP@meta.data[["seurat_clusters"]]))-1){

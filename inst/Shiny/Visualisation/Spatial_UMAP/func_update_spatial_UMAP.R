@@ -73,7 +73,8 @@ current_plot_spatial <- reactive({
           colorscale = input$select_color_visualisation_projection,
           size = input$Plot_scatter_size_spatial,
           showscale = T,
-          cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2]
+          cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+          opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,])/max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,])*input$transparency_visual_spatial_range}
         ),
         showlegend = T,
         text = values$UMAP@assays$SCT@scale.data[input$gene_UMAP_choice,],
@@ -96,6 +97,7 @@ current_plot_spatial <- reactive({
             colorscale = input$select_color_visualisation_projection,
             size = input$Plot_scatter_size_spatial,
             cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])/max(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])*input$transparency_visual_spatial_range},
             showscale = T
           ),
           showlegend = T,
@@ -119,6 +121,7 @@ current_plot_spatial <- reactive({
             colorscale = input$select_color_visualisation_projection,
             size = input$Plot_scatter_size_spatial,
             showscale = T,
+            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@meta.data[[input$Plot_display_type]])/max(values$UMAP@meta.data[[input$Plot_display_type]])*input$transparency_visual_spatial_range},
             cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2]
           ),
           showlegend = T,

@@ -63,91 +63,95 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
 })
 
 output[["Plot_main_parameters_2_UI"]] <- renderUI({
-  if(input$Plot_display_type == "gene"){
-    tagList(
-      selectizeInput("gene_UMAP_choice", label = "Choose gene",
-                     choices = rownames(values$data@assays$SCT@scale.data),
-                     selected = NULL,
-                     multiple = FALSE,
-                     options = NULL)
-    )
-  } else if (input$Plot_display_type == "IC"){
-    tagList(
-      selectizeInput("IC_UMAP_choice", label = "Choose ICs",
-                     choices = values$IC_names,
-                     selected = NULL,
-                     multiple = FALSE,
-                     options = NULL)
-    )
+  if(input$Plot_analysis_type == "UMAP"){
+    if(input$Plot_display_type == "gene"){
+      tagList(
+        selectizeInput("gene_UMAP_choice", label = "Choose gene",
+                       choices = rownames(values$data@assays$SCT@scale.data),
+                       selected = NULL,
+                       multiple = FALSE,
+                       options = NULL)
+      )
+    } else if (input$Plot_display_type == "IC"){
+      tagList(
+        selectizeInput("IC_UMAP_choice", label = "Choose ICs",
+                       choices = values$IC_names,
+                       selected = NULL,
+                       multiple = FALSE,
+                       options = NULL)
+      )
+    }
   }
 })
 
 output[["Plot_main_parameters_3_UI"]] <- renderUI({
-  if(input$Plot_display_type == "gene"){
-    tagList(
-      sliderInput("slider_visual_spatial_range", label = "Color range",
-                  min = round(min(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0), 
-                  max = round(max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0),
-                  value = c(round(min(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]),digits = 0),
-                            round(max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0)),
-                  step = 0.01),
-      radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
-                   choices = list("Flat" = 1, "gene value" = 2), 
-                   selected = 1),
-      sliderInput("transparency_visual_spatial_range", "Alpha",
-                  min = 0, max = 1,
-                  value = 1, step = 0.01)
-    )
-  } else if (input$Plot_display_type == "IC"){
-    req(input$IC_UMAP_choice)
-    tagList(
-      sliderInput("slider_visual_spatial_range", label = "Color range",
-                  min = round(min(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0), 
-                  max = round(max(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0),
-                  value = c(round(min(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]),digits = 0),
-                            round(max(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0)),
-                  step = 0.01),
-      radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
-                   choices = list("Flat" = 1, "IC value" = 2), 
-                   selected = 1),
-      sliderInput("transparency_visual_spatial_range", "Alpha",
-                  min = 0, max = 1,
-                  value = 1, step = 0.01)
+  if(input$Plot_analysis_type == "UMAP"){
+    if(input$Plot_display_type == "gene"){
+      tagList(
+        sliderInput("slider_visual_spatial_range", label = "Color range",
+                    min = round(min(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0), 
+                    max = round(max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0),
+                    value = c(round(min(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]),digits = 0),
+                              round(max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0)),
+                    step = 0.01),
+        radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
+                     choices = list("Flat" = 1, "gene value" = 2), 
+                     selected = 1),
+        sliderInput("transparency_visual_spatial_range", "Alpha",
+                    min = 0, max = 1,
+                    value = 1, step = 0.01)
       )
-  } else {
-    if(is.null(values$UMAP)){
-      if (typeof(values$data@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
-        tagList(
+    } else if (input$Plot_display_type == "IC"){
+      req(input$IC_UMAP_choice)
+      tagList(
         sliderInput("slider_visual_spatial_range", label = "Color range",
-                    min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
-                    max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
-                    value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
-                              round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
+                    min = round(min(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0), 
+                    max = round(max(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0),
+                    value = c(round(min(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]),digits = 0),
+                              round(max(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0)),
                     step = 0.01),
-        radioButtons("transparency_Visual_spatial_choice", label = "Alpha type",
-                     choices = list("Flat" = 1, "value" = 2), 
+        radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
+                     choices = list("Flat" = 1, "IC value" = 2), 
                      selected = 1),
-        sliderInput("transparency_Visual_spatial_range", "Alpha",
+        sliderInput("transparency_visual_spatial_range", "Alpha",
                     min = 0, max = 1,
                     value = 1, step = 0.01)
         )
-      }
     } else {
-      if (typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
-        tagList(
-        sliderInput("slider_visual_spatial_range", label = "Color range",
-                    min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
-                    max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
-                    value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
-                              round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
-                    step = 0.01),
-        radioButtons("transparency_Visual_spatial_choice", label = "Alpha type",
-                     choices = list("Flat" = 1, "value" = 2), 
-                     selected = 1),
-        sliderInput("transparency_Visual_spatial_range", "Alpha",
-                    min = 0, max = 1,
-                    value = 1, step = 0.01)
-        )
+      if(is.null(values$UMAP)){
+        if (typeof(values$data@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
+          tagList(
+          sliderInput("slider_visual_spatial_range", label = "Color range",
+                      min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
+                      max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
+                      value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
+                                round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
+                      step = 0.01),
+          radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
+                       choices = list("Flat" = 1, "value" = 2), 
+                       selected = 1),
+          sliderInput("transparency_visual_spatial_range", "Alpha",
+                      min = 0, max = 1,
+                      value = 1, step = 0.01)
+          )
+        }
+      } else {
+        if (typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
+          tagList(
+          sliderInput("slider_visual_spatial_range", label = "Color range",
+                      min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
+                      max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
+                      value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
+                                round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
+                      step = 0.01),
+          radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
+                       choices = list("Flat" = 1, "value" = 2), 
+                       selected = 1),
+          sliderInput("transparency_visual_spatial_range", "Alpha",
+                      min = 0, max = 1,
+                      value = 1, step = 0.01)
+          )
+        }
       }
     }
   }

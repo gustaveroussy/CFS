@@ -42,14 +42,18 @@ output[["ICA_top_IC_UI"]] <- renderUI({
             title = "Show additional information for this panel.",
             style = "margin-right: 3px"
           ),
-          shinyFiles::shinySaveButton(
-            "top_IC_heatmap_export",
-            label = "export to PDF",
-            title = "Export dimensional reduction to PDF file.",
-            filetype = "pdf",
-            viewtype = "icon",
-            class = "btn-xs",
-            style = "margin-right: 3px"
+          shinyWidgets::dropdownButton(
+            tags$div(
+              style = "color: black !important;",
+              numericInput('top_IC_heatmap_export_width','width',640,min = 1,max = NA,step = 1,width = NULL),
+              numericInput('top_IC_heatmap_export_height','height',480,min = 1,max = NA,step = 1,width = NULL),
+              numericInput('top_IC_heatmap_export_scale','scale',1,min = 0.001,max = NA,step = 0.01,width = NULL),
+              uiOutput("top_IC_heatmap_export_UI")
+            ),
+            circle = FALSE,
+            icon = icon("download"),
+            inline = TRUE,
+            size = "xs"
           ),
           shinyWidgets::dropdownButton(
             tags$div(
@@ -127,6 +131,19 @@ outputOptions(
   "top_IC_kurtosis_filter_UI",
   suspendWhenHidden = FALSE
 )
+
+output[["top_IC_heatmap_export_UI"]] <- renderUI({
+  shinyFiles::shinySaveButton(
+    "top_IC_heatmap_export",
+    label = HTML("<p style='color:black;'>export</p>"),
+    title = "png, jpg, jpeg, webp, svg, or pdf",
+    filetype = c("png", "jpg", "jpeg", "webp", "svg", "pdf"),
+    viewtype = "icon",
+    class = "btn-xs",
+    style = "margin-right: 3px"
+  )
+})
+
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.
 ##----------------------------------------------------------------------------##

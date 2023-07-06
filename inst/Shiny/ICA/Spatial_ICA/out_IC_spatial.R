@@ -3,6 +3,10 @@
 ##----------------------------------------------------------------------------##
 
 output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
+  return(IC_spatial_output_react())
+})
+
+IC_spatial_output_react <- reactive({
   req(values$data)
   
   data <- values$data

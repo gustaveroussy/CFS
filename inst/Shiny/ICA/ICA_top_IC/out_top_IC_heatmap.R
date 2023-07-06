@@ -2,9 +2,11 @@
 ## top IC heatmap
 ##----------------------------------------------------------------------------##
 
-# wrapper
-
 output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
+  return(output_heatmap_all_ICs())
+})
+
+output_heatmap_all_ICs <- reactive({
   
   data_heat = top_IC_heatmap_table()
   

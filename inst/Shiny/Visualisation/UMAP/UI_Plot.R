@@ -45,6 +45,19 @@ output[["Plot_UI"]] <- renderUI({
             style = "margin-right: 3px"
           ),
           shinyWidgets::dropdownButton(
+            tags$div(
+              style = "color: black !important;",
+              numericInput('plot_export_width','width',640,min = 1,max = NA,step = 1,width = NULL),
+              numericInput('plot_export_height','height',480,min = 1,max = NA,step = 1,width = NULL),
+              numericInput('plot_export_scale','scale',1,min = 0.001,max = NA,step = 0.01,width = NULL),
+              uiOutput("plot_export_UI")
+            ),
+            circle = FALSE,
+            icon = icon("download"),
+            inline = TRUE,
+            size = "xs"
+          ),
+          shinyWidgets::dropdownButton(
             circle = FALSE,
             icon = icon("cog"),
             inline = TRUE,
@@ -89,6 +102,19 @@ outputOptions(
   "ggplot_scatter_pie_UI",
   suspendWhenHidden = FALSE
 )
+
+# export button
+output[["plot_export_UI"]] <- renderUI({
+  shinyFiles::shinySaveButton(
+    "plot_export",
+    label = HTML("<p style='color:black;'>export</p>"),
+    title = "png, jpg, jpeg, webp, svg, or pdf",
+    filetype = c("png", "jpg", "jpeg", "webp", "svg", "pdf"),
+    viewtype = "icon",
+    class = "btn-xs",
+    style = "margin-right: 3px"
+  )
+})
 
 ##----------------------------------------------------------------------------##
 ## UI element that either shows a plot or a text message if data is not

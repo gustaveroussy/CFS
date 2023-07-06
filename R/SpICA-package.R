@@ -12,6 +12,7 @@
 #' @import stringr
 #' @import scales
 #' @import ggplot2
+#' @import reticulate
 #' @importFrom viridis viridis
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG

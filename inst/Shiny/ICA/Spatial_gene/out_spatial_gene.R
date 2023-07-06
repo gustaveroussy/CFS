@@ -3,6 +3,10 @@
 ##----------------------------------------------------------------------------##
 
 output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
+  return(spatial_gene_react())
+})
+
+spatial_gene_react <- reactive({
   data <- values$data
   
   IC_C = input[["IC_choice"]]
@@ -64,18 +68,18 @@ output[["Spatial_gene_plot"]] <- plotly::renderPlotly({
       }
       
       plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
-                        marker = list(color = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())],
-                                      size = input$Plot_spatial_gene_size,
-                                      colorscale = input$select_color_gene_projection),
-                        opacity = input$transparency_gene_projection,
-                        type = 'scatter', mode = "markers",
-                        text = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())],
-                        customdata = names(data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())]),
-                        hovertemplate = paste0("Cell : %{customdata}<br>",
-                                               "Expression: %{text}",
-                                               "<extra></extra>")
-        ) %>% layout(title = input$gene_projection_gene_choice, xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                     yaxis = list(showgrid = FALSE, showticklabels=FALSE))
+                                                   marker = list(color = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())],
+                                                                 size = input$Plot_spatial_gene_size,
+                                                                 colorscale = input$select_color_gene_projection),
+                                                   opacity = input$transparency_gene_projection,
+                                                   type = 'scatter', mode = "markers",
+                                                   text = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())],
+                                                   customdata = names(data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())]),
+                                                   hovertemplate = paste0("Cell : %{customdata}<br>",
+                                                                          "Expression: %{text}",
+                                                                          "<extra></extra>")
+      ) %>% layout(title = input$gene_projection_gene_choice, xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                   yaxis = list(showgrid = FALSE, showticklabels=FALSE))
       i = i+1
     }
     

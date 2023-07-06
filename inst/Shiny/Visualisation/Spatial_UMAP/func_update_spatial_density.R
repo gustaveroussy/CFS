@@ -114,7 +114,6 @@ current_plot_spatial_density <- reactive({
           opacity=input$Plot_thresh_alpha_density
         )
     }
-    
     # Add image in the background
     if (input$Plot_show_image_density == TRUE) {
       if (is.null(values$HD_image)){
@@ -156,7 +155,6 @@ current_plot_spatial_density <- reactive({
                                 "Level : %{text}",
                                 "<extra></extra>")
        )
-     
      # Add image in the background
      if (input$Plot_show_image_density == TRUE) {
        if (is.null(values$HD_image)){

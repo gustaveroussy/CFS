@@ -3,6 +3,10 @@
 ##----------------------------------------------------------------------------##
 
 output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
+  return(heatmap_IC_gene_react())
+})
+
+heatmap_IC_gene_react <- reactive({
   req(values$data)
   req(input$IC_choice)
   
@@ -37,7 +41,6 @@ output[["IC_gene_heatmap"]] <- plotly::renderPlotly({
       )
     )
   }
-
 })
 
 ##----------------------------------------------------------------------------##

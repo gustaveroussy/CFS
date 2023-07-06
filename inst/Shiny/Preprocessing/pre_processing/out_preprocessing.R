@@ -18,7 +18,7 @@ observeEvent(input$preprocessing_action_button, {
     values$HD_image_2 = NULL
     
     i <- (Matrix::colSums(values$data@assays$Spatial@counts, na.rm=T) != 0)
-    row_names_df_to_keep<-colnames(values$data@assays$Spatial[, i])
+    row_names_df_to_keep<-colnames(values$data@assays$Spatial)[i]
     values$data = values$data[, row_names_df_to_keep]
     
     withProgress(message = 'Pre-processing', value = 0, {
