@@ -99,14 +99,15 @@ current_plot_umap <- reactive({
           x = values$UMAP[["umap"]]@cell.embeddings[,1],
           y = values$UMAP[["umap"]]@cell.embeddings[,2],
           marker = list(
-            color = values$UMAP@assays$SCT@scale.data[input$gene_UMAP_choice,],
+            color = values$data@assays$SCT@scale.data[input$gene_UMAP_choice,],
             colorscale = input$select_color_visualisation_projection,
             size = input$Plot_scatter_size_UMAP,
             showscale = T,
-            cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2]
+            cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,])/max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,])*input$transparency_visual_spatial_range}
           ),
           showlegend = T,
-          text = values$UMAP@assays$SCT@scale.data[input$gene_UMAP_choice,],
+          text = values$data@assays$SCT@scale.data[input$gene_UMAP_choice,],
           customdata = rownames(values$UMAP@meta.data),
           hovertemplate = paste0("Cell : %{customdata}<br>",
                                  "Value : %{text}",
@@ -126,7 +127,8 @@ current_plot_umap <- reactive({
             colorscale = input$select_color_visualisation_projection,
             size = input$Plot_scatter_size_UMAP,
             showscale = T,
-            cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2]
+            cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])/max(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])*input$transparency_visual_spatial_range}
           ),
           showlegend = T,
           text = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
@@ -149,7 +151,8 @@ current_plot_umap <- reactive({
               colorscale = input$select_color_visualisation_projection,
               size = input$Plot_scatter_size_UMAP,
               showscale = T,
-              cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2]
+              cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+              opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@meta.data[[input$Plot_display_type]])/max(values$UMAP@meta.data[[input$Plot_display_type]])*input$transparency_visual_spatial_range}
             ),
             showlegend = T,
             text = values$UMAP@meta.data[[input$Plot_display_type]],

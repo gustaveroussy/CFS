@@ -90,7 +90,13 @@ output[["Plot_main_parameters_3_UI"]] <- renderUI({
                   max = round(max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0),
                   value = c(round(min(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]),digits = 0),
                             round(max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,]), digits = 0)),
-                  step = 0.01)
+                  step = 0.01),
+      radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
+                   choices = list("Flat" = 1, "gene value" = 2), 
+                   selected = 1),
+      sliderInput("transparency_visual_spatial_range", "Alpha",
+                  min = 0, max = 1,
+                  value = 1, step = 0.01)
     )
   } else if (input$Plot_display_type == "IC"){
     req(input$IC_UMAP_choice)
@@ -100,16 +106,51 @@ output[["Plot_main_parameters_3_UI"]] <- renderUI({
                   max = round(max(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0),
                   value = c(round(min(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]),digits = 0),
                             round(max(values$data@reductions$ica@cell.embeddings[, input$IC_UMAP_choice]), digits = 0)),
-                  step = 0.01)
+                  step = 0.01),
+      radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
+                   choices = list("Flat" = 1, "IC value" = 2), 
+                   selected = 1),
+      sliderInput("transparency_visual_spatial_range", "Alpha",
+                  min = 0, max = 1,
+                  value = 1, step = 0.01)
       )
-    } else if (typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
-      sliderInput("slider_visual_spatial_range", label = "Color range",
-                  min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
-                  max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
-                  value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
-                            round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
-                  step = 0.01)
+  } else {
+    if(is.null(values$UMAP)){
+      if (typeof(values$data@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
+        tagList(
+        sliderInput("slider_visual_spatial_range", label = "Color range",
+                    min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
+                    max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
+                    value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
+                              round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
+                    step = 0.01),
+        radioButtons("transparency_Visual_spatial_choice", label = "Alpha type",
+                     choices = list("Flat" = 1, "value" = 2), 
+                     selected = 1),
+        sliderInput("transparency_Visual_spatial_range", "Alpha",
+                    min = 0, max = 1,
+                    value = 1, step = 0.01)
+        )
+      }
+    } else {
+      if (typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
+        tagList(
+        sliderInput("slider_visual_spatial_range", label = "Color range",
+                    min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
+                    max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
+                    value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
+                              round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
+                    step = 0.01),
+        radioButtons("transparency_Visual_spatial_choice", label = "Alpha type",
+                     choices = list("Flat" = 1, "value" = 2), 
+                     selected = 1),
+        sliderInput("transparency_Visual_spatial_range", "Alpha",
+                    min = 0, max = 1,
+                    value = 1, step = 0.01)
+        )
+      }
     }
+  }
 })
 
 output[["start_plot_UI"]] <- renderUI({
