@@ -45,7 +45,7 @@ Create_vizgen_seurat=function(spot_gene_expression=NULL, pixel_format = 40, min.
   genes = unique(spot_gene_expression[,'gene'])
   
   # get n_spot for coordinates
-  n_spot = ceiling(max_x/pixel_format)*ceiling(max_y/pixel_format)
+  n_spot = ceiling((max_x-min_x)/pixel_format)*ceiling((max_y-min_y)/pixel_format)
   
   low_window_x = min_x
   low_window_y = min_y
@@ -54,53 +54,25 @@ Create_vizgen_seurat=function(spot_gene_expression=NULL, pixel_format = 40, min.
   low_y = c()
   high_x = c()
   high_y = c()
-
-
-  # fill table
-  for (i in 1:ceiling(max_x/pixel_format)){
-    # get coordinates for windows against x
-    high_window_x = i*pixel_format
-    high_window_y = pixel_format
-    
-    low_x = c(low_x, low_window_x)
-    low_y = c(low_y, low_window_y)
-    high_x = c(high_x, high_window_x)
-    high_y = c(high_y,  high_window_y)
-    
-    low_window_x = i*pixel_format
-  }
   
+  # fill table
   low_window_x = min_x
   low_window_y = min_y
   
-  for (j in 2:ceiling(max_y/pixel_format)){
-    high_window_x = pixel_format
-    high_window_y = j*pixel_format
-    
-    low_x = c(low_x, low_window_x)
-    low_y = c(low_y, low_window_y)
-    high_x = c(high_x, high_window_x)
-    high_y = c(high_y,  high_window_y)
-    
-    low_window_y = j*pixel_format
-  }
-  
-  low_window_x = pixel_format
-  low_window_y = pixel_format
-    
-  for (i in 1:ceiling(max_x/pixel_format)){
-    high_window_x = i*pixel_format
-    for (j in 1:ceiling(max_y/pixel_format)){
-      high_window_y = j*pixel_format
+  # fill table
+  for (i in 1:ceiling((max_x-min_x)/pixel_format)){
+    high_window_x = min_x + i*pixel_format
+    for (j in 1:ceiling((max_y-min_y)/pixel_format)){
+      high_window_y = min_y + j*pixel_format
       
       low_x = c(low_x, low_window_x)
       low_y = c(low_y, low_window_y)
       high_x = c(high_x, high_window_x)
       high_y = c(high_y,  high_window_y)
       
-      low_window_y = j*pixel_format
+      low_window_y = min_y + j*pixel_format
     }
-    low_window_x = i*pixel_format
+    low_window_x = min_x + i*pixel_format
   }
   
   spot_coordinates = data.frame(low_x = low_x, low_y = low_y, high_x = high_x, high_y = high_y)
@@ -122,14 +94,17 @@ Create_vizgen_seurat=function(spot_gene_expression=NULL, pixel_format = 40, min.
     spot_coordinates[,k] = 0
   }
   
-  for(i in 1:nrow(spot_coordinates)){
+  # get real n_spot for coordinates
+  n_spot = nrow(spot_coordinates)
+  
+  for(i in 1:n_spot){
     print(i)
     table = spot_gene_expression[which(spot_gene_expression[,'global_x'] > spot_coordinates[i,'low_x']  & spot_gene_expression[,'global_y'] > spot_coordinates[i,'low_y']  & spot_gene_expression[,'global_x'] < spot_coordinates[i,'high_x'] & spot_gene_expression[,'global_y'] < spot_coordinates[i,'high_y']),]
     table = table(table$gene) 
     spot_coordinates[i,names(table)] = table
   }
   
-  saveRDS(spot_coordinates,"spot_coordinates_40px.RDS")
+  saveRDS(spot_coordinates,paste0("./spot_coordinates_", pixel_format,"px.RDS"))
   
   genes_table = spot_coordinates[,!colnames(spot_coordinates) %in% c("low_x",
                                  "low_y",
@@ -155,7 +130,7 @@ Create_vizgen_seurat=function(spot_gene_expression=NULL, pixel_format = 40, min.
                                      row.names = NULL,
   )
   
-  DT =   genes_table = spot_coordinates[,colnames(spot_coordinates) %in% c("x","y","imagerow","imagecol")]
+  DT = spot_coordinates[,colnames(spot_coordinates) %in% c("x","y","imagerow","imagecol")]
   
   seurat.object@images$image =  new(
     Class = 'SlideSeq',

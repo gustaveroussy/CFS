@@ -14,7 +14,7 @@ output$pie_chart_check <- renderUI({
                           round(max(values$data@reductions$ica@cell.embeddings[, IC_C]), digits = 0)),
                 step = 0.01),
     radioButtons("transparency_IC_spatial_choice", label = "Alpha type",
-                 choices = list("Flat" = 1, "IC value" = 2), 
+                 choices = list("Constant" = 1, "Scaling" = 2), 
                  selected = 1),
     sliderInput("transparency_IC_spatial_range", "Alpha",
                 min = 0, max = 1,

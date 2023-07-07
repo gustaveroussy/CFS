@@ -149,7 +149,7 @@ Create_CosMX_seurat_tx=function(tx=NULL, pixel_format = 600, min.features = 5){
   
   close(pb)
   
-  saveRDS(spot_coordinates,"spot_coordinates_200px.RDS")
+  saveRDS(spot_coordinates,paste0("./spot_coordinates_", pixel_format,"px.RDS"))
   
   genes_table = spot_coordinates[,!colnames(spot_coordinates) %in% c("low_x",
                                  "low_y",

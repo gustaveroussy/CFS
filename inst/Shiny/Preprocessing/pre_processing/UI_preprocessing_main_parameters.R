@@ -26,7 +26,17 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
     HTML("<h3><b>Enrichment process</b></h3>"),
     selectizeInput("preprocessing_database", label = "Enrichment database",
                    choices = if (websiteLive){enrichR::listEnrichrDbs()$libraryName} else {NULL},
-                   selected = c("GO_Biological_Process_2021","GO_Molecular_Function_2021","Azimuth_Cell_Types_2021","CellMarker_Augmented_2021","MSigDB_Hallmark_2020","Reactome_2022","KEGG_2021_Human","ENCODE_Histone_Modifications_2015","PanglaoDB_Augmented_2021"), multiple = TRUE,
+                   selected = c("PanglaoDB_Augmented_2021",
+                                "CellMarker_Augmented_2021",
+                                "Azimuth_Cell_Types_2021",
+                                "Tabula_Sapiens",
+                                "Tabula_Muris",
+                                "GO_Biological_process_2023",
+                                "GO_Molecular_Function_2023",
+                                "GO_Cellular_Compartment_2023",
+                                "MSigDB_Hallmark_2020",
+                                "Reactome_2022",
+                                "KEGG_2021_Human"), multiple = TRUE,
                    options = NULL),
     actionButton("preprocessing_action_button", label = "Process")
     )

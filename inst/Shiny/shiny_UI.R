@@ -24,6 +24,7 @@
 # library(imagefx)
 # library(heatmaply)
 # library(scales)
+# reticulate::use_python("/home/c_thuilliez/anaconda3/bin/python3")
 library(enrichR)
 # library(e1071)
 
