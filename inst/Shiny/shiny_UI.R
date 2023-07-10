@@ -24,7 +24,16 @@
 # library(imagefx)
 # library(heatmaply)
 # library(scales)
-# reticulate::use_python("/home/c_thuilliez/anaconda3/bin/python3")
+if(!file.exists(miniconda_path())){
+  reticulate::install_miniconda()
+}
+
+if(!reticulate::py_module_available("kaleido")){
+  reticulate::conda_install('r-reticulate', 'python-kaleido=0.1.0')
+  reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')
+}
+
+reticulate::use_miniconda('r-reticulate')
 library(enrichR)
 # library(e1071)
 

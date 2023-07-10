@@ -6,7 +6,7 @@ observeEvent(input[["top_IC_heatmap_export"]], {
   ## open dialog to select where plot should be saved and how the file should
   ## be named
   
-  available_storage_volumes <- getVolumes()
+  available_storage_volumes <- shinyFiles::getVolumes()
   
   ## open dialog to select where plot should be saved and how the file should
   ## be named
