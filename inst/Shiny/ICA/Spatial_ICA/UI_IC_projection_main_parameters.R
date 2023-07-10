@@ -15,7 +15,7 @@ output$pie_chart_check <- renderUI({
                 step = 0.01),
     radioButtons("transparency_IC_spatial_choice", label = "Alpha type",
                  choices = list("Constant" = 1, "Scaling" = 2), 
-                 selected = 1),
+                 selected = 2),
     sliderInput("transparency_IC_spatial_range", "Alpha",
                 min = 0, max = 1,
                 value = 1, step = 0.01),

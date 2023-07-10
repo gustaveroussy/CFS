@@ -109,7 +109,7 @@ output[["plot_export_UI"]] <- renderUI({
     "plot_export",
     label = HTML("<p style='color:black;'>export</p>"),
     title = "png, jpg, jpeg, webp, svg, or pdf",
-    filetype = c("png", "jpg", "jpeg", "webp", "svg", "pdf"),
+    filetype = c("pdf", "png", "jpg", "jpeg", "webp", "svg"),
     viewtype = "icon",
     class = "btn-xs",
     style = "margin-right: 3px"
