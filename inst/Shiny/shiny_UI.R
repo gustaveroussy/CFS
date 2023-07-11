@@ -73,7 +73,22 @@ ui <- dashboardPage(
       menuItem("Ouput", tabName = "Output", icon = icon("arrow-up-from-bracket")),
       menuItem("About", tabName = "About", icon = icon("bars"))
     ),
-    uiOutput("IC_list_UI")
+    uiOutput("IC_list_UI"),
+    shinyWidgets::awesomeCheckbox(
+      inputId = "spatial_mirror_X",
+      label = "mirror X",
+      value = FALSE
+    ),
+    shinyWidgets::awesomeCheckbox(
+      inputId = "spatial_mirror_Y",
+      label = "mirror Y",
+      value = FALSE
+    ),
+    shinyWidgets::awesomeCheckbox(
+      inputId = "spatial_flip",
+      label = "flip",
+      value = FALSE
+    )
   ),
   dashboardBody(
     tabItems(
