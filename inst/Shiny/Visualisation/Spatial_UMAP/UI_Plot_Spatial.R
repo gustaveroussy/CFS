@@ -28,6 +28,7 @@ output[["Plot_Spatial_UI"]] <- renderUI({
           shinyWidgets::dropdownButton(
             tags$div(
               style = "color: black !important;",
+              uiOutput("invert_color_visualisation_spatial_UI"),
               uiOutput("Spatial_display_image_UI")
             ),
             circle = FALSE,
@@ -68,6 +69,24 @@ output[["Plot_Spatial_or_message"]] <- renderUI({
     )
   }
 })
+
+##----------------------------------------------------------------------------##
+## invert color scale
+##----------------------------------------------------------------------------##
+output[["invert_color_visualisation_spatial_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "invert_color_visualisation_spatial",
+    label = "Invert color scale",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "invert_color_visualisation_spatial_UI",
+  suspendWhenHidden = FALSE
+)
 
 ##----------------------------------------------------------------------------##
 ## Drop down column organization

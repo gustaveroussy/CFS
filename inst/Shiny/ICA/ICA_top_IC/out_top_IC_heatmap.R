@@ -62,7 +62,8 @@ plotly_figure_ICA_all = reactive({
                    "IC: %{x:.2f%}<br>",
                    "Value: %{z:.2f%}",
                    "<extra></extra>"
-                 )
+                 ),
+                 reversescale=input$invert_color_ICA_top
   )
   
   fig <- fig %>% event_register('plotly_click')

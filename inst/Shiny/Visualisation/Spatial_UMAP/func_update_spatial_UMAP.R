@@ -71,6 +71,7 @@ current_plot_spatial <- reactive({
         marker = list(
           color = values$UMAP@assays$SCT@scale.data[input$gene_UMAP_choice,],
           colorscale = input$select_color_visualisation_projection,
+          reversescale=input$invert_color_visualisation_spatial,
           size = input$Plot_scatter_size_spatial,
           showscale = T,
           cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
@@ -95,6 +96,7 @@ current_plot_spatial <- reactive({
           marker = list(
             color = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
             colorscale = input$select_color_visualisation_projection,
+            reversescale=input$invert_color_visualisation_spatial,
             size = input$Plot_scatter_size_spatial,
             cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
             opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])/max(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])*input$transparency_visual_spatial_range},
@@ -119,6 +121,7 @@ current_plot_spatial <- reactive({
           marker = list(
             color = values$UMAP@meta.data[[input$Plot_display_type]],
             colorscale = input$select_color_visualisation_projection,
+            reversescale=input$invert_color_visualisation_spatial,
             size = input$Plot_scatter_size_spatial,
             showscale = T,
             opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@meta.data[[input$Plot_display_type]])/max(values$UMAP@meta.data[[input$Plot_display_type]])*input$transparency_visual_spatial_range},

@@ -57,6 +57,10 @@ output[["IC_enrichment_UI"]] <- renderUI({
             size = "xs"
           ),
           shinyWidgets::dropdownButton(
+            tags$div(
+              style = "color: black !important;",
+              uiOutput("invert_color_enrichment_projection_UI")
+            ),
             circle = FALSE,
             icon = icon("cog"),
             inline = TRUE,
@@ -74,6 +78,24 @@ output[["IC_enrichment_UI"]] <- renderUI({
     )
   )
 })
+
+##----------------------------------------------------------------------------##
+## invert color scale
+##----------------------------------------------------------------------------##
+output[["invert_color_enrichment_projection_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "invert_color_enrichment_projection",
+    label = "Invert color scale",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "invert_color_enrichment_projection_UI",
+  suspendWhenHidden = FALSE
+)
 
 ##----------------------------------------------------------------------------##
 ## UI element that either shows a plot or a text message if data is not

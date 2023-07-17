@@ -55,6 +55,10 @@ output[["Spatial_gene_UI"]] <- renderUI({
             size = "xs"
           ),
           shinyWidgets::dropdownButton(
+            tags$div(
+              style = "color: black !important;",
+              uiOutput("invert_color_gene_projection_UI")
+            ),
             circle = FALSE,
             icon = icon("cog"),
             inline = TRUE,
@@ -72,6 +76,24 @@ output[["Spatial_gene_UI"]] <- renderUI({
     )
   )
 })
+
+##----------------------------------------------------------------------------##
+## invert color scale
+##----------------------------------------------------------------------------##
+output[["invert_color_gene_projection_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "invert_color_gene_projection",
+    label = "Invert color scale",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "invert_color_gene_projection_UI",
+  suspendWhenHidden = FALSE
+)
 
 ##----------------------------------------------------------------------------##
 ## Alternative text message if data is missing.

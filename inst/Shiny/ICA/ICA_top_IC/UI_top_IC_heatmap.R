@@ -60,7 +60,8 @@ output[["ICA_top_IC_UI"]] <- renderUI({
               style = "color: black !important;",
               uiOutput("log_top_IC_heatmap_UI"),
               uiOutput("heatmap_top_IC_column_organization_UI"),
-              uiOutput("top_IC_kurtosis_filter_UI")
+              uiOutput("top_IC_kurtosis_filter_UI"),
+              uiOutput("invert_color_ICA_top_UI")
             ),
             circle = FALSE,
             icon = icon("cog"),
@@ -81,6 +82,24 @@ output[["ICA_top_IC_UI"]] <- renderUI({
     )
   )
 })
+
+##----------------------------------------------------------------------------##
+## invert color scale
+##----------------------------------------------------------------------------##
+output[["invert_color_ICA_top_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "invert_color_ICA_top",
+    label = "Invert color scale",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "invert_color_ICA_top_UI",
+  suspendWhenHidden = FALSE
+)
 
 ##----------------------------------------------------------------------------##
 ## Drop down column organization

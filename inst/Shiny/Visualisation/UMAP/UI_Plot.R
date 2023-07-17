@@ -64,6 +64,7 @@ output[["Plot_UI"]] <- renderUI({
             size = "xs",
             tags$div(
               style = "color: black !important;",
+              uiOutput("invert_color_visualisation_UMAP_UI"),
               uiOutput("ggplot_scatter_pie_UI")
             )
           )
@@ -79,6 +80,24 @@ output[["Plot_UI"]] <- renderUI({
     )
   )
 })
+
+##----------------------------------------------------------------------------##
+## invert color scale
+##----------------------------------------------------------------------------##
+output[["invert_color_visualisation_UMAP_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "invert_color_visualisation_UMAP",
+    label = "Invert color scale",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "invert_color_visualisation_UMAP_UI",
+  suspendWhenHidden = FALSE
+)
 
 output[["ggplot_scatter_pie_UI"]] <- renderUI({
   tagList(

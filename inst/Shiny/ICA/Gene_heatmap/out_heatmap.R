@@ -26,7 +26,8 @@ heatmap_IC_gene_react <- reactive({
         "IC: %{x:.2f%}<br>",
         "Value: %{z:.2f%}",
         "<extra></extra>"
-      )
+      ),
+      reversescale=input$invert_color_gene_heatmap
     )
   } else {
     plot_ly(
@@ -38,7 +39,8 @@ heatmap_IC_gene_react <- reactive({
         "IC: %{x:.2f%}<br>",
         "Value: %{z:.2f%}",
         "<extra></extra>"
-      )
+      ),
+      reversescale=input$invert_color_gene_heatmap
     )
   }
 })

@@ -60,7 +60,7 @@ enrichment_barplot_react <- reactive({
     hoverinfo = 'text', 
     showlegend=FALSE,
     marker = list(color = table["Adjusted.P.value"][1:number_enrichr,], colorscale = input$select_color_IC_enrichment,
-                  colorbar = list(title = "P-value", exponentformat = "power"), showscale = TRUE, reversescale=TRUE)
+                  colorbar = list(title = "P-value", exponentformat = "power"), showscale = TRUE, reversescale=input$invert_color_enrichment_projection)
   )
   
   fig <- fig %>% layout(yaxis = list(autorange = "reversed", title = 'Enrichment', tickfont = list(size = 7)),

@@ -12,77 +12,44 @@ IC_spatial_output_react <- reactive({
   data <- values$data
   
   IC_C = input[["IC_choice"]]
+    
+  fig <- plot_ly(source = "E")
   
-  if(input$select_color_IC_projection != "Range"){
-    
-    fig <- plot_ly(source = "E")
-    
-    # if (!is.null(values$HD_image_2)){
-    #   fig <- fig %>% add_trace(type="image", source = values$HD_image_2, hoverinfo = 'skip')
-    # }
-    if (!is.null(values$HD_image)) {
-      fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
-    } else {
-      if(!is.null(values$low_image)){
-        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
-      }
-    }
-    
-    fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
-                             x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
-                             marker = list(color = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())],
-                                           colorscale = input$select_color_IC_projection,
-                                           cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
-                                           size = input$Plot_spatial_IC_size,
-                                           showscale = TRUE,
-                                           opacity = if(input$transparency_IC_spatial_choice == 1){input$transparency_IC_spatial_range}else{(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())])/max(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())])*input$transparency_IC_spatial_range}),
-                             text = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())],
-                             customdata = names(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())]),
-                             hovertemplate = paste0("Cell : %{customdata}<br>",
-                                                    "Expression: %{text}",
-                                                    "<extra></extra>")
-    )
-    
-    fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                          yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                          showlegend = FALSE
-    )
+  # if (!is.null(values$HD_image_2)){
+  #   fig <- fig %>% add_trace(type="image", source = values$HD_image_2, hoverinfo = 'skip')
+  # }
+  if (!is.null(values$HD_image)) {
+    fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
   } else {
-    
-    fig <- plot_ly(source = "E")
-    
-    # if (!is.null(values$HD_image_2)){
-    #   fig <- fig %>% add_trace(type="image", source = values$HD_image_2, hoverinfo = 'skip')
-    # }
-    if (!is.null(values$HD_image)) {
-      fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
-    } else {
-      if(!is.null(values$low_image)){
-        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
-      }
+    if(!is.null(values$low_image)){
+      fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
     }
-    
-    fig <- fig %>% add_trace(type = "scatter", mode = "markers", x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
-                             marker = list(color = data@reductions$ica@cell.embeddings[, IC_C],
-                                           colors = colfunc(),
-                                           size = input$Plot_spatial_IC_size,
-                                           cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
-                                           showscale = TRUE),
-                             opacity = input$transparency_IC_spatial_range,
-                             text = data@reductions$ica@cell.embeddings[, IC_C],
-                             customdata = names(data@reductions$ica@cell.embeddings[, IC_C]),
-                             hoverinfo = "text",
-                             hovertemplate = paste0("Cell : %{customdata}<br>",
-                                                    "Expression: %{text}",
-                                                    "<extra></extra>")
-    )
-    
-    fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                          yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                          showlegend = FALSE
-    ) # add trace, show legend
-    
   }
+  
+  
+  #determines colorscale
+  
+  fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
+                           x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
+                           marker = list(color = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())],
+                                         colorscale = input$select_color_IC_projection,
+                                         cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
+                                         size = input$Plot_spatial_IC_size,
+                                         showscale = TRUE,
+                                         opacity = if(input$transparency_IC_spatial_choice == 1){input$transparency_IC_spatial_range}else{(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())])/max(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())])*input$transparency_IC_spatial_range},
+                                         reversescale=input$invert_color_ICA_projection
+                                         ),
+                           text = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())],
+                           customdata = names(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())]),
+                           hovertemplate = paste0("Cell : %{customdata}<br>",
+                                                  "Expression: %{text}",
+                                                  "<extra></extra>")
+  )
+  
+  fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                        yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                        showlegend = FALSE
+  )
 })
 
 ##----------------------------------------------------------------------------##

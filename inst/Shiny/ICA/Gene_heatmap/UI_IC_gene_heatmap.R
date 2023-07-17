@@ -58,7 +58,8 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
           shinyWidgets::dropdownButton(
             tags$div(
               style = "color: black !important;",
-              uiOutput("heatmap_IC_gene_column_organization_UI")
+              uiOutput("heatmap_IC_gene_column_organization_UI"),
+              uiOutput("invert_color_gene_heatmap_UI")
             ),
             circle = FALSE,
             icon = icon("cog"),
@@ -86,6 +87,24 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
     )
   )
 })
+
+##----------------------------------------------------------------------------##
+## invert color scale
+##----------------------------------------------------------------------------##
+output[["invert_color_gene_heatmap_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "invert_color_gene_heatmap",
+    label = "Invert color scale",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "invert_color_gene_heatmap_UI",
+  suspendWhenHidden = FALSE
+)
 
 ##----------------------------------------------------------------------------##
 ## Drop down column organization
