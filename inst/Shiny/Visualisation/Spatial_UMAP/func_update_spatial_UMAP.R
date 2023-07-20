@@ -4,16 +4,22 @@
 
 current_plot_spatial <- reactive({
   
-  data <- values$UMAP
+  cell.embeddings <- values$UMAP@reductions$ica@cell.embeddings
+  TissueCoordinates = TissueCoordinates()
+  meta.data = values$UMAP@meta.data
+  
+  # keep cells based on UMAP
+  if(!is.null(square_cell_UMAP_selected())){
+    cell.embeddings = values$UMAP@reductions$ica@cell.embeddings[square_cell_UMAP_selected()$customdata,]
+    TissueCoordinates = TissueCoordinates()[square_cell_UMAP_selected()$customdata,]
+    meta.data = values$UMAP@meta.data[square_cell_UMAP_selected()$customdata,]
+  }
   
   fig <- plot_ly(type = 'scatter',
                  mode='markers',
                  source = "C"
   )
   
-  # if (!is.null(values$HD_image_2)){
-  #   fig <- fig %>% add_trace(type="image", source = values$HD_image_2, hoverinfo = 'skip')
-  # }
   if (!is.null(values$HD_image)) {
     fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
   } else {
@@ -24,9 +30,14 @@ current_plot_spatial <- reactive({
   
   if (input$Plot_analysis_type == "UMAP"){
     if (input$Plot_display_type == "seurat_clusters"){
-      for (i in 1:length(summary(data@meta.data[["seurat_clusters"]]))-1){
+      for (i in as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))){
+        if(length(which(meta.data[["seurat_clusters"]]==i)) == 1){
+          table = t(as.data.frame(cell.embeddings[which(meta.data[["seurat_clusters"]]==i),]))
+          rownames(table) = rownames(meta.data[which(meta.data[["seurat_clusters"]]==i),])
+        } else {
+          table = cell.embeddings[which(meta.data[["seurat_clusters"]]==i),]
+        }
         
-        table = data@reductions$ica@cell.embeddings[which(data@meta.data[["seurat_clusters"]]==i),]
         list_cells_ICs = c()
         for(k in 1:length(rownames(table))){
           top_10_ICs = head(colnames(table)[order(table[rownames(table)[k], ],decreasing = TRUE)],10)
@@ -38,11 +49,12 @@ current_plot_spatial <- reactive({
           list_cells_ICs = c(list_cells_ICs,final_vector)
         }
         
-        r = length(as.vector(TissueCoordinates()[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)]))
+        r = TissueCoordinates[,"imagecol"][which(meta.data[["seurat_clusters"]]==i)]
+        r = length(as.vector(r))
         
-        datatable <- data.frame("x" = as.vector(TissueCoordinates()[,"imagecol"][which(data@meta.data[["seurat_clusters"]]==i)]),
-                                "y" = as.vector(TissueCoordinates()[,"imagerow"][which(data@meta.data[["seurat_clusters"]]==i)]),
-                                "cell_name" = as.vector(rownames(data@meta.data)[which(data@meta.data[["seurat_clusters"]]==i)]),
+        datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"][which(meta.data[["seurat_clusters"]]==i)]),
+                                "y" = as.vector(TissueCoordinates[,"imagerow"][which(meta.data[["seurat_clusters"]]==i)]),
+                                "cell_name" = as.vector(rownames(meta.data)[which(meta.data[["seurat_clusters"]]==i)]),
                                 "t" = list_cells_ICs)
         
         fig <- fig %>%
@@ -61,13 +73,13 @@ current_plot_spatial <- reactive({
                                    "%{customdata}",
                                    "<extra></extra>")
           )
-    } 
+    }
   } else if (input$Plot_display_type == "gene") {
       
     fig <- fig %>%
       add_trace(
-        x = TissueCoordinates()[,"imagecol"],
-        y = TissueCoordinates()[,"imagerow"],
+        x = TissueCoordinates[,"imagecol"],
+        y = TissueCoordinates[,"imagerow"],
         marker = list(
           color = values$UMAP@assays$SCT@scale.data[input$gene_UMAP_choice,],
           colorscale = input$select_color_visualisation_projection,
@@ -91,8 +103,8 @@ current_plot_spatial <- reactive({
       
       fig <- fig %>%
         add_trace(
-          x = TissueCoordinates()[,"imagecol"],
-          y = TissueCoordinates()[,"imagerow"],
+          x = TissueCoordinates[,"imagecol"],
+          y = TissueCoordinates[,"imagerow"],
           marker = list(
             color = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
             colorscale = input$select_color_visualisation_projection,
@@ -116,8 +128,8 @@ current_plot_spatial <- reactive({
     if(typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
       fig <- fig %>%
         add_trace(
-          x = TissueCoordinates()[,"imagecol"],
-          y = TissueCoordinates()[,"imagerow"],
+          x = TissueCoordinates[,"imagecol"],
+          y = TissueCoordinates[,"imagerow"],
           marker = list(
             color = values$UMAP@meta.data[[input$Plot_display_type]],
             colorscale = input$select_color_visualisation_projection,
@@ -142,8 +154,8 @@ current_plot_spatial <- reactive({
         for (i in unique(data@meta.data[[input$Plot_display_type]])){
           fig <- fig %>%
             add_trace(
-              x = TissueCoordinates()[,"imagecol"][which(data@meta.data[[input$Plot_display_type]]==i)],
-              y = TissueCoordinates()[,"imagerow"][which(data@meta.data[[input$Plot_display_type]]==i)],
+              x = TissueCoordinates[,"imagecol"][which(data@meta.data[[input$Plot_display_type]]==i)],
+              y = TissueCoordinates[,"imagerow"][which(data@meta.data[[input$Plot_display_type]]==i)],
               name = i,
               marker = list(
                 color = palette()[c],

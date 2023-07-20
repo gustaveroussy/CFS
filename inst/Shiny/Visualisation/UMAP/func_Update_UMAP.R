@@ -84,11 +84,11 @@ current_plot_umap <- reactive({
               color = palette()[i+1],
               size = input$Plot_scatter_size_UMAP
             ),
-            text = datatable$cell_name,
-            customdata = datatable$t,
+            text = datatable$t,
+            customdata = datatable$cell_name,
             showlegend = T,
-            hovertemplate = paste0("Cell : %{text}<br>",
-                                   "%{customdata}",
+            hovertemplate = paste0("Cell : %{customdata}<br>",
+                                   "%{text}",
                                    "<extra></extra>")
           )
       }
