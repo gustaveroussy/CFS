@@ -7,6 +7,7 @@ current_plot_spatial <- reactive({
   cell.embeddings <- values$UMAP@reductions$ica@cell.embeddings
   TissueCoordinates = TissueCoordinates()
   meta.data = values$UMAP@meta.data
+  annotation = values$UMAP@misc$annotation
   
   # keep cells based on UMAP
   if(!is.null(square_cell_UMAP_selected())){
@@ -43,7 +44,12 @@ current_plot_spatial <- reactive({
           top_10_ICs = head(colnames(table)[order(table[rownames(table)[k], ],decreasing = TRUE)],10)
           final_vector = c('Cluster : ', i,'\nTop 10 ICs :\n')
           for (j in top_10_ICs){
-            final_vector = c(final_vector,j,' : ',table[rownames(table)[k],j],'\n')
+            if(input$full_annotation_spatial  & (j %in% rownames(annotation))){
+              final_vector = c(final_vector,j,' : ',round(table[rownames(table)[k],j],4),' : ',annotation[j,'Type'],' : ',annotation[j,'Annotation'],'\n')
+            } else {
+              final_vector = c(final_vector,j,' : ',round(table[rownames(table)[k],j],4),'\n')
+            }
+            
             final_vector = paste(final_vector,collapse = "")
           }
           list_cells_ICs = c(list_cells_ICs,final_vector)

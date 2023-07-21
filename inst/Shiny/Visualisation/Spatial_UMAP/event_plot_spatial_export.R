@@ -38,7 +38,7 @@ observeEvent(input[["plot_spatial_export"]], {
     plot = plots$spatial
   } else if (input$Plot_analysis_type == "Density") {
     req(input$Plot_display_type_choice)
-    plot = plots$spatial_density
+    plot = plot_ly()#plots$spatial_density
   } else if (input$Plot_analysis_type == "Scatter pie") {
     req(values$data)
     plot = plots$spatial_scatter_pie

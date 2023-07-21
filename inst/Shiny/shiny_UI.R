@@ -86,7 +86,7 @@ ui <- dashboardPage(
     ),
     shinyWidgets::awesomeCheckbox(
       inputId = "spatial_flip",
-      label = "flip",
+      label = "90° turn",
       value = FALSE
     )
   ),

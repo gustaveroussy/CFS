@@ -129,10 +129,18 @@ current_plot_spatial_scatter_pie <- reactive({
         )
       }
     } else {
-      fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                            yaxis = list(showgrid = FALSE, showticklabels=FALSE),
-                            grid = list(columns = max_row_img, rows = max_col_img)
-      )
+      if(input$black_b_scatter_pie){
+        fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                              yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                              grid = list(columns = max_row_img, rows = max_col_img)) %>%
+          layout(plot_bgcolor='black') %>%
+          layout(paper_bgcolor='black')
+      }else{
+        fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                              yaxis = list(showgrid = FALSE, showticklabels=FALSE),
+                              grid = list(columns = max_row_img, rows = max_col_img)
+        )
+      }
     }
   } else {
     ic_types=data@reductions$ica@cell.embeddings

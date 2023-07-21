@@ -111,6 +111,11 @@ output[["ggplot_scatter_pie_UI"]] <- renderUI({
       label = "Use ggplot scatter pie",
       value = FALSE
     ),
+    shinyWidgets::awesomeCheckbox(
+      inputId = "full_annotation_UMAP",
+      label = "Full annotation for scatter",
+      value = FALSE
+    ),
     numericInput("Plot_scatter_size_UMAP", "Spot size", 10, min = 0, max = NA)
   )
 })

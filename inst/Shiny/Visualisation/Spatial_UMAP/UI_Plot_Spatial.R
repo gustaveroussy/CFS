@@ -100,9 +100,19 @@ output[["Spatial_display_image_UI"]] <- renderUI({
       value = FALSE
     ),
     shinyWidgets::awesomeCheckbox(
+      inputId = "full_annotation_spatial",
+      label = "Full annotation for scatter",
+      value = FALSE
+    ),
+    shinyWidgets::awesomeCheckbox(
       inputId = "Spatial_display_image",
       label = "Display image",
       value = TRUE
+    ),
+    shinyWidgets::awesomeCheckbox(
+      inputId = "black_b_scatter_pie",
+      label = "Black background for scatter pie",
+      value = FALSE
     ),
     numericInput("Plot_scatter_size_spatial", "Spot size", 10, min = 0, max = NA)
   )

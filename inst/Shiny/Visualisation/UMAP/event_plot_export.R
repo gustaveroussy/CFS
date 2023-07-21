@@ -38,7 +38,7 @@ observeEvent(input[["plot_export"]], {
     plot = plots$umap
   } else if (input$Plot_analysis_type == "Density") {
     req(input$Plot_display_type_choice)
-    plot = plots$density
+    plot = plot_ly()#plots$density
   } else if (input$Plot_analysis_type == "Scatter pie") {
     req(values$data)
     plot = plots$spatial_scatter_pie
