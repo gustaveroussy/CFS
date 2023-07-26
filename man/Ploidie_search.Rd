@@ -2,7 +2,7 @@
 % Please edit documentation in R/Copykat.R
 \name{Ploidie_search}
 \alias{Ploidie_search}
-\title{Ploidie search for cancer cells.}
+\title{Ploidie search for cancer cells. (Non functionnal)}
 \usage{
 Ploidie_search(
   data = NULL,

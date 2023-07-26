@@ -1,8 +1,12 @@
 #' enrich IC
 #'
 #' Search and enrich IC genes using EnrichR. Result saved in misc$IC_X$en
+#' @param data Seurat object to clusterise
+#' @param dbs names of enrichR compatible databases to use
+#' @param kurtosis kurtosis filter value to use
+#' @param overwrite overwrite preexisting annotations in the object.
 #' 
-#' @return datatables of enrichment intro the seurat object
+#' @return datatables of enrichment into the seurat object
 #' 
 #' @examples 
 #' data = Enrich_ICA(data=data,dbs=c("GO_Biological_Process_2015"), kurtosis = 3, overwrite = TRUE)

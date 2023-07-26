@@ -1,4 +1,4 @@
-#' Ploidie search for cancer cells.
+#' Ploidie search for cancer cells. (Non functionnal)
 #'
 #' Search for ploidie alteration within the sample.
 #' @param data Seurat object to analyse

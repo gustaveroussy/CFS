@@ -1,38 +1,16 @@
-################################################################################
-# Convert vizgen data using fov matrix
-################################################################################
-Convert_vizgen_fov=function(spot_gene_expression=NULL, fov_matrix = NULL){
-  
-  # coordinates calculation
-  x = c()
-  y = c()
-  for(i in 1:nrow(spot_gene_expression)){
-    fov_coor = which(fov_matrix==i,arr.ind=TRUE)
-    x = c(x,fov_coor[,'row'])
-    y = c(y,fov_coor[,'col'])
-  }
-  
-  DT = data.frame(x = x, y = y, imagerow = x, imagecol = y, stringsAsFactors=FALSE)
-  
-  seurat.object@images$image =  new(
-    Class = 'SlideSeq',
-    assay = "Spatial",
-    key = "image_",
-    coordinates = DT
-  )
-  
-  #removing empty spots
-  toKeep <- colnames(seurat.object@assays$Spatial@counts)[!(colSums(seurat.object@assays$Spatial@counts) == 0)]
-  seurat.object = subset(seurat.object, cells = toKeep)
-  
-  # return the seurat object
-  return(seurat.object)
-}
-
-################################################################################
-# Convert vizgen data using grid based method
-################################################################################
-
+#' Create_vizgen_seurat
+#'
+#' Convert vizgen data using grid based method
+#' @param spot_gene_expression table of transcripts
+#' @param pixel_format size of the binning (in px)
+#' @param min.features minimum number of transcripts to keep per spot.
+#' 
+#' @return Seurat object corresponding to the binned vizgen data
+#' 
+#' @examples 
+#' data <- Create_vizgen_seurat(spot_gene_expression=spot_table, pixel_format = 40, min.features = 5)
+#' 
+#' @export
 Create_vizgen_seurat=function(spot_gene_expression=NULL, pixel_format = 40, min.features = 5){
   # get window work :
   max_x = max(spot_gene_expression$global_x)

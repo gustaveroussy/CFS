@@ -23,7 +23,9 @@ ICASpatial(
 
 \item{method}{Method to use between "icafast", "icaimax", "icajade"}
 
-\item{sd}{Value of the kurtosis filter on IC}
+\item{kurtosis}{Value of the kurtosis filter on IC}
+
+\item{sd}{Value of the standard deviation used for ICA genes relation selection}
 }
 \value{
 An analysed Seurat object

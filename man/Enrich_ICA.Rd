@@ -11,8 +11,17 @@ Enrich_ICA(
   overwrite = TRUE
 )
 }
+\arguments{
+\item{data}{Seurat object to clusterise}
+
+\item{dbs}{names of enrichR compatible databases to use}
+
+\item{kurtosis}{kurtosis filter value to use}
+
+\item{overwrite}{overwrite preexisting annotations in the object.}
+}
 \value{
-datatables of enrichment intro the seurat object
+datatables of enrichment into the seurat object
 }
 \description{
 Search and enrich IC genes using EnrichR. Result saved in misc$IC_X$en

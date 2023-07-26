@@ -5,7 +5,8 @@
 #' @param ncis Number of independant component to separate in the sample
 #' @param maxit Number of iterations
 #' @param method Method to use between "icafast", "icaimax", "icajade"
-#' @param sd Value of the kurtosis filter on IC
+#' @param kurtosis Value of the kurtosis filter on IC
+#' @param sd Value of the standard deviation used for ICA genes relation selection
 #' 
 #' @return An analysed Seurat object
 #' @examples 

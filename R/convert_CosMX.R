@@ -42,8 +42,20 @@ Create_CosMX_seurat_cells=function(matrix=NULL, metadata = NULL, min.features = 
 }
 
 
-################################################################################
-Create_CosMX_seurat_tx=function(tx=NULL, pixel_format = 600, min.features = 5){
+#' Create_vizgen_seurat
+#'
+#' Convert vizgen data using grid based method
+#' @param tx table of transcripts
+#' @param pixel_format size of the binning (in px)
+#' @param min.features minimum number of transcripts to keep per spot.
+#' 
+#' @return Seurat object corresponding to the binned CosMX data
+#' 
+#' @examples 
+#' data <- Create_CosMX_seurat(tx=spot_table, pixel_format = 40, min.features = 5)
+#' 
+#' @export
+Create_CosMX_seurat=function(tx=NULL, pixel_format = 600, min.features = 5){
   # get window work :
   max_x = max(tx$x_global_px)
   min_x = min(tx$x_global_px)

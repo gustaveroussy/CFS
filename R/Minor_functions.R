@@ -1,12 +1,4 @@
 #' @export
-detect_sign=function(x){
-  if(abs(min(x))>max(x)){
-    x=(-x)
-  }
-  return(x)
-}
-
-#' @export
 correct_sign=function(data){
   A = data@reductions$ica@feature.loadings
   S = data@reductions$ica@cell.embeddings
