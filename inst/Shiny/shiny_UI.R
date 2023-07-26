@@ -25,7 +25,7 @@
 # library(heatmaply)
 # library(scales)
 
-if(Shiny.options[["shiny_root"]] == FALSE){
+if(Shiny.options[["offline_mode"]] == FALSE){
   if(!file.exists(miniconda_path())){
     reticulate::install_miniconda()
   }
