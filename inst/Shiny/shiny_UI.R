@@ -24,17 +24,20 @@
 # library(imagefx)
 # library(heatmaply)
 # library(scales)
-if(!file.exists(miniconda_path())){
-  reticulate::install_miniconda()
-}
 
-if(!reticulate::py_module_available("kaleido")){
-  reticulate::conda_install('r-reticulate', 'python-kaleido=0.1.0')
-  reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')
+if(Shiny.options[["shiny_root"]] == FALSE){
+  if(!file.exists(miniconda_path())){
+    reticulate::install_miniconda()
+  }
+  
+  if(!reticulate::py_module_available("kaleido")){
+    reticulate::conda_install('r-reticulate', 'python-kaleido=0.1.0')
+    reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')
+  }
+  
+  reticulate::use_miniconda('r-reticulate')
+  library(enrichR)
 }
-
-reticulate::use_miniconda('r-reticulate')
-library(enrichR)
 # library(e1071)
 
 ##--------------------------------------------------------------------------##

@@ -14,6 +14,7 @@ launchCFS <- function(
     file_to_load = NULL,
     welcome_message = NULL,
     projections_show_hover_info = TRUE,
+    offline_mode = FALSE,
     ...
 ){
   ##--------------------------------------------------------------------------##
@@ -25,7 +26,8 @@ launchCFS <- function(
     "file_to_load" = file_to_load,
     "welcome_message" = welcome_message,
     "shiny_root" = paste0(system.file(package = "CFS"),"/Shiny/"),
-    "projections_show_hover_info" = projections_show_hover_info
+    "projections_show_hover_info" = projections_show_hover_info,
+    "offline_mode" = offline_mode
   )
   
   ##--------------------------------------------------------------------------##
