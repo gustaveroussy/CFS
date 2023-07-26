@@ -21,7 +21,7 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
                 selected = "icafast"),
     numericInput("preprocessing_kurtosis", label = "Kurtosis filter", value = 3,
                  min = 0, step = 0.01),
-    numericInput("preprocessing_sd", label = "Standard deviation filter", value = 3,
+    numericInput("preprocessing_sd", label = "Genes standard deviation", value = 3,
                  min = 0, step = 0.01),
     HTML("<h3><b>Enrichment process</b></h3>"),
     selectizeInput("preprocessing_database", label = "Enrichment database",
@@ -74,7 +74,8 @@ preprocessing_main_parameters_info <- list(
     <li><b>Number of ICs:</b> Number of ICs to extract from the sample</li>
     <li><b>Maximum iterations:</b> Number of iterations of the ICA</li>
     <li><b>ICA fonction to run:</b> Method of ICA</li>
-    <li><b>Kurtosis filter:</b> Hurtosis filter to apply at the end of the analysis over ICs</li>
+    <li><b>Kurtosis filter:</b> Kurtosis filter to apply at the end of the analysis over ICs</li>
+    <li><b>Genes standard deviation:</b> Keep genes expressed more or less than number of standard deviations from the IC.</li>
     </ul>
     <b>Enrichment process :</b>
     <ul>
