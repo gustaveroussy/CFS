@@ -2,7 +2,7 @@ CFS
 ===
 CFS is an R package for spatial single cell genomics.
 Documentation can be found at:
-[Tutorial and instructions]()
+[Tutorial and instructions](https://codimd.univ-rouen.fr/s/w0oZMV6fz)
 
 The documentation is still under construction, and will soon be released. The tool can already be installed and is still un beta but is being actively worked on for full release. Thank you.
 
