@@ -138,7 +138,8 @@ current_plot_spatial_scatter_pie <- reactive({
                               yaxis = list(showgrid = FALSE, showticklabels=FALSE),
                               grid = list(columns = max_row_img, rows = max_col_img)) %>%
           layout(plot_bgcolor='black') %>%
-          layout(paper_bgcolor='black')
+          layout(paper_bgcolor='black') %>%
+          layout(legend = list(bgcolor = 'white'))
       }else{
         fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                               yaxis = list(showgrid = FALSE, showticklabels=FALSE),
