@@ -21,8 +21,8 @@ output$pie_chart_check <- renderUI({
                 value = 1, step = 0.01),
     numericInput("Plot_spatial_IC_size", "Spot size", 7, min = 0, max = NA),
     selectInput("select_color_IC_projection", label = "Select color", 
-                choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
-                selected = "Viridis")
+                choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
+                selected = "D")
   )
 })
 

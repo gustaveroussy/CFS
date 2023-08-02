@@ -102,6 +102,11 @@ outputOptions(
 output[["ggplot_scatter_pie_UI"]] <- renderUI({
   tagList(
     shinyWidgets::awesomeCheckbox(
+      inputId = "UMAP_visualisation_comput",
+      label = "Display",
+      value = TRUE
+    ),
+    shinyWidgets::awesomeCheckbox(
       inputId = "show_grid_scatter_pie",
       label = "Display plotly grid",
       value = TRUE

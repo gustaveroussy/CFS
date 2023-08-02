@@ -30,7 +30,7 @@ spatial_gene_react <- reactive({
                              x = TissueCoordinates()[,"imagecol"],
                              y = TissueCoordinates()[,"imagerow"],
                              marker = list(color = data@assays$SCT@scale.data[input$gene_projection_gene_choice,][rownames(TissueCoordinates())],
-                                           colorscale = input$select_color_gene_projection,
+                                           colorscale = colorscale_gene_spatial(),
                                            showscale = TRUE,
                                            size = input$Plot_spatial_gene_size,
                                            reversescale=input$invert_color_gene_projection),
@@ -41,8 +41,6 @@ spatial_gene_react <- reactive({
                                                     "Expression: %{text}",
                                                     "<extra></extra>")
     )
-    
-    
     
     fig <- fig %>% layout(title = input$gene_projection_gene_choice, xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                           yaxis = list(showgrid = FALSE, showticklabels=FALSE),
@@ -67,11 +65,11 @@ spatial_gene_react <- reactive({
           plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
         }
       }
-      
+
       plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
                                                    marker = list(color = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())],
                                                                  size = input$Plot_spatial_gene_size,
-                                                                 colorscale = input$select_color_gene_projection,
+                                                                 colorscale = colorscale_gene_spatial(),
                                                                  reversescale=input$invert_color_gene_projection),
                                                    opacity = input$transparency_gene_projection,
                                                    type = 'scatter', mode = "markers",
@@ -82,6 +80,8 @@ spatial_gene_react <- reactive({
                                                                           "<extra></extra>")
       ) %>% layout(title = input$gene_projection_gene_choice, xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                    yaxis = list(showgrid = FALSE, showticklabels=FALSE))
+
+      
       i = i+1
     }
     
@@ -101,4 +101,23 @@ output[["Spatial_gene_plot_or_message"]] <- renderUI({
                          width = "auto",
                          height = "85vh")
   )
+})
+
+##----------------------------------------------------------------------------##
+## Create the colorscale for gene spatial
+##----------------------------------------------------------------------------##
+colorscale_gene_spatial <- reactive({
+  if(input$select_color_gene_projection %in% c("Blues", "Reds","YlGnBu","YlOrRd")){
+    return(input$select_color_gene_projection)
+  } else {
+    #prepare colorscales
+    l = list()
+    se = seq(0, 1, (1/(nrow(TissueCoordinates())-1)))
+    col = viridis_pal(option = input$select_color_gene_projection)(nrow(TissueCoordinates()))
+    for(i in 1:length(se)){
+      l[[i]] = list(se[i],col[i])
+    }
+    
+    return(l)
+  }
 })

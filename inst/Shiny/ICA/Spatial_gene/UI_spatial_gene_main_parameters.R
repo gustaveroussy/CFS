@@ -19,8 +19,8 @@ output[["gene_choice_main_parameters_UI"]] <- renderUI({
 
 output[["gene_color_choice_main_parameters_UI"]] <- renderUI({
   selectInput("select_color_gene_projection", label = "Select color", 
-              choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
-              selected = "Viridis")
+              choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
+              selected = "D")
 })
 
 ##----------------------------------------------------------------------------##

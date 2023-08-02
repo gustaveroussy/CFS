@@ -3,37 +3,18 @@
 ##----------------------------------------------------------------------------##
 
 current_plot_density <- reactive({
+  
+  if(!(input$UMAP_visualisation_comput)){
+    return(NULL)
+  }
+  
   if (!is.null(values$UMAP)){
-    if(length(input$Plot_display_type_choice) != 1){
-      name = paste(input$Plot_display_type_choice,collapse = ",")
-      for (n_cell_type in 1:length(input$Plot_display_type_choice)) {
-        if(n_cell_type == 1) {
-          type = values$annotation_for_output[[n_cell_type]]
-        } else {
-          type = append(type, values$annotation_for_output[[n_cell_type]])
-        }
-      }
-      type = unique(type)
-    } else {
-      name = input$Plot_display_type_choice
-      type = values$annotation_for_output[[input$Plot_display_type_choice]]
-    }
     
-    l=length(type)
+    l=length(UMAP_type())
     
     if (l > 1){
-      ic_types=values$UMAP@reductions$ica@cell.embeddings[,type]
       
-      ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
-      sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
-      sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
-      ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
-      ic_types<-cbind(values$UMAP@reductions$umap@cell.embeddings,t(ic_types)) %>%  cbind(.,sum_IC)
-      grid=interp(ic_types[,'UMAP_1'],ic_types[,'UMAP_2'],ic_types[,'sum_IC'], nx = 400, ny = 400)
-      griddf <- data.frame(x = rep(grid$x, ncol(grid$z)), 
-                           y = rep(grid$y, each = nrow(grid$z)), 
-                           z = as.numeric(grid$z))    
-      griddf$z2=ifelse(griddf$z<quantile(griddf$z,na.rm = TRUE,probs = seq(0, 1, 1/10))[2],0,griddf$z)
+      griddf = UMAP_griddf()
       
       # Create plotly object
       fig <- plot_ly(type = 'scatter',
@@ -85,7 +66,7 @@ current_plot_density <- reactive({
                             autosize = TRUE
       )
     } else {
-      ic_types=values$UMAP@reductions$ica@cell.embeddings[,type]
+      ic_types=values$UMAP@reductions$ica@cell.embeddings[,UMAP_type()]
       # Create plotly object
       fig <- plot_ly(type = 'scatter',
                      mode='markers'
@@ -119,3 +100,42 @@ current_plot_density <- reactive({
     return(NULL)
   }
 })
+
+# get the ICs related to the annotation
+UMAP_type <- reactive({
+  if(length(input$Plot_display_type_choice) != 1){
+    name = paste(input$Plot_display_type_choice,collapse = ",")
+    for (n_cell_type in 1:length(input$Plot_display_type_choice)) {
+      if(n_cell_type == 1) {
+        type = values$annotation_for_output[[n_cell_type]]
+      } else {
+        type = append(type, values$annotation_for_output[[n_cell_type]])
+      }
+    }
+    type = unique(type)
+  } else {
+    name = input$Plot_display_type_choice
+    type = values$annotation_for_output[[input$Plot_display_type_choice]]
+  }
+  
+  return(type)
+})
+
+# get the density annotation.
+UMAP_griddf <- reactive({
+  ic_types=values$UMAP@reductions$ica@cell.embeddings[,UMAP_type()]
+  
+  ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
+  sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
+  sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
+  ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
+  ic_types<-cbind(values$UMAP@reductions$umap@cell.embeddings,t(ic_types)) %>%  cbind(.,sum_IC)
+  grid=interp(ic_types[,'UMAP_1'],ic_types[,'UMAP_2'],ic_types[,'sum_IC'], nx = 400, ny = 400)
+  griddf <- data.frame(x = rep(grid$x, ncol(grid$z)), 
+                       y = rep(grid$y, each = nrow(grid$z)), 
+                       z = as.numeric(grid$z))    
+  griddf$z2=ifelse(griddf$z<quantile(griddf$z,na.rm = TRUE,probs = seq(0, 1, 1/10))[2],0,griddf$z)
+  return(griddf)
+})
+
+

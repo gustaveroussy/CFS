@@ -4,6 +4,10 @@
 
 current_plot_spatial_scatter_pie <- reactive({
   
+  if(!(input$Spatial_visualisation_comput)){
+    return(NULL)
+  }
+  
   withProgress(message = 'Preparing Scatterpie', value = 0, {
   
   data <- values$data
@@ -262,7 +266,7 @@ current_plot_spatial_scatter_pie <- reactive({
   return(fig)
 })
 
-# for ggplot
+#for ggplot
 current_plot_spatial_scatter_pie_ggplot <- reactive({
   req(values$data)
   

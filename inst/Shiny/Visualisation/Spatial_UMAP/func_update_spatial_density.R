@@ -3,36 +3,14 @@
 ##----------------------------------------------------------------------------##
 
 current_plot_spatial_density <- reactive({
-  if(length(input$Plot_display_type_choice) != 1){
-    name = paste(input$Plot_display_type_choice,collapse = ",")
-    for (n_cell_type in 1:length(input$Plot_display_type_choice)) {
-      if(n_cell_type == 1) {
-        type = values$annotation_for_output[[n_cell_type]]
-      } else {
-        type = append(type, values$annotation_for_output[[n_cell_type]])
-      }
-    }
-    type = unique(type)
-  } else {
-    name = input$Plot_display_type_choice
-    type = values$annotation_for_output[[input$Plot_display_type_choice]]
+  if(!(input$Spatial_visualisation_comput)){
+    return(NULL)
   }
   
-  l=length(type)
+  l=length(UMAP_type())
   
   if (l > 1){
-    ic_types=values$data@reductions$ica@cell.embeddings[,type]
-    
-    ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
-    sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
-    sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
-    ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
-    ic_types<-cbind(TissueCoordinates(),t(ic_types)) %>%  cbind(.,sum_IC) %>% as_tibble()
-    grid=interp(ic_types$imagecol,ic_types$imagerow,ic_types$sum_IC, nx = 400, ny = 400)
-    griddf <- data.frame(x = rep(grid$x, ncol(grid$z)), 
-                         y = rep(grid$y, each = nrow(grid$z)), 
-                         z = as.numeric(grid$z))
-    griddf$z2=ifelse(griddf$z<quantile(griddf$z,na.rm = TRUE,probs = seq(0, 1, 1/10))[2],0,griddf$z)
+    griddf = spatial_griddf()
     
     # Add density
     
@@ -131,7 +109,7 @@ current_plot_spatial_density <- reactive({
     )
   
   } else {
-    ic_types=values$data@reductions$ica@cell.embeddings[,type]
+    ic_types=values$data@reductions$ica@cell.embeddings[,UMAP_type()]
     
     # Create plotly object
     fig <- plot_ly(source = "B")
@@ -187,3 +165,23 @@ current_plot_spatial_density_ggplot <- reactive({
   
   return(fig)
 })
+
+# get the density annotation.
+spatial_griddf <- reactive({
+  ic_types=values$data@reductions$ica@cell.embeddings[,UMAP_type()]
+  
+  ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
+  sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
+  sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
+  ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
+  ic_types<-cbind(TissueCoordinates(),t(ic_types)) %>%  cbind(.,sum_IC) %>% as_tibble()
+  grid=interp(ic_types$imagecol,ic_types$imagerow,ic_types$sum_IC, nx = 400, ny = 400)
+  griddf <- data.frame(x = rep(grid$x, ncol(grid$z)), 
+                       y = rep(grid$y, each = nrow(grid$z)), 
+                       z = as.numeric(grid$z))
+  griddf$z2=ifelse(griddf$z<quantile(griddf$z,na.rm = TRUE,probs = seq(0, 1, 1/10))[2],0,griddf$z)
+  return(griddf)
+})
+
+
+

@@ -4,6 +4,11 @@
 
 current_plot_scatter_pie <- reactive({
   req(values$data)
+  
+  if(!(input$UMAP_visualisation_comput)){
+    return(NULL)
+  }
+  
   if (!is.null(values$UMAP)) {
     data <- values$UMAP
     max_col_img = ceiling(max(data[["umap"]]@cell.embeddings[,'UMAP_2']))

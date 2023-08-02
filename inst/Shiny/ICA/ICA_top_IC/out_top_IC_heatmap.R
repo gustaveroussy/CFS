@@ -53,18 +53,33 @@ output_heatmap_all_ICs <- reactive({
 plotly_figure_ICA_all = reactive({
   data_heat = top_IC_heatmap_table()
   
-  fig <- plot_ly(source = "F",
-                 x = colnames(data_heat), y = rownames(data_heat),
-                 z = data_heat, type = "heatmap", zmin = input$slider_IC_top_range[1], zmax = input$slider_IC_top_range[2],
-                 colorscale = if(input$select_color_IC_top == "viridis"){"Viridis"}else{input$select_color_IC_top},
-                 hovertemplate = paste(
-                   "Gene: %{y:.2f%}<br>",
-                   "IC: %{x:.2f%}<br>",
-                   "Value: %{z:.2f%}",
-                   "<extra></extra>"
-                 ),
-                 reversescale=input$invert_color_ICA_top
-  )
+  if(input$select_color_IC_top %in% c("Blues", "Reds","YlGnBu","YlOrRd")){
+    fig <- plot_ly(source = "F",
+                   x = colnames(data_heat), y = rownames(data_heat),
+                   z = data_heat, type = "heatmap", zmin = input$slider_IC_top_range[1], zmax = input$slider_IC_top_range[2],
+                   colorscale = input$select_color_IC_top,
+                   hovertemplate = paste(
+                     "Gene: %{y:.2f%}<br>",
+                     "IC: %{x:.2f%}<br>",
+                     "Value: %{z:.2f%}",
+                     "<extra></extra>"
+                   ),
+                   reversescale=input$invert_color_ICA_top
+    )
+  } else {
+    fig <- plot_ly(source = "F",
+                   x = colnames(data_heat), y = rownames(data_heat),
+                   z = data_heat, type = "heatmap", zmin = input$slider_IC_top_range[1], zmax = input$slider_IC_top_range[2],
+                   colors = viridis_pal(option = input$select_color_IC_top)(nrow(data_heat) * ncol(data_heat)),
+                   hovertemplate = paste(
+                     "Gene: %{y:.2f%}<br>",
+                     "IC: %{x:.2f%}<br>",
+                     "Value: %{z:.2f%}",
+                     "<extra></extra>"
+                   ),
+                   reversescale=input$invert_color_ICA_top
+    )
+  }
   
   fig <- fig %>% event_register('plotly_click')
   
@@ -75,13 +90,23 @@ plotly_figure_ICA_all = reactive({
 plotly_figure_ICA_all_heatmaply = reactive({
   data_heat = top_IC_heatmap_table()
   
-  fig = heatmaply(data_heat,
-                  xlab = "ICs",
-                  ylab = "Genes",
-                  colors = eval(parse(text=paste0(input$select_color_IC_top,"(n=256)"))),
-                  scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colours = eval(parse(text=paste0(input$select_color_IC_top,"(n=256)"))), limits=c(input$slider_IC_top_range[1], input$slider_IC_top_range[2]), oob=squish),
-                  hclust_method = "ward.D"
-  )
+  if(input$select_color_IC_top %in% c("A","B","C","D","E","F","G","H")){
+    fig = heatmaply(data_heat,
+                    xlab = "ICs",
+                    ylab = "Genes",
+                    colors = eval(parse(text=paste0(input$select_color_IC_top,"(n=256)"))),
+                    scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colours = viridis_pal(option = input$select_color_IC_top)(nrow(data_heat) * ncol(data_heat)), limits=c(input$slider_IC_top_range[1], input$slider_IC_top_range[2]), oob=squish),
+                    hclust_method = "ward.D"
+    )
+  } else {
+    fig = heatmaply(data_heat,
+                    xlab = "ICs",
+                    ylab = "Genes",
+                    colors = eval(parse(text=paste0(input$select_color_IC_top,"(n=256)"))),
+                    scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colours = viridis_pal(option = "D")(nrow(data_heat) * ncol(data_heat)), limits=c(input$slider_IC_top_range[1], input$slider_IC_top_range[2]), oob=squish),
+                    hclust_method = "ward.D"
+    )
+  }
   
   fig <- fig %>% event_register('plotly_click')
   

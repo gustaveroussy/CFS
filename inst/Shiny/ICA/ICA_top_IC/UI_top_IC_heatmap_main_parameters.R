@@ -10,8 +10,8 @@ output[["ICA_top_IC_main_parameters_gene_number_UI"]] <- renderUI({
 output[["ICA_top_IC_main_parameters_colorscale_UI"]] <- renderUI({
   tagList(
     selectInput("select_color_IC_top", label = "Select color", 
-                choices = list("Viridis" = "viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
-                selected = "Viridis")
+                choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
+                selected = "D")
   )
 })
 

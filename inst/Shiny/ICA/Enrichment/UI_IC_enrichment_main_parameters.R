@@ -15,8 +15,8 @@ output[["IC_enrichment_main_parameters_UI"]] <- renderUI({
 output[["IC_enrichment_color_main_parameters_UI"]] <- renderUI({
   tagList(
     selectInput("select_color_IC_enrichment", label = "Select color", 
-                choices = list("Viridis", "Blues", "Reds","YlGnBu","YlOrRd"), 
-                selected = "Viridis")
+                choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
+                selected = "D")
   )
 })
 

@@ -3,6 +3,11 @@
 ##----------------------------------------------------------------------------##
 
 current_plot_umap <- reactive({
+  
+  if(!(input$UMAP_visualisation_comput)){
+    return(NULL)
+  }
+  
   type = NULL
   
   if (!is.null(input$Plot_display_IC_choice)) {
@@ -101,76 +106,169 @@ current_plot_umap <- reactive({
       }
     } else if (input$Plot_display_type == "gene") {
       
-      fig <- fig %>%
-        add_trace(
-          x = values$UMAP[["umap"]]@cell.embeddings[,1],
-          y = values$UMAP[["umap"]]@cell.embeddings[,2],
-          marker = list(
-            color = values$data@assays$SCT@scale.data[input$gene_UMAP_choice,],
-            colorscale = input$select_color_visualisation_projection,
-            reversescale=input$invert_color_visualisation_UMAP,
-            size = input$Plot_scatter_size_UMAP,
-            showscale = T,
-            cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
-            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,])/max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,])*input$transparency_visual_spatial_range}
-          ),
-          showlegend = T,
-          text = values$data@assays$SCT@scale.data[input$gene_UMAP_choice,],
-          customdata = rownames(values$UMAP@meta.data),
-          hovertemplate = paste0("Cell : %{customdata}<br>",
-                                 "Value : %{text}",
-                                 "<extra></extra>")
-        )
-      
-      fig <- fig %>% layout(showlegend = F)
-      
-    } else if (input$Plot_display_type == "IC") {
-      
-      fig <- fig %>%
-        add_trace(
-          x = values$UMAP[["umap"]]@cell.embeddings[,1],
-          y = values$UMAP[["umap"]]@cell.embeddings[,2],
-          marker = list(
-            color = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
-            colorscale = input$select_color_visualisation_projection,
-            reversescale=input$invert_color_visualisation_UMAP,
-            size = input$Plot_scatter_size_UMAP,
-            showscale = T,
-            cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
-            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])/max(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])*input$transparency_visual_spatial_range}
-          ),
-          showlegend = T,
-          text = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
-          customdata = rownames(values$UMAP@meta.data),
-          hovertemplate = paste0("Cell : %{customdata}<br>",
-                                 "Value : %{text}",
-                                 "<extra></extra>")
-        )
-      
-      fig <- fig %>% layout(showlegend = F)
-      
-    } else {
-      if(typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
+      if(input$select_color_visualisation_projection %in% c("Blues", "Reds","YlGnBu","YlOrRd")){
         fig <- fig %>%
           add_trace(
             x = values$UMAP[["umap"]]@cell.embeddings[,1],
             y = values$UMAP[["umap"]]@cell.embeddings[,2],
             marker = list(
-              color = values$UMAP@meta.data[[input$Plot_display_type]],
+              color = values$data@assays$SCT@scale.data[input$gene_UMAP_choice,],
               colorscale = input$select_color_visualisation_projection,
               reversescale=input$invert_color_visualisation_UMAP,
               size = input$Plot_scatter_size_UMAP,
               showscale = T,
               cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
-              opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@meta.data[[input$Plot_display_type]])/max(values$UMAP@meta.data[[input$Plot_display_type]])*input$transparency_visual_spatial_range}
+              opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,])/max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,])*input$transparency_visual_spatial_range}
             ),
             showlegend = T,
-            text = values$UMAP@meta.data[[input$Plot_display_type]],
+            text = values$data@assays$SCT@scale.data[input$gene_UMAP_choice,],
             customdata = rownames(values$UMAP@meta.data),
             hovertemplate = paste0("Cell : %{customdata}<br>",
                                    "Value : %{text}",
                                    "<extra></extra>")
           )
+      } else {
+        #prepare colorscales
+        l = list()
+        se = seq(0, 1, (1/(nrow(TissueCoordinates())-1)))
+        col = viridis_pal(option = input$select_color_visualisation_projection)(nrow(TissueCoordinates()))
+        for(i in 1:length(se)){
+          l[[i]] = list(se[i],col[i])
+        }
+        
+        fig <- fig %>%
+          add_trace(
+            x = values$UMAP[["umap"]]@cell.embeddings[,1],
+            y = values$UMAP[["umap"]]@cell.embeddings[,2],
+            marker = list(
+              color = values$data@assays$SCT@scale.data[input$gene_UMAP_choice,],
+              colorscale = l,
+              reversescale=input$invert_color_visualisation_UMAP,
+              size = input$Plot_scatter_size_UMAP,
+              showscale = T,
+              cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+              opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,])/max(values$data@assays$SCT@scale.data[input$gene_UMAP_choice,])*input$transparency_visual_spatial_range}
+            ),
+            showlegend = T,
+            text = values$data@assays$SCT@scale.data[input$gene_UMAP_choice,],
+            customdata = rownames(values$UMAP@meta.data),
+            hovertemplate = paste0("Cell : %{customdata}<br>",
+                                   "Value : %{text}",
+                                   "<extra></extra>")
+          )
+      }
+      
+      fig <- fig %>% layout(showlegend = F)
+      
+    } else if (input$Plot_display_type == "IC") {
+      if(input$select_color_visualisation_projection %in% c("Blues", "Reds","YlGnBu","YlOrRd")){
+        fig <- fig %>%
+          add_trace(
+            x = values$UMAP[["umap"]]@cell.embeddings[,1],
+            y = values$UMAP[["umap"]]@cell.embeddings[,2],
+            marker = list(
+              color = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
+              colorscale = input$select_color_visualisation_projection,
+              reversescale=input$invert_color_visualisation_UMAP,
+              size = input$Plot_scatter_size_UMAP,
+              showscale = T,
+              cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+              opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])/max(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])*input$transparency_visual_spatial_range}
+            ),
+            showlegend = T,
+            text = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
+            customdata = rownames(values$UMAP@meta.data),
+            hovertemplate = paste0("Cell : %{customdata}<br>",
+                                   "Value : %{text}",
+                                   "<extra></extra>")
+          )
+      } else {
+        #prepare colorscales
+        l = list()
+        se = seq(0, 1, (1/(nrow(TissueCoordinates())-1)))
+        col = viridis_pal(option = input$select_color_visualisation_projection)(nrow(TissueCoordinates()))
+        for(i in 1:length(se)){
+          l[[i]] = list(se[i],col[i])
+        }
+        
+        fig <- fig %>%
+          add_trace(
+            x = values$UMAP[["umap"]]@cell.embeddings[,1],
+            y = values$UMAP[["umap"]]@cell.embeddings[,2],
+            marker = list(
+              color = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
+              colorscale = l,
+              reversescale=input$invert_color_visualisation_UMAP,
+              size = input$Plot_scatter_size_UMAP,
+              showscale = T,
+              cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+              opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])/max(values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice])*input$transparency_visual_spatial_range}
+            ),
+            showlegend = T,
+            text = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
+            customdata = rownames(values$UMAP@meta.data),
+            hovertemplate = paste0("Cell : %{customdata}<br>",
+                                   "Value : %{text}",
+                                   "<extra></extra>")
+          )
+      }
+      
+      fig <- fig %>% layout(showlegend = F)
+      
+    } else {
+      if(typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
+        
+        if(input$select_color_visualisation_projection %in% c("Blues", "Reds","YlGnBu","YlOrRd")){
+          fig <- fig %>%
+            add_trace(
+              x = values$UMAP[["umap"]]@cell.embeddings[,1],
+              y = values$UMAP[["umap"]]@cell.embeddings[,2],
+              marker = list(
+                color = values$UMAP@meta.data[[input$Plot_display_type]],
+                colorscale = input$select_color_visualisation_projection,
+                reversescale=input$invert_color_visualisation_UMAP,
+                size = input$Plot_scatter_size_UMAP,
+                showscale = T,
+                cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+                opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@meta.data[[input$Plot_display_type]])/max(values$UMAP@meta.data[[input$Plot_display_type]])*input$transparency_visual_spatial_range}
+              ),
+              showlegend = T,
+              text = values$UMAP@meta.data[[input$Plot_display_type]],
+              customdata = rownames(values$UMAP@meta.data),
+              hovertemplate = paste0("Cell : %{customdata}<br>",
+                                     "Value : %{text}",
+                                     "<extra></extra>")
+            )
+        } else {
+          #prepare colorscales
+          l = list()
+          se = seq(0, 1, (1/(nrow(TissueCoordinates())-1)))
+          col = viridis_pal(option = input$select_color_visualisation_projection)(nrow(TissueCoordinates()))
+          for(i in 1:length(se)){
+            l[[i]] = list(se[i],col[i])
+          }
+          
+          fig <- fig %>%
+            add_trace(
+              x = values$UMAP[["umap"]]@cell.embeddings[,1],
+              y = values$UMAP[["umap"]]@cell.embeddings[,2],
+              marker = list(
+                color = values$UMAP@meta.data[[input$Plot_display_type]],
+                colorscale = l,
+                reversescale=input$invert_color_visualisation_UMAP,
+                size = input$Plot_scatter_size_UMAP,
+                showscale = T,
+                cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+                opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(values$UMAP@meta.data[[input$Plot_display_type]])/max(values$UMAP@meta.data[[input$Plot_display_type]])*input$transparency_visual_spatial_range}
+              ),
+              showlegend = T,
+              text = values$UMAP@meta.data[[input$Plot_display_type]],
+              customdata = rownames(values$UMAP@meta.data),
+              hovertemplate = paste0("Cell : %{customdata}<br>",
+                                     "Value : %{text}",
+                                     "<extra></extra>")
+            )
+        }
         
         fig <- fig %>% layout(showlegend = F)
         

@@ -4,6 +4,10 @@
 
 current_plot_spatial <- reactive({
   
+  if(!(input$Spatial_visualisation_comput)){
+    return(NULL)
+  }
+  
   cell.embeddings <- values$UMAP@reductions$ica@cell.embeddings
   TissueCoordinates = TissueCoordinates()
   meta.data = values$UMAP@meta.data
@@ -14,6 +18,14 @@ current_plot_spatial <- reactive({
     cell.embeddings = values$UMAP@reductions$ica@cell.embeddings[square_cell_UMAP_selected()$customdata,]
     TissueCoordinates = TissueCoordinates()[square_cell_UMAP_selected()$customdata,]
     meta.data = values$UMAP@meta.data[square_cell_UMAP_selected()$customdata,]
+  }
+  
+  #prepare colorscales
+  l = list()
+  se = seq(0, 1, (1/(nrow(TissueCoordinates())-1)))
+  col = viridis_pal(option = input$select_color_visualisation_projection)(nrow(TissueCoordinates()))
+  for(i in 1:length(se)){
+    l[[i]] = list(se[i],col[i])
   }
   
   fig <- plot_ly(type = 'scatter',
@@ -81,14 +93,14 @@ current_plot_spatial <- reactive({
           )
     }
   } else if (input$Plot_display_type == "gene") {
-      
+
     fig <- fig %>%
       add_trace(
         x = TissueCoordinates[,"imagecol"],
         y = TissueCoordinates[,"imagerow"],
         marker = list(
           color = values$UMAP@assays$SCT@scale.data[input$gene_UMAP_choice,],
-          colorscale = input$select_color_visualisation_projection,
+          colorscale = if(input$select_color_visualisation_projection %in% c("Blues", "Reds","YlGnBu","YlOrRd")){input$select_color_visualisation_projection}else{l},
           reversescale=input$invert_color_visualisation_spatial,
           size = input$Plot_scatter_size_spatial,
           showscale = T,
@@ -102,18 +114,18 @@ current_plot_spatial <- reactive({
                                "Value : %{text}",
                                "<extra></extra>")
       )
+
     
     fig <- fig %>% layout(showlegend = F)
       
     }  else if (input$Plot_display_type == "IC") {
-      
       fig <- fig %>%
         add_trace(
           x = TissueCoordinates[,"imagecol"],
           y = TissueCoordinates[,"imagerow"],
           marker = list(
             color = values$UMAP@reductions$ica@cell.embeddings[,input$IC_UMAP_choice],
-            colorscale = input$select_color_visualisation_projection,
+            colorscale = if(input$select_color_visualisation_projection %in% c("Blues", "Reds","YlGnBu","YlOrRd")){input$select_color_visualisation_projection}else{l},
             reversescale=input$invert_color_visualisation_spatial,
             size = input$Plot_scatter_size_spatial,
             cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
@@ -132,13 +144,14 @@ current_plot_spatial <- reactive({
       
     } else {
     if(typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
+      
       fig <- fig %>%
         add_trace(
           x = TissueCoordinates[,"imagecol"],
           y = TissueCoordinates[,"imagerow"],
           marker = list(
             color = values$UMAP@meta.data[[input$Plot_display_type]],
-            colorscale = input$select_color_visualisation_projection,
+            colorscale = if(input$select_color_visualisation_projection %in% c("Blues", "Reds","YlGnBu","YlOrRd")){input$select_color_visualisation_projection}else{l},
             reversescale=input$invert_color_visualisation_spatial,
             size = input$Plot_scatter_size_spatial,
             showscale = T,

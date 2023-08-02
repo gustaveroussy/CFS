@@ -59,11 +59,29 @@ enrichment_barplot_react <- reactive({
                        , "\ngenes : ", genes[1:number_enrichr,]),
     hoverinfo = 'text', 
     showlegend=FALSE,
-    marker = list(color = table["Adjusted.P.value"][1:number_enrichr,], colorscale = input$select_color_IC_enrichment,
+    marker = list(color = table["Adjusted.P.value"][1:number_enrichr,], colorscale = colorscale_enrichment(),
                   colorbar = list(title = "P-value", exponentformat = "power"), showscale = TRUE, reversescale=input$invert_color_enrichment_projection)
   )
   
   fig <- fig %>% layout(yaxis = list(autorange = "reversed", title = 'Enrichment', tickfont = list(size = 7)),
                         xaxis = list(title = 'Nb genes', tickfont = list(size = 10))
   )
+})
+
+##----------------------------------------------------------------------------##
+## Create the colorscale for enrichment
+##----------------------------------------------------------------------------##
+colorscale_enrichment <- reactive({
+  if(input$select_color_IC_enrichment %in% c("Blues", "Reds","YlGnBu","YlOrRd")){
+    return(input$select_color_IC_enrichment)
+  } else {
+    #prepare colorscales
+    l = list()
+    se = seq(0, 1, (1/(input$enrichment_disp_number-1)))
+    col = viridis_pal(option = input$select_color_IC_enrichment)(input$enrichment_disp_number)
+    for(i in 1:length(se)){
+      l[[i]] = list(se[i],col[i])
+    }
+    return(l)
+  }
 })

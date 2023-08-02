@@ -95,6 +95,11 @@ outputOptions(
 output[["Spatial_display_image_UI"]] <- renderUI({
   tagList(
     shinyWidgets::awesomeCheckbox(
+      inputId = "Spatial_visualisation_comput",
+      label = "Display",
+      value = TRUE
+    ),
+    shinyWidgets::awesomeCheckbox(
       inputId = "Spatial_use_ggplot",
       label = "Use ggplot",
       value = FALSE

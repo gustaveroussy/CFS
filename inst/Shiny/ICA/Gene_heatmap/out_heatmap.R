@@ -17,31 +17,61 @@ heatmap_IC_gene_react <- reactive({
   mm = min_max_gene_heatmap()
   
   if(mm$max == mm$min){
-    plot_ly(
-      x = colnames(z), y = rownames(z),
-      z = z, type = "heatmap",
-      colorscale = input$select_color_IC_gene_heatmap,
-      hovertemplate = paste(
-        "Gene: %{y:.2f%}<br>",
-        "IC: %{x:.2f%}<br>",
-        "Value: %{z:.2f%}",
-        "<extra></extra>"
-      ),
-      reversescale=input$invert_color_gene_heatmap
-    )
+    if((input$select_color_IC_top %in% c("Blues", "Reds","YlGnBu","YlOrRd"))){
+      plot_ly(
+        x = colnames(z), y = rownames(z),
+        z = z, type = "heatmap",
+        colorscale = input$select_color_IC_gene_heatmap,
+        hovertemplate = paste(
+          "Gene: %{y:.2f%}<br>",
+          "IC: %{x:.2f%}<br>",
+          "Value: %{z:.2f%}",
+          "<extra></extra>"
+        ),
+        reversescale=input$invert_color_gene_heatmap
+      )
+    } else {
+      plot_ly(
+        x = colnames(z), y = rownames(z),
+        z = z, type = "heatmap",
+        colors = viridis_pal(option = input$select_color_IC_gene_heatmap)(nrow(z) * ncol(z)),
+        hovertemplate = paste(
+          "Gene: %{y:.2f%}<br>",
+          "IC: %{x:.2f%}<br>",
+          "Value: %{z:.2f%}",
+          "<extra></extra>"
+        ),
+        reversescale=input$invert_color_gene_heatmap
+      )
+    }
   } else {
-    plot_ly(
-      x = colnames(z), y = rownames(z),
-      z = z, type = "heatmap", zmin = input$slider_IC_gene_heatmap_range[1], zmax = input$slider_IC_gene_heatmap_range[2],
-      colorscale = input$select_color_IC_gene_heatmap,
-      hovertemplate = paste(
-        "Gene: %{y:.2f%}<br>",
-        "IC: %{x:.2f%}<br>",
-        "Value: %{z:.2f%}",
-        "<extra></extra>"
-      ),
-      reversescale=input$invert_color_gene_heatmap
-    )
+    if((input$select_color_IC_top %in% c("Blues", "Reds","YlGnBu","YlOrRd"))){
+      plot_ly(
+        x = colnames(z), y = rownames(z),
+        z = z, type = "heatmap", zmin = input$slider_IC_gene_heatmap_range[1], zmax = input$slider_IC_gene_heatmap_range[2],
+        colorscale = input$select_color_IC_gene_heatmap,
+        hovertemplate = paste(
+          "Gene: %{y:.2f%}<br>",
+          "IC: %{x:.2f%}<br>",
+          "Value: %{z:.2f%}",
+          "<extra></extra>"
+        ),
+        reversescale=input$invert_color_gene_heatmap
+      )
+    } else {
+      plot_ly(
+        x = colnames(z), y = rownames(z),
+        z = z, type = "heatmap", zmin = input$slider_IC_gene_heatmap_range[1], zmax = input$slider_IC_gene_heatmap_range[2],
+        colors = viridis_pal(option = input$select_color_IC_gene_heatmap)(nrow(z) * ncol(z)),
+        hovertemplate = paste(
+          "Gene: %{y:.2f%}<br>",
+          "IC: %{x:.2f%}<br>",
+          "Value: %{z:.2f%}",
+          "<extra></extra>"
+        ),
+        reversescale=input$invert_color_gene_heatmap
+      )
+    }
   }
 })
 
@@ -70,3 +100,4 @@ output[["IC_text_output"]] <- renderUI({
   )
   return(HTML(text))
 })
+
