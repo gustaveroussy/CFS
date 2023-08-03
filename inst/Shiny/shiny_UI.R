@@ -77,6 +77,7 @@ ui <- dashboardPage(
       menuItem("About", tabName = "About", icon = icon("bars"))
     ),
     uiOutput("IC_list_UI"),
+    selectInput("Plot_image_spatial", "Image to display", NULL),
     shinyWidgets::awesomeCheckbox(
       inputId = "spatial_mirror_X",
       label = "mirror X",

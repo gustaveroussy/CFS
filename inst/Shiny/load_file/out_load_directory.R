@@ -33,7 +33,10 @@ observeEvent(input$load_data_file_select, {
           
           incProgress(0.2, detail = "Loading spatial 10X")
           # load the seurat object
-          values$data = Load10X_Spatial(path)
+          files_names = list.files(path=path, pattern=".h5", all.files=TRUE, full.names=FALSE)
+          files_names = files_names[grepl("filtered",files_names)][1]
+          
+          values$data = Load10X_Spatial(path, filename = files_names)
           
           if('image' %in% names(attributes(values$data@images[[1]]))){
             values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))

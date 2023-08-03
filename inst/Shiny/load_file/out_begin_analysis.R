@@ -119,3 +119,19 @@ observeEvent(input$input_image_2, {
     shinyalert("Oops!", "Wrong format (expecting .png or .jpg)", type = "error")
   }
 })
+
+images_names <- reactive({
+  if(is.null(values$data)){
+    return(NULL)
+  }else{
+    return(names(values$data@images))
+  }
+})
+
+observe({
+  updateSelectInput(
+    session = getDefaultReactiveDomain(),
+    "Plot_image_spatial",
+    choices = images_names()
+  )
+})

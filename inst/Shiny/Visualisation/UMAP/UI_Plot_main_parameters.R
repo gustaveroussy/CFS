@@ -96,7 +96,7 @@ output[["Plot_main_parameters_3_UI"]] <- renderUI({
                     step = 0.01),
         radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
                      choices = list("Constant" = 1, "Scaling" = 2), 
-                     selected = 2),
+                     selected = 1),
         sliderInput("transparency_visual_spatial_range", "Alpha",
                     min = 0, max = 1,
                     value = 1, step = 0.01)

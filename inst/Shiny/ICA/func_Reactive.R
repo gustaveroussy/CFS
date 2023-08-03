@@ -16,9 +16,9 @@ TissueCoordinates <- reactive({
   #   c <- values$data@images$slice1@coordinates
   # }
   if(!is.null(values$HD_image)) {
-    c <- values$data@images$slice1@coordinates * values$data@images$slice1@scale.factors$hires
+    c <- values$data@images[[input$Plot_image_spatial]]@coordinates * values$data@images[[input$Plot_image_spatial]]@scale.factors$hires
   } else {
-    c <- GetTissueCoordinates(values$data)
+    c <- GetTissueCoordinates(values$data, image = input$Plot_image_spatial)
     names(c)[names(c) == "x"] <- "imagerow"
     names(c)[names(c) == "y"] <- "imagecol"
   }
