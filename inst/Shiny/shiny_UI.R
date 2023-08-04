@@ -31,7 +31,11 @@ if(Shiny.options[["offline_mode"]] == FALSE){
   }
   
   if(!reticulate::py_module_available("kaleido")){
-    reticulate::conda_install('r-reticulate', 'python-kaleido=0.1.0')
+    if(Sys.info()['sysname'] == "Darwin"){
+      reticulate::conda_install('r-reticulate', 'python-kaleido')
+    } else {
+      reticulate::conda_install('r-reticulate', 'python-kaleido=0.1.0')
+    }
     reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')
   }
   
