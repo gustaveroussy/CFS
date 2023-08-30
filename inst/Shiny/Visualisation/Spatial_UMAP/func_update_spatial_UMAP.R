@@ -32,16 +32,17 @@ current_plot_spatial <- reactive({
                  mode='markers',
                  source = "C"
   )
-  
-  if (!is.null(values$HD_image)) {
-    fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
-  } else {
-    if(!is.null(values$low_image)){
-      fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+  if (input$Spatial_display_image == TRUE){
+    if (!is.null(values$HD_image)) {
+      fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+    } else {
+      if(!is.null(values$low_image)){
+        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+      }
     }
   }
   
-  if (input$Plot_analysis_type == "UMAP"){
+  if (input$Plot_analysis_type == "UMAP" || input$Plot_analysis_type == "tSNE"){
     if (input$Plot_display_type == "seurat_clusters"){
       for (i in as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))[order(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]]))))]){
         if(length(which(meta.data[["seurat_clusters"]]==i)) == 1){

@@ -9,6 +9,10 @@ output[["Marker_table_or_message"]] <- renderDT({
   
   if(is.null(values$marker_gene)){
     values$marker_gene = marker_table()
+  } else {
+    if(input$overwrite_marker_table){
+      values$marker_gene = marker_table()
+    }
   }
   
   req(values$marker_gene)

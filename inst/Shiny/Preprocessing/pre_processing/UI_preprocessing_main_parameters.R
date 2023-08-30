@@ -14,7 +14,7 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
     HTML("<h3><b>ICA process</b></h3>"),
     numericInput("preprocessing_number_of_ICs", label = "Number of ICs", value = 100,
                  min = 2, step = 1),
-    numericInput("preprocessing_maxit", label = "Maximum iterations", value = 100,
+    numericInput("preprocessing_maxit", label = "Maximum iterations", value = 600,
                  min = 1, step = 1),
     selectInput("preprocessing_ICA_function", label = "ICA fonction to run", 
                 choices = list("icafast", "icaimax", "icajade"), 

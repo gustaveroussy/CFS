@@ -32,6 +32,11 @@ output[["Volcano_plot_main_parameters_2_UI"]] <- renderUI({
     sliderInput("Volcano_plot_alpha", "Alpha",
                 min = 0, max = 1,
                 value = 1, step = 0.01),
+    shinyWidgets::awesomeCheckbox(
+      inputId = "overwrite_marker_table",
+      label = "Overwrite",
+      value = FALSE
+    ),
     actionButton("start_marker", "Start")
   )
 })

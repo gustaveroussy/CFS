@@ -1,9 +1,36 @@
 output[["Plot_UI"]] <- renderUI({
   fluidRow(
     column(width = 3, offset = 0, style = "padding: 0px;",
-           box(id = "Plot_main_parameters_UI",
+           box(id = "Plot_main_parameters_clustering_UI",
                title = tagList(
-                 "Main parameters",
+                 "Main parameters Clustering",
+                 actionButton(
+                   inputId = "Plot_main_parameters_cluster_info",
+                   label = "info",
+                   icon = NULL,
+                   class = "btn-xs",
+                   title = "Show additional information for this panel.",
+                   style = "margin-right: 3px"
+                 ),
+                 shinyWidgets::dropdownButton(
+                   circle = FALSE,
+                   icon = icon("cog"),
+                   inline = TRUE,
+                   size = "xs"
+                 )
+               ),
+               status = "primary",
+               solidHeader = TRUE,
+               width = 12,
+               height = NULL,
+               collapsible = TRUE,
+               collapsed = FALSE,
+               uiOutput("Plot_main_parameters_cluster_UI"),
+               uiOutput("start_cluster_UI")
+           ),
+           box(id = "Plot_main_parameters_display_UI",
+               title = tagList(
+                 "Main parameters Display",
                  actionButton(
                    inputId = "Plot_main_parameters_info",
                    label = "info",
