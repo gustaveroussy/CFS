@@ -23,6 +23,7 @@ server <- function(input, output, session) {
   source(paste0(Shiny.options[["shiny_root"]], "/load_file/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Preprocessing/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/ICA/server.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "/ICA_table/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Visualisation/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Output/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Table/server.R"), local = TRUE)

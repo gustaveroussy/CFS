@@ -31,7 +31,7 @@ if(Shiny.options[["offline_mode"]] == FALSE){
   }
   
   if(!reticulate::py_module_available("kaleido")){
-    if(Sys.info()['sysname'] == "Darwin"){
+    if(Sys.info()['sysname'] == "Darwin" | Sys.info()['sysname'] == "Linux"){
       reticulate::conda_install('r-reticulate', 'python-kaleido')
     } else {
       reticulate::conda_install('r-reticulate', 'python-kaleido=0.1.0')
@@ -64,6 +64,7 @@ if(Shiny.options[["offline_mode"]] == FALSE){
 source(paste0(Shiny.options[["shiny_root"]], "/load_file/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Preprocessing/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/ICA/UI.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/ICA_table/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Visualisation/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Output/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Table/UI.R"), local = TRUE)
@@ -78,6 +79,7 @@ ui <- dashboardPage(
       menuItem("Load Data", tabName = "Load_file", icon = icon("spinner")),
       menuItem("Pre-Processing", tabName = "Preprocessing", icon = icon("gears")),
       menuItem("ICA", tabName = "ICA", icon = icon("wave-square")),
+      menuItem("ICA/Gene table", tabName = "ICA_table", icon = icon("table-list")),
       menuItem("ICA Table", tabName = "Table", icon = icon("table-list")),
       menuItem("Visualisation", tabName = "Visualisation", icon = icon("display")),
       menuItem("Marker table", tabName = "Marker_table", icon = icon("table-list")),
@@ -107,6 +109,7 @@ ui <- dashboardPage(
       tab_load,
       tab_preprocessing,
       tab_ICA,
+      tab_ICA_table,
       tab_table,
       tab_visualisation,
       tab_marker_table,

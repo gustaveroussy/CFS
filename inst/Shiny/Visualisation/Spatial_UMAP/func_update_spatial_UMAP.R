@@ -32,6 +32,7 @@ current_plot_spatial <- reactive({
                  mode='markers',
                  source = "C"
   )
+  
   if (input$Spatial_display_image == TRUE){
     if (!is.null(values$HD_image)) {
       fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
