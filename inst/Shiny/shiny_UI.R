@@ -79,7 +79,7 @@ ui <- dashboardPage(
       menuItem("Load Data", tabName = "Load_file", icon = icon("spinner")),
       menuItem("Pre-Processing", tabName = "Preprocessing", icon = icon("gears")),
       menuItem("ICA", tabName = "ICA", icon = icon("wave-square")),
-      menuItem("ICA/Gene table", tabName = "ICA_table", icon = icon("table-list")),
+      menuItem("IC gene weights", tabName = "ICA_table", icon = icon("table-list")),
       menuItem("ICA Table", tabName = "Table", icon = icon("table-list")),
       menuItem("Visualisation", tabName = "Visualisation", icon = icon("display")),
       menuItem("Marker table", tabName = "Marker_table", icon = icon("table-list")),

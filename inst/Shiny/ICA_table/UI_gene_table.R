@@ -3,7 +3,7 @@ output[["ICA_genes_table_UI"]] <- renderUI({
     column(width = 12, offset = 0, style = "padding: 0px;",
            box(id = "table_gene_container",
                title = tagList(
-                 p("ICA/Gene table", style = "padding-right: 5px; display: inline"),
+                 p("IC gene weights", style = "padding-right: 5px; display: inline"),
                  actionButton(
                    inputId = "table_gene_info",
                    label = "info",
