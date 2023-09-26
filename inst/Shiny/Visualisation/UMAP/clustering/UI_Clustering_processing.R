@@ -61,7 +61,7 @@ marker_table <- observeEvent(input$start_cluster_plot, {
       incProgress(0.4, detail = "Finding neighbors")
       values$UMAP = FindNeighbors(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',type)))
       incProgress(0.4, detail = "Finding clusters")
-      values$UMAP = FindClusters(values$UMAP, verbose = FALSE, resolution=Clustering_resolution, algorithm = as.integer(input$select_algorithm_clusterisation))
+      values$UMAP = FindClusters(values$UMAP, verbose = FALSE, resolution=input$Clustering_resolution, algorithm = as.integer(input$select_algorithm_clusterisation))
       incProgress(0.1, detail = "Done")
       
     } else {
