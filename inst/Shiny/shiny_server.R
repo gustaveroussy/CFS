@@ -16,6 +16,7 @@ server <- function(input, output, session) {
   # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/Minor_functions.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/Prepare_table_marker.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/Plotly_line.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "/Functions/alpha_color_scale.R"), local = TRUE)
 
 ##--------------------------------------------------------------------------##
 ## Tabs.
