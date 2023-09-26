@@ -76,7 +76,7 @@ colorscale_IC_spatial <- reactive({
     se = seq(0, 1, (1/(nrow(TissueCoordinates())-1)))
     col = viridis_pal(option = input$select_color_IC_projection)(nrow(TissueCoordinates()))
     for(i in 1:length(se)){
-      l[[i]] = list(se[i],col[i])
+      l[[i]] = c(se[i],col[i])
     }
     
     return(l)

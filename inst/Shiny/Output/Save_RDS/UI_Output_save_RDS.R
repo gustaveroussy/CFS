@@ -3,7 +3,7 @@ output[["Output_directory_UI"]] <- renderUI({
     column(width = 12, offset = 0, style = "padding: 0px;",
            box(id = "output_container",
                title = tagList(
-                 p("Output", style = "padding-right: 5px; display: inline"),
+                 p("Download Output", style = "padding-right: 5px; display: inline"),
                  actionButton(
                    inputId = "ouput_info",
                    label = "info",
@@ -20,10 +20,32 @@ output[["Output_directory_UI"]] <- renderUI({
                collapsible = FALSE,
                collapsed = FALSE,
                uiOutput("Output_or_message"),
-               column(width = 6, align="left", offset = 0, style = "padding: 0px;",
-                      downloadButton("download_RDS", "Download RDS")),
-               column(width = 6, align="right", offset = 0, style = "padding: 0px;",
-                      downloadButton("download_subcluster_RDS", "download subset"))
+               column(width = 12, align="left", offset = 0, style = "padding: 0px;",
+                      downloadButton("download_RDS", "Download RDS"))
+           )
+    ),
+    column(width = 12, offset = 0, style = "padding: 0px;",
+           box(id = "output_container",
+               title = tagList(
+                 p("Download Subset", style = "padding-right: 5px; display: inline"),
+                 actionButton(
+                   inputId = "ouput_info",
+                   label = "info",
+                   icon = NULL,
+                   class = "btn-xs",
+                   title = "Show additional information for this panel.",
+                   style = "margin-right: 3px"
+                 ),
+               ),
+               status = "primary",
+               solidHeader = TRUE,
+               width = 12,
+               height = NULL,
+               collapsible = FALSE,
+               collapsed = FALSE,
+               uiOutput("Output_or_message_2"),
+               column(width = 12, align="left", offset = 0, style = "padding: 0px;",
+                      downloadButton("download_subcluster_RDS", "Download subset RDS"))
            )
     )
   )
