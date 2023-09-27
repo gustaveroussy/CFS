@@ -4,15 +4,15 @@
 
 plots <- reactiveValues(button_check = 1, display = NULL, spatial = NULL)
 
-observeEvent(input$start_plot, {
-  if (input$start_plot >= plots$button_check) {
-    if (input$Plot_analysis_type == "UMAP"){
+observeEvent(input$start_display, {
+  if (input$start_display >= plots$button_check) {
+    if (input$Plot_analysis_display_type == "UMAP"){
       plots$display = current_plot_umap()
       plots$spatial = current_plot_spatial()
-    } else if (input$Plot_analysis_type == "tSNE") {
+    } else if (input$Plot_analysis_display_type == "tSNE") {
       plots$display = current_plot_tSNE()
       plots$spatial = current_plot_spatial()
-    } else if (input$Plot_analysis_type == "Density") {
+    } else if (input$Plot_analysis_display_type == "Density") {
       req(input$Plot_display_type_choice)
       if(input$Spatial_use_ggplot){
         #plots$density = current_plot_density()
@@ -21,7 +21,7 @@ observeEvent(input$start_plot, {
         plots$display = current_plot_density()
         plots$spatial = current_plot_spatial_density()
       }
-    } else if (input$Plot_analysis_type == "Scatter pie") {
+    } else if (input$Plot_analysis_display_type == "Scatter pie") {
       req(values$data)
       plots$display = current_plot_scatter_pie()
       if(input$Spatial_use_ggplot){
@@ -30,7 +30,7 @@ observeEvent(input$start_plot, {
         plots$spatial = current_plot_spatial_scatter_pie()
       }
     }
-    plots$button_check <- input$start_plot + 1
+    plots$button_check <- input$start_display + 1
   }
 })
 

@@ -43,7 +43,7 @@ current_plot_spatial <- reactive({
     }
   }
   
-  if (input$Plot_analysis_type == "UMAP" || input$Plot_analysis_type == "tSNE"){
+  if (input$Plot_analysis_display_type == "UMAP" || input$Plot_analysis_display_type == "tSNE"){
     if (input$Plot_display_type == "seurat_clusters"){
       for (i in as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))[order(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]]))))]){
         if(length(which(meta.data[["seurat_clusters"]]==i)) == 1){

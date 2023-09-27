@@ -28,6 +28,34 @@ output[["Plot_UI"]] <- renderUI({
                uiOutput("Plot_main_parameters_cluster_UI"),
                uiOutput("start_cluster_UI")
            ),
+           box(id = "Plot_main_parameters_dimred_UI",
+               title = tagList(
+                 "Main parameters dimension reduction",
+                 actionButton(
+                   inputId = "Plot_main_parameters_info",
+                   label = "info",
+                   icon = NULL,
+                   class = "btn-xs",
+                   title = "Show additional information for this panel.",
+                   style = "margin-right: 3px"
+                 ),
+                 shinyWidgets::dropdownButton(
+                   circle = FALSE,
+                   icon = icon("cog"),
+                   inline = TRUE,
+                   size = "xs"
+                 )
+               ),
+               status = "primary",
+               solidHeader = TRUE,
+               width = 12,
+               height = NULL,
+               collapsible = TRUE,
+               collapsed = TRUE,
+               uiOutput("Plot_type_UI"),
+               uiOutput("Plot_main_parameters_UI"),
+               uiOutput("start_plot_UI")
+           ),
            box(id = "Plot_main_parameters_display_UI",
                title = tagList(
                  "Main parameters Display",
@@ -52,11 +80,11 @@ output[["Plot_UI"]] <- renderUI({
                height = NULL,
                collapsible = TRUE,
                collapsed = TRUE,
-               uiOutput("Plot_type_UI"),
-               uiOutput("Plot_main_parameters_UI"),
-               uiOutput("Plot_main_parameters_3_UI"),
-               uiOutput("Plot_main_parameters_2_UI"),
-               uiOutput("start_plot_UI")
+               uiOutput("Plot_type_display_UI"),
+               uiOutput("Plot_main_parameters_display_UI"),
+               uiOutput("Plot_main_parameters_display_2_UI"),
+               uiOutput("Plot_main_parameters_display_3_UI"),
+               uiOutput("start_display_UI")
            )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",
