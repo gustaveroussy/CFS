@@ -15,25 +15,31 @@ observeEvent(clicked_cell_ICA(), {
   table = clicked_cell_ICA()
   
   if (is.null(values$HD_image)) {
-    table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
-    table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
+    table$x = table$x * (1/values$data@images[[input$Plot_image_spatial]]@scale.factors[["lowres"]])
+    table$y = table$y * (1/values$data@images[[input$Plot_image_spatial]]@scale.factors[["lowres"]])
   } else {
-    table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["hires"]])
-    table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["hires"]])
+    table$x = table$x * (1/values$data@images[[input$Plot_image_spatial]]@scale.factors[["hires"]])
+    table$y = table$y * (1/values$data@images[[input$Plot_image_spatial]]@scale.factors[["hires"]])
   }
   
-  min_x = table$x-ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
-  min_y = table$y-ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
-  max_x = table$x+ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
-  max_y = table$y+ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
+  min_x = table$x-ceiling(1/(values$data@images[[input$Plot_image_spatial]]@spot.radius))*2
+  min_y = table$y-ceiling(1/(values$data@images[[input$Plot_image_spatial]]@spot.radius))*2
+  max_x = table$x+ceiling(1/(values$data@images[[input$Plot_image_spatial]]@spot.radius))*2
+  max_y = table$y+ceiling(1/(values$data@images[[input$Plot_image_spatial]]@spot.radius))*2
   
-  cropped_image = values$HD_image_2[min_y:max_y,min_x:max_x,]
+  dim(image)
   
-  values$cropped_image = raster2uri(raster::as.raster(cropped_image))
-  
-  shinyalert(html = TRUE, text = tagList(
-    plotlyOutput('mini_plot_ICA')
-  ))
+  if(dim(values$HD_image_2)[1] > max_x & dim(values$HD_image_2)[2] > max_y){
+    cropped_image = values$HD_image_2[min_y:max_y,min_x:max_x,]
+    
+    values$cropped_image = raster2uri(raster::as.raster(cropped_image))
+    
+    shinyalert(html = TRUE, text = tagList(
+      plotlyOutput('mini_plot_ICA')
+    ))
+  } else {
+    shinyalert("Oops!", "Full res image is of the wrong size.", type = "error")
+  }
 })
 
 output[["mini_plot_ICA"]] <- plotly::renderPlotly({
@@ -44,9 +50,9 @@ output[["mini_plot_ICA"]] <- plotly::renderPlotly({
                 shapes = list(
                   list(type = "circle",
                        fillcolor = NULL, line = list(color = "black"), opacity = 0.5,
-                       x0 = ceiling(1/(values$data@images[["slice1"]]@spot.radius)),
-                       x1 = ceiling(1/(values$data@images[["slice1"]]@spot.radius))*3, xref = "x",
-                       y0 = ceiling(1/(values$data@images[["slice1"]]@spot.radius)),
-                       y1 = ceiling(1/(values$data@images[["slice1"]]@spot.radius))*3, yref = "y")))
+                       x0 = ceiling(1/(values$data@images[[input$Plot_image_spatial]]@spot.radius)),
+                       x1 = ceiling(1/(values$data@images[[input$Plot_image_spatial]]@spot.radius))*3, xref = "x",
+                       y0 = ceiling(1/(values$data@images[[input$Plot_image_spatial]]@spot.radius)),
+                       y1 = ceiling(1/(values$data@images[[input$Plot_image_spatial]]@spot.radius))*3, yref = "y")))
 })
 
