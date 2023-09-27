@@ -15,7 +15,8 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     req(values$annotation_for_output)
     tagList(
       selectInput("Plot_display_type", label = "Select what to color", 
-                  choices = if(!is.null(values$UMAP)){unique(c("gene","IC",colnames(values$UMAP@meta.data)))}else{unique(c("gene","IC",colnames(values$data@meta.data)))}),
+                  choices = if(!is.null(values$UMAP)){unique(c("gene","IC",colnames(values$UMAP@meta.data)))}else{unique(c("gene","IC",colnames(values$data@meta.data)))},
+                  selected = if("seurat_clusters" %in% colnames(values$UMAP@meta.data)){"seurat_clusters"}else{"gene"}),
       selectInput("select_color_visualisation_projection", label = "Select color", 
                   choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
                   selected = "D"),

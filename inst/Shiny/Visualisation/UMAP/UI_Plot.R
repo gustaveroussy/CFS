@@ -24,7 +24,7 @@ output[["Plot_UI"]] <- renderUI({
                width = 12,
                height = NULL,
                collapsible = TRUE,
-               collapsed = FALSE,
+               collapsed = TRUE,
                uiOutput("Plot_main_parameters_cluster_UI"),
                uiOutput("start_cluster_UI")
            ),
@@ -51,7 +51,7 @@ output[["Plot_UI"]] <- renderUI({
                width = 12,
                height = NULL,
                collapsible = TRUE,
-               collapsed = FALSE,
+               collapsed = TRUE,
                uiOutput("Plot_type_UI"),
                uiOutput("Plot_main_parameters_UI"),
                uiOutput("Plot_main_parameters_3_UI"),
@@ -136,7 +136,7 @@ output[["ggplot_scatter_pie_UI"]] <- renderUI({
     shinyWidgets::awesomeCheckbox(
       inputId = "show_grid_scatter_pie",
       label = "Display plotly grid",
-      value = TRUE
+      value = FALSE
     ),
     shinyWidgets::awesomeCheckbox(
       inputId = "ggplot_scatter_pie",
@@ -146,12 +146,12 @@ output[["ggplot_scatter_pie_UI"]] <- renderUI({
     shinyWidgets::awesomeCheckbox(
       inputId = "full_annotation_UMAP",
       label = "Full annotation for scatter",
-      value = FALSE
+      value = TRUE
     ),
     shinyWidgets::awesomeCheckbox(
       inputId = "image_display_UMAP",
       label = "Display only the UMAP of the currently selected image",
-      value = TRUE
+      value = FALSE
     ),
     numericInput("Plot_scatter_size_UMAP", "Spot size", 10, min = 0, max = NA)
   )
