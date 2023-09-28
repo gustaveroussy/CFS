@@ -64,7 +64,7 @@ output[["Plot_main_parameters_display_2_UI"]] <- renderUI({
   }
 })
 
-output[["Plot_main_parameters_Display_3_UI"]] <- renderUI({
+output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
   if(input$Plot_analysis_display_type == "UMAP" || input$Plot_analysis_display_type == "tSNE"){
     if(input$Plot_display_type == "gene"){
       tagList(

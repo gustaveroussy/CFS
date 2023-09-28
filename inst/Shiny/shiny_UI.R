@@ -39,9 +39,9 @@ if(Shiny.options[["offline_mode"]] == FALSE){
     reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')
   }
   
-  if(!reticulate::py_module_available("leidenalg")){
-    reticulate::conda_install('r-reticulate', 'leidenalg')
-  }
+  # if(!reticulate::py_module_available("leidenalg")){
+  #   reticulate::conda_install('r-reticulate', 'leidenalg')
+  # }
   
   reticulate::use_miniconda('r-reticulate')
   library(enrichR)
