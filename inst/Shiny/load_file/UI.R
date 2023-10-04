@@ -6,5 +6,6 @@ tab_load <- tabItem(
   uiOutput("load_data_2_UI"),
   uiOutput("load_data_UI"),
   uiOutput("load_image_UI"),
-  uiOutput("load_image_2_UI")
+  uiOutput("load_image_2_UI"),
+  uiOutput("load_data_integration_UI")
 )

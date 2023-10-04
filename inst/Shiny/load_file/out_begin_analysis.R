@@ -135,3 +135,10 @@ observe({
     choices = images_names()
   )
 })
+
+observeEvent(input$Plot_image_spatial, {
+  req(values$data)
+  req(values$data@images[[input$Plot_image_spatial]])
+  req(values$data@images[[input$Plot_image_spatial]]@image)
+  values$low_image = raster2uri(raster::as.raster(values$data@images[[input$Plot_image_spatial]]@image))
+})
