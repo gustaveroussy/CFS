@@ -33,15 +33,17 @@ current_plot_spatial <- reactive({
                  source = "C"
   )
   
-  if (!is.null(values$HD_image)) {
-    fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
-  } else {
-    if(!is.null(values$low_image)){
-      fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+  if (input$Spatial_display_image == TRUE){
+    if (!is.null(values$HD_image)) {
+      fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
+    } else {
+      if(!is.null(values$low_image)){
+        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+      }
     }
   }
   
-  if (input$Plot_analysis_type == "UMAP"){
+  if (input$Plot_analysis_display_type == "UMAP" || input$Plot_analysis_display_type == "tSNE"){
     if (input$Plot_display_type == "seurat_clusters"){
       for (i in as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))[order(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]]))))]){
         if(length(which(meta.data[["seurat_clusters"]]==i)) == 1){
@@ -106,7 +108,7 @@ current_plot_spatial <- reactive({
           size = input$Plot_scatter_size_spatial,
           showscale = T,
           cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
-          opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(scale.data[input$gene_UMAP_choice,])/max(scale.data[input$gene_UMAP_choice,])*input$transparency_visual_spatial_range}
+          opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = scale.data[input$gene_UMAP_choice,], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)}
         ),
         showlegend = T,
         text = scale.data[input$gene_UMAP_choice,],
@@ -130,7 +132,7 @@ current_plot_spatial <- reactive({
             reversescale=input$invert_color_visualisation_spatial,
             size = input$Plot_scatter_size_spatial,
             cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
-            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(cell.embeddings[,input$IC_UMAP_choice])/max(cell.embeddings[,input$IC_UMAP_choice])*input$transparency_visual_spatial_range},
+            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = cell.embeddings[,input$IC_UMAP_choice], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)},
             showscale = T
           ),
           showlegend = T,
@@ -156,7 +158,7 @@ current_plot_spatial <- reactive({
             reversescale=input$invert_color_visualisation_spatial,
             size = input$Plot_scatter_size_spatial,
             showscale = T,
-            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{(meta.data[[input$Plot_display_type]])/max(meta.data[[input$Plot_display_type]])*input$transparency_visual_spatial_range},
+            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = meta.data[[input$Plot_display_type]], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)},
             cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2]
           ),
           showlegend = T,

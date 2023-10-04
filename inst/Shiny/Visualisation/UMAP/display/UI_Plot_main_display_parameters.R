@@ -1,69 +1,28 @@
 ##----------------------------------------------------------------------------##
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
-output[["Plot_type_UI"]] <- renderUI({
+
+output[["Plot_type_display_UI"]] <- renderUI({
   tagList(
-    selectInput("Plot_analysis_type", label = "Select method to use", 
-                choices = list("UMAP","Density","Scatter pie"),
+    selectInput("Plot_analysis_display_type", label = "Select method to use", 
+                choices = list("UMAP","tSNE","Density","Scatter pie"),
                 selected = "UMAP")
-    )
+  )
 })
 
-output[["Plot_main_parameters_UI"]] <- renderUI({
-  req(input$Plot_analysis_type)
-  if (input$Plot_analysis_type == "UMAP"){
-    req(values$annotation_for_output)
-    tagList(
-      selectInput("Plot_display_type", label = "Select what to color", 
-                  choices = if(!is.null(values$UMAP)){unique(c("seurat_clusters","gene","IC",colnames(values$UMAP@meta.data)))}else{unique(c("seurat_clusters","gene","IC",colnames(values$data@meta.data)))}, 
-                  selected = "seurat_clusters"),
-      selectInput("select_color_visualisation_projection", label = "Select color", 
-                  choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
-                  selected = "D"),
-      selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type to plot",
-                     choices = unique(names(values$annotation_for_output)),
-                     selected = NULL,
-                     multiple = TRUE,
-                     options = NULL),
-      selectizeInput("Plot_display_IC_choice", label = "Choose IC to plot",
-                     choices = values$IC_names,
-                     selected = input$Ic_list,
-                     multiple = TRUE,
-                     options = NULL),
-      numericInput("Plot_resolution", "Plot resolution", 1.2,
-                   min = 0.1, max = 2, step = 0.1
-      ),
-      numericInput("Plot_spread", "Spread", 3,
-                   min = 0.1, step = 0.1
-      )
-    )
-  } else if (input$Plot_analysis_type == "Density") {
-    req(values$annotation_for_output)
-    tagList(
-      selectizeInput("Plot_display_type_choice", label = "Choose cell type to plot",
-                     choices = unique(names(values$annotation_for_output)),
-                     selected = NULL,
-                     multiple = TRUE,
-                     options = NULL),
-      checkboxInput("Plot_show_image_density", label = "Display image", value = TRUE),
-      numericInput("Plot_thresh_density", label = "threshold", value = 0.3, min = 0, step = 0.1),
-      numericInput("Plot_thresh_alpha_density", label = "alpha", value = 0.5, min = 0, max = 1, step = 0.1)
-    )
-  } else if (input$Plot_analysis_type == "Scatter pie") {
-    req(values$annotation_for_output)
-    tagList(
-      selectizeInput("Scatter_pie_cell_type", label = "choose cell type",
-                     choices = unique(names(values$annotation_for_output)),
-                     selected = NULL, multiple = TRUE, options = NULL),
-      selectizeInput("Scatter_pie__IC_chosen_projection", label = "Choose IC to plot", choices = values$IC_names,
-                     selected = NULL, multiple = TRUE,
-                     options = NULL)
-    )
-  }
+output[["Plot_main_parameters_display_UI"]] <- renderUI({
+  tagList(
+    selectInput("Plot_display_type", label = "Select what to color", 
+                choices = if(!is.null(values$UMAP)){unique(c("gene","IC",colnames(values$UMAP@meta.data)))}else{unique(c("gene","IC",colnames(values$data@meta.data)))},
+                selected = if("seurat_clusters" %in% colnames(values$UMAP@meta.data)){"seurat_clusters"}else{"gene"}),
+    selectInput("select_color_visualisation_projection", label = "Select color", 
+                choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
+                selected = "D")
+  )
 })
 
-output[["Plot_main_parameters_2_UI"]] <- renderUI({
-  if(input$Plot_analysis_type == "UMAP"){
+output[["Plot_main_parameters_display_2_UI"]] <- renderUI({
+  if(input$Plot_analysis_display_type == "UMAP" || input$Plot_analysis_display_type == "tSNE"){
     if(input$Plot_display_type == "gene"){
       tagList(
         selectizeInput("gene_UMAP_choice", label = "Choose gene",
@@ -81,11 +40,32 @@ output[["Plot_main_parameters_2_UI"]] <- renderUI({
                        options = NULL)
       )
     }
+  } else if (input$Plot_analysis_display_type == "Density") {
+    req(values$annotation_for_output)
+    tagList(
+      selectizeInput("Plot_display_type_choice", label = "Choose cell type for density",
+                     choices = unique(names(values$annotation_for_output)),
+                     selected = NULL,
+                     multiple = TRUE,
+                     options = NULL),
+      numericInput("Plot_thresh_density", label = "threshold", value = 0.3, min = 0, step = 0.1),
+      numericInput("Plot_thresh_alpha_density", label = "alpha", value = 0.5, min = 0, max = 1, step = 0.1)
+    )
+  } else if (input$Plot_analysis_display_type == "Scatter pie") {
+    req(values$annotation_for_output)
+    tagList(
+      selectizeInput("Scatter_pie_cell_type", label = "choose cell type",
+                     choices = unique(names(values$annotation_for_output)),
+                     selected = NULL, multiple = TRUE, options = NULL),
+      selectizeInput("Scatter_pie__IC_chosen_projection", label = "Choose IC to plot", choices = values$IC_names,
+                     selected = NULL, multiple = TRUE,
+                     options = NULL)
+    )
   }
 })
 
-output[["Plot_main_parameters_3_UI"]] <- renderUI({
-  if(input$Plot_analysis_type == "UMAP"){
+output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
+  if(input$Plot_analysis_display_type == "UMAP" || input$Plot_analysis_display_type == "tSNE"){
     if(input$Plot_display_type == "gene"){
       tagList(
         sliderInput("slider_visual_spatial_range", label = "Color range",
@@ -116,40 +96,40 @@ output[["Plot_main_parameters_3_UI"]] <- renderUI({
         sliderInput("transparency_visual_spatial_range", "Alpha",
                     min = 0, max = 1,
                     value = 1, step = 0.01)
-        )
+      )
     } else {
       if(is.null(values$UMAP)){
         if (typeof(values$data@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
           tagList(
-          sliderInput("slider_visual_spatial_range", label = "Color range",
-                      min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
-                      max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
-                      value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
-                                round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
-                      step = 0.01),
-          radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
-                       choices = list("Constant" = 1, "Scaling" = 2), 
-                       selected = 1),
-          sliderInput("transparency_visual_spatial_range", "Alpha",
-                      min = 0, max = 1,
-                      value = 1, step = 0.01)
+            sliderInput("slider_visual_spatial_range", label = "Color range",
+                        min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
+                        max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
+                        value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
+                                  round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
+                        step = 0.01),
+            radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
+                         choices = list("Constant" = 1, "Scaling" = 2), 
+                         selected = 1),
+            sliderInput("transparency_visual_spatial_range", "Alpha",
+                        min = 0, max = 1,
+                        value = 1, step = 0.01)
           )
         }
       } else {
         if (typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
           tagList(
-          sliderInput("slider_visual_spatial_range", label = "Color range",
-                      min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
-                      max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
-                      value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
-                                round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
-                      step = 0.01),
-          radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
-                       choices = list("Constant" = 1, "Scaling" = 2), 
-                       selected = 1),
-          sliderInput("transparency_visual_spatial_range", "Alpha",
-                      min = 0, max = 1,
-                      value = 1, step = 0.01)
+            sliderInput("slider_visual_spatial_range", label = "Color range",
+                        min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
+                        max = round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0),
+                        value = c(round(min(values$data@meta.data[, input$Plot_display_type]),digits = 0),
+                                  round(max(values$data@meta.data[, input$Plot_display_type]), digits = 0)),
+                        step = 0.01),
+            radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
+                         choices = list("Constant" = 1, "Scaling" = 2), 
+                         selected = 1),
+            sliderInput("transparency_visual_spatial_range", "Alpha",
+                        min = 0, max = 1,
+                        value = 1, step = 0.01)
           )
         }
       }
@@ -157,21 +137,20 @@ output[["Plot_main_parameters_3_UI"]] <- renderUI({
   }
 })
 
-output[["start_plot_UI"]] <- renderUI({
+output[["start_display_UI"]] <- renderUI({
   tagList(
-    actionButton("Select_all_ICs_visualisation", "Select all ICs"),
-    actionButton("start_plot", "Start plot")
+    actionButton("start_display", "Display")
   )
 })
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["Plot_main_parameters_info"]], {
+observeEvent(input[["Plot_main_parameters_display_info"]], {
   showModal(
     modalDialog(
-      Plot_main_parameters_info[["text"]],
-      title = Plot_main_parameters_info[["title"]],
+      Plot_main_parameters_display_info[["text"]],
+      title = Plot_main_parameters_display_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
@@ -181,7 +160,7 @@ observeEvent(input[["Plot_main_parameters_info"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-Plot_main_parameters_info <- list(
+Plot_main_parameters_display_info <- list(
   title = "Main parameters for total gene heatmap",
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.

@@ -10,6 +10,7 @@ launchCFS(
   file_to_load = NULL,
   welcome_message = NULL,
   projections_show_hover_info = TRUE,
+  offline_mode = FALSE,
   ...
 )
 }

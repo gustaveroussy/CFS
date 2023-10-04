@@ -34,7 +34,7 @@ IC_spatial_output_react <- reactive({
                                          cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
                                          size = input$Plot_spatial_IC_size,
                                          showscale = TRUE,
-                                         opacity = if(input$transparency_IC_spatial_choice == 1){input$transparency_IC_spatial_range}else{(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())])/max(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())])*input$transparency_IC_spatial_range},
+                                         opacity = if(input$transparency_IC_spatial_choice == 1){input$transparency_IC_spatial_range}else{alpha_color_scale(values = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())], slider_1 = input$slider_IC_spatial_range[1], slider_2 =input$slider_IC_spatial_range[2], alpha = input$transparency_IC_spatial_range)},
                                          reversescale=input$invert_color_ICA_projection
                                          ),
                            text = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates())],
@@ -76,7 +76,7 @@ colorscale_IC_spatial <- reactive({
     se = seq(0, 1, (1/(nrow(TissueCoordinates())-1)))
     col = viridis_pal(option = input$select_color_IC_projection)(nrow(TissueCoordinates()))
     for(i in 1:length(se)){
-      l[[i]] = list(se[i],col[i])
+      l[[i]] = c(se[i],col[i])
     }
     
     return(l)

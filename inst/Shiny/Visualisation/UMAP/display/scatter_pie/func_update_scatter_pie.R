@@ -9,8 +9,8 @@ current_plot_scatter_pie <- reactive({
     return(NULL)
   }
   
-  if (!is.null(values$UMAP)) {
-    data <- values$UMAP
+  if (!is.null(values$data)) {
+    data <- values$data
     max_col_img = ceiling(max(data[["umap"]]@cell.embeddings[,'UMAP_2']))
     max_row_img = ceiling(max(data[["umap"]]@cell.embeddings[,'UMAP_1']))
     
@@ -50,6 +50,17 @@ current_plot_scatter_pie <- reactive({
       
       ####
       
+      min_col = min(ic_types[,"UMAP_1"])
+      min_row = min(ic_types[,"UMAP_2"])
+      
+      if(min_col < 0){
+        ic_types[,"UMAP_1"] = ic_types[,"UMAP_1"] - min_col
+      }
+      
+      if(min_row < 0){
+        ic_types[,"UMAP_2"] = ic_types[,"UMAP_2"] - min_row
+      }
+      
       max_col = max(ic_types[,"UMAP_1"])
       max_row = max(ic_types[,"UMAP_2"])
       
@@ -58,7 +69,7 @@ current_plot_scatter_pie <- reactive({
       #Radius(data@images$slice1)
       for (i in 1:nrow(ic_types)) {
         
-        t = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
+        t = names(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
         v = round(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])/sum(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]))*100,2)
         q = list()
         for (IC in t){
@@ -74,10 +85,10 @@ current_plot_scatter_pie <- reactive({
         col_coordinates = ic_types[i,"UMAP_1"]
         row_coordinates = ic_types[i,"UMAP_2"]
         
-        x = c((col_coordinates/max_col_img)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col_img)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
-        y = c((row_coordinates/max_row_img)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row_img)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
+        x = c((col_coordinates/max_col)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
+        y = c((row_coordinates/max_row)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
         
-        fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = values$Annotation[colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),'Annotation']
+        fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = values$Annotation[names(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),'Annotation']
                                  , values = as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),
                                  name = rownames(ic_types[i,]), domain = list(x = x, y = y),
                                  showlegend = TRUE, textposition = "none", textinfo = "none",
@@ -117,8 +128,16 @@ current_plot_scatter_pie <- reactive({
       
       ####
       
-      min_col = min(ic_types[,"imagecol"])
-      min_row = min(ic_types[,"imagerow"])
+      min_col = min(ic_types[,"UMAP_1"])
+      min_row = min(ic_types[,"UMAP_2"])
+      
+      if(min_col < 0){
+        ic_types[,"UMAP_1"] = ic_types[,"UMAP_1"] - min_col
+      }
+      
+      if(min_row < 0){
+        ic_types[,"UMAP_2"] = ic_types[,"UMAP_2"] - min_row
+      }
       
       max_col = max(ic_types[,"UMAP_1"])
       max_row = max(ic_types[,"UMAP_2"])
@@ -128,7 +147,7 @@ current_plot_scatter_pie <- reactive({
       #Radius(data@images$slice1)
       for (i in 1:nrow(ic_types)) {
         
-        t = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
+        t = names(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
         v = round(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])/sum(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]))*100,2)
         q = list()
         for (IC in t){
@@ -144,11 +163,10 @@ current_plot_scatter_pie <- reactive({
         col_coordinates = ic_types[i,"UMAP_1"]
         row_coordinates = ic_types[i,"UMAP_2"]
         
+        x = c((col_coordinates/max_col)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
+        y = c((row_coordinates/max_row)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
         
-        x = c((col_coordinates/max_col_img-(Radius(data@images$slice1))/2),(col_coordinates/max_col_img+Radius(data@images$slice1)/2))
-        y = c((row_coordinates/max_row_img-(Radius(data@images$slice1))/2),(row_coordinates/max_row_img+Radius(data@images$slice1)/2))
-        
-        fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
+        fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = values$Annotation[names(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),'Annotation']
                                  , values = as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),
                                  name = rownames(ic_types[i,]), domain = list(x = x, y = y),
                                  showlegend = TRUE, textposition = "none", textinfo = "none",

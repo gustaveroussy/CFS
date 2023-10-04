@@ -1,9 +1,36 @@
 output[["Plot_UI"]] <- renderUI({
   fluidRow(
     column(width = 3, offset = 0, style = "padding: 0px;",
-           box(id = "Plot_main_parameters_UI",
+           box(id = "Plot_main_parameters_clustering_UI",
                title = tagList(
-                 "Main parameters",
+                 "Main parameters Clustering",
+                 actionButton(
+                   inputId = "Plot_main_parameters_cluster_info",
+                   label = "info",
+                   icon = NULL,
+                   class = "btn-xs",
+                   title = "Show additional information for this panel.",
+                   style = "margin-right: 3px"
+                 ),
+                 shinyWidgets::dropdownButton(
+                   circle = FALSE,
+                   icon = icon("cog"),
+                   inline = TRUE,
+                   size = "xs"
+                 )
+               ),
+               status = "primary",
+               solidHeader = TRUE,
+               width = 12,
+               height = NULL,
+               collapsible = TRUE,
+               collapsed = TRUE,
+               uiOutput("Plot_main_parameters_cluster_UI"),
+               uiOutput("start_cluster_UI")
+           ),
+           box(id = "Plot_main_parameters_dimred_UI",
+               title = tagList(
+                 "Main parameters dimension reduction",
                  actionButton(
                    inputId = "Plot_main_parameters_info",
                    label = "info",
@@ -24,12 +51,40 @@ output[["Plot_UI"]] <- renderUI({
                width = 12,
                height = NULL,
                collapsible = TRUE,
-               collapsed = FALSE,
+               collapsed = TRUE,
                uiOutput("Plot_type_UI"),
                uiOutput("Plot_main_parameters_UI"),
-               uiOutput("Plot_main_parameters_3_UI"),
-               uiOutput("Plot_main_parameters_2_UI"),
                uiOutput("start_plot_UI")
+           ),
+           box(id = "Plot_main_parameters_display_UI",
+               title = tagList(
+                 "Main parameters Display",
+                 actionButton(
+                   inputId = "Plot_main_parameters_info",
+                   label = "info",
+                   icon = NULL,
+                   class = "btn-xs",
+                   title = "Show additional information for this panel.",
+                   style = "margin-right: 3px"
+                 ),
+                 shinyWidgets::dropdownButton(
+                   circle = FALSE,
+                   icon = icon("cog"),
+                   inline = TRUE,
+                   size = "xs"
+                 )
+               ),
+               status = "primary",
+               solidHeader = TRUE,
+               width = 12,
+               height = NULL,
+               collapsible = TRUE,
+               collapsed = TRUE,
+               uiOutput("Plot_type_display_UI"),
+               uiOutput("Plot_main_parameters_display_UI"),
+               uiOutput("Plot_main_parameters_display_2_UI"),
+               uiOutput("Plot_main_parameters_display_3_UI"),
+               uiOutput("start_display_UI")
            )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",
@@ -109,7 +164,7 @@ output[["ggplot_scatter_pie_UI"]] <- renderUI({
     shinyWidgets::awesomeCheckbox(
       inputId = "show_grid_scatter_pie",
       label = "Display plotly grid",
-      value = TRUE
+      value = FALSE
     ),
     shinyWidgets::awesomeCheckbox(
       inputId = "ggplot_scatter_pie",
@@ -119,12 +174,12 @@ output[["ggplot_scatter_pie_UI"]] <- renderUI({
     shinyWidgets::awesomeCheckbox(
       inputId = "full_annotation_UMAP",
       label = "Full annotation for scatter",
-      value = FALSE
+      value = TRUE
     ),
     shinyWidgets::awesomeCheckbox(
       inputId = "image_display_UMAP",
       label = "Display only the UMAP of the currently selected image",
-      value = TRUE
+      value = FALSE
     ),
     numericInput("Plot_scatter_size_UMAP", "Spot size", 10, min = 0, max = NA)
   )

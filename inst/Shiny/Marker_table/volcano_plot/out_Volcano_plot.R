@@ -6,7 +6,7 @@ output[["Volcano_plot"]] <- plotly::renderPlotly({
   req(values$marker_gene)
   req(values$UMAP)
   
-  table <- values$marker_gene[[(as.integer(input$marker_cluster_choice)+1)]]
+  table <- values$marker_gene[[input$marker_cluster_choice]]
   
   gene = rownames(table)
   fold_change = table$avg_log2FC
