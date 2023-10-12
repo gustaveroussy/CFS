@@ -295,7 +295,12 @@ current_plot_spatial_scatter_pie <- reactive({
     #Radius(data@images[[1]])
     for (i in 1:nrow(types)) {
       incProgress(0.7/nrow(types), detail = "Preparing scatterpie data")
-      v = round(as.double(types[i,input$Scatter_pie_metadata_select][which(types[i,input$Scatter_pie_metadata_select] > 0)])/sum(as.double(types[i,input$Scatter_pie_metadata_select][which(types[i,input$Scatter_pie_metadata_select] > 0)]))*100,2)
+      
+      if(!(sum(as.double(types[i,input$Scatter_pie_metadata_select])) == 0)){
+        v = round(as.double(types[i,input$Scatter_pie_metadata_select])/sum(as.double(types[i,input$Scatter_pie_metadata_select]))*100,2)
+      } else {
+        next
+      }
       
       text_final = ""
       
@@ -315,7 +320,7 @@ current_plot_spatial_scatter_pie <- reactive({
       }
       
       fig <- fig %>% add_trace(type = 'pie', data = types, labels = input$Scatter_pie_metadata_select
-                               , values = as.double(types[i,input$Scatter_pie_metadata_select][which(types[i,input$Scatter_pie_metadata_select] > 0)]),
+                               , values = as.double(types[i,input$Scatter_pie_metadata_select]),
                                name = rownames(types[i,]), domain = list(x = x, y = y),
                                showlegend = TRUE, textposition = "none", textinfo = "none",
                                text = text_final,
