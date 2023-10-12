@@ -11,14 +11,16 @@ output[["Plot_type_display_UI"]] <- renderUI({
 })
 
 output[["Plot_main_parameters_display_UI"]] <- renderUI({
-  tagList(
-    selectInput("Plot_display_type", label = "Select what to color", 
-                choices = if(!is.null(values$UMAP)){unique(c("gene","IC",colnames(values$UMAP@meta.data)))}else{unique(c("gene","IC",colnames(values$data@meta.data)))},
-                selected = if("seurat_clusters" %in% colnames(values$UMAP@meta.data)){"seurat_clusters"}else{"gene"}),
-    selectInput("select_color_visualisation_projection", label = "Select color", 
-                choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
-                selected = "D")
-  )
+  if(!(input$Plot_analysis_display_type == "Scatter pie")){
+    tagList(
+      selectInput("Plot_display_type", label = "Select what to color", 
+                  choices = if(!is.null(values$UMAP)){unique(c("gene","IC",colnames(values$UMAP@meta.data)))}else{unique(c("gene","IC",colnames(values$data@meta.data)))},
+                  selected = if("seurat_clusters" %in% colnames(values$UMAP@meta.data)){"seurat_clusters"}else{"gene"}),
+      selectInput("select_color_visualisation_projection", label = "Select color", 
+                  choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
+                  selected = "D")
+    )
+  }
 })
 
 output[["Plot_main_parameters_display_2_UI"]] <- renderUI({
@@ -54,12 +56,15 @@ output[["Plot_main_parameters_display_2_UI"]] <- renderUI({
   } else if (input$Plot_analysis_display_type == "Scatter pie") {
     req(values$annotation_for_output)
     tagList(
-      selectizeInput("Scatter_pie_cell_type", label = "choose cell type",
-                     choices = unique(names(values$annotation_for_output)),
-                     selected = NULL, multiple = TRUE, options = NULL),
-      selectizeInput("Scatter_pie__IC_chosen_projection", label = "Choose IC to plot", choices = values$IC_names,
-                     selected = NULL, multiple = TRUE,
-                     options = NULL)
+      selectInput("Scatter_pie_values_selected",
+                     "Values for Scatterpie",
+                     c("IC","Metadata"),
+                     selected = "IC"),
+      shinyWidgets::awesomeCheckbox(
+        inputId = "Scatter_pie_size_activate",
+        label = "Pie chart sized by signal intensity",
+        value = TRUE
+      )
     )
   }
 })
@@ -133,6 +138,23 @@ output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
           )
         }
       }
+    }
+  } else if (input$Plot_analysis_display_type == "Scatter pie"){
+    if(input$Scatter_pie_values_selected == "IC"){
+      tagList(
+        selectizeInput("Scatter_pie_cell_type", label = "choose cell type",
+                       choices = unique(names(values$annotation_for_output)),
+                       selected = NULL, multiple = TRUE, options = NULL),
+        selectizeInput("Scatter_pie__IC_chosen_projection", label = "Choose IC to plot", choices = values$IC_names,
+                       selected = NULL, multiple = TRUE,
+                       options = NULL)
+      )
+    } else if (input$Scatter_pie_values_selected == "Metadata") {
+      tagList(
+        selectizeInput("Scatter_pie_metadata_select", label = "Choose metadata", choices = colnames(values$UMAP@meta.data),
+                       selected = NULL, multiple = TRUE,
+                       options = NULL)
+      )
     }
   }
 })
