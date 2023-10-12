@@ -9,12 +9,11 @@ current_plot_scatter_pie <- reactive({
     return(NULL)
   }
   
-  if (input$Scatter_pie_values_selected == "IC"){
-    if (!is.null(values$data)) {
-      data <- values$data
-      max_col_img = ceiling(max(data[["umap"]]@cell.embeddings[,'UMAP_2']))
-      max_row_img = ceiling(max(data[["umap"]]@cell.embeddings[,'UMAP_1']))
-      
+  if (!is.null(values$data)) {
+    data <- values$data
+    max_col_img = ceiling(max(data[["umap"]]@cell.embeddings[,'UMAP_2']))
+    max_row_img = ceiling(max(data[["umap"]]@cell.embeddings[,'UMAP_1']))
+    if (input$Scatter_pie_values_selected == "IC"){
       if (!is.null(input$Scatter_pie_cell_type)){
         type = unlist(values$annotation_for_output[input$Scatter_pie_cell_type], use.names=FALSE)
         if (!is.null(input$Scatter_pie__IC_chosen_projection)){

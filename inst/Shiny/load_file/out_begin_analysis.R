@@ -139,7 +139,7 @@ observe({
 observeEvent(input$Plot_image_spatial, {
   req(values$data)
   req(values$data@images[[input$Plot_image_spatial]])
-  if("image" %in% slotNames(data@images[[input$Plot_image_spatial]])){
+  if("image" %in% slotNames(values$data@images[[input$Plot_image_spatial]])){
     values$low_image = raster2uri(raster::as.raster(values$data@images[[input$Plot_image_spatial]]@image))
   }
 })
