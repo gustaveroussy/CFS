@@ -20,7 +20,6 @@ Imports:
     shinyWidgets,
     shinyalert,
     pheatmap,
-    Matrix (== 1.6-1),
     Seurat,
     plotly,
     raster,

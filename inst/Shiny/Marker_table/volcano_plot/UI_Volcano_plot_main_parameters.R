@@ -16,33 +16,35 @@ output[["Volcano_plot_main_parameters_1_UI"]] <- renderUI({
 })
 
 output[["Volcano_plot_main_parameters_2_UI"]] <- renderUI({
-  tagList(
-    selectizeInput('volcano_plot_clusters_to_compare', "Clusters to compare",
-                   unique(values$data@meta.data$seurat_clusters)[order(unique(values$data@meta.data$seurat_clusters))], selected = NULL, multiple = TRUE,
-                   options = NULL),
-    numericInput(
-      "Volcano_plot_p_value", "P-value",
-      0.05,
-      min = 0,
-      max = 1,
-      step = 0.01
-    ),
-    numericInput(
-      "Volcano_plot_top_gene", "Top genes",
-      10,
-      min = 0,
-      step = 1
-    ),
-    sliderInput("Volcano_plot_alpha", "Alpha",
-                min = 0, max = 1,
-                value = 1, step = 0.01),
-    shinyWidgets::awesomeCheckbox(
-      inputId = "overwrite_marker_table",
-      label = "Overwrite",
-      value = FALSE
-    ),
-    actionButton("start_marker", "Start")
-  )
+  if(!is.null(values$UMAP)){
+    tagList(
+      selectizeInput('volcano_plot_clusters_to_compare', "Clusters to compare",
+                     unique(values$UMAP@meta.data$seurat_clusters)[order(unique(values$UMAP@meta.data$seurat_clusters))], selected = NULL, multiple = TRUE,
+                     options = NULL),
+      numericInput(
+        "Volcano_plot_p_value", "P-value",
+        0.05,
+        min = 0,
+        max = 1,
+        step = 0.01
+      ),
+      numericInput(
+        "Volcano_plot_top_gene", "Top genes",
+        10,
+        min = 0,
+        step = 1
+      ),
+      sliderInput("Volcano_plot_alpha", "Alpha",
+                  min = 0, max = 1,
+                  value = 1, step = 0.01),
+      shinyWidgets::awesomeCheckbox(
+        inputId = "overwrite_marker_table",
+        label = "Overwrite",
+        value = FALSE
+      ),
+      actionButton("start_marker", "Start")
+    )
+  }
 })
 
 ##----------------------------------------------------------------------------##
