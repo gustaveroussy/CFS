@@ -15,9 +15,32 @@
 #' @export
 ICASpatial=function(data=NULL,ncis=100,maxit=600,method="icafast", kurtosis = 3, sd=3,...){
   
-  data<-RunICA(data,verbose = TRUE,nics = ncis,maxit=maxit,ica.function = method)
+  set.seed(seed = 42)
+  
+  object = data@assays$SCT@scale.data
+  
+  nics <- min(nics, ncol(x = data))
+  ica.fxn <- eval(expr = parse(text = method))
+  
+  ica.results <- ica.fxn(t(x = as.matrix(object)), nc = nics, maxit=maxit)
+  cell.embeddings <- ica.results$S
+  
+  feature.loadings <- (as.matrix(x = object) %*% as.matrix(x = cell.embeddings))
+  
+  colnames(x = feature.loadings) <- paste0("IC_", 1:ncol(x = feature.loadings))
+  colnames(x = cell.embeddings) <- paste0("IC_", 1:ncol(x = cell.embeddings))
+  rownames(x = cell.embeddings) <- Cells(data)
+  
+  reduction.data <- CreateDimReducObject(
+    embeddings = cell.embeddings,
+    loadings = feature.loadings,
+    assay = "SCT",
+    key = "IC_"
+  )
+  
+  data@reductions$ica = reduction.data
+  
   data = correct_sign(data)
-  rownames(data@reductions$ica@cell.embeddings)=colnames(data@assays$Spatial@data)
   
   # determine genes stats
   kurt_cob=apply(data@reductions$ica@feature.loadings,2,function(x){kurtosis(x)})
