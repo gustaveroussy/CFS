@@ -2,7 +2,7 @@
 #'
 #' Complete ICA analysis on the spatial sample after normalisation and regression. Then correct sign and determine stats from IC and Genes
 #' @param data Seurat object to analyse
-#' @param ncis Number of independant component to separate in the sample
+#' @param nics Number of independant component to separate in the sample
 #' @param maxit Number of iterations
 #' @param method Method to use between "icafast", "icaimax", "icajade"
 #' @param kurtosis Value of the kurtosis filter on IC
@@ -13,7 +13,7 @@
 #' data = ICASpatial(data=data,ncis=100,maxit=600,method="icafast",sd=3)
 #' 
 #' @export
-ICASpatial=function(data=NULL,ncis=100,maxit=600,method="icafast", kurtosis = 3, sd=3,...){
+ICASpatial=function(data=NULL,nics=100,maxit=600,method="icafast", kurtosis = 3, sd=3,...){
   
   set.seed(seed = 42)
   

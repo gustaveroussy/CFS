@@ -328,7 +328,7 @@ data <- PrepNormData(data=data,organism="Hs"/"Mm",variable_features=2000)
 -   ICA step
 
 ```{r}
-data <- ICASpatial(data=data,ncis=100,maxit=600,method="icafast",kurtosis = 3,sd=3)
+data <- ICASpatial(data=data,nics=100,maxit=600,method="icafast",kurtosis = 3,sd=3)
 ```
 
 -   enrichment step
@@ -406,7 +406,7 @@ brain <- LoadData("stxBrain", type = "anterior1")
 
 ``` r
 brain = PrepNormData(data=brain,organism="Hs",variable_features=20000)
-brain = ICASpatial(data=brain,ncis=100,maxit=600,method="icafast", kurtosis = 3, sd=3)
+brain = ICASpatial(data=brain,nics=100,maxit=600,method="icafast", kurtosis = 3, sd=3)
 brain = Enrich_ICA(data=brain, dbs=c("PanglaoDB_Augmented_2021",
                                 "CellMarker_Augmented_2021",
                                 "Azimuth_Cell_Types_2021",
@@ -480,7 +480,7 @@ Run the Independant Component Analysis on the seurat object outputed from PrepNo
 #### arguments
 
 -   data : Seurat object to analyse
--   ncis : Number of independant component to separate in the sample (default=100)
+-   nics : Number of independant component to separate in the sample (default=100)
 -   maxit : Number of iterations (default = 600)
 -   method : Method to use between "icafast", "icaimax", "icajade" (default = "icafast")
 -   kurtosis : Value of the kurtosis filter on IC (default = 3)
@@ -493,7 +493,7 @@ a Seurat object containing "ica" reduction slot and annotation tables in the "mi
 #### example
 
 ```{r}
-data <- ICASpatial(data=data,ncis=100,maxit=600,method="icafast",kurtosis = 3,sd=3)
+data <- ICASpatial(data=data,nics=100,maxit=600,method="icafast",kurtosis = 3,sd=3)
 ```
 
 ### Enrich_ICA
