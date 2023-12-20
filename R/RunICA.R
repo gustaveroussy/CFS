@@ -10,7 +10,7 @@
 #' 
 #' @return An analysed Seurat object
 #' @examples 
-#' data = ICASpatial(data=data,ncis=100,maxit=600,method="icafast",sd=3)
+#' data = ICASpatial(data=data,nics=100,maxit=600,method="icafast",sd=3)
 #' 
 #' @export
 ICASpatial=function(data=NULL,nics=100,maxit=600,method="icafast", kurtosis = 3, sd=3,...){

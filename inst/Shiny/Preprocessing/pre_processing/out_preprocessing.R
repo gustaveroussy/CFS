@@ -25,7 +25,7 @@ observeEvent(input$preprocessing_action_button, {
       incProgress(0.2, detail = "Normalize")
       values$data = PrepNormData(data=values$data,organism=input$preprocessing_specie_select,variable_features=input$preprocessing_variable_features)
       incProgress(0.4, detail = "Calculating ICs")
-      values$data=ICASpatial(data=values$data,ncis=input$preprocessing_number_of_ICs,maxit=input$preprocessing_maxit,method=input$preprocessing_ICA_function, kurtosis = input$preprocessing_kurtosis, sd = input$preprocessing_sd)
+      values$data=ICASpatial(data=values$data,nics=input$preprocessing_number_of_ICs,maxit=input$preprocessing_maxit,method=input$preprocessing_ICA_function, kurtosis = input$preprocessing_kurtosis, sd = input$preprocessing_sd)
       incProgress(0.3, detail = "Enriching")
       if(!is.null(input$preprocessing_database)){
         values$data = Enrich_ICA(data=values$data,dbs=input$preprocessing_database, kurtosis = values$data@misc$GeneAndStat$kurtosis_value)
