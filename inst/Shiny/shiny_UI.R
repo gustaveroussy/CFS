@@ -2,29 +2,6 @@
 ## Load shiny library.
 ##--------------------------------------------------------------------------##
 
-# library(shiny)
-# library(shinydashboard)
-# library(shinyFiles)
-# library(shinyWidgets)
-# library(shinyalert)
-# library(pheatmap)
-# library(Seurat)
-# library(plotly)
-# library(raster)
-# library(RColorBrewer)
-# library(scatterpie)
-# library(destiny)
-# library(rclipboard)
-# library(tibble)
-# library(DT)
-# library(interp)
-# library(stringr)
-# library(png)
-# library(jpeg)
-# library(imagefx)
-# library(heatmaply)
-# library(scales)
-
 if(Shiny.options[["offline_mode"]] == FALSE){
   if(!file.exists(miniconda_path())){
     reticulate::install_miniconda()
@@ -46,7 +23,8 @@ if(Shiny.options[["offline_mode"]] == FALSE){
   reticulate::use_miniconda('r-reticulate')
   library(enrichR)
 }
-# library(e1071)
+
+library(ica)
 
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny
