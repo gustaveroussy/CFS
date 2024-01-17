@@ -28,7 +28,7 @@ observeEvent(input$preprocessing_action_button, {
       values$data=ICASpatial(data=values$data,nics=input$preprocessing_number_of_ICs,maxit=input$preprocessing_maxit,method=input$preprocessing_ICA_function, kurtosis = input$preprocessing_kurtosis, sd = input$preprocessing_sd)
       incProgress(0.3, detail = "Enriching")
       if(!is.null(input$preprocessing_database)){
-        values$data = Enrich_ICA(data=values$data,dbs=input$preprocessing_database, kurtosis = values$data@misc$GeneAndStat$kurtosis_value)
+        values$data = Enrich_ICA(data=values$data,dbs=input$preprocessing_database, kurtosis = values$data@misc$GeneAndStat$kurtosis_value, enrich_positive_genes = input$preprocessing_enrichment_positive)
       }
       incProgress(0.1, detail = "Done")
       

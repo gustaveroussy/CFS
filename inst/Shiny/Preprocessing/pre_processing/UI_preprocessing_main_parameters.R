@@ -38,6 +38,8 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
                                 "Reactome_2022",
                                 "KEGG_2021_Human"), multiple = TRUE,
                    options = NULL),
+    checkboxInput("preprocessing_enrichment_positive", label = "Only process positively associated genes",
+                  value = TRUE, width = NULL),
     actionButton("preprocessing_action_button", label = "Process")
     )
 })
