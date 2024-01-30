@@ -16,20 +16,19 @@ observeEvent(input$load_data_file_select_integration, {
     path = parseDirPath(volumes(), input$load_data_file_select_integration)
     
     values$integration_folders = c(values$integration_folders,path)
-    
-    print(values$integration_folders)
   }
 })
 
-observe({
-  if(is.null(values) | is.null(values$integration_folders)){
-    values$text_integration_folders = ""
-  }else{
-    values$text_integration_folders = "<ul>"
+text_integration_folders <- reactive({
+  if(is.null(values) | length(values$integration_folders) == 0){
+    return("")
+  } else {
+    loop = "<ul>"
     for(i in values$integration_folders){
-      values$text_integration_folders = paste0(values$text_integration_folders, paste0("<li><b>", i, "</b></li>"))
+      loop = paste0(loop, paste0("<li><b>", i, "</b></li>"))
     }
-    values$text_integration_folders = paste0(values$text_integration_folders, "</ul>")
+    loop = paste0(loop, "</ul>")
+    return(loop)
   }
 })
 
