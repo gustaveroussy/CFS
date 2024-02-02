@@ -17,7 +17,7 @@ observeEvent(input$preprocessing_action_button, {
     values$HD_image = NULL
     values$HD_image_2 = NULL
     
-    i <- (Matrix::colSums(values$data@assays$Spatial$counts, na.rm=T) != 0)
+    i <- if(substr(packageVersion("Seurat"),1,1) == "5"){(Matrix::colSums(values$data@assays$Spatial$counts, na.rm=T) != 0)}else{(Matrix::colSums(values$data@assays$Spatial@counts, na.rm=T) != 0)}
     row_names_df_to_keep<-colnames(values$data@assays$Spatial)[i]
     values$data = values$data[, row_names_df_to_keep]
     

@@ -90,7 +90,7 @@ observeEvent(input$input_file, {
     
     
     if('image' %in% names(attributes(values$data@images[[1]]))){
-      values$low_image = raster2uri(raster::as.raster(values$data@images$slice1@image))
+      values$low_image = raster2uri(raster::as.raster(values$data@images[[1]]@image))
     }
     
   } else {
