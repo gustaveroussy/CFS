@@ -13,6 +13,7 @@
 #' @import scales
 #' @import ggplot2
 #' @import reticulate
+#' @import ica
 #' @importFrom viridis viridis
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG

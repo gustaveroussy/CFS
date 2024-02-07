@@ -44,9 +44,14 @@ observeEvent(input$start_integration_button, {
     values$HD_image_2 = NULL
     
     
+    # merging the list of samples
     incProgress(0.2, detail = "Merging")
     values$data = merge(x = list_of_data[[names(list_of_data)[1]]], y = list_of_data[2:length(list_of_data)], add.cell.ids = names(list_of_data))
     
+    # adding sample to metadata
+    values$data@meta.data$sample = sapply(strsplit(rownames(values$data@meta.data),"_"),"[[",1)
+    
+    # adding image to sample
     if('image' %in% names(attributes(values$data@images[[1]]))){
       values$low_image = raster2uri(raster::as.raster(values$data@images[[names(list_of_data)[1]]]@image))
     }
