@@ -178,7 +178,7 @@ output[["ggplot_scatter_pie_UI"]] <- renderUI({
     ),
     shinyWidgets::awesomeCheckbox(
       inputId = "image_display_UMAP",
-      label = "Display only the UMAP of the currently selected image",
+      label = "Display only the UMAP of the currently selected samples",
       value = FALSE
     ),
     numericInput("Plot_scatter_size_UMAP", "Spot size", 10, min = 0, max = NA)

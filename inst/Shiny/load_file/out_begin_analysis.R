@@ -90,7 +90,7 @@ observeEvent(input$input_file, {
     
     
     if('image' %in% names(attributes(values$data@images[[1]]))){
-      values$low_image = raster2uri(raster::as.raster(values$data@images[[1]]@image))
+      values$low_image = c(raster2uri(raster::as.raster(values$data@images[[1]]@image)))
     }
     
   } else {
@@ -129,17 +129,23 @@ images_names <- reactive({
 })
 
 observe({
-  updateSelectInput(
+  updateSelectizeInput(
     session = getDefaultReactiveDomain(),
     "Plot_image_spatial",
+    selected = images_names()[1],
     choices = images_names()
-  )
+    )
 })
 
 observeEvent(input$Plot_image_spatial, {
   req(values$data)
-  req(values$data@images[[input$Plot_image_spatial]])
-  if("image" %in% slotNames(values$data@images[[input$Plot_image_spatial]])){
-    values$low_image = raster2uri(raster::as.raster(values$data@images[[input$Plot_image_spatial]]@image))
+  values$low_image = list()
+  for(image in input$Plot_image_spatial){
+    req(values$data@images[[image]])
+    if("image" %in% slotNames(values$data@images[[image]])){
+      values$low_image = append(values$low_image,raster2uri(raster::as.raster(values$data@images[[image]]@image)))
+    } else {
+      values$low_image = append(values$low_image,NULL)
+    }
   }
 })

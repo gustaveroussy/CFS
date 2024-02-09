@@ -33,7 +33,7 @@ current_plot_spatial_scatter_pie <- reactive({
   if (input$Scatter_pie_values_selected == "IC"){
     if(!is.null(type)){
   
-      ic_types=data@reductions$ica@cell.embeddings[,type]
+      ic_types=data@reductions$ica@cell.embeddings[(rownames(values$UMAP@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates()[[1]])),type]
       
       ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
       
@@ -103,7 +103,7 @@ current_plot_spatial_scatter_pie <- reactive({
                                   yaxis = list(showgrid = FALSE, showticklabels=FALSE),
                                   grid = list(columns = max_row_img, rows = max_col_img),
                                   images = list(
-                                    source = values$low_image,
+                                    source = values$low_image[[1]],
                                     xref = 'paper',
                                     yref =  'paper',
                                     sizex = 1,

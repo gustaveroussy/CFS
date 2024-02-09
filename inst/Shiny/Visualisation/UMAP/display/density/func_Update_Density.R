@@ -41,11 +41,11 @@ current_plot_density <- reactive({
       fig <- fig %>% colorbar(title = "UMAP\ndensity")
   
       # ADD umap
-      for (i in 0:length(summary(values$UMAP@meta.data[["seurat_clusters"]]))-1){
+      for (i in 0:length(summary(values$UMAP@meta.data[,"seurat_clusters"]))-1){
         fig <- fig %>%
           add_trace(
-            x = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),1],
-            y = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[["seurat_clusters"]]==i),2],
+            x = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[,"seurat_clusters"]==i),1],
+            y = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[,"seurat_clusters"]==i),2],
             name = i,
             marker = list(
               color = palette()[i+1],
@@ -53,7 +53,7 @@ current_plot_density <- reactive({
             ),
             showlegend = T,
             text = i,
-            customdata = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[["seurat_clusters"]]==i)],
+            customdata = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[,"seurat_clusters"]==i)],
             hovertemplate = paste0("Cell : %{customdata}<br>",
                                    "Cluster : %{text}",
                                    "<extra></extra>"),
@@ -77,9 +77,10 @@ current_plot_density <- reactive({
         add_trace(
           x = values$UMAP[["umap"]]@cell.embeddings[,1],
           y = values$UMAP[["umap"]]@cell.embeddings[,2],
-          name = name,
+          name = "UMAP",
           marker = list(
             color = ic_types,
+            colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
             size = 5
           ),
           showlegend = T,
@@ -130,7 +131,8 @@ UMAP_griddf <- reactive({
   sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
   ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
   ic_types<-cbind(values$UMAP@reductions$umap@cell.embeddings,t(ic_types)) %>%  cbind(.,sum_IC)
-  grid=interp(ic_types[,'UMAP_1'],ic_types[,'UMAP_2'],ic_types[,'sum_IC'], nx = 400, ny = 400)
+  print(ic_types)
+  grid=interp(ic_types[,'umap_1'],ic_types[,'umap_2'],ic_types[,'sum_IC'], nx = 400, ny = 400)
   griddf <- data.frame(x = rep(grid$x, ncol(grid$z)), 
                        y = rep(grid$y, each = nrow(grid$z)), 
                        z = as.numeric(grid$z))    

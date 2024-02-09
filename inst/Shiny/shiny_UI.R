@@ -24,8 +24,6 @@ if(Shiny.options[["offline_mode"]] == FALSE){
   library(enrichR)
 }
 
-library(ica)
-
 ##--------------------------------------------------------------------------##
 ## Set class to read shiny object from saveForShiny
 ##--------------------------------------------------------------------------##
@@ -65,7 +63,11 @@ ui <- dashboardPage(
       menuItem("About", tabName = "About", icon = icon("bars"))
     ),
     uiOutput("IC_list_UI"),
-    selectInput("Plot_image_spatial", "Image to display", NULL),
+    
+    selectizeInput("Plot_image_spatial", "Sample to display", NULL, selected = NULL, multiple = TRUE),
+    
+    actionButton("select_all_samples_image_spatial", "Select all samples"),
+    
     shinyWidgets::awesomeCheckbox(
       inputId = "spatial_mirror_X",
       label = "mirror X",
@@ -96,3 +98,7 @@ ui <- dashboardPage(
     )
   )
 )
+
+
+
+

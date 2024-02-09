@@ -22,21 +22,21 @@ spatial_gene_react <- reactive({
       fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
     } else {
       if(!is.null(values$low_image)){
-        fig <- fig %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+        fig <- fig %>% add_trace(type="image", source = values$low_image[[1]], hoverinfo = 'skip')
       }
     }
     
     fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
-                             x = TissueCoordinates()[,"imagecol"],
-                             y = TissueCoordinates()[,"imagerow"],
-                             marker = list(color = data@assays$SCT@scale.data[input$gene_projection_gene_choice,][rownames(TissueCoordinates())],
+                             x = TissueCoordinates()[[1]][,"imagecol"],
+                             y = TissueCoordinates()[[1]][,"imagerow"],
+                             marker = list(color = data@assays$SCT@scale.data[input$gene_projection_gene_choice,][rownames(TissueCoordinates()[[1]])],
                                            colorscale = colorscale_gene_spatial(),
                                            showscale = TRUE,
                                            size = input$Plot_spatial_gene_size,
                                            reversescale=input$invert_color_gene_projection),
                              opacity = input$transparency_gene_projection,
-                             text = data@assays$SCT@scale.data[input$gene_projection_gene_choice,][rownames(TissueCoordinates())],
-                             customdata = names(data@assays$SCT@scale.data[input$gene_projection_gene_choice,][rownames(TissueCoordinates())]),
+                             text = data@assays$SCT@scale.data[input$gene_projection_gene_choice,][rownames(TissueCoordinates()[[1]])],
+                             customdata = names(data@assays$SCT@scale.data[input$gene_projection_gene_choice,][rownames(TissueCoordinates()[[1]])]),
                              hovertemplate = paste0("Cell : %{customdata}<br>",
                                                     "Expression: %{text}",
                                                     "<extra></extra>")
@@ -62,19 +62,19 @@ spatial_gene_react <- reactive({
         plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
       } else {
         if(!is.null(values$low_image)){
-          plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$low_image, hoverinfo = 'skip')
+          plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$low_image[[1]], hoverinfo = 'skip')
         }
       }
 
-      plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[,"imagecol"], y = TissueCoordinates()[,"imagerow"],
-                                                   marker = list(color = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())],
+      plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[[1]][,"imagecol"], y = TissueCoordinates()[[1]][,"imagerow"],
+                                                   marker = list(color = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates()[[1]])],
                                                                  size = input$Plot_spatial_gene_size,
                                                                  colorscale = colorscale_gene_spatial(),
                                                                  reversescale=input$invert_color_gene_projection),
                                                    opacity = input$transparency_gene_projection,
                                                    type = 'scatter', mode = "markers",
-                                                   text = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())],
-                                                   customdata = names(data@assays$SCT@scale.data[x,][rownames(TissueCoordinates())]),
+                                                   text = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates()[[1]])],
+                                                   customdata = names(data@assays$SCT@scale.data[x,][rownames(TissueCoordinates()[[1]])]),
                                                    hovertemplate = paste0("Cell : %{customdata}<br>",
                                                                           "Expression: %{text}",
                                                                           "<extra></extra>")
@@ -112,8 +112,8 @@ colorscale_gene_spatial <- reactive({
   } else {
     #prepare colorscales
     l = list()
-    se = seq(0, 1, (1/(nrow(TissueCoordinates())-1)))
-    col = viridis_pal(option = input$select_color_gene_projection)(nrow(TissueCoordinates()))
+    se = seq(0, 1, (1/(ncol(values$data)-1)))
+    col = viridis_pal(option = input$select_color_gene_projection)(ncol(values$data))
     for(i in 1:length(se)){
       l[[i]] = c(se[i],col[i])
     }
