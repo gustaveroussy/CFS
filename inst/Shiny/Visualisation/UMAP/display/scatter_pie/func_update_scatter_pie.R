@@ -11,8 +11,8 @@ current_plot_scatter_pie <- reactive({
   
   if (!is.null(values$data)) {
     data <- values$data
-    max_col_img = ceiling(max(data[["umap"]]@cell.embeddings[,'UMAP_2']))
-    max_row_img = ceiling(max(data[["umap"]]@cell.embeddings[,'UMAP_1']))
+    max_col_img = ceiling(max(data[["umap"]]@cell.embeddings[,'umap_2']))
+    max_row_img = ceiling(max(data[["umap"]]@cell.embeddings[,'umap_1']))
     if (input$Scatter_pie_values_selected == "IC"){
       if (!is.null(input$Scatter_pie_cell_type)){
         type = unlist(values$annotation_for_output[input$Scatter_pie_cell_type], use.names=FALSE)
@@ -53,19 +53,19 @@ current_plot_scatter_pie <- reactive({
         
         ####
         
-        min_col = min(ic_types[,"UMAP_1"])
-        min_row = min(ic_types[,"UMAP_2"])
+        min_col = min(ic_types[,"umap_1"])
+        min_row = min(ic_types[,"umap_2"])
         
         if(min_col < 0){
-          ic_types[,"UMAP_1"] = ic_types[,"UMAP_1"] - min_col
+          ic_types[,"umap_1"] = ic_types[,"umap_1"] - min_col
         }
         
         if(min_row < 0){
-          ic_types[,"UMAP_2"] = ic_types[,"UMAP_2"] - min_row
+          ic_types[,"umap_2"] = ic_types[,"umap_2"] - min_row
         }
         
-        max_col = max(ic_types[,"UMAP_1"])
-        max_row = max(ic_types[,"UMAP_2"])
+        max_col = max(ic_types[,"umap_1"])
+        max_row = max(ic_types[,"umap_2"])
         
         fig <- plot_ly()
         
@@ -85,15 +85,15 @@ current_plot_scatter_pie <- reactive({
             text_final = paste(text_final,paste0(t[k]," : ",v[k],"% : ",q[k],"<br>"))
           }
           
-          col_coordinates = ic_types[i,"UMAP_1"]
-          row_coordinates = ic_types[i,"UMAP_2"]
+          col_coordinates = ic_types[i,"umap_1"]
+          row_coordinates = ic_types[i,"umap_2"]
           
           if(input$Scatter_pie_size_activate){
-            x = c((col_coordinates/max_col)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
-            y = c((row_coordinates/max_row)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
+            x = c((col_coordinates/max_col)-(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col)+(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2)
+            y = c((row_coordinates/max_row)-(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row)+(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2)
           } else {
-            x = c((col_coordinates/max_col)-(Radius(data@images$slice1))/2,(col_coordinates/max_col)+(Radius(data@images$slice1))/2)
-            y = c((row_coordinates/max_row)-(Radius(data@images$slice1))/2,(row_coordinates/max_row)+(Radius(data@images$slice1))/2)
+            x = c((col_coordinates/max_col)-(Radius(data@images[[input$Plot_image_spatial[1]]]))/2,(col_coordinates/max_col)+(Radius(data@images[[input$Plot_image_spatial[1]]]))/2)
+            y = c((row_coordinates/max_row)-(Radius(data@images[[input$Plot_image_spatial[1]]]))/2,(row_coordinates/max_row)+(Radius(data@images[[input$Plot_image_spatial[1]]]))/2)
           }
           
           fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = values$Annotation[names(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),'Annotation']
@@ -136,19 +136,19 @@ current_plot_scatter_pie <- reactive({
         
         ####
         
-        min_col = min(ic_types[,"UMAP_1"])
-        min_row = min(ic_types[,"UMAP_2"])
+        min_col = min(ic_types[,"umap_1"])
+        min_row = min(ic_types[,"umap_2"])
         
         if(min_col < 0){
-          ic_types[,"UMAP_1"] = ic_types[,"UMAP_1"] - min_col
+          ic_types[,"umap_1"] = ic_types[,"umap_1"] - min_col
         }
         
         if(min_row < 0){
-          ic_types[,"UMAP_2"] = ic_types[,"UMAP_2"] - min_row
+          ic_types[,"umap_2"] = ic_types[,"umap_2"] - min_row
         }
         
-        max_col = max(ic_types[,"UMAP_1"])
-        max_row = max(ic_types[,"UMAP_2"])
+        max_col = max(ic_types[,"umap_1"])
+        max_row = max(ic_types[,"umap_2"])
         
         fig <- plot_ly()
         
@@ -168,11 +168,11 @@ current_plot_scatter_pie <- reactive({
             text_final = paste(text_final,paste0(t[k]," : ",v[k],"% : ",q[k],"<br>"))
           }
           
-          col_coordinates = ic_types[i,"UMAP_1"]
-          row_coordinates = ic_types[i,"UMAP_2"]
+          col_coordinates = ic_types[i,"umap_1"]
+          row_coordinates = ic_types[i,"umap_2"]
           
-          x = c((col_coordinates/max_col)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
-          y = c((row_coordinates/max_row)-(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row)+(Radius(data@images$slice1)*ic_types[i,"sum_IC"])/2)
+          x = c((col_coordinates/max_col)-(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col)+(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2)
+          y = c((row_coordinates/max_row)-(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row)+(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2)
           
           fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = values$Annotation[names(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),'Annotation']
                                    , values = as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),
@@ -205,19 +205,19 @@ current_plot_scatter_pie <- reactive({
       
       ####
       
-      min_col = min(types[,"UMAP_1"])
-      min_row = min(types[,"UMAP_2"])
+      min_col = min(types[,"umap_1"])
+      min_row = min(types[,"umap_2"])
       
       if(min_col < 0){
-        types[,"UMAP_1"] = types[,"UMAP_1"] - min_col
+        types[,"umap_1"] = types[,"umap_1"] - min_col
       }
       
       if(min_row < 0){
-        types[,"UMAP_2"] = types[,"UMAP_2"] - min_row
+        types[,"umap_2"] = types[,"umap_2"] - min_row
       }
       
-      max_col = max(types[,"UMAP_1"])
-      max_row = max(types[,"UMAP_2"])
+      max_col = max(types[,"umap_1"])
+      max_row = max(types[,"umap_2"])
       
       fig <- plot_ly()
       
@@ -236,8 +236,8 @@ current_plot_scatter_pie <- reactive({
           text_final = paste(text_final,paste0(input$Scatter_pie_metadata_select[k]," : ",v[k],"%<br>"))
         }
         
-        col_coordinates = types[i,"UMAP_1"]
-        row_coordinates = types[i,"UMAP_2"]
+        col_coordinates = types[i,"umap_1"]
+        row_coordinates = types[i,"umap_2"]
         
         if(input$Scatter_pie_size_activate){
           x = c((col_coordinates/max_col)-(Radius(data@images$slice1)*types[i,"sum"])/2,(col_coordinates/max_col)+(Radius(data@images$slice1)*types[i,"sum"])/2)
