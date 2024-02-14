@@ -206,7 +206,7 @@ current_plot_spatial <- reactive({
     
   }
   
-  output <- subplot(out)
+  output <- subplot(out, nrows = ceiling(length(TissueCoordinates())/3))
   
   return(output)
 })
