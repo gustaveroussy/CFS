@@ -20,7 +20,8 @@ output[["Plot_main_parameters_cluster_UI"]] <- renderUI({
                 selected = 1),
     numericInput("Clustering_resolution", "Clustering resolution", 1.2,
                  min = 0.1, max = 10, step = 0.1
-    )
+    ),
+    textInput("cluster_named_by_user", "Clustering name", value = "")
   )
 })
 

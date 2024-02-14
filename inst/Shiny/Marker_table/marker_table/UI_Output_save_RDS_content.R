@@ -21,7 +21,7 @@ marker_table <- observeEvent(input$start_marker, {
   
   withProgress(message = 'Preparing to find markers', value = 0, {
   
-    if(length(values$UMAP@images) > 1){
+    if(length(values$UMAP@assays$SCT@SCTModel.list) > 1){
       # prepare differential analysis for integrated spatial
       if(slot(object = values$UMAP@assays$SCT@SCTModel.list[[2]], name="umi.assay") != "Spatial"){
         for(i in 1:length(values$UMAP@images)){
@@ -29,9 +29,21 @@ marker_table <- observeEvent(input$start_marker, {
         }
       }
       
-      values$UMAP = PrepSCTFindMarkers(values$UMAP, assay = "SCT", verbose = FALSE)
+      # check if PrepSCT needs to be applied
+      apply_SCTprep = FALSE
+      old_value = slot(values$UMAP@assays$SCT@SCTModel.list[[1]],"median_umi")
+
+      for(i in 2:length(values$UMAP@assays$SCT@SCTModel.list)){
+        if(old_value != slot(values$UMAP@assays$SCT@SCTModel.list[[i]],"median_umi")){
+          apply_SCTprep = TRUE
+        }
+      }
+      
+      if(apply_SCTprep){
+        values$UMAP = PrepSCTFindMarkers(values$UMAP, assay = "SCT", verbose = FALSE)
+      }
     }
-  
+
     incProgress(0.1, detail = "Preparing table")
   
     if (!is.null(values$UMAP)){
@@ -39,12 +51,12 @@ marker_table <- observeEvent(input$start_marker, {
         values$marker_gene = list()
       }
       for (i in 1:length(input$volcano_plot_clusters_to_compare)){
-        if(nrow(values$UMAP@meta.data[values$UMAP@meta.data$seurat_clusters == (input$volcano_plot_clusters_to_compare[i]),]) > 3){
+        if(nrow(values$UMAP@meta.data[values$UMAP@meta.data[,input$volcano_plot_clusters_list_to_compare] == (input$volcano_plot_clusters_to_compare[i]),]) > 3){
           incProgress((0.9/length(input$volcano_plot_clusters_to_compare)), detail = paste(paste0("Working on cluster ",(input$volcano_plot_clusters_to_compare[i]))))
-          values$marker_gene[[paste0(input$volcano_plot_clusters_to_compare[i],"/", paste(input$volcano_plot_clusters_to_compare[which(input$volcano_plot_clusters_to_compare != input$volcano_plot_clusters_to_compare[i])],collapse=","))]] =
+          values$marker_gene[[paste0(input$volcano_plot_clusters_list_to_compare," : ",input$volcano_plot_clusters_to_compare[i],"/", paste(input$volcano_plot_clusters_to_compare[which(input$volcano_plot_clusters_to_compare != input$volcano_plot_clusters_to_compare[i])],collapse=","))]] =
             FindMarkers(values$UMAP,
-                        ident.1 = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data$seurat_clusters == (input$volcano_plot_clusters_to_compare[i]))],
-                        ident.2 = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data$seurat_clusters %in% (input$volcano_plot_clusters_to_compare[which(input$volcano_plot_clusters_to_compare != input$volcano_plot_clusters_to_compare[i])]))],
+                        ident.1 = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[,input$volcano_plot_clusters_list_to_compare] == (input$volcano_plot_clusters_to_compare[i]))],
+                        ident.2 = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[,input$volcano_plot_clusters_list_to_compare] %in% (input$volcano_plot_clusters_to_compare[which(input$volcano_plot_clusters_to_compare != input$volcano_plot_clusters_to_compare[i])]))],
                         logfc.threshold = 0.25)
         }
       }

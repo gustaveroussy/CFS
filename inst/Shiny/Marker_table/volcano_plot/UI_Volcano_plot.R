@@ -26,6 +26,7 @@ output[["Volcano_plot_UI"]] <- renderUI({
           collapsible = TRUE,
           collapsed = FALSE,
           uiOutput("Volcano_plot_main_parameters_1_UI"),
+          uiOutput("Volcano_plot_main_parameters_3_UI"),
           uiOutput("Volcano_plot_main_parameters_2_UI")
       )
     ),

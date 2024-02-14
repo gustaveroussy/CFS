@@ -161,7 +161,9 @@ output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
 
 output[["start_display_UI"]] <- renderUI({
   tagList(
-    actionButton("start_display", "Display")
+    actionButton("start_display_UMAP", "Display UMAP"),
+    actionButton("start_display_Spatial", "Display Spatial"),
+    actionButton("start_display", "Display Both")
   )
 })
 
