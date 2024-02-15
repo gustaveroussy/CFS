@@ -28,6 +28,7 @@ Imports:
     scatterpie,
     rclipboard,
     tibble,
+    tidyr,
     DT,
     interp,
     stringr,

@@ -8,6 +8,7 @@
 #' @import scatterpie
 #' @import rclipboard
 #' @import tibble
+#' @import tidyr
 #' @import interp
 #' @import stringr
 #' @import scales
