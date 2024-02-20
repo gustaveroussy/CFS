@@ -16,10 +16,10 @@ output[["Volcano_plot_main_parameters_1_UI"]] <- renderUI({
 })
 
 output[["Volcano_plot_main_parameters_2_UI"]] <- renderUI({
-  if(!is.null(values$UMAP)){
+  if(!is.null(values$data)){
     tagList(
             selectizeInput('volcano_plot_clusters_to_compare', "Clusters to compare",
-                     unique(values$UMAP@meta.data[,input$volcano_plot_clusters_list_to_compare])[order(unique(values$UMAP@meta.data[,input$volcano_plot_clusters_list_to_compare]))], selected = NULL, multiple = TRUE,
+                     unique(values$data@meta.data[,input$volcano_plot_clusters_list_to_compare])[order(unique(values$data@meta.data[,input$volcano_plot_clusters_list_to_compare]))], selected = NULL, multiple = TRUE,
                      options = NULL),
       numericInput(
         "Volcano_plot_p_value", "P-value",
@@ -50,7 +50,7 @@ output[["Volcano_plot_main_parameters_2_UI"]] <- renderUI({
 output[["Volcano_plot_main_parameters_3_UI"]] <- renderUI({
   tagList(
     selectInput('volcano_plot_clusters_list_to_compare', "Cluster list to compare",
-                names(Filter(is.factor, values$UMAP@meta.data)), selected = names(Filter(is.factor, values$UMAP@meta.data))[1], multiple = FALSE)
+                names(Filter(is.factor, values$data@meta.data)), selected = names(Filter(is.factor, values$data@meta.data))[1], multiple = FALSE)
   )
 })
 

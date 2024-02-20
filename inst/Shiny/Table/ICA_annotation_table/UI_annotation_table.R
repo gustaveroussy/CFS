@@ -45,10 +45,6 @@ observeEvent(input$import_annotation_table, {
   
   values$data@misc$annotation = values$Annotation
   
-  if (!is.null(values$UMAP)){
-    values$UMAP@misc$annotation = values$Annotation
-  }
-  
   #values$IC_names = NULL
   #values$IC_names = rownames(values$Annotation[which(values$Annotation[,'Use'] == "TRUE"),])
   

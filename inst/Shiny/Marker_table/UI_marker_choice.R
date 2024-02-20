@@ -1,5 +1,5 @@
 output[["marker_cluster_choice_UI"]] <- renderUI({
-  req(values$UMAP)
+  req(values$data)
   selectInput(
     "marker_cluster_choice",
     label = "Choose cluster marker gene",

@@ -20,9 +20,9 @@ observeEvent(input$start_UMAP, {
         } else {
           type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
         }
-        values$UMAP= RunTSNE(values$UMAP, reduction = "ica", dims = as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))), perplexity = input$Plot_perplexity)
+        values$data= RunTSNE(values$data, reduction = "ica", dims = as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))), perplexity = input$Plot_perplexity, reduction.name = input$reddim_named_by_user)
       } else {
-        values$UMAP= RunTSNE(values$UMAP, reduction = "ica", dims = as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)), perplexity = input$Plot_perplexity)
+        values$data= RunTSNE(values$data, reduction = "ica", dims = as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)), perplexity = input$Plot_perplexity, reduction.name = input$reddim_named_by_user)
       }
     } else if (!is.null(input$Plot_display_type_UMAP_choice)){
       if(length(input$Plot_display_type_UMAP_choice) != 1){
@@ -38,9 +38,9 @@ observeEvent(input$start_UMAP, {
       } else {
         type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
       }
-      values$UMAP=RunTSNE(values$UMAP, reduction = "ica", dims = as.integer(gsub('[IC_]','',type)), perplexity = input$Plot_perplexity)
+      values$data=RunTSNE(values$data, reduction = "ica", dims = as.integer(gsub('[IC_]','',type)), perplexity = input$Plot_perplexity, reduction.name = input$reddim_named_by_user)
     } else {
-      if(is.null(values$UMAP@reductions$tsne)){
+      if(is.null(values$data@reductions$tsne)){
         shinyalert("tSNE error", "No tSNE can be calculated", type = "error")
       }
     }

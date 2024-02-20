@@ -8,22 +8,22 @@ current_plot_umap <- reactive({
     return(NULL)
   }
 
-  req(values$UMAP)
-  req(values$UMAP@reductions$umap)
+  req(values$data)
+  req(values$data@reductions$umap)
   
   if(input$image_display_UMAP){
     TissueCoordinates = TissueCoordinates()
     
-    meta.data = values$UMAP@meta.data[(rownames(values$UMAP@meta.data) %in% unlist(c(sapply(TissueCoordinates,rownames)))),]
-    cell.embeddings <- values$UMAP@reductions$ica@cell.embeddings[(rownames(values$UMAP@reductions$ica@cell.embeddings) %in% unlist(c(sapply(TissueCoordinates,rownames)))),]
-    annotation = values$UMAP@misc$annotation
-    cell.embeddings.umap = values$UMAP[["umap"]]@cell.embeddings[(rownames(values$UMAP[["umap"]]@cell.embeddings) %in% unlist(c(sapply(TissueCoordinates,rownames)))),]
+    meta.data = values$data@meta.data[(rownames(values$data@meta.data) %in% unlist(c(sapply(TissueCoordinates,rownames)))),]
+    cell.embeddings <- values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% unlist(c(sapply(TissueCoordinates,rownames)))),]
+    annotation = values$data@misc$annotation
+    cell.embeddings.umap = values$data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings[(rownames(values$data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings) %in% unlist(c(sapply(TissueCoordinates,rownames)))),]
   } else {
     TissueCoordinates = TissueCoordinates()
-    meta.data = values$UMAP@meta.data
-    cell.embeddings <- values$UMAP@reductions$ica@cell.embeddings
-    annotation = values$UMAP@misc$annotation
-    cell.embeddings.umap = values$UMAP[["umap"]]@cell.embeddings
+    meta.data = values$data@meta.data
+    cell.embeddings <- values$data@reductions$ica@cell.embeddings
+    annotation = values$data@misc$annotation
+    cell.embeddings.umap = values$data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings
   }
   
   fig <- plot_ly(type = 'scatter',
@@ -31,7 +31,7 @@ current_plot_umap <- reactive({
                  source = "G"
   )
   
-  if (input$Plot_analysis_display_type == "UMAP"){
+  if (input$Plot_analysis_display_type == "Dimentional reduction"){
     if (input$Plot_display_type == "seurat_clusters"){
       
       ################# utiliser la fonction , split = de plotly et pas une boucle
@@ -84,9 +84,9 @@ current_plot_umap <- reactive({
       }
     } else if (input$Plot_display_type == "gene") {
       if(input$image_display_UMAP){
-        scale.data = values$UMAP@assays$SCT@scale.data[,(colnames(values$UMAP@assays$SCT@scale.data) %in% unlist(c(sapply(TissueCoordinates,rownames))))]
+        scale.data = values$data@assays$SCT@scale.data[,(colnames(values$data@assays$SCT@scale.data) %in% unlist(c(sapply(TissueCoordinates,rownames))))]
       } else {
-        scale.data = values$UMAP@assays$SCT@scale.data
+        scale.data = values$data@assays$SCT@scale.data
       }
 
       fig <- fig %>%

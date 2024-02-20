@@ -42,14 +42,14 @@ current_plot_spatial_density <- reactive({
       
       fig <- fig %>% colorbar(title = "Cell type\ndensity")
       
-      if (!is.null(values$UMAP)){
-        for (i in 0:length(summary(values$UMAP@meta.data[rownames(TissueCoordinates()[[n]]),"seurat_clusters"]))-1){
+      if (!is.null(values$data)){
+        for (i in 0:length(summary(values$data@meta.data[rownames(TissueCoordinates()[[n]]),"seurat_clusters"]))-1){
           fig <- fig %>%
             add_trace(
               type = "scatter",
               mode = "markers",
-              x = TissueCoordinates()[[n]][,"imagecol"][which(values$UMAP@meta.data[rownames(TissueCoordinates()[[n]]),"seurat_clusters"]==i)],
-              y = TissueCoordinates()[[n]][,"imagerow"][which(values$UMAP@meta.data[rownames(TissueCoordinates()[[n]]),"seurat_clusters"]==i)],
+              x = TissueCoordinates()[[n]][,"imagecol"][which(values$data@meta.data[rownames(TissueCoordinates()[[n]]),"seurat_clusters"]==i)],
+              y = TissueCoordinates()[[n]][,"imagerow"][which(values$data@meta.data[rownames(TissueCoordinates()[[n]]),"seurat_clusters"]==i)],
               name = i,
               marker = list(
                 color = palette()[i+1],
@@ -57,7 +57,7 @@ current_plot_spatial_density <- reactive({
               ),
               showlegend = T,
               text = i,
-              customdata = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[rownames(TissueCoordinates()[[n]]),"seurat_clusters"]==i)],
+              customdata = rownames(values$data@meta.data)[which(values$data@meta.data[rownames(TissueCoordinates()[[n]]),"seurat_clusters"]==i)],
               hovertemplate = paste0("Cell : %{customdata}<br>",
                                      "Cluster : %{text}",
                                      "<extra></extra>"),

@@ -20,9 +20,9 @@ observeEvent(input$start_UMAP, {
         } else {
           type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
         }
-        values$UMAP= RunUMAP(values$UMAP, reduction = "ica",dims = as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))), min.dist = input$Plot_min.dist, n.neighbors = input$Plot_n.neighbors, spread = input$Plot_spread)
+        values$data= RunUMAP(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))), min.dist = input$Plot_min.dist, n.neighbors = input$Plot_n.neighbors, spread = input$Plot_spread, reduction.name = input$reddim_named_by_user)
       } else {
-        values$UMAP=RunUMAP(values$UMAP, reduction = "ica",dims = as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)), min.dist = input$Plot_min.dist, n.neighbors = input$Plot_n.neighbors, spread = input$Plot_spread)
+        values$data=RunUMAP(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)), min.dist = input$Plot_min.dist, n.neighbors = input$Plot_n.neighbors, spread = input$Plot_spread, reduction.name = input$reddim_named_by_user)
       }
     } else if (!is.null(input$Plot_display_type_UMAP_choice)){
       if(length(input$Plot_display_type_UMAP_choice) != 1){
@@ -38,9 +38,9 @@ observeEvent(input$start_UMAP, {
       } else {
         type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
       }
-      values$UMAP=RunUMAP(values$UMAP, reduction = "ica",dims = as.integer(gsub('[IC_]','',type)), min.dist = input$Plot_min.dist, n.neighbors = input$Plot_n.neighbors, spread = input$Plot_spread)
+      values$data=RunUMAP(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',type)), min.dist = input$Plot_min.dist, n.neighbors = input$Plot_n.neighbors, spread = input$Plot_spread, reduction.name = input$reddim_named_by_user)
     } else {
-      if(is.null(values$UMAP@reductions$umap)){
+      if(is.null(values$data@reductions$umap)){
         shinyalert("UMAP error", "No UMAP can be calculated", type = "error")
       }
     }

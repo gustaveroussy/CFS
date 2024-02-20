@@ -11,8 +11,8 @@ current_plot_scatter_pie <- reactive({
   
   if (!is.null(values$data)) {
     data <- values$data
-    max_col_img = ceiling(max(data[["umap"]]@cell.embeddings[,'umap_2']))
-    max_row_img = ceiling(max(data[["umap"]]@cell.embeddings[,'umap_1']))
+    max_col_img = ceiling(max(data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings[,2]))
+    max_row_img = ceiling(max(data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings[,1]))
     if (input$Scatter_pie_values_selected == "IC"){
       if (!is.null(input$Scatter_pie_cell_type)){
         type = unlist(values$annotation_for_output[input$Scatter_pie_cell_type], use.names=FALSE)
@@ -43,7 +43,7 @@ current_plot_scatter_pie <- reactive({
         
         #ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
         # We build the final object
-        ic_types<-cbind(data[["umap"]]@cell.embeddings,ic_types) %>%  cbind(.,sum_IC)
+        ic_types<-cbind(data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings,ic_types) %>%  cbind(.,sum_IC)
         
         #We build the plot
         
@@ -53,19 +53,19 @@ current_plot_scatter_pie <- reactive({
         
         ####
         
-        min_col = min(ic_types[,"umap_1"])
-        min_row = min(ic_types[,"umap_2"])
+        min_col = min(ic_types[,1])
+        min_row = min(ic_types[,2])
         
         if(min_col < 0){
-          ic_types[,"umap_1"] = ic_types[,"umap_1"] - min_col
+          ic_types[,1] = ic_types[,1] - min_col
         }
         
         if(min_row < 0){
-          ic_types[,"umap_2"] = ic_types[,"umap_2"] - min_row
+          ic_types[,2] = ic_types[,2] - min_row
         }
         
-        max_col = max(ic_types[,"umap_1"])
-        max_row = max(ic_types[,"umap_2"])
+        max_col = max(ic_types[,1])
+        max_row = max(ic_types[,2])
         
         fig <- plot_ly()
         
@@ -85,8 +85,8 @@ current_plot_scatter_pie <- reactive({
             text_final = paste(text_final,paste0(t[k]," : ",v[k],"% : ",q[k],"<br>"))
           }
           
-          col_coordinates = ic_types[i,"umap_1"]
-          row_coordinates = ic_types[i,"umap_2"]
+          col_coordinates = ic_types[i,1]
+          row_coordinates = ic_types[i,2]
           
           if(input$Scatter_pie_size_activate){
             x = c((col_coordinates/max_col)-(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col)+(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2)
@@ -126,7 +126,7 @@ current_plot_scatter_pie <- reactive({
         
         #ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
         # We build the final object
-        ic_types<-cbind(data[["umap"]]@cell.embeddings,ic_types) %>%  cbind(.,sum_IC)
+        ic_types<-cbind(data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings,ic_types) %>%  cbind(.,sum_IC)
         
         #We build the plot
         
@@ -136,19 +136,19 @@ current_plot_scatter_pie <- reactive({
         
         ####
         
-        min_col = min(ic_types[,"umap_1"])
-        min_row = min(ic_types[,"umap_2"])
+        min_col = min(ic_types[,1])
+        min_row = min(ic_types[,2])
         
         if(min_col < 0){
-          ic_types[,"umap_1"] = ic_types[,"umap_1"] - min_col
+          ic_types[,1] = ic_types[,1] - min_col
         }
         
         if(min_row < 0){
-          ic_types[,"umap_2"] = ic_types[,"umap_2"] - min_row
+          ic_types[,2] = ic_types[,2] - min_row
         }
         
-        max_col = max(ic_types[,"umap_1"])
-        max_row = max(ic_types[,"umap_2"])
+        max_col = max(ic_types[,1])
+        max_row = max(ic_types[,2])
         
         fig <- plot_ly()
         
@@ -168,8 +168,8 @@ current_plot_scatter_pie <- reactive({
             text_final = paste(text_final,paste0(t[k]," : ",v[k],"% : ",q[k],"<br>"))
           }
           
-          col_coordinates = ic_types[i,"umap_1"]
-          row_coordinates = ic_types[i,"umap_2"]
+          col_coordinates = ic_types[i,1]
+          row_coordinates = ic_types[i,2]
           
           x = c((col_coordinates/max_col)-(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col)+(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2)
           y = c((row_coordinates/max_row)-(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row)+(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2)
@@ -195,7 +195,7 @@ current_plot_scatter_pie <- reactive({
       
       #types<-apply(types,1,function(x){x/sum(x); return(x)})
       # We build the final object
-      types<-cbind(data[["umap"]]@cell.embeddings,types) %>%  cbind(.,sum)
+      types<-cbind(data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings,types) %>%  cbind(.,sum)
       
       #We build the plot
       
@@ -205,19 +205,19 @@ current_plot_scatter_pie <- reactive({
       
       ####
       
-      min_col = min(types[,"umap_1"])
-      min_row = min(types[,"umap_2"])
+      min_col = min(types[,1])
+      min_row = min(types[,2])
       
       if(min_col < 0){
-        types[,"umap_1"] = types[,"umap_1"] - min_col
+        types[,1] = types[,1] - min_col
       }
       
       if(min_row < 0){
-        types[,"umap_2"] = types[,"umap_2"] - min_row
+        types[,2] = types[,2] - min_row
       }
       
-      max_col = max(types[,"umap_1"])
-      max_row = max(types[,"umap_2"])
+      max_col = max(types[,1])
+      max_row = max(types[,2])
       
       fig <- plot_ly()
       
@@ -236,8 +236,8 @@ current_plot_scatter_pie <- reactive({
           text_final = paste(text_final,paste0(input$Scatter_pie_metadata_select[k]," : ",v[k],"%<br>"))
         }
         
-        col_coordinates = types[i,"umap_1"]
-        row_coordinates = types[i,"umap_2"]
+        col_coordinates = types[i,1]
+        row_coordinates = types[i,2]
         
         if(input$Scatter_pie_size_activate){
           x = c((col_coordinates/max_col)-(Radius(data@images$slice1)*types[i,"sum"])/2,(col_coordinates/max_col)+(Radius(data@images$slice1)*types[i,"sum"])/2)

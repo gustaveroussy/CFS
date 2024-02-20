@@ -36,7 +36,6 @@ observeEvent(input$start_integration_button, {
     values$IC_names = NULL
     values$Stat = NULL
     values$Annotation = NULL
-    values$UMAP = NULL
     values$low_image = NULL
     values$marker_gene = NULL
     values$IC_names = NULL

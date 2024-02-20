@@ -12,7 +12,6 @@ observeEvent(input$preprocessing_action_button, {
     values$IC_names = NULL
     values$Stat = NULL
     values$Annotation = NULL
-    values$UMAP = NULL
     values$marker_gene = NULL
     values$HD_image = NULL
     values$HD_image_2 = NULL

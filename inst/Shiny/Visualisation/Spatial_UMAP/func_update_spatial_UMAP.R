@@ -15,15 +15,15 @@ current_plot_spatial <- reactive({
     n = n + 1
       
     TissueCoordinates = TissueCoordinates()[[n]]
-    meta.data = values$UMAP@meta.data[(rownames(values$UMAP@meta.data) %in% rownames(TissueCoordinates)),]
-    cell.embeddings <- values$UMAP@reductions$ica@cell.embeddings[(rownames(values$UMAP@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),]
-    annotation = values$UMAP@misc$annotation
+    meta.data = values$data@meta.data[(rownames(values$data@meta.data) %in% rownames(TissueCoordinates)),]
+    cell.embeddings <- values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),]
+    annotation = values$data@misc$annotation
     
     # keep cells based on UMAP
     if(!is.null(square_cell_UMAP_selected())){
-      cell.embeddings = values$UMAP@reductions$ica@cell.embeddings[square_cell_UMAP_selected()$customdata,]
+      cell.embeddings = values$data@reductions$ica@cell.embeddings[square_cell_UMAP_selected()$customdata,]
       TissueCoordinates = TissueCoordinates[square_cell_UMAP_selected()$customdata,]
-      meta.data = values$UMAP@meta.data[square_cell_UMAP_selected()$customdata,]
+      meta.data = values$data@meta.data[square_cell_UMAP_selected()$customdata,]
     }
     
     fig <- plot_ly(type = 'scatter',
@@ -41,7 +41,7 @@ current_plot_spatial <- reactive({
       }
     }
     
-    if (input$Plot_analysis_display_type == "UMAP" || input$Plot_analysis_display_type == "tSNE"){
+    if (input$Plot_analysis_display_type == "Dimentional reduction"){
       if (input$Plot_display_type == "seurat_clusters"){
         for (i in as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))[order(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]]))))]){
           if(length(which(meta.data[["seurat_clusters"]]==i)) == 1){
@@ -93,7 +93,7 @@ current_plot_spatial <- reactive({
             )
       }
     } else if (input$Plot_display_type == "gene") {
-      scale.data = values$UMAP@assays$SCT@scale.data[,(colnames(values$UMAP@assays$SCT@scale.data) %in% rownames(TissueCoordinates))]
+      scale.data = values$data@assays$SCT@scale.data[,(colnames(values$data@assays$SCT@scale.data) %in% rownames(TissueCoordinates))]
       
       fig <- fig %>%
         add_trace(

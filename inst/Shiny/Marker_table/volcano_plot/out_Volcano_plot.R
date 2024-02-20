@@ -4,7 +4,7 @@
 
 output[["Volcano_plot"]] <- plotly::renderPlotly({
   req(values$marker_gene)
-  req(values$UMAP)
+  req(values$data)
   
   table <- values$marker_gene[[input$marker_cluster_choice]]
   

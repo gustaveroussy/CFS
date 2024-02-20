@@ -57,13 +57,13 @@ current_plot_tSNE <- reactive({
     meta.data = values$UMAP@meta.data[(rownames(values$UMAP@meta.data) %in% rownames(TissueCoordinates)),]
     cell.embeddings <- values$UMAP@reductions$ica@cell.embeddings[(rownames(values$UMAP@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),]
     annotation = values$UMAP@misc$annotation
-    cell.embeddings.umap = values$UMAP[["tsne"]]@cell.embeddings[(rownames(values$UMAP[["tsne"]]@cell.embeddings) %in% rownames(TissueCoordinates)),]
+    cell.embeddings.umap = values$UMAP[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings[(rownames(values$UMAP[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings) %in% rownames(TissueCoordinates)),]
   } else {
     TissueCoordinates = TissueCoordinates()
     meta.data = values$UMAP@meta.data
     cell.embeddings <- values$UMAP@reductions$ica@cell.embeddings
     annotation = values$UMAP@misc$annotation
-    cell.embeddings.umap = values$UMAP[["tsne"]]@cell.embeddings
+    cell.embeddings.umap = values$UMAP[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings
   }
 
 
@@ -72,8 +72,9 @@ current_plot_tSNE <- reactive({
                  source = "G"
   )
   
-  if (input$Plot_analysis_type == "tSNE"){
+  if (input$Plot_analysis_type == "Dimentional reduction"){
     if (input$Plot_display_type == "seurat_clusters"){
+      print("yes")
       
       ################# utiliser la fonction , split = de plotly et pas une boucle
       for (i in as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))[order(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]]))))]){

@@ -8,7 +8,7 @@ current_plot_density <- reactive({
     return(NULL)
   }
   
-  if (!is.null(values$UMAP)){
+  if (!is.null(values$data)){
     
     l=length(UMAP_type())
     
@@ -41,11 +41,11 @@ current_plot_density <- reactive({
       fig <- fig %>% colorbar(title = "UMAP\ndensity")
   
       # ADD umap
-      for (i in 0:length(summary(values$UMAP@meta.data[,"seurat_clusters"]))-1){
+      for (i in 0:length(summary(values$data@meta.data[,"seurat_clusters"]))-1){
         fig <- fig %>%
           add_trace(
-            x = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[,"seurat_clusters"]==i),1],
-            y = values$UMAP[["umap"]]@cell.embeddings[which(values$UMAP@meta.data[,"seurat_clusters"]==i),2],
+            x = values$data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings[which(values$data@meta.data[,"seurat_clusters"]==i),1],
+            y = values$data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings[which(values$data@meta.data[,"seurat_clusters"]==i),2],
             name = i,
             marker = list(
               color = palette()[i+1],
@@ -53,7 +53,7 @@ current_plot_density <- reactive({
             ),
             showlegend = T,
             text = i,
-            customdata = rownames(values$UMAP@meta.data)[which(values$UMAP@meta.data[,"seurat_clusters"]==i)],
+            customdata = rownames(values$data@meta.data)[which(values$data@meta.data[,"seurat_clusters"]==i)],
             hovertemplate = paste0("Cell : %{customdata}<br>",
                                    "Cluster : %{text}",
                                    "<extra></extra>"),
@@ -66,7 +66,7 @@ current_plot_density <- reactive({
                             autosize = TRUE
       )
     } else {
-      ic_types=values$UMAP@reductions$ica@cell.embeddings[,UMAP_type()]
+      ic_types=values$data@reductions$ica@cell.embeddings[,UMAP_type()]
       # Create plotly object
       fig <- plot_ly(type = 'scatter',
                      mode='markers'
@@ -75,8 +75,8 @@ current_plot_density <- reactive({
       # ADD umap
       fig <- fig %>%
         add_trace(
-          x = values$UMAP[["umap"]]@cell.embeddings[,1],
-          y = values$UMAP[["umap"]]@cell.embeddings[,2],
+          x = values$data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings[,1],
+          y = values$data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings[,2],
           name = "UMAP",
           marker = list(
             color = ic_types,
@@ -85,7 +85,7 @@ current_plot_density <- reactive({
           ),
           showlegend = T,
           text = ic_types,
-          customdata = rownames(values$UMAP@meta.data),
+          customdata = rownames(values$data@meta.data),
           hovertemplate = paste0("Cell : %{customdata}<br>",
                                  "Level : %{text}",
                                  "<extra></extra>")
@@ -124,15 +124,15 @@ UMAP_type <- reactive({
 
 # get the density annotation.
 UMAP_griddf <- reactive({
-  ic_types=values$UMAP@reductions$ica@cell.embeddings[,UMAP_type()]
+  ic_types=values$data@reductions$ica@cell.embeddings[,UMAP_type()]
   
   ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
   sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
   sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
   ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
-  ic_types<-cbind(values$UMAP@reductions$umap@cell.embeddings,t(ic_types)) %>%  cbind(.,sum_IC)
+  ic_types<-cbind(values$data@reductions$umap@cell.embeddings,t(ic_types)) %>%  cbind(.,sum_IC)
   print(ic_types)
-  grid=interp(ic_types[,'umap_1'],ic_types[,'umap_2'],ic_types[,'sum_IC'], nx = 400, ny = 400)
+  grid=interp(ic_types[,1],ic_types[,2],ic_types[,'sum_IC'], nx = 400, ny = 400)
   griddf <- data.frame(x = rep(grid$x, ncol(grid$z)), 
                        y = rep(grid$y, each = nrow(grid$z)), 
                        z = as.numeric(grid$z))    

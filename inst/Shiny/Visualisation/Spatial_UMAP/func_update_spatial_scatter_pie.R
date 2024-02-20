@@ -10,7 +10,7 @@ current_plot_spatial_scatter_pie <- reactive({
   
   withProgress(message = 'Preparing Scatterpie', value = 0, {
   
-  data <- values$UMAP
+  data <- values$data
   max_col_img = dim(data@images[[1]]@image)[2]
   max_row_img = dim(data@images[[1]]@image)[1]
   
@@ -33,7 +33,7 @@ current_plot_spatial_scatter_pie <- reactive({
   if (input$Scatter_pie_values_selected == "IC"){
     if(!is.null(type)){
   
-      ic_types=data@reductions$ica@cell.embeddings[(rownames(values$UMAP@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates()[[1]])),type]
+      ic_types=data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates()[[1]])),type]
       
       ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
       

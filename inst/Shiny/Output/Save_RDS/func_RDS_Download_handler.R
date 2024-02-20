@@ -19,13 +19,13 @@ output$download_RDS <- downloadHandler(
       
       incProgress(0.25, detail = paste("Preparing UMAP"))
       
-      if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
-        data@meta.data <- values$UMAP@meta.data
-        data@active.ident <- values$UMAP@active.ident
-        data@graphs <- values$UMAP@graphs
-        data@reductions$umap <- values$UMAP@reductions$umap
-        data@commands <- values$UMAP@commands
-      }
+      # if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
+      #   data@meta.data <- values$UMAP@meta.data
+      #   data@active.ident <- values$UMAP@active.ident
+      #   data@graphs <- values$UMAP@graphs
+      #   data@reductions$umap <- values$UMAP@reductions$umap
+      #   data@commands <- values$UMAP@commands
+      # }
       
       incProgress(0.25, detail = paste("Preparing annotation"))
       
@@ -108,13 +108,13 @@ output$download_subcluster_RDS <- downloadHandler(
           identity = rownames(data@reductions$ica@cell.embeddings)
         }
         
-        if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
-          data@meta.data <- values$UMAP@meta.data
-          data@active.ident <- values$UMAP@active.ident
-          data@graphs <- values$UMAP@graphs
-          data@reductions$umap <- values$UMAP@reductions$umap
-          data@commands <- values$UMAP@commands
-        }
+        # if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
+        #   data@meta.data <- values$UMAP@meta.data
+        #   data@active.ident <- values$UMAP@active.ident
+        #   data@graphs <- values$UMAP@graphs
+        #   data@reductions$umap <- values$UMAP@reductions$umap
+        #   data@commands <- values$UMAP@commands
+        # }
         
         if(input$output_annotation_RDS == TRUE){
           data@misc$annotation <- values$Annotation
@@ -133,13 +133,13 @@ output$download_subcluster_RDS <- downloadHandler(
       
       data <- Launch_analysis()
       
-      if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
-        data@meta.data <- values$UMAP@meta.data
-        data@active.ident <- values$UMAP@active.ident
-        data@graphs <- values$UMAP@graphs
-        data@reductions$umap <- values$UMAP@reductions$umap
-        data@commands <- values$UMAP@commands
-      }
+      # if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
+      #   data@meta.data <- values$UMAP@meta.data
+      #   data@active.ident <- values$UMAP@active.ident
+      #   data@graphs <- values$UMAP@graphs
+      #   data@reductions$umap <- values$UMAP@reductions$umap
+      #   data@commands <- values$UMAP@commands
+      # }
       
       if(input$output_annotation_RDS == TRUE){
         data@misc$annotation <- values$Annotation

@@ -48,10 +48,11 @@ output$subclustering_choice <- renderUI({
                   selected = "Manual")
     )
   } else if (input$export_sub_IC == "UMAP Cluster"){
-    req(values$UMAP)
+    req(values$data)
+    req(values$data@meta.data$seurat_clusters)
     tagList(
       selectizeInput("subclustering_cluster_export_choose", label = "Choose cluster to export",
-                     choices = sort(unique(values$UMAP@meta.data$seurat_clusters)), selected = NULL, multiple = TRUE,
+                     choices = sort(unique(values$data@meta.data$seurat_clusters)), selected = NULL, multiple = TRUE,
                      options = NULL)
     )
   }

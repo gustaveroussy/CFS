@@ -8,7 +8,7 @@
 ## UI element to select data to load into Shiny.
 ##----------------------------------------------------------------------------##
 
-values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL, UMAP = NULL,
+values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL,
                          annotation_for_output = list(), low_image = NULL, HD_image = NULL, HD_image_2 = NULL,
                          cropped_image = NULL, marker_gene = NULL, integration_folders = NULL)
 
@@ -49,7 +49,6 @@ observeEvent(input$input_file, {
   values$IC_names = NULL
   values$Stat = NULL
   values$Annotation = NULL
-  values$UMAP = NULL
   values$low_image = NULL
   values$HD_image = NULL
   values$HD_image_2 = NULL
@@ -57,11 +56,6 @@ observeEvent(input$input_file, {
   values$data = Launch_analysis()
   
   if (!is.null(values$data)){
-    if (!is.null(values$data@reductions$umap)){
-      values$UMAP = values$data
-    } else {
-      values$UMAP = NULL
-    }
     
     if (!is.null(values$data@misc$markers)){
       values$marker_gene = values$data@misc$markers

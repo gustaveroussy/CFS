@@ -14,6 +14,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
   if (input$Plot_analysis_type == "UMAP"){
     req(values$annotation_for_output)
     tagList(
+      textInput("reddim_named_by_user", "Clustering name", value = "umap"),
       selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
                      choices = unique(names(values$annotation_for_output)),
                      selected = NULL,
@@ -37,6 +38,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
   } else if (input$Plot_analysis_type == "tSNE") {
     req(values$annotation_for_output)
     tagList(
+      textInput("reddim_named_by_user", "Clustering name", value = "tsne"),
       selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
                      choices = unique(names(values$annotation_for_output)),
                      selected = NULL,
@@ -57,7 +59,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
 output[["start_plot_UI"]] <- renderUI({
   tagList(
     actionButton("Select_all_ICs_visualisation", "Select all ICs"),
-    actionButton("start_UMAP", "Start plot")
+    actionButton("start_UMAP", "Calculate DimRed")
   )
 })
 

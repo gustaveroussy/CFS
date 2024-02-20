@@ -5,8 +5,18 @@
 output[["Plot_type_display_UI"]] <- renderUI({
   tagList(
     selectInput("Plot_analysis_display_type", label = "Select method to use", 
-                choices = list("UMAP","tSNE","Density","Scatter pie"),
-                selected = "UMAP")
+                choices = list("Dimentional reduction","Density","Scatter pie"),
+                selected = "Dimentional reduction"),
+    selectInput(
+      "Visualisation_selected_dimred_to_display",
+      "Reduction to Display",
+      names(values$data@reductions)[names(values$data@reductions) != c("ica","pca")],
+      selected = names(values$data@reductions)[names(values$data@reductions) != c("ica","pca")][1],
+      multiple = FALSE,
+      selectize = TRUE,
+      width = NULL,
+      size = NULL
+    )
   )
 })
 
@@ -14,8 +24,8 @@ output[["Plot_main_parameters_display_UI"]] <- renderUI({
   if(!(input$Plot_analysis_display_type == "Scatter pie")){
     tagList(
       selectInput("Plot_display_type", label = "Select what to color", 
-                  choices = if(!is.null(values$UMAP)){unique(c("gene","IC",colnames(values$UMAP@meta.data)))}else{unique(c("gene","IC",colnames(values$data@meta.data)))},
-                  selected = if("seurat_clusters" %in% colnames(values$UMAP@meta.data)){"seurat_clusters"}else{"gene"}),
+                  choices = unique(c("gene","IC",colnames(values$data@meta.data))),
+                  selected = if("seurat_clusters" %in% colnames(values$data@meta.data)){"seurat_clusters"}else{"gene"}),
       selectInput("select_color_visualisation_projection", label = "Select color", 
                   choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
                   selected = "D")
@@ -24,7 +34,7 @@ output[["Plot_main_parameters_display_UI"]] <- renderUI({
 })
 
 output[["Plot_main_parameters_display_2_UI"]] <- renderUI({
-  if(input$Plot_analysis_display_type == "UMAP" || input$Plot_analysis_display_type == "tSNE"){
+  if(input$Plot_analysis_display_type == "Dimentional reduction"){
     if(input$Plot_display_type == "gene"){
       tagList(
         selectizeInput("gene_UMAP_choice", label = "Choose gene",
@@ -70,7 +80,7 @@ output[["Plot_main_parameters_display_2_UI"]] <- renderUI({
 })
 
 output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
-  if(input$Plot_analysis_display_type == "UMAP" || input$Plot_analysis_display_type == "tSNE"){
+  if(input$Plot_analysis_display_type == "Dimentional reduction"){
     if(input$Plot_display_type == "gene"){
       tagList(
         sliderInput("slider_visual_spatial_range", label = "Color range",
@@ -103,7 +113,7 @@ output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
                     value = 1, step = 0.01)
       )
     } else {
-      if(is.null(values$UMAP)){
+      if(is.null(values$data)){
         if (typeof(values$data@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
           tagList(
             sliderInput("slider_visual_spatial_range", label = "Color range",
@@ -121,7 +131,7 @@ output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
           )
         }
       } else {
-        if (typeof(values$UMAP@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
+        if (typeof(values$data@meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
           tagList(
             sliderInput("slider_visual_spatial_range", label = "Color range",
                         min = round(min(values$data@meta.data[, input$Plot_display_type]), digits = 0), 
@@ -142,6 +152,16 @@ output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
   } else if (input$Plot_analysis_display_type == "Scatter pie"){
     if(input$Scatter_pie_values_selected == "IC"){
       tagList(
+        selectInput(
+          "Visualisation_selected_dimred_to_display",
+          "Reduction to Display",
+          names(values$data@reductions)[names(values$data@reductions) != c("ica","pca")],
+          selected = names(values$data@reductions)[names(values$data@reductions) != c("ica","pca")][1],
+          multiple = FALSE,
+          selectize = TRUE,
+          width = NULL,
+          size = NULL
+        ),
         selectizeInput("Scatter_pie_cell_type", label = "choose cell type",
                        choices = unique(names(values$annotation_for_output)),
                        selected = NULL, multiple = TRUE, options = NULL),
@@ -151,7 +171,17 @@ output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
       )
     } else if (input$Scatter_pie_values_selected == "Metadata") {
       tagList(
-        selectizeInput("Scatter_pie_metadata_select", label = "Choose metadata", choices = colnames(values$UMAP@meta.data),
+        selectInput(
+          "Visualisation_selected_dimred_to_display",
+          "Reduction to Display",
+          names(values$data@reductions)[names(values$data@reductions) != c("ica","pca")],
+          selected = names(values$data@reductions)[names(values$data@reductions) != c("ica","pca")][1],
+          multiple = FALSE,
+          selectize = TRUE,
+          width = NULL,
+          size = NULL
+        ),
+        selectizeInput("Scatter_pie_metadata_select", label = "Choose metadata", choices = colnames(values$data@meta.data),
                        selected = NULL, multiple = TRUE,
                        options = NULL)
       )
