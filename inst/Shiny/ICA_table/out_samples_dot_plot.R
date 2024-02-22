@@ -10,7 +10,7 @@ sample_based_dotplot_react <- reactive({
   
   IC_anno <- values$data@misc$annotation
   IC_S <- as.data.frame(values$data@reductions$ica@cell.embeddings)[,rownames(IC_anno)]
-  IC_S_long <- IC_S %>% rownames_to_column(var = "spot") %>% separate(spot, into = c("sample", "spot"), sep = "\\_(?!.*_)", remove = FALSE) %>% pivot_longer(cols = !c(spot | sample), names_to = "IC", values_to = "weight")
+  IC_S_long <- IC_S %>% rownames_to_column(var = "spot") %>% tidyr::separate(spot, into = c("sample", "spot"), sep = "\\_(?!.*_)", remove = FALSE) %>% tidyr::pivot_longer(cols = !c(spot | sample), names_to = "IC", values_to = "weight")
 
   percentil = IC_S_long %>% summarise(.by = c(sample,IC), quantile = scales::percent(c(0.90)), percent = quantile(weight, c(0.90)), weight = sum(weight > percent)/sum(IC_S_long$weight > percent))
   
