@@ -29,7 +29,9 @@ sample_based_dotplot_react <- reactive({
                                          reversescale=F),
                            text = percentil$weight*100,
                            customdata = percentil$percent,
-                           hovertemplate = paste0("90th percentile weight : %{customdata}<br>",
+                           hovertemplate = paste0("sample : %{x}<br>",
+                                                  "IC : %{y}<br>",
+                                                  "90th percentile weight : %{customdata}<br>",
                                                   "% of spot > 90% percentile: %{text}",
                                                   "<extra></extra>")
   )
