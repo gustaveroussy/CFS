@@ -53,17 +53,34 @@ current_plot_spatial <- reactive({
           
           list_cells_ICs = c()
           for(k in 1:length(rownames(table))){
-            top_10_ICs = head(colnames(table)[order(table[rownames(table)[k], ],decreasing = TRUE)],10)
-            final_vector = c('Cluster : ', i,'\nTop 10 ICs :\n')
-            for (j in top_10_ICs){
-              if(input$full_annotation_spatial  & (j %in% rownames(annotation))){
-                final_vector = c(final_vector,j,' : ',round(table[rownames(table)[k],j],4),' : ',annotation[j,'Type'],' : ',annotation[j,'Annotation'],'\n')
+            if(input$full_annotation_spatial == "IC" | input$full_annotation_spatial == "Full annotation" | input$full_annotation_spatial == "Mean IC" | input$full_annotation_spatial == "Mean full annotation"){
+              if(input$full_annotation_spatial == "IC" | input$full_annotation_spatial == "Full annotation"){
+                top_10_ICs = head(colnames(table)[order(table[rownames(table)[k], ],decreasing = TRUE)],10)
               } else {
-                final_vector = c(final_vector,j,' : ',round(table[rownames(table)[k],j],4),'\n')
+                cell_names = rownames(meta.data[meta.data$seurat_clusters == i,])
+                means = colMeans(cell.embeddings[cell_names,])
+                top_10_ICs = head(means[order(means,decreasing = TRUE)], n = 10L)
               }
-              
-              final_vector = paste(final_vector,collapse = "")
+              final_vector = c('Cluster : ', i,'\nTop 10 ICs :\n')
+              for (j in 1:length(top_10_ICs)){
+                if(input$full_annotation_spatial == "Full annotation" & (top_10_ICs[j] %in% rownames(annotation))){
+                  final_vector = c(final_vector,top_10_ICs[j],' : ',round(table[rownames(table)[k],top_10_ICs[j]],4),' : ',annotation[top_10_ICs[j],'Type'],' : ',annotation[top_10_ICs[j],'Annotation'],'\n')
+                } else if (input$full_annotation_spatial == "IC" & (top_10_ICs[j] %in% rownames(annotation))) {
+                  final_vector = c(final_vector,top_10_ICs[j],' : ',round(table[rownames(table)[k],top_10_ICs[j]],4),'\n')
+                } else if (!is.null(names(top_10_ICs))){
+                  if(input$full_annotation_spatial == "Mean IC" & (names(top_10_ICs)[j] %in% rownames(annotation))) {
+                    final_vector = c(final_vector,names(top_10_ICs)[j],' : ',round(top_10_ICs[j],4),'\n')
+                  } else if (input$full_annotation_spatial == "Mean full annotation" & (names(top_10_ICs)[j] %in% rownames(annotation))) {
+                    final_vector = c(final_vector,names(top_10_ICs)[j],' : ',round(top_10_ICs[j],4),' : ',annotation[names(top_10_ICs)[j],'Type'],' : ',annotation[names(top_10_ICs)[j],'Annotation'],'\n')
+                  }
+                }
+              }
+            } else {
+              final_vector = c('Cluster : ', i)
             }
+              
+            final_vector = paste(final_vector,collapse = "")
+
             list_cells_ICs = c(list_cells_ICs,final_vector)
           }
           

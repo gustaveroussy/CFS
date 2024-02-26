@@ -171,10 +171,15 @@ output[["ggplot_scatter_pie_UI"]] <- renderUI({
       label = "Use ggplot scatter pie",
       value = FALSE
     ),
-    shinyWidgets::awesomeCheckbox(
+    selectInput(
       inputId = "full_annotation_UMAP",
-      label = "Full annotation for scatter",
-      value = TRUE
+      label = "Select annotation",
+      choices = c("None","IC", "Mean IC","Full annotation","Mean full annotation"),
+      selected = "Full annotation",
+      multiple = FALSE,
+      selectize = TRUE,
+      width = NULL,
+      size = NULL
     ),
     shinyWidgets::awesomeCheckbox(
       inputId = "image_display_UMAP",

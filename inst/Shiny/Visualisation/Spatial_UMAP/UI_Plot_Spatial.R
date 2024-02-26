@@ -104,10 +104,15 @@ output[["Spatial_display_image_UI"]] <- renderUI({
       label = "Use ggplot",
       value = FALSE
     ),
-    shinyWidgets::awesomeCheckbox(
+    selectInput(
       inputId = "full_annotation_spatial",
-      label = "Full annotation for scatter",
-      value = FALSE
+      label = "Select annotation",
+      choices = c("None","IC", "Mean IC","Full annotation","Mean full annotation"),
+      selected = "Full annotation",
+      multiple = FALSE,
+      selectize = TRUE,
+      width = NULL,
+      size = NULL
     ),
     shinyWidgets::awesomeCheckbox(
       inputId = "Spatial_display_image",
