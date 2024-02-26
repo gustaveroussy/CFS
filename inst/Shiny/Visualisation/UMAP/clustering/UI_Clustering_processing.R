@@ -5,6 +5,8 @@
 # data <- FindClusters(data, verbose = FALSE,resolution=res)
 
 marker_table <- observeEvent(input$start_cluster_plot, {
+  req(values$data)
+  
   type = NULL
   
   withProgress(message = 'Pre-processing', value = 0, {
