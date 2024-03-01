@@ -13,7 +13,6 @@ current_plot_umap <- reactive({
   
   if(input$image_display_UMAP){
     TissueCoordinates = TissueCoordinates()
-    
     meta.data = values$data@meta.data[(rownames(values$data@meta.data) %in% unlist(c(sapply(TissueCoordinates,rownames)))),]
     cell.embeddings <- values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% unlist(c(sapply(TissueCoordinates,rownames)))),]
     annotation = values$data@misc$annotation
@@ -26,7 +25,7 @@ current_plot_umap <- reactive({
     cell.embeddings.umap = values$data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings
   }
   
-  fig <- plot_ly(type = 'scatter',
+  fig <- plot_ly(type = if(ncol(cell.embeddings.umap) == 2){'scatter'}else if(ncol(cell.embeddings.umap) == 3){"scatter3d"},
                  mode='markers',
                  source = "G"
   )
@@ -78,27 +77,58 @@ current_plot_umap <- reactive({
         
         r = length(as.vector(cell.embeddings.umap[which(meta.data[["seurat_clusters"]]==i),2]))
         
-        datatable <- data.frame("x" = as.vector(cell.embeddings.umap[which(meta.data[["seurat_clusters"]]==i),1]),
-                                "y" = as.vector(cell.embeddings.umap[which(meta.data[["seurat_clusters"]]==i),2]),
-                                "cell_name" = rownames(meta.data)[which(meta.data[["seurat_clusters"]]==i)],
-                                "t" = list_cells_ICs)
         
-        fig <- fig %>%
-          add_trace(data = datatable,
-            x = ~x,
-            y = ~y,
-            name = i,
-            marker = list(
-              color = palette()[i+1],
-              size = input$Plot_scatter_size_UMAP
-            ),
-            text = datatable$t,
-            customdata = datatable$cell_name,
-            showlegend = T,
-            hovertemplate = paste0("Cell : %{customdata}<br>",
-                                   "%{text}",
-                                   "<extra></extra>")
-          )
+        if(ncol(cell.embeddings.umap) == 2){
+          datatable <- data.frame("x" = as.vector(cell.embeddings.umap[which(meta.data[["seurat_clusters"]]==i),1]),
+                                  "y" = as.vector(cell.embeddings.umap[which(meta.data[["seurat_clusters"]]==i),2]),
+                                  "cell_name" = rownames(meta.data)[which(meta.data[["seurat_clusters"]]==i)],
+                                  "t" = list_cells_ICs)
+          
+          fig <- fig %>%
+            add_trace(data = datatable,
+                      x = ~x,
+                      y = ~y,
+                      name = i,
+                      marker = list(
+                        color = palette()[i+1],
+                        size = input$Plot_scatter_size_UMAP
+                      ),
+                      text = datatable$t,
+                      customdata = datatable$cell_name,
+                      showlegend = T,
+                      hovertemplate = paste0("Cell : %{customdata}<br>",
+                                             "%{text}",
+                                             "<extra></extra>")
+            )
+        }else if(ncol(cell.embeddings.umap) == 3){
+          datatable <- data.frame("x" = as.vector(cell.embeddings.umap[which(meta.data[["seurat_clusters"]]==i),1]),
+                                  "y" = as.vector(cell.embeddings.umap[which(meta.data[["seurat_clusters"]]==i),2]),
+                                  "z" = as.vector(cell.embeddings.umap[which(meta.data[["seurat_clusters"]]==i),3]),
+                                  "cell_name" = rownames(meta.data)[which(meta.data[["seurat_clusters"]]==i)],
+                                  "t" = list_cells_ICs)
+          
+          fig <- fig %>%
+            add_trace(data = datatable,
+                      x = ~x,
+                      y = ~y,
+                      z = ~z,
+                      name = i,
+                      marker = list(
+                        color = palette()[i+1],
+                        size = input$Plot_scatter_size_UMAP
+                      ),
+                      text = datatable$t,
+                      customdata = datatable$cell_name,
+                      showlegend = T,
+                      hovertemplate = paste0("Cell : %{customdata}<br>",
+                                             "%{text}",
+                                             "<extra></extra>")
+            )
+        }
+        
+
+        
+        
       }
     } else if (input$Plot_display_type == "gene") {
       if(input$image_display_UMAP){
@@ -106,33 +136,56 @@ current_plot_umap <- reactive({
       } else {
         scale.data = values$data@assays$SCT@scale.data
       }
-
-      fig <- fig %>%
-        add_trace(
-          x = cell.embeddings.umap[,1],
-          y = cell.embeddings.umap[,2],
-          marker = list(
-            color = scale.data[input$gene_UMAP_choice,],
-            colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
-            reversescale=input$invert_color_visualisation_UMAP,
-            size = input$Plot_scatter_size_UMAP,
-            showscale = T,
-            cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
-            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = scale.data[input$gene_UMAP_choice,], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)}
-          ),
-          showlegend = T,
-          text = scale.data[input$gene_UMAP_choice,],
-          customdata = rownames(meta.data),
-          hovertemplate = paste0("Cell : %{customdata}<br>",
-                                 "Value : %{text}",
-                                 "<extra></extra>")
-        )
+      
+      if(ncol(cell.embeddings.umap) == 2){
+        fig <- fig %>%
+          add_trace(
+            x = cell.embeddings.umap[,1],
+            y = cell.embeddings.umap[,2],
+            marker = list(
+              color = scale.data[input$gene_UMAP_choice,],
+              colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
+              reversescale=input$invert_color_visualisation_UMAP,
+              size = input$Plot_scatter_size_UMAP,
+              showscale = T,
+              cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+              opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = scale.data[input$gene_UMAP_choice,], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)}
+            ),
+            showlegend = T,
+            text = scale.data[input$gene_UMAP_choice,],
+            customdata = rownames(meta.data),
+            hovertemplate = paste0("Cell : %{customdata}<br>",
+                                   "Value : %{text}",
+                                   "<extra></extra>")
+          )
+      } else if (ncol(cell.embeddings.umap) == 3){
+        fig <- fig %>%
+          add_trace(
+            x = cell.embeddings.umap[,1],
+            y = cell.embeddings.umap[,2],
+            z = cell.embeddings.umap[,3],
+            marker = list(
+              color = scale.data[input$gene_UMAP_choice,],
+              colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
+              reversescale=input$invert_color_visualisation_UMAP,
+              size = input$Plot_scatter_size_UMAP,
+              showscale = T,
+              cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+              opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = scale.data[input$gene_UMAP_choice,], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)}
+            ),
+            showlegend = T,
+            text = scale.data[input$gene_UMAP_choice,],
+            customdata = rownames(meta.data),
+            hovertemplate = paste0("Cell : %{customdata}<br>",
+                                   "Value : %{text}",
+                                   "<extra></extra>")
+          )
+      }
       
       fig <- fig %>% layout(showlegend = F)
       
     } else if (input$Plot_display_type == "IC") {
-      
-
+    if (ncol(cell.embeddings.umap) == 2){
       fig <- fig %>%
         add_trace(
           x = cell.embeddings.umap[,1],
@@ -153,13 +206,36 @@ current_plot_umap <- reactive({
                                  "Value : %{text}",
                                  "<extra></extra>")
         )
+    } else if (ncol(cell.embeddings.umap) == 3){
+      fig <- fig %>%
+        add_trace(
+          x = cell.embeddings.umap[,1],
+          y = cell.embeddings.umap[,2],
+          z = cell.embeddings.umap[,3],
+          marker = list(
+            color = cell.embeddings[,input$IC_UMAP_choice],
+            colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
+            reversescale=input$invert_color_visualisation_UMAP,
+            size = input$Plot_scatter_size_UMAP,
+            showscale = T,
+            cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+            opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = cell.embeddings[,input$IC_UMAP_choice], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)}
+          ),
+          showlegend = T,
+          text = cell.embeddings[,input$IC_UMAP_choice],
+          customdata = rownames(meta.data),
+          hovertemplate = paste0("Cell : %{customdata}<br>",
+                                 "Value : %{text}",
+                                 "<extra></extra>")
+        )
+    }
       
       fig <- fig %>% layout(showlegend = F)
       
     } else {
       
       if(typeof(meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
-
+        if (ncol(cell.embeddings.umap) == 2){
           fig <- fig %>%
             add_trace(
               x = cell.embeddings.umap[,1],
@@ -180,31 +256,77 @@ current_plot_umap <- reactive({
                                      "Value : %{text}",
                                      "<extra></extra>")
             )
+        } else if (ncol(cell.embeddings.umap) == 3){
+          fig <- fig %>%
+            add_trace(
+              x = cell.embeddings.umap[,1],
+              y = cell.embeddings.umap[,2],
+              z = cell.embeddings.umap[,3],
+              marker = list(
+                color = meta.data[[input$Plot_display_type]],
+                colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
+                reversescale=input$invert_color_visualisation_UMAP,
+                size = input$Plot_scatter_size_UMAP,
+                showscale = T,
+                cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+                opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = meta.data[[input$Plot_display_type]], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)}
+              ),
+              showlegend = T,
+              text = meta.data[[input$Plot_display_type]],
+              customdata = rownames(meta.data),
+              hovertemplate = paste0("Cell : %{customdata}<br>",
+                                     "Value : %{text}",
+                                     "<extra></extra>")
+            )
+        }
         
         fig <- fig %>% layout(showlegend = F)
         
       } else {
         c = 1
-        for (i in unique(meta.data[[input$Plot_display_type]])){
-          fig <- fig %>%
-            add_trace(
-              x = cell.embeddings.umap[which(meta.data[[input$Plot_display_type]]==i),1],
-              y = cell.embeddings.umap[which(meta.data[[input$Plot_display_type]]==i),2],
-              name = i,
-              marker = list(
-                color = palette()[c],
-                size = input$Plot_scatter_size_UMAP
-              ),
-              showlegend = T,
-              text = i,
-              customdata = rownames(meta.data)[which(meta.data[[input$Plot_display_type]]==i)],
-              hovertemplate = paste0("Cell : %{customdata}<br>",
-                                     "Cluster : %{text}",
-                                     "<extra></extra>")
-            )
-          c = c+1
+      if (ncol(cell.embeddings.umap) == 2){
+          for (i in unique(meta.data[[input$Plot_display_type]])){
+            fig <- fig %>%
+              add_trace(
+                x = cell.embeddings.umap[which(meta.data[[input$Plot_display_type]]==i),1],
+                y = cell.embeddings.umap[which(meta.data[[input$Plot_display_type]]==i),2],
+                name = i,
+                marker = list(
+                  color = palette()[c],
+                  size = input$Plot_scatter_size_UMAP
+                ),
+                showlegend = T,
+                text = i,
+                customdata = rownames(meta.data)[which(meta.data[[input$Plot_display_type]]==i)],
+                hovertemplate = paste0("Cell : %{customdata}<br>",
+                                       "Cluster : %{text}",
+                                       "<extra></extra>")
+              )
+            c = c+1
+          }
+        } else if (ncol(cell.embeddings.umap) == 3){
+          for (i in unique(meta.data[[input$Plot_display_type]])){
+            fig <- fig %>%
+              add_trace(
+                x = cell.embeddings.umap[which(meta.data[[input$Plot_display_type]]==i),1],
+                y = cell.embeddings.umap[which(meta.data[[input$Plot_display_type]]==i),2],
+                z = cell.embeddings.umap[which(meta.data[[input$Plot_display_type]]==i),3],
+                name = i,
+                marker = list(
+                  color = palette()[c],
+                  size = input$Plot_scatter_size_UMAP
+                ),
+                showlegend = T,
+                text = i,
+                customdata = rownames(meta.data)[which(meta.data[[input$Plot_display_type]]==i)],
+                hovertemplate = paste0("Cell : %{customdata}<br>",
+                                       "Cluster : %{text}",
+                                       "<extra></extra>")
+              )
+            c = c+1
           }
         }
+      }
     }
     
     fig <- fig %>% layout(xaxis = list(showgrid = input$show_grid_scatter_pie, zeroline=input$show_grid_scatter_pie,

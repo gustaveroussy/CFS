@@ -6,7 +6,7 @@ plots <- reactiveValues(button_check = 1, display = NULL, spatial = NULL)
 
 # Display UMAP
 observeEvent(input$start_display_UMAP, {
-    if (input$Plot_analysis_display_type == "Dimentional reduction" & input$Visualisation_selected_dimred_to_display == "umap"){
+    if (input$Plot_analysis_display_type == "Dimentional reduction"){
       plots$display = current_plot_umap()
     } else if (input$Plot_analysis_display_type == "Dimentional reduction" & input$Visualisation_selected_dimred_to_display == "tsne") {
       plots$display = current_plot_tSNE()
@@ -25,7 +25,7 @@ observeEvent(input$start_display_UMAP, {
 
 # Display spatial
 observeEvent(input$start_display_Spatial, {
-  if (input$Plot_analysis_display_type == "Dimentional reduction" & input$Visualisation_selected_dimred_to_display == "umap"){
+  if (input$Plot_analysis_display_type == "Dimentional reduction"){
     plots$spatial = current_plot_spatial()
   } else if (input$Plot_analysis_display_type == "Dimentional reduction" & input$Visualisation_selected_dimred_to_display == "tsne") {
     plots$spatial = current_plot_spatial()
@@ -49,7 +49,7 @@ observeEvent(input$start_display_Spatial, {
 # Display both
 observeEvent(input$start_display, {
   if (input$start_display >= plots$button_check) {
-    if (input$Plot_analysis_display_type == "Dimentional reduction" & input$Visualisation_selected_dimred_to_display == "umap"){
+    if (input$Plot_analysis_display_type == "Dimentional reduction"){
       plots$display = current_plot_umap()
       plots$spatial = current_plot_spatial()
     } else if (input$Plot_analysis_display_type == "Dimentional reduction" & input$Visualisation_selected_dimred_to_display == "tsne") {
