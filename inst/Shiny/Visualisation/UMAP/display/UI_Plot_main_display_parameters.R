@@ -10,8 +10,8 @@ output[["Plot_type_display_UI"]] <- renderUI({
     selectInput(
       "Visualisation_selected_dimred_to_display",
       "Reduction to Display",
-      names(values$data@reductions)[names(values$data@reductions) != c("ica","pca")],
-      selected = names(values$data@reductions)[names(values$data@reductions) != c("ica","pca")][1],
+      names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca"))],
+      selected = names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca"))][1],
       multiple = FALSE,
       selectize = TRUE,
       width = NULL,
@@ -174,8 +174,8 @@ output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
         selectInput(
           "Visualisation_selected_dimred_to_display",
           "Reduction to Display",
-          names(values$data@reductions)[names(values$data@reductions) != c("ica","pca")],
-          selected = names(values$data@reductions)[names(values$data@reductions) != c("ica","pca")][1],
+          names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca"))],
+          selected = names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca"))][1],
           multiple = FALSE,
           selectize = TRUE,
           width = NULL,
