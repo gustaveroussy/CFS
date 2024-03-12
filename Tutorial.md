@@ -11,20 +11,20 @@ CellsFromSpace (CFS) is an R package for spatial transcriptomics analysis using 
 # Table of Contents
 
 -   [Installation](#installation)
--   [CFS Shiny interface](#Shiny)
-    -   [Load data](#Load)
-    -   [Pre-Processing](#process)
-    -   [ICA](#ICA)
-    -   [ICA Table](#table)
-    -   [Visualization](#Viz)
-    -   [Marker Table](#marker)
-    -   [Output](#outputTab)
-    -   [Other](#other)
+-   [CFS Shiny interface](#cfs-shiny-interface)
+    -   [Load data](#load-data)
+    -   [Pre-Processing](#pre-process)
+    -   [ICA](#ica)
+    -   [ICA Table](#ica-table)
+    -   [Visualization](#visualization)
+    -   [Marker Table](#marker-table)
+    -   [Output](#output)
+    -   [Other](#other-options)
 -   [Examples](#examples)
-    -   [No dataset](#No-dataset)
-    -   [Visium dataset](#Visium-dataset)
--   [CFS functions](#Functions)
--   [Citation](#Citation)
+    -   [No dataset](#no-dataset)
+    -   [Visium dataset](#visium-dataset)
+-   [CFS functions](#cfs-functions)
+-   [Citation](#citation)
 
 ------------------------------------------------------------------------
 
@@ -43,6 +43,13 @@ devtools::install_github("/gustaveroussy/CFS"
                          ,ref="main")
 ```
 
+The version currently being worked on can also be installed using :
+
+```{r}
+devtools::install_github("c-thuil/CFS"
+                         ,ref="development")
+```
+
 CFS has the following dependencies : - shiny - shinydashboard - shinyFiles - shinyWidgets - shinyalert - pheatmap - Seurat - plotly - raster - RColorBrewer - scatterpie - destiny - rclipboard - tibble - DT - interp - stringr - png - jpeg - heatmaply - scales - enrichR - e1071
 
 ## Usage
@@ -51,7 +58,7 @@ CFS contains functions for the processing of Spatial Transcriptomics (ST) data f
 
 ------------------------------------------------------------------------
 
-## CFS Shiny interface {#Shiny}
+## CFS Shiny interface {#cfs-shiny-interface}
 
 Below is a rapid description of all panels found on the lefthand selection window. Panels are found in the order of standard analysis workflow.
 
@@ -63,7 +70,7 @@ $~$
 
 $~$
 
-### Load data {#Load}
+### Load data {#load-data}
 
 The load data window displays 4 data loading options:
 
@@ -76,7 +83,7 @@ $~$
 
 $~$
 
-### Pre-Processing {#process}
+### Pre-Processing
 
 Allows to carry out the ICA and functional enrichment from the output of Space ranger or any spatial Seurat object. Upon completion, resulting ICs can be visualized and annotated with the ICA tab
 
@@ -102,7 +109,7 @@ $~$
 
 $~$
 
-### ICA {#ICA}
+### ICA {#ica}
 
 Cornerstone of the CFS workflow, this tab shows data related to individual ICs. Allows for the interpretation and annotation of each IC. *This is where the magic happens.* Hover on any point or bar for additional information.
 
@@ -169,7 +176,7 @@ $~$
 
 $~$
 
-### ICA Table {#table}
+### ICA Table {#ica-table}
 
 Full IC annotation table. can be directly edited, downloaded or uploaded. If imported, ensure the table structure is followed and data is saved as a `.csv` using comma separators (not semicolon or spaces). We recommend downloading the empty table and filling outside of the shiny UI as data is not saved dynamically. The complete table can then be easily imported back into the UI. The searchbox is useful for quick corrections or selection of all ICs containing the searched keyword. Total number of kurtosis-filtered ICs is displayed below the table.
 
@@ -184,7 +191,7 @@ $~$
 
 $~$
 
-### Visualization {#Viz}
+### Visualization {#visualization}
 
 Calculation of the spot clustering and UMAP embedding and various data visualization options on both the UMAP (top window) and spatial (bottom window) embeddings.
 
@@ -238,7 +245,7 @@ $~$
 
 $~$
 
-### Marker table {#marker}
+### Marker table {#marker-table}
 
 Once clustering analysis has been carried out in the **Visualization** tab, differential gene expression analysis can be initiated and visualized within this tab for each clusters.
 
@@ -254,7 +261,7 @@ $~$
 
 $~$
 
-### Output {#outputTab}
+### Output
 
 Configure the export parameters for the analysed object. Writes out an `.rds` object containing the specified features. Also enables dataset subclustering by cluster identity or IC "Type" density.
 
@@ -277,7 +284,7 @@ $~$
 
 $~$
 
-### Other options {#other}
+### Other options {#other-options}
 
 The side menu also offers some additional options for object visualization:
 
@@ -371,7 +378,7 @@ launchCFS()
 
 ![](https://codimd.univ-rouen.fr/uploads/605dac18-3129-42e4-8de9-92087d462ca8.png) The Pre-Processing tab is used to carry out the functions PrepNormData, ICASpatial and Enrich_ICA before ICs annotation, arguments have the same use as the functions.
 
-#### ICA {#ica}
+#### ICA
 
 This tab allow to display the different properties of each ICs to determine annotations. Annotation can be filled from this page directly for the ICs - Choose IC to observe Choose which ICs to observe the properties of. ![](https://codimd.univ-rouen.fr/uploads/7fb066e6-a3c1-47e4-b711-39ddc296fb6b.png) - Annotation table Display the line in the annotation table related to the IC, can be filled from here. ![](https://codimd.univ-rouen.fr/uploads/e7ff2f9c-908f-41dc-8f83-f5d1299adefc.png) - IC top genes heatmap This window can be used directly to observe each of the ICs and their top genes compared to one another. ![](https://codimd.univ-rouen.fr/uploads/06bfdd91-f09f-4b17-bc5b-332e610ec7e3.png) - Plot IC weight Use this window the localisation of the IC's signal ![](https://codimd.univ-rouen.fr/uploads/0a3fc15c-ed5c-4ff4-b998-758f9a564335.png) - Plot IC related Genes weight Use this window to determine the top genes of each ICs and their spatial localisation ![](https://codimd.univ-rouen.fr/uploads/cd9f629f-b919-4c8e-abf2-340f2c995fdc.png) - Build heatmap of genes related to IC Use this window to see the top genes of the selected IC in a heatmap format compared to other ICs. ![](https://codimd.univ-rouen.fr/uploads/4ff5746d-d93b-4a3c-8ed3-c690a87e3bc5.png) - Build bar chart of enrichment Use this to see the enrichment of genes related to the IC. ![](https://codimd.univ-rouen.fr/uploads/b528ae1e-3075-4290-aff9-8b6b12ab9d2b.png) - Build heatmap of genes related to spot Build the heatmap between each spots and the expression of the genes related to the IC (\<5000 spots) ![](https://codimd.univ-rouen.fr/uploads/989eaa16-ffa0-401a-b338-a9d9d326597b.png)
 
@@ -431,7 +438,7 @@ brain = Enrich_ICA(data=brain, dbs=c("PanglaoDB_Augmented_2021",
 
 The IC annotation is accomplished with the shiny tool. Fill the annotation table using the help of the ICA tab.
 
-## CFS functions {#Functions}
+## CFS functions {#cfs-functions}
 
 ### launchCFS
 
