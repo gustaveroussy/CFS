@@ -1,9 +1,3 @@
----
-editor_options:
-  markdown: null
-output: pdf_document
----
-
 # CellsFromSpace
 
 CellsFromSpace (CFS) is an R package for spatial transcriptomics analysis using ICA. Documentation can be found at: [Tutorial and instructions](https://codimd.univ-rouen.fr/s/w0oZMV6fz)
@@ -28,7 +22,7 @@ CellsFromSpace (CFS) is an R package for spatial transcriptomics analysis using 
 
 ------------------------------------------------------------------------
 
-## Installation {#installation}
+## Installation
 
 Installing the package from the github repository requires the package devtools which can be installed using the following command :
 
@@ -58,7 +52,7 @@ CFS contains functions for the processing of Spatial Transcriptomics (ST) data f
 
 ------------------------------------------------------------------------
 
-## CFS Shiny interface {#cfs-shiny-interface}
+## CFS Shiny interface
 
 Below is a rapid description of all panels found on the lefthand selection window. Panels are found in the order of standard analysis workflow.
 
@@ -70,7 +64,7 @@ $~$
 
 $~$
 
-### Load data {#load-data}
+### Load data
 
 The load data window displays 4 data loading options:
 
@@ -101,7 +95,7 @@ Allows to carry out the ICA and functional enrichment from the output of Space r
 -   **Enrichment**
     -   **Enrichment database :** Select enrichment libraries from EnrichR, see <https://maayanlab.cloud/Enrichr/#libraries> for full list of avaialable libraries
 
-#### Output {#output}
+#### Output
 
 -   **Pre-processing :** displays the number of spots and features present in the object
 
@@ -109,7 +103,7 @@ $~$
 
 $~$
 
-### ICA {#ica}
+### ICA
 
 Cornerstone of the CFS workflow, this tab shows data related to individual ICs. Allows for the interpretation and annotation of each IC. *This is where the magic happens.* Hover on any point or bar for additional information.
 
@@ -176,7 +170,7 @@ $~$
 
 $~$
 
-### ICA Table {#ica-table}
+### ICA Table
 
 Full IC annotation table. can be directly edited, downloaded or uploaded. If imported, ensure the table structure is followed and data is saved as a `.csv` using comma separators (not semicolon or spaces). We recommend downloading the empty table and filling outside of the shiny UI as data is not saved dynamically. The complete table can then be easily imported back into the UI. The searchbox is useful for quick corrections or selection of all ICs containing the searched keyword. Total number of kurtosis-filtered ICs is displayed below the table.
 
@@ -191,7 +185,7 @@ $~$
 
 $~$
 
-### Visualization {#visualization}
+### Visualization
 
 Calculation of the spot clustering and UMAP embedding and various data visualization options on both the UMAP (top window) and spatial (bottom window) embeddings.
 
@@ -245,7 +239,7 @@ $~$
 
 $~$
 
-### Marker table {#marker-table}
+### Marker table
 
 Once clustering analysis has been carried out in the **Visualization** tab, differential gene expression analysis can be initiated and visualized within this tab for each clusters.
 
@@ -284,7 +278,7 @@ $~$
 
 $~$
 
-### Other options {#other-options}
+### Other options
 
 The side menu also offers some additional options for object visualization:
 
@@ -298,11 +292,11 @@ $~$
 
 ------------------------------------------------------------------------
 
-## Examples {#examples}
+## Examples
 
 The entirety of the pipeline can be accomplished from the visium output to the results interpretation. The package uses the Seurat format for Visium analysis.
 
-### No dataset {#no-dataset}
+### No dataset
 
 The analysis can be directly accomplished within a Seurat object directly by following the following steps in R:
 
@@ -394,7 +388,7 @@ Use this window to display the metadata, densi display and scatter pie as explai
 
 If you wish to record all changes made in CFS Shiny, go to the output window and follow the the instruction explained above. ![](https://codimd.univ-rouen.fr/uploads/448fab46-c442-4051-90a8-44dc2f368327.png)
 
-### Visium dataset {#visium-dataset}
+### Visium dataset
 
 #### Preprocessing
 
@@ -438,7 +432,7 @@ brain = Enrich_ICA(data=brain, dbs=c("PanglaoDB_Augmented_2021",
 
 The IC annotation is accomplished with the shiny tool. Fill the annotation table using the help of the ICA tab.
 
-## CFS functions {#cfs-functions}
+## CFS functions
 
 ### launchCFS
 
@@ -599,7 +593,7 @@ data <- Cluster_ICA(data=data,
                     res=1.2)
 ```
 
-## Citation {#citation}
+## Citation
 
 ## License
 

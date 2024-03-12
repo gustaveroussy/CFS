@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # CFS
 
 CFS is an R package for spatial single cell genomics. Documentation can
@@ -23,7 +17,7 @@ being actively worked on for full release. Thank you.
 -   [Exemple](#exemple)
 -   [Citation](#citation)
 
-## Installation {#installation}
+## Installation
 
 Installing the package from the github repository requires the package
 devtools which can be installed using the following commands :
@@ -46,7 +40,7 @@ devtools::install_github("c-thuil/CFS"
                          ,ref="development")
 ```
 
-## CFS's interface {#cfss-interface}
+## CFS's interface
 
 ### Load data
 
@@ -103,9 +97,9 @@ marker genes of each clusters.
 Tab used to download the RDS output of the analysis, as well as
 subclusters of the object by cluster of cell types.
 
-## Exemple {#exemple}
+## Exemple
 
-## Citation {#citation}
+## Citation
 
 ## License
 
