@@ -45,11 +45,8 @@ observeEvent(input[["table_gene_info"]], {
 ##----------------------------------------------------------------------------##
 table_gene_info <- list(
   title = "ICA/Gene table",
-  text = HTML("Annotation table of all the ICA:
-              <ul>
-                <li><b>Use</b>: Indicates whether or not the ICA is used when displaying or exporting data based on the associated cell type</li>
-                <li><b>Type</b>: Indicate cell type or biological process associated with the ICA, if multiple, separate them with a comma (,) without spaces</li>
-                <li><b>Annotation</b>: Complementary information for the user</li>
-              </ul>
-              ")
+  text = HTML("
+    Table displaying IC signals and their associated genes.
+    "
+  )
 )

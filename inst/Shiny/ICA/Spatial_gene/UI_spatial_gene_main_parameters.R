@@ -48,6 +48,7 @@ gene_projection_main_parameters_info <- list(
     <ul>
       <li><b>Choose gene to plot:</b> Select here which genes you want to use in the plot on the right</li>
       <li><b>Alpha:</b> Change spot transparency</li>
+      <li><b>Spot size:</b> Change the size of spots</li>
       <li><b>Select color:</b> Select here which color scale you want to use in the plot on the right.</li>
     </ul>
     "

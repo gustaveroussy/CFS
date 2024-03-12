@@ -14,7 +14,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
   if (input$Plot_analysis_type == "UMAP"){
     req(values$annotation_for_output)
     tagList(
-      textInput("reddim_named_by_user", "Clustering name", value = "umap"),
+      textInput("reddim_named_by_user", "Reduction name", value = "umap"),
       selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
                      choices = unique(names(values$annotation_for_output)),
                      selected = NULL,
@@ -38,7 +38,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
   } else if (input$Plot_analysis_type == "3D UMAP"){
     req(values$annotation_for_output)
     tagList(
-      textInput("reddim_named_by_user", "Clustering name", value = "umap"),
+      textInput("reddim_named_by_user", "Reduction name", value = "umap"),
       selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
                      choices = unique(names(values$annotation_for_output)),
                      selected = NULL,
@@ -62,7 +62,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
   } else if (input$Plot_analysis_type == "tSNE") {
     req(values$annotation_for_output)
     tagList(
-      textInput("reddim_named_by_user", "Clustering name", value = "tsne"),
+      textInput("reddim_named_by_user", "Reduction name", value = "tsne"),
       selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
                      choices = unique(names(values$annotation_for_output)),
                      selected = NULL,
@@ -109,27 +109,19 @@ Plot_main_parameters_info <- list(
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
-      <li><b>Select method to use:</b> Select here which projection you want to see in the scatter plot on the right.</li>
-      <li><b>UMAP:</b> UMAP display, if data have already been generated, leaving it empty will reagenerate the previous one.</li>
+      <li><b>Select method to use:</b> Select which reduction you want to create from the data.</li>
+      <li><b>Reduction name:</b> Name the reduction being generated to display in the visual options.</li>
+      <li><b>Choose cell type to cluster:</b> Select ICs associated to the selected cell type for the reduction.</li>
+      <li><b>Choose IC to cluster:</b> Select specific ICs for the reduction.</li>
+      <li><b>UMAP/3D UMAP:</b></li>
       <ul>
-        <li><b>Select what to color:</b> Select which category, to use to color the spots.</li>
-        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for UMAP generation.</li>
-        <li><b>Choose IC to plot:</b> Select which IC to use for UMAP generation.</li>
-        <li><b>Enter Plot resolution:</b> Select clustering resolution to use.</li>
-        <li><b>Spread:</b> Select clustering resolution to use.</li>
+        <li><b>n.neighbors:</b> Number of neighbor for graph construction</li>
+        <li><b>min.dist:</b> Controls how tightly the embedding is allowed compress points together.</li>
+        <li><b>Spread:</b> Determines how clustered/clumped the embedded points are.</li>
       </ul>
-      <li><b>Density:</b></li>
+      <li><b>tSNE:</b></li>
       <ul>
-        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for density generation.</li>
-        <li><b>Contour:</b> Only display density area limits.</li>
-        <li><b>Display image:</b> Display the histological image under the density display.</li>
-        <li><b>threshold:</b> Select the limits of density display.</li>
-        <li><b>alpha:</b> Select the density display transparency.</li>
-      </ul>
-      <li><b>Scatter pie:</b></li>
-      <ul>
-        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for density generation.</li>
-        <li><b>Choose IC to plot:</b> Select which IC to use for density generation.</li>
+        <li><b>Perplexity:</b> Perplexity of the result</li>
       </ul>
     </ul>
     "

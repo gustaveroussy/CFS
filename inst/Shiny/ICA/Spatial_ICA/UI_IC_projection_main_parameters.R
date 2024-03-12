@@ -50,7 +50,14 @@ IC_projection_main_parameters_info <- list(
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
     <li><b>Color range:</b> Color range of the plot</li>
-    <li><b>Alpha:</b> Change spot transparency</li>
+    <li><b>Alpha type:</b> 
+      <ul>
+        <li><b>Constant:</b> Alpha uniform through the sample</li>
+        <li><b>Scaling:</b> Alpha scaled with signal intensity</li>
+      </ul>
+    </li>
+    <li><b>Alpha:</b> Change scale of the transparency</li>
+    <li><b>Spot size:</b> Change the size of spots</li>
     <li><b>Select color:</b> Type of color scale of the plot</li>
     </ul>
     "

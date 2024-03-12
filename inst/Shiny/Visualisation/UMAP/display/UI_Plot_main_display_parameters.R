@@ -219,27 +219,30 @@ Plot_main_parameters_display_info <- list(
   text = HTML("
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
-      <li><b>Select method to use:</b> Select here which projection you want to see in the scatter plot on the right.</li>
-      <li><b>UMAP:</b> UMAP display, if data have already been generated, leaving it empty will reagenerate the previous one.</li>
+      <li><b>Select method to use:</b> Select here which projection you want to see.</li>
+      <li><b>Dimentional Reduction:</b></li>
       <ul>
-        <li><b>Select what to color:</b> Select which category, to use to color the spots.</li>
-        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for UMAP generation.</li>
-        <li><b>Choose IC to plot:</b> Select which IC to use for UMAP generation.</li>
-        <li><b>Enter Plot resolution:</b> Select clustering resolution to use.</li>
-        <li><b>Spread:</b> Select clustering resolution to use.</li>
+        <li><b>Reduction to Display:</b> Select which reduction to use for the scatter plot to display.</li>
+        <li><b>Select what to color:</b> Select here which metadata to observe.</li>
+        <li><b>Select color:</b> Select which colorscale to use for display.</li>
       </ul>
       <li><b>Density:</b></li>
       <ul>
-        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for density generation.</li>
-        <li><b>Contour:</b> Only display density area limits.</li>
-        <li><b>Display image:</b> Display the histological image under the density display.</li>
-        <li><b>threshold:</b> Select the limits of density display.</li>
-        <li><b>alpha:</b> Select the density display transparency.</li>
+        <li><b>Reduction to Display:</b> Select which reduction to use for the scatter plot to display.</li>
+        <li><b>Select what to color:</b> Select here which metadata to observe.</li>
+        <li><b>Select color:</b> Select which colorscale to use for display.</li>
+        <li><b>Choose cell type for density:</b> Select which cell type density to display.</li>
+        <li><b>threshold:</b> Select the threshold for which a density isn't considered as part of the selected cell type anymore.</li>
+        <li><b>Alpha:</b> select how see-through spot are represented as.</li>
       </ul>
       <li><b>Scatter pie:</b></li>
       <ul>
-        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for density generation.</li>
-        <li><b>Choose IC to plot:</b> Select which IC to use for density generation.</li>
+        <li><b>Reduction to Display:</b> Select which reduction to use for the scatter plot to display.</li>
+        <li><b>Values for Scatterpie:</b> Select what values the scatterpie should represent.</li>
+        <li><b>Pie chart sized by signal intensity:</b> Change the size of pie charts based on signal intensity.</li>
+        <li><b>Reduction to Display:</b> Select which reduction to use for scatter plot display.</li>
+        <li><b>choose cell type:</b> Select which ICs signal related to a specific cell type will be used for the scatterpies.</li>
+        <li><b>Choose IC to plot:</b> Select specific ICs to represent in the scatterpies.</li>
       </ul>
     </ul>
     "

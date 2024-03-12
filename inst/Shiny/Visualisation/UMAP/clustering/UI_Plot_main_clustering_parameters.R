@@ -52,30 +52,13 @@ observeEvent(input[["Plot_main_parameters_cluster_info"]], {
 Plot_main_parameters_cluster_info <- list(
   title = "Main parameters for total gene heatmap",
   text = HTML("
-    The elements in this panel allow you to control what and how results are displayed across the whole tab.
+    The elements in this panel allow you to clusterise samples.
     <ul>
-      <li><b>Select method to use:</b> Select here which projection you want to see in the scatter plot on the right.</li>
-      <li><b>UMAP:</b> UMAP display, if data have already been generated, leaving it empty will reagenerate the previous one.</li>
-      <ul>
-        <li><b>Select what to color:</b> Select which category, to use to color the spots.</li>
-        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for UMAP generation.</li>
-        <li><b>Choose IC to plot:</b> Select which IC to use for UMAP generation.</li>
-        <li><b>Enter Plot resolution:</b> Select clustering resolution to use.</li>
-        <li><b>Spread:</b> Select clustering resolution to use.</li>
-      </ul>
-      <li><b>Density:</b></li>
-      <ul>
-        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for density generation.</li>
-        <li><b>Contour:</b> Only display density area limits.</li>
-        <li><b>Display image:</b> Display the histological image under the density display.</li>
-        <li><b>threshold:</b> Select the limits of density display.</li>
-        <li><b>alpha:</b> Select the density display transparency.</li>
-      </ul>
-      <li><b>Scatter pie:</b></li>
-      <ul>
-        <li><b>Choose cell type to plot:</b> Select which IC associated with cell types from annotation to use for density generation.</li>
-        <li><b>Choose IC to plot:</b> Select which IC to use for density generation.</li>
-      </ul>
+      <li><b>Choose cell type to cluster:</b> Select ICs associated to the selected cell type for the clusterisation.</li>
+      <li><b>Choose IC to cluster:</b> Select specific ICs for the clusterisation.</li>
+      <li><b>Select algorithm:</b> Select the clustering algorithm.</li>
+      <li><b>Clustering resolution:</b> Select the resolution of the clustering.</li>
+      <li><b>Clustering name:</b> Name the clustering being carried out in order to be selected in display parameters.</li>
     </ul>
     "
   )

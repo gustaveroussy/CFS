@@ -115,5 +115,5 @@ observeEvent(input[["sample_based_dotplot_info"]], {
 ##----------------------------------------------------------------------------##
 sample_based_dotplot_info <- list(
   title = "Sample based dotplot",
-  text = HTML("ICA distribution through samples.")
+  text = HTML("Dotplot representation of IC signal intensity accross samples.")
 )
