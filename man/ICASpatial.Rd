@@ -6,7 +6,7 @@
 \usage{
 ICASpatial(
   data = NULL,
-  ncis = 100,
+  nics = 100,
   maxit = 600,
   method = "icafast",
   kurtosis = 3,
@@ -17,7 +17,7 @@ ICASpatial(
 \arguments{
 \item{data}{Seurat object to analyse}
 
-\item{ncis}{Number of independant component to separate in the sample}
+\item{nics}{Number of independant component to separate in the sample}
 
 \item{maxit}{Number of iterations}
 
@@ -34,6 +34,6 @@ An analysed Seurat object
 Complete ICA analysis on the spatial sample after normalisation and regression. Then correct sign and determine stats from IC and Genes
 }
 \examples{
-data = ICASpatial(data=data,ncis=100,maxit=600,method="icafast",sd=3)
+data = ICASpatial(data=data,nics=100,maxit=600,method="icafast",sd=3)
 
 }

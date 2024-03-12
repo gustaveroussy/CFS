@@ -6,7 +6,7 @@ Title: Spatial single cells analysis Package using ICA
 Authors@R: c(person("Corentin", "Thuilliez", email = "Corentin.THUILLIEZ@gustaveroussy.fr", role = c("aut", "cre")))
 Description: Allows for the analysis of spatial seurat objects using ICA
 License: GPL (>= 2)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Encoding: UTF-8
 Depends:
     R (>= 3.5.1)

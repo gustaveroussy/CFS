@@ -8,7 +8,8 @@ Enrich_ICA(
   data = NULL,
   dbs = c("GO_Biological_Process_2015"),
   kurtosis = 3,
-  overwrite = TRUE
+  overwrite = TRUE,
+  enrich_positive_genes = TRUE
 )
 }
 \arguments{
