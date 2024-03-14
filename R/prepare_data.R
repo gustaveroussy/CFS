@@ -11,7 +11,7 @@
 #' @examples 
 #' data <- PrepNormData(data=data,organism="Hs",variable_features=20000)
 #' @export
-PrepNormData=function(data=NULL,organism="Hs",variable_features=20000, , min_cells = 5){
+PrepNormData=function(data=NULL,organism="Hs",variable_features=20000, min_cells = 5){
   if(organism=="Hs"){
     data <- PercentageFeatureSet(data, "^MT-", col.name = "percent_mito")
     data <- PercentageFeatureSet(data, "^HB.*-", col.name = "percent_hb")
