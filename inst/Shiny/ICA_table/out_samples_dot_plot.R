@@ -8,39 +8,43 @@ output[["sample_based_dotplot"]] <- plotly::renderPlotly({
 
 sample_based_dotplot_react <- reactive({
   
-  IC_anno <- values$data@misc$annotation
-  IC_S <- as.data.frame(values$data@reductions$ica@cell.embeddings)[,rownames(IC_anno)]
-  IC_S_long <- IC_S %>% rownames_to_column(var = "spot") %>% tidyr::separate(spot, into = c("sample", "spot"), sep = "\\_(?!.*_)", remove = FALSE) %>% tidyr::pivot_longer(cols = !c(spot | sample), names_to = "IC", values_to = "weight")
-
-  percentil = IC_S_long %>% summarise(.by = c(sample,IC), quantile = scales::percent(c(0.90)), percent = quantile(weight, c(0.90)), weight = sum(weight > percent)/sum(IC_S_long$weight > percent))
+  if(length(values$data@images) > 2){
+    IC_anno <- values$data@misc$annotation
+    IC_S <- as.data.frame(values$data@reductions$ica@cell.embeddings)[,rownames(IC_anno)]
+    IC_S_long <- IC_S %>% rownames_to_column(var = "spot") %>% tidyr::separate(spot, into = c("sample", "spot"), sep = "\\_(?!.*_)", remove = FALSE) %>% tidyr::pivot_longer(cols = !c(spot | sample), names_to = "IC", values_to = "weight")
   
-  x = percentil$sample
-  y = percentil$IC
+    percentil = IC_S_long %>% summarise(.by = c(sample,IC), quantile = scales::percent(c(0.90)), percent = quantile(weight, c(0.90)), weight = sum(weight > percent)/sum(IC_S_long$weight > percent))
+    
+    x = percentil$sample
+    y = percentil$IC
+    
+    fig <- plot_ly()
+    
+    fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
+                             x = x,
+                             y = y,
+                             marker = list(color = percentil$percent,
+                                           colorscale = colorscale_sample_based_dotplot(),
+                                           showscale = TRUE,
+                                           size = percentil$weight*1000,
+                                           reversescale=F),
+                             text = percentil$weight*100,
+                             customdata = percentil$percent,
+                             hovertemplate = paste0("sample : %{x}<br>",
+                                                    "IC : %{y}<br>",
+                                                    "90th percentile weight : %{customdata}<br>",
+                                                    "% of spot > 90% percentile: %{text}",
+                                                    "<extra></extra>")
+    )
+    
+    fig <- fig %>% layout(title = "IC dotplot by samples", xaxis=list(title = 'Sample', showgrid = FALSE, showticklabels=TRUE),
+                          yaxis = list(title = 'IC', showgrid = TRUE, showticklabels=TRUE),
+                          showlegend = FALSE)
   
-  fig <- plot_ly()
-  
-  fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
-                           x = x,
-                           y = y,
-                           marker = list(color = percentil$percent,
-                                         colorscale = colorscale_sample_based_dotplot(),
-                                         showscale = TRUE,
-                                         size = percentil$weight*1000,
-                                         reversescale=F),
-                           text = percentil$weight*100,
-                           customdata = percentil$percent,
-                           hovertemplate = paste0("sample : %{x}<br>",
-                                                  "IC : %{y}<br>",
-                                                  "90th percentile weight : %{customdata}<br>",
-                                                  "% of spot > 90% percentile: %{text}",
-                                                  "<extra></extra>")
-  )
-  
-  fig <- fig %>% layout(title = "IC dotplot by samples", xaxis=list(title = 'Sample', showgrid = FALSE, showticklabels=TRUE),
-                        yaxis = list(title = 'IC', showgrid = TRUE, showticklabels=TRUE),
-                        showlegend = FALSE)
-
-  return(fig)
+    return(fig)
+  } else {
+    return(NULL)
+  }
 })
 
 ##----------------------------------------------------------------------------##
