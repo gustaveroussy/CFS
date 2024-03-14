@@ -50,7 +50,11 @@ output[["Volcano_plot_main_parameters_2_UI"]] <- renderUI({
 output[["Volcano_plot_main_parameters_3_UI"]] <- renderUI({
   tagList(
     selectInput('volcano_plot_clusters_list_to_compare', "Cluster list to compare",
-                names(Filter(is.factor, values$data@meta.data)), selected = names(Filter(is.factor, values$data@meta.data))[1], multiple = FALSE)
+                names(Filter(is.factor, values$data@meta.data)),
+                selected = names(Filter(is.factor, values$data@meta.data))[1], multiple = FALSE),
+    selectInput('clustering_method_volcano_plot', "Clustering method",
+                c("wilcox", "wilcox_limma", "bimod","roc","t", "negbinom", "poisson", "LR", "MAST", "DESeq2"),
+                selected = "wilcox", multiple = FALSE)
   )
 })
 

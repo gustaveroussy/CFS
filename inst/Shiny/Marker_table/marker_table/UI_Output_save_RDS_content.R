@@ -57,7 +57,8 @@ marker_table <- observeEvent(input$start_marker, {
             FindMarkers(values$data,
                         ident.1 = rownames(values$data@meta.data)[which(values$data@meta.data[,input$volcano_plot_clusters_list_to_compare] == (input$volcano_plot_clusters_to_compare[i]))],
                         ident.2 = rownames(values$data@meta.data)[which(values$data@meta.data[,input$volcano_plot_clusters_list_to_compare] %in% (input$volcano_plot_clusters_to_compare[which(input$volcano_plot_clusters_to_compare != input$volcano_plot_clusters_to_compare[i])]))],
-                        logfc.threshold = 0.25)
+                        logfc.threshold = 0.25,
+                        test.use = input$clustering_method_volcano_plot)
         }
       }
     }
