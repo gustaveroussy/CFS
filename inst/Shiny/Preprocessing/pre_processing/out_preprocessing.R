@@ -22,7 +22,7 @@ observeEvent(input$preprocessing_action_button, {
     
     withProgress(message = 'Pre-processing', value = 0, {
       incProgress(0.2, detail = "Normalize")
-      values$data = PrepNormData(data=values$data,organism=input$preprocessing_specie_select,variable_features=input$preprocessing_variable_features)
+      values$data = PrepNormData(data=values$data,organism=input$preprocessing_specie_select,variable_features=input$preprocessing_variable_features, min_cells = input$preprocessing_minimum_cell)
       incProgress(0.4, detail = "Calculating ICs")
       values$data=ICASpatial(data=values$data,nics=input$preprocessing_number_of_ICs,maxit=input$preprocessing_maxit,method=input$preprocessing_ICA_function, kurtosis = input$preprocessing_kurtosis, sd = input$preprocessing_sd)
       incProgress(0.3, detail = "Enriching")

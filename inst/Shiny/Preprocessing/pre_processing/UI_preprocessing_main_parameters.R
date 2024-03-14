@@ -11,6 +11,8 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
                 selected = "Hs"),
     numericInput("preprocessing_variable_features", label = "Variable Features", value = 2000,
                  min = 10, step = 1),
+    numericInput("preprocessing_minimum_cell", label = "Minimum gene presence (in spots)", value = 5,
+                 min = 0, step = 1),
     HTML("<h3><b>ICA process</b></h3>"),
     numericInput("preprocessing_number_of_ICs", label = "Number of ICs", value = 100,
                  min = 2, step = 1),
