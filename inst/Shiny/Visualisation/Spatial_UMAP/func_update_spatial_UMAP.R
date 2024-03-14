@@ -188,7 +188,7 @@ current_plot_spatial <- reactive({
         
       } else {
           c = 1
-          for (i in unique(meta.data[[input$Plot_display_type]])){
+          for (i in unique(meta.data[[input$Plot_display_type]])[order(unique(meta.data[[input$Plot_display_type]]))]){
             fig <- fig %>%
               add_trace(
                 x = TissueCoordinates[,"imagecol"][which(meta.data[[input$Plot_display_type]]==i)],

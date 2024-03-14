@@ -3,7 +3,7 @@ output[["Plot_UI"]] <- renderUI({
     column(width = 3, offset = 0, style = "padding: 0px;",
            box(id = "Plot_main_parameters_clustering_UI",
                title = tagList(
-                 "Main parameters Clustering",
+                 "Clustering parameters",
                  actionButton(
                    inputId = "Plot_main_parameters_cluster_info",
                    label = "info",
@@ -30,7 +30,7 @@ output[["Plot_UI"]] <- renderUI({
            ),
            box(id = "Plot_main_parameters_dimred_UI",
                title = tagList(
-                 "Main parameters dimension reduction",
+                 "Dimension reduction parameter",
                  actionButton(
                    inputId = "Plot_main_parameters_info",
                    label = "info",
@@ -58,7 +58,7 @@ output[["Plot_UI"]] <- renderUI({
            ),
            box(id = "Plot_main_parameters_display_UI",
                title = tagList(
-                 "Main parameters Display",
+                 "Display parameters",
                  actionButton(
                    inputId = "Plot_main_parameters_info",
                    label = "info",

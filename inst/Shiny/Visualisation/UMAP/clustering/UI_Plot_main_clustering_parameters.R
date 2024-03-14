@@ -16,12 +16,12 @@ output[["Plot_main_parameters_cluster_UI"]] <- renderUI({
                    multiple = TRUE,
                    options = NULL),
     selectInput("select_algorithm_clusterisation", label = "Select algorithm", 
-                choices = list("Louvain" = 1, "Louvain + multilevel refinement" = 2, "SLM" = 3, "Leiden" = 4), 
+                choices = list("Louvain" = 1, "Louvain + multilevel refinement" = 2, "SLM" = 3, "igraph (Leiden)" = 4), 
                 selected = 1),
     numericInput("Clustering_resolution", "Clustering resolution", 1.2,
                  min = 0.1, max = 10, step = 0.1
     ),
-    textInput("cluster_named_by_user", "Clustering name", value = "seurat_clusters")
+    textInput("cluster_named_by_user", "Clustering name", value = "clustering_1")
   )
 })
 

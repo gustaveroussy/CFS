@@ -14,7 +14,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
   if (input$Plot_analysis_type == "UMAP"){
     req(values$annotation_for_output)
     tagList(
-      textInput("reddim_named_by_user", "Reduction name", value = "umap"),
+      textInput("reddim_named_by_user", "Dimred name", value = "umap"),
       selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
                      choices = unique(names(values$annotation_for_output)),
                      selected = NULL,
