@@ -37,11 +37,6 @@ output[["Volcano_plot_main_parameters_2_UI"]] <- renderUI({
       sliderInput("Volcano_plot_alpha", "Alpha",
                   min = 0, max = 1,
                   value = 1, step = 0.01),
-      shinyWidgets::awesomeCheckbox(
-        inputId = "overwrite_marker_table",
-        label = "Overwrite",
-        value = FALSE
-      ),
       actionButton("start_marker", "Start")
     )
   }
@@ -52,7 +47,7 @@ output[["Volcano_plot_main_parameters_3_UI"]] <- renderUI({
     selectInput('volcano_plot_clusters_list_to_compare', "Cluster list to compare",
                 names(Filter(is.factor, values$data@meta.data)),
                 selected = names(Filter(is.factor, values$data@meta.data))[1], multiple = FALSE),
-    selectInput('clustering_method_volcano_plot', "Clustering method",
+    selectInput('clustering_method_volcano_plot', "Analysis method",
                 c("wilcox", "wilcox_limma", "bimod","roc","t", "negbinom", "poisson", "LR", "MAST", "DESeq2"),
                 selected = "wilcox", multiple = FALSE)
   )

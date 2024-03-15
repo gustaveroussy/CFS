@@ -6,7 +6,9 @@ output[["sample_based_dotplot_main_parameters_UI"]] <- renderUI({
   tagList(
     selectInput("select_color_sample_based_dotplot", label = "Select color", 
                 choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
-                selected = "D")
+                selected = "D"),
+    numericInput("percentil_dotplot", label = "Percentil cutout",
+                 0.99, min = 0, max = 1, step = 0.01)
   )
 })
 

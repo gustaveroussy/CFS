@@ -9,6 +9,7 @@
 #' @import rclipboard
 #' @import tibble
 #' @import tidyr
+#' @import dplyr
 #' @import interp
 #' @import stringr
 #' @import scales

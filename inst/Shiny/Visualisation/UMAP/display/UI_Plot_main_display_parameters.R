@@ -45,7 +45,7 @@ output[["Plot_main_parameters_display_2_UI"]] <- renderUI({
       )
     } else if (input$Plot_display_type == "IC"){
       tagList(
-        selectizeInput("IC_UMAP_choice", label = "Choose ICs",
+        selectizeInput("IC_UMAP_choice", label = "Choose IC",
                        choices = values$IC_names,
                        selected = NULL,
                        multiple = FALSE,

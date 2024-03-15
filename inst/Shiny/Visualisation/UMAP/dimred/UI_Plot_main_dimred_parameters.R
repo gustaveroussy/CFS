@@ -25,10 +25,10 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
                      selected = input$Ic_list,
                      multiple = TRUE,
                      options = NULL),
-      numericInput("Plot_n.neighbors", "n.neighbors", 30,
+      numericInput("Plot_n.neighbors", "n.neighbors", 20,
                    min = 1, max = Inf, step = 1
       ),
-      numericInput("Plot_min.dist", "min.dist", 0.3,
+      numericInput("Plot_min.dist", "min.dist", 0.1,
                    min = 0, max = Inf, step = 0.01
       ),
       numericInput("Plot_spread", "Spread", 3,
@@ -49,10 +49,10 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
                      selected = input$Ic_list,
                      multiple = TRUE,
                      options = NULL),
-      numericInput("Plot_n.neighbors", "n.neighbors", 30,
+      numericInput("Plot_n.neighbors", "n.neighbors", 20,
                    min = 1, max = Inf, step = 1
       ),
-      numericInput("Plot_min.dist", "min.dist", 0.3,
+      numericInput("Plot_min.dist", "min.dist", 0.1,
                    min = 0, max = Inf, step = 0.01
       ),
       numericInput("Plot_spread", "Spread", 3,
