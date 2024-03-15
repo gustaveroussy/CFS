@@ -148,7 +148,15 @@ top_IC_heatmap_table <- reactive({
   
   data <- values$data
   
-  list_gene <-  purrr::map(data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))],function(.x){x<-.x %>% arrange(desc(abs(Sig))) %>% head(n=input$select_number_IC_top_heatmap) ;return(x$gene)}) %>% unlist %>% unique
+  if(input$top_IC_positive_genes){
+    list_gene <-  purrr::map(data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))],
+                             function(.x){x<-.x %>% arrange(desc(Sig)) %>% head(n=input$select_number_IC_top_heatmap);
+                             return(x$gene)}) %>% unlist %>% unique
+  } else {
+    list_gene <-  purrr::map(data@misc$GeneAndStat$Contrib_gene[names(which(data@misc$GeneAndStat$Kurtosis_ICs>3))],
+                             function(.x){x<-.x %>% arrange(desc(abs(Sig))) %>% head(n=input$select_number_IC_top_heatmap);
+                             return(x$gene)}) %>% unlist %>% unique
+  }
   
   data_heat=data@reductions$ica@feature.loadings[as.matrix(list_gene),]
   

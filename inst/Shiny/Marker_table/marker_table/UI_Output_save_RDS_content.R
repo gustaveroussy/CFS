@@ -79,8 +79,8 @@ marker_table <- observeEvent(input$start_marker, {
         for (i in selected_clusters){
           if(nrow(values$data@meta.data[values$data@meta.data[,input$volcano_plot_clusters_list_to_compare] == i,]) > 3){
             
-            # incProgress((0.9/length(selected_clusters)),
-            #             detail = paste(paste0("Working on cluster ",i)))
+            incProgress((0.9/length(selected_clusters)),
+                        detail = paste(paste0("Working on cluster ",i)))
             
             values$marker_gene[[paste0(input$volcano_plot_clusters_list_to_compare," : ",i,"/", paste(selected_clusters[which(selected_clusters != i)],collapse=","))]] =
               FindMarkers(values$data,

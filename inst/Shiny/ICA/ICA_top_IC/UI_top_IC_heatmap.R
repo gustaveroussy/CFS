@@ -58,6 +58,7 @@ output[["ICA_top_IC_UI"]] <- renderUI({
           shinyWidgets::dropdownButton(
             tags$div(
               style = "color: black !important;",
+              uiOutput("heatmap_top_IC_only_positive_genes_UI"),
               uiOutput("log_top_IC_heatmap_UI"),
               uiOutput("heatmap_top_IC_column_organization_UI"),
               uiOutput("top_IC_kurtosis_filter_UI"),
@@ -104,6 +105,21 @@ outputOptions(
 ##----------------------------------------------------------------------------##
 ## Drop down column organization
 ##----------------------------------------------------------------------------##
+
+output[["heatmap_top_IC_only_positive_genes_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "top_IC_positive_genes",
+    label = "Only show positively associated genes",
+    value = TRUE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "heatmap_top_IC_only_positive_genes_UI",
+  suspendWhenHidden = FALSE
+)
 
 output[["heatmap_top_IC_column_organization_UI"]] <- renderUI({
   shinyWidgets::awesomeCheckbox(
