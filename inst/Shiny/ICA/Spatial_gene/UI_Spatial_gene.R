@@ -32,7 +32,7 @@ output[["Spatial_gene_UI"]] <- renderUI({
     column(width = 9, offset = 0, style = "padding: 0px;",
       box(id = "gene_plot_container",
         title = tagList(
-          p("Plot IC related Genes weight", style = "padding-right: 5px; display: inline"),
+          p("IC related Genes weights per spot", style = "padding-right: 5px; display: inline"),
           actionButton(
             inputId = "Spatial_gene_info",
             label = "info",

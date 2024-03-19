@@ -32,7 +32,7 @@ output[["Spatial_IC_UI"]] <- renderUI({
     column(width = 9, offset = 0, style = "padding: 0px;",
       box(id = "IC_plot_container",
         title = tagList(
-          p("Plot IC weight", style = "padding-right: 5px; display: inline"),
+          p("IC weight per spot", style = "padding-right: 5px; display: inline"),
           actionButton(
             inputId = "Spatial_IC_info",
             label = "info",

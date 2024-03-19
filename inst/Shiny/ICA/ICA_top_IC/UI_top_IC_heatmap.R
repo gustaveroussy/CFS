@@ -33,7 +33,7 @@ output[["ICA_top_IC_UI"]] <- renderUI({
     column(width = 9, offset = 0, style = "padding: 0px;",
       box(id = "heatmap_container",
         title = tagList(
-          p("IC top genes heatmap", style = "padding-right: 5px; display: inline"),
+          p("Global ICA heatmap", style = "padding-right: 5px; display: inline"),
           actionButton(
             inputId = "IC_top_gene_info",
             label = "info",

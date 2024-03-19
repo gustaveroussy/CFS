@@ -6,7 +6,7 @@ output[["IC_enrichment_main_parameters_UI"]] <- renderUI({
   tagList(
     selectInput(
       "IC_enrichment_database_choice",
-      label = "Choose database related to enrichment",
+      label = "Database selection",
       choices = names(values$data@misc[input$IC_choice][[1]][[1]])
     )
   )

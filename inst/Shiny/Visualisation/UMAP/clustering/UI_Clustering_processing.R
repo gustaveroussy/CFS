@@ -32,14 +32,14 @@ marker_table <- observeEvent(input$start_cluster_plot, {
         incProgress(0.4, detail = "Finding neighbors")
         values$data = FindNeighbors(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',unique(c(type,input$Plot_cluster_IC_choice)))))
         incProgress(0.4, detail = "Finding clusters")
-        values$data = FindClusters(values$data, verbose = FALSE, resolution=input$Clustering_resolution, algorithm = as.integer(input$select_algorithm_clusterisation), cluster.name = input$cluster_named_by_user)
+        values$data = FindClusters(values$data, verbose = FALSE, resolution=input$Clustering_resolution, method = "igraph", algorithm = as.integer(input$select_algorithm_clusterisation), cluster.name = input$cluster_named_by_user)
         incProgress(0.1, detail = "Done")
         values$data@meta.data[,input$cluster_named_by_user] = as.factor(values$data@meta.data[,input$cluster_named_by_user])
       } else {
         incProgress(0.5, detail = "Finding neighbors")
         values$data = FindNeighbors(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',unique(c(type,input$Plot_cluster_IC_choice)))))
         incProgress(0.4, detail = "Finding clusters")
-        values$data = FindClusters(values$data, verbose = FALSE, resolution=input$Clustering_resolution, algorithm = as.integer(input$select_algorithm_clusterisation), cluster.name = input$cluster_named_by_user)
+        values$data = FindClusters(values$data, verbose = FALSE, resolution=input$Clustering_resolution, method = "igraph", algorithm = as.integer(input$select_algorithm_clusterisation), cluster.name = input$cluster_named_by_user)
         incProgress(0.1, detail = "Done")
         values$data@meta.data[,input$cluster_named_by_user] = as.factor(values$data@meta.data[,input$cluster_named_by_user])
       }
@@ -65,7 +65,7 @@ marker_table <- observeEvent(input$start_cluster_plot, {
       incProgress(0.4, detail = "Finding neighbors")
       values$data = FindNeighbors(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',type)))
       incProgress(0.4, detail = "Finding clusters")
-      values$data = FindClusters(values$data, verbose = FALSE, resolution=input$Clustering_resolution, algorithm = as.integer(input$select_algorithm_clusterisation), cluster.name = input$cluster_named_by_user)
+      values$data = FindClusters(values$data, verbose = FALSE, resolution=input$Clustering_resolution, method = "igraph", algorithm = as.integer(input$select_algorithm_clusterisation), cluster.name = input$cluster_named_by_user)
       incProgress(0.1, detail = "Done")
       
       values$data@meta.data[,input$cluster_named_by_user] = as.factor(values$data@meta.data[,input$cluster_named_by_user])

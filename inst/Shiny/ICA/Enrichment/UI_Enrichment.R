@@ -34,7 +34,7 @@ output[["IC_enrichment_UI"]] <- renderUI({
     column(width = 9, offset = 0, style = "padding: 0px;",
       box(id = "IC_enrichment_container",
         title = tagList(
-          p("Build bar chart of enrichment", style = "padding-right: 5px; display: inline"),
+          p("Functional enrichment", style = "padding-right: 5px; display: inline"),
           actionButton(
             inputId = "IC_enrichment_info",
             label = "info",

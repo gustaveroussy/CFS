@@ -24,7 +24,7 @@ output[["spot_gene_heatmap_UI"]] <- renderUI({
           width = 12,
           height = NULL,
           collapsible = TRUE,
-          collapsed = FALSE,
+          collapsed = TRUE,
           uiOutput("spot_gene_heatmap_main_parameters_UI"),
           uiOutput("spot_gene_heatmap_slider_main_parameters_UI"),
           uiOutput("spot_gene_heatmap_gene_main_parameters_UI"),
@@ -34,7 +34,7 @@ output[["spot_gene_heatmap_UI"]] <- renderUI({
     column(width = 9, offset = 0, style = "padding: 0px;",
       box(id = "spot_gene_heatmap_container",
         title = tagList(
-          p("Build heatmap of genes related to spot", style = "padding-right: 5px; display: inline"),
+          p("IC-contributory genes per spot", style = "padding-right: 5px; display: inline"),
           actionButton(
             inputId = "spot_gene_heatmap_info",
             label = "info",
@@ -59,7 +59,7 @@ output[["spot_gene_heatmap_UI"]] <- renderUI({
         width = 12,
         height = NULL,
         collapsible = TRUE,
-        collapsed = FALSE,
+        collapsed = TRUE,
         uiOutput("spot_gene_heatmap_plot_or_message")
       )
     )

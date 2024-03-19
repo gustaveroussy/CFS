@@ -3,7 +3,7 @@ output[["Plot_Spatial_UI"]] <- renderUI({
     column(width = 12, offset = 0, style = "padding: 0px;",
       box(id = "Plot_spatial_container",
         title = tagList(
-          p("Plot_Spatial", style = "padding-right: 5px; display: inline"),
+          p("Plot Spatial", style = "padding-right: 5px; display: inline"),
           actionButton(
             inputId = "Plot_info",
             label = "info",
