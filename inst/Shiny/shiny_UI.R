@@ -58,7 +58,7 @@ ui <- dashboardPage(
       menuItem("ICA", tabName = "ICA", icon = icon("wave-square")),
       menuItem("IC gene weights", tabName = "ICA_table", icon = icon("table-list")),
       menuItem("ICA Table", tabName = "Table", icon = icon("table-list")),
-      menuItem("Visualisation", tabName = "Visualisation", icon = icon("display")),
+      menuItem("Vizualisation", tabName = "Vizualisation", icon = icon("display")),
       menuItem("Marker table", tabName = "Marker_table", icon = icon("table-list")),
       menuItem("Ouput", tabName = "Output", icon = icon("arrow-up-from-bracket")),
       menuItem("About", tabName = "About", icon = icon("bars"))
