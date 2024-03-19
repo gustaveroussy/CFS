@@ -29,6 +29,8 @@ marker_table <- observeEvent(input$start_cluster_plot, {
           type = values$annotation_for_output[[input$Plot_cluster_type_UMAP_choice]]
         }
         
+        type = type[type %in% rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"]]
+        
         incProgress(0.4, detail = "Finding neighbors")
         values$data = FindNeighbors(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',unique(c(type,input$Plot_cluster_IC_choice)))))
         incProgress(0.4, detail = "Finding clusters")
@@ -62,6 +64,9 @@ marker_table <- observeEvent(input$start_cluster_plot, {
       } else {
         type = values$annotation_for_output[[input$Plot_cluster_type_UMAP_choice]]
       }
+      
+      type = type[type %in% rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"]]
+      
       incProgress(0.4, detail = "Finding neighbors")
       values$data = FindNeighbors(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',type)))
       incProgress(0.4, detail = "Finding clusters")

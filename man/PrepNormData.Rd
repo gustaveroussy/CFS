@@ -4,7 +4,12 @@
 \alias{PrepNormData}
 \title{Normalize data}
 \usage{
-PrepNormData(data = NULL, organism = "Hs", variable_features = 20000)
+PrepNormData(
+  data = NULL,
+  organism = "Hs",
+  variable_features = 20000,
+  min_cells = 5
+)
 }
 \arguments{
 \item{data}{Seurat object to analyse}

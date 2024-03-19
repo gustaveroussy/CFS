@@ -20,6 +20,9 @@ observeEvent(input$start_UMAP, {
         } else {
           type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
         }
+        
+        type = type[type %in% rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"]]
+        
         values$data= RunUMAP(values$data, reduction = "ica",
                              dims = as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))),
                              min.dist = input$Plot_min.dist, n.neighbors = input$Plot_n.neighbors,
@@ -43,6 +46,9 @@ observeEvent(input$start_UMAP, {
       } else {
         type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
       }
+      
+      type = type[type %in% rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"]]
+      
       values$data=RunUMAP(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',type)), min.dist = input$Plot_min.dist, n.neighbors = input$Plot_n.neighbors, spread = input$Plot_spread, reduction.name = input$reddim_named_by_user,
                           n.components = if(input$Plot_analysis_type == "UMAP"){2L}else{3L})
     } else {

@@ -16,6 +16,7 @@
 #' @import ggplot2
 #' @import reticulate
 #' @import ica
+#' @import data.table
 #' @importFrom viridis viridis
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG
