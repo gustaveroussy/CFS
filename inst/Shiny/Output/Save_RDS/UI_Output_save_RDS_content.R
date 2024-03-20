@@ -51,11 +51,18 @@ output$subclustering_choice <- renderUI({
     req(values$data)
     req(values$data@meta.data$seurat_clusters)
     tagList(
+      selectInput("subclustering_metadata_export_choose", label = "Choose metadata to use for export",
+                     choices = names(Filter(is.factor, values$data@meta.data)), selected = NULL),
       selectizeInput("subclustering_cluster_export_choose", label = "Choose cluster to export",
-                     choices = sort(unique(values$data@meta.data$seurat_clusters)), selected = NULL, multiple = TRUE,
+                     choices = NULL, selected = NULL, multiple = TRUE,
                      options = NULL)
     )
   }
+})
+
+observeEvent (input$subclustering_metadata_export_choose,{
+  edit <- input$subclustering_metadata_export_choose
+  updateSelectizeInput(session,"subclustering_cluster_export_choose", choices = sort(unique(values$data@meta.data[,input$subclustering_metadata_export_choose])))
 })
 
 output$subclustering_automated <- renderUI({
@@ -65,7 +72,10 @@ output$subclustering_automated <- renderUI({
       selectizeInput("Cell_type_subclustering_IC_export_choose", label = "Choose cell type to export",
                      choices = names(values$annotation_for_output), selected = NULL, multiple = TRUE,
                      options = NULL),
-      numericInput("Cell_type_subclustering_density_export_choose", label = "Density threshold", value = 0.4, step = 0.1)
+      selectizeInput("Cell_type_subclustering_IC_def_export_choose", label = "Choose ICs to export",
+                     choices = rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"], selected = NULL, multiple = TRUE,
+                     options = NULL),
+      numericInput("Cell_type_subclustering_density_export_choose", label = "standard deviation threshold", value = 1, step = 0.1)
     )
   }
 })

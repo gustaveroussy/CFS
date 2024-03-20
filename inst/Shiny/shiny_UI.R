@@ -50,7 +50,7 @@ source(paste0(Shiny.options[["shiny_root"]], "/About/UI.R"), local = TRUE)
 
 # Define UI for app that draws a histogram ----
 ui <- dashboardPage(
-  dashboardHeader(title = "CFS"),
+  dashboardHeader(title = "CellsFromSpace"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("Load Data", tabName = "Load_file", icon = icon("spinner")),

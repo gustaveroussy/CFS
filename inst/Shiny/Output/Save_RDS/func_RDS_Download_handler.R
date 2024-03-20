@@ -52,7 +52,7 @@ output$download_subcluster_RDS <- downloadHandler(
   content = function(file) {
     if (input$export_sub_IC == "IC Cell types"){
       
-      data <- Launch_analysis()
+      data <- values$data
       threshold = input$Cell_type_subclustering_density_export_choose
       Cell_type = input$Cell_type_subclustering_IC_export_choose
       
@@ -73,11 +73,6 @@ output$download_subcluster_RDS <- downloadHandler(
         
       } else if (input$Plot_display_type_density_manual == "Automated"){
         
-        data <- Launch_analysis()
-        
-        threshold = input$Cell_type_subclustering_density_export_choose
-        Cell_type = input$Cell_type_subclustering_IC_export_choose
-        
         if(length(Cell_type) > 1){
           for (n in 1:length(Cell_type)) {
             if(n == 1) {
@@ -90,7 +85,15 @@ output$download_subcluster_RDS <- downloadHandler(
         } else if (length(Cell_type) == 1) {
           type = values$annotation_for_output[[Cell_type]]
         } else {
-          shinyalert("Oops!", "Enter a cell type to sub.", type = "error")
+          type = NULL
+        }
+        
+        type = type[type %in% rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"]]
+        
+        type = unique(c(type,input$Cell_type_subclustering_IC_def_export_choose))
+        
+        if(is.null(type)){
+          shinyalert("Oops!", "Enter a cell type or IC to extract", type = "error")
         }
         
         if (length(type) >= 1){
@@ -99,22 +102,14 @@ output$download_subcluster_RDS <- downloadHandler(
           sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
           sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
           sum_IC = GetTissueCoordinates(data) %>%  cbind(.,sum_IC)
-          identity = rownames(sum_IC)[which(sum_IC[,'sum_IC'] >= input$Cell_type_subclustering_density_export_choose)]
+          identity = rownames(sum_IC)[which(sum_IC[,'sum_IC'] >= mean(sum_IC[,'sum_IC']) + sd(sum_IC[,'sum_IC'])*input$Cell_type_subclustering_density_export_choose)]
         } else {
           identity = rownames(data@reductions$ica@cell.embeddings)
         }
         
-        # if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
-        #   data@meta.data <- values$UMAP@meta.data
-        #   data@active.ident <- values$UMAP@active.ident
-        #   data@graphs <- values$UMAP@graphs
-        #   data@reductions$umap <- values$UMAP@reductions$umap
-        #   data@commands <- values$UMAP@commands
-        # }
+        data@misc$annotation <- values$Annotation
         
-        if(input$output_annotation_RDS == TRUE){
-          data@misc$annotation <- values$Annotation
-        }
+        data@misc$markers <- values$marker_gene
         
         data <- subset(
           x = data,
@@ -127,7 +122,7 @@ output$download_subcluster_RDS <- downloadHandler(
       
     } else if (input$export_sub_IC == "UMAP Cluster"){
       
-      data <- Launch_analysis()
+      data <- values$data
       
       # if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
       #   data@meta.data <- values$UMAP@meta.data
@@ -137,13 +132,13 @@ output$download_subcluster_RDS <- downloadHandler(
       #   data@commands <- values$UMAP@commands
       # }
       
-      if(input$output_annotation_RDS == TRUE){
-        data@misc$annotation <- values$Annotation
-      }
+      data@misc$annotation <- values$Annotation
+      
+      data@misc$markers <- values$marker_gene
       
       data <- subset(
         x = data,
-        idents = input$subclustering_cluster_export_choose
+        cells = rownames(values$data@meta.data[values$data@meta.data[,input$subclustering_metadata_export_choose] %in% input$subclustering_cluster_export_choose,])
       )
       
       saveRDS(data, file)
