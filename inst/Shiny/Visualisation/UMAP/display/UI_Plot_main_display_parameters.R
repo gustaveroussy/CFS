@@ -60,7 +60,7 @@ output[["Plot_main_parameters_display_2_UI"]] <- renderUI({
                      selected = NULL,
                      multiple = TRUE,
                      options = NULL),
-      numericInput("Plot_thresh_density", label = "threshold", value = 0.3, min = 0, step = 0.1),
+      numericInput("Plot_thresh_density", label = "threshold", value = 0, min = 0, step = 0.1),
       numericInput("Plot_thresh_alpha_density", label = "alpha", value = 0.5, min = 0, max = 1, step = 0.1)
     )
   } else if (input$Plot_analysis_display_type == "Scatter pie") {

@@ -44,7 +44,7 @@ output[["Volcano_plot_main_parameters_2_UI"]] <- renderUI({
 
 output[["Volcano_plot_main_parameters_3_UI"]] <- renderUI({
   tagList(
-    selectInput('volcano_plot_clusters_list_to_compare', "Cluster list to compare",
+    selectInput('volcano_plot_clusters_list_to_compare', "Markers to display",
                 names(Filter(is.factor, values$data@meta.data)),
                 selected = names(Filter(is.factor, values$data@meta.data))[1], multiple = FALSE),
     selectInput('clustering_method_volcano_plot', "Analysis method",
