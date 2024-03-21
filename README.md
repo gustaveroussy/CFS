@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="CFS_logo.png" alt="CFS_logo" width="250"/>
+  <img src="https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/README_images/CFS_Logo.png" alt="CFS_logo" width="250"/>
 </p>
 
 CellsFromSpace
@@ -17,7 +17,7 @@ More documentation and tutorials are being made as new features are implemented.
 CellsFromSpace aims at providing a simple and user-friendly ST analysis pipeline to any researcher, biologist, pathologist or bioinformatician regardless of coding ability. As a reference-free complete analysis tool, any dataset can be processed and analysed from end to end within the CFS interactive interface. CFS also allows integrated analysis of multiple samples for complex datasets.
 
 <p align="center">
-  <img src="CFS_graphAbstract.png" alt="CFS_graphAbstract" width="100%"/>
+  <img src="https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/README_images/CFS_graphAbstract.png" alt="CFS_graphAbstract" width="100%"/>
 </p>
 
 # Installation
