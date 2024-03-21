@@ -363,7 +363,7 @@ Once the `.rds` file is saved, it can then be reimported into CFS in the **Load*
 
 DGE analysis can then be performed on clusters of interest in the **Marker Table** tab, for example to identify marker genes between the Lateral versus Basolateral amygdalar nuclei (clusters 20 & 10 respectively) which were not distinguished in the original analysis.
 
-[subset_Ctx_DGE](https://github.com/gustaveroussy/CFS/blob/development/docs/Tutorial_images/subset_Ctx_DGE.png)
+![subset_Ctx_DGE](https://github.com/gustaveroussy/CFS/blob/development/docs/Tutorial_images/subset_Ctx_DGE.png)
 
 
 $~$

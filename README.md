@@ -8,7 +8,7 @@ Built on the [Seurat](https://satijalab.org/seurat/) ecosystem, CellsFromSpace (
 
 # Documentation
 
-Full documentation and tutorial can be found at: [Tutorial and instructions](https://codimd.univ-rouen.fr/s/w0oZMV6fz)
+Full documentation and tutorial can be found at: [Tutorial and instructions](https://github.com/gustaveroussy/CFS/blob/development/docs/CFS_Tuto_Visium.md)
 
 More documentation and tutorials are being made as new features are implemented. The tool can already be installed and is still un beta but is being actively worked on for full release.
 
