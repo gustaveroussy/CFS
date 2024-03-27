@@ -51,8 +51,13 @@ observeEvent(input$start_integration_button, {
     values$data@meta.data$sample = sapply(strsplit(rownames(values$data@meta.data),"_"),"[[",1)
     
     # adding image to sample
+    
     if('image' %in% names(attributes(values$data@images[[1]]))){
-      values$low_image = raster2uri(raster::as.raster(values$data@images[[names(list_of_data)[1]]]@image))
+      if(grepl("^[[:digit:]]",names(list_of_data)[1])){
+        values$low_image = raster2uri(raster::as.raster(values$data@images[[paste0("X",names(list_of_data)[1])]]@image))
+      } else {
+        values$low_image = raster2uri(raster::as.raster(values$data@images[[names(list_of_data)[1]]]@image))
+      }
     }
     
     list_of_data = NULL
