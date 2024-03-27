@@ -1,111 +1,80 @@
-# CFS
+<p align="center">
+  <img src="https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/README_images/CFS_Logo.png" alt="CFS_logo" width="250"/>
+</p>
 
-CFS is an R package for spatial single cell genomics. Documentation can
-be found at: [Tutorial and
-instructions](https://codimd.univ-rouen.fr/s/w0oZMV6fz)
+CellsFromSpace
+===
+Built on the [Seurat](https://satijalab.org/seurat/) ecosystem, CellsFromSpace (CFS) is an R package designed for user-friendly spatial transcriptomics (ST) analysis using independent component analysis (ICA), enabling reference-free signal decomposition and spot deconvolution through interpretable latent space.
 
-The documentation is still under construction, and will soon be
-released. The tool can already be installed and is still un beta but is
-being actively worked on for full release. Thank you.
+# Documentation
 
-# CFS
+Full documentation and tutorial can be found at: [Tutorial and instructions](https://github.com/gustaveroussy/CFS/blob/development/docs/CFS_Tuto_Visium.md)
 
-# Table of Contents
+More documentation and tutorials are being made as new features are implemented. The tool can already be installed and is still un beta but is being actively worked on for full release.
 
--   [Installation](#installation)
--   [CFS's interface](#cfss-interface)
--   [Exemple](#exemple)
--   [Citation](#citation)
+# Overview
 
-## Installation
+CellsFromSpace aims at providing a simple and user-friendly ST analysis pipeline to any researcher, biologist, pathologist or bioinformatician regardless of coding ability. As a reference-free complete analysis tool, any dataset can be processed and analysed from end to end within the CFS interactive interface. CFS also allows integrated analysis of multiple samples for complex datasets.
 
-Installing the package from the github repository requires the package
-devtools which can be installed using the following commands :
+<p align="center">
+  <img src="https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/README_images/CFS_graphAbstract.png" alt="CFS_graphAbstract" width="100%"/>
+</p>
 
-```{r}
+# Installation
+CellsFromSpace can be installed from the github repository using the package devtools :
+
+``` r
 install.packages("devtools")
-```
-
-The command line to install CFS :
-
-```{r}
-devtools::install_github("c-thuil/CFS"
+devtools::install_github("/gustaveroussy/CFS"
                          ,ref="main")
 ```
 
-The version currently being worked on can also be installed using :
+To install the development branch with additional (potentially unstable) features, use:
 
-```{r}
-devtools::install_github("c-thuil/CFS"
+``` r
+devtools::install_github("/gustaveroussy/CFS"
                          ,ref="development")
 ```
 
-## CFS's interface
 
-### Load data
+# Features
 
-The load data tab is plit into 4 loadable objects.
+CellsFromSpace contains functions for the processing of Spatial Transcriptomics (ST) data from major commercial technologies built into a fully interactive Shiny interface. Most pre-processing functionalities and all processing, analysis and visualization functionalities of CFS can be accessed through the interactive shiny interface, providing an all-in-one easy-to-use analytical tool for ST data.
 
--   **Load Visium output folder** Select the folder which contains Space
-    Ranger output. The data will then be loaded directly from it and can
-    then be directly analysed in the Pre-Processing tab.
+Once installed, simply launch the interactive Shiny interface to access all of CFS' functionalities:
 
--   **Load processed data** Select an RDS file output from the tool or
-    from an external visium analysis using Seurat. (`.rds`)
+``` r
+library(CFS)
+library(Seurat)
 
--   **Load high res image** Select High res image from Space Ranger
-    output. The image will then be used for every spatial plot within
-    the tool, offering higher quality visualisation.
+launchCFS()
+```
+Follow along our [Tutorials](Tutorial URL) for a step-by-step exploration of the CFS pipeline. Briefly, the analysis workflow consists of:
 
--   **Load full res image** Select the original full res image from
-    samples. Spatial plot will then be clickable and allow to visualise
-    a zoomed image of the slice at à selected location.
+- Pre-processing
+- IC annotation*
+- Visualization and Analysis
 
-### Pre-Processing
+*IC annotation is the crux of the CFS pipeline. Multiple tools are implemented to assist scientists in this crucial interpretation step 
 
-Allows to carry out the analysis from the output of Space ranger to the
-ICA analysis and enrichment. Once this is done, IC can be annoted with
-the tool.
 
-### ICA
+# Citation  
 
-Show data related to ICs. IC, genes, spatial plot and enrichment can be
-observed. Each IC can be annoted in the table above.
+This tool is not yet published. In the meantime, please cite our [preprint](https://www.biorxiv.org/content/10.1101/2023.08.30.555558v2)
+``` r
+@article {Thuilliez2023.08.30.555558,
+	author = {Corentin Thuilliez & Gaël Moquin-Beaudry et al.},
+	title = {CellsFromSpace: A fast, accurate and reference-free tool to deconvolve and annotate spatially distributed Omics data},
+	elocation-id = {2023.08.30.555558},
+	year = {2024},
+	doi = {10.1101/2023.08.30.555558},
+	publisher = {Cold Spring Harbor Laboratory},
+	URL = {https://www.biorxiv.org/content/early/2024/02/15/2023.08.30.555558},
+	eprint = {https://www.biorxiv.org/content/early/2024/02/15/2023.08.30.555558.full.pdf},
+	journal = {bioRxiv}
+}
 
-### IC gene weights
+``` 
 
-Show the table of ICs signal by spots as well as the intensity of IC
-signal by sample if multiple samples are being analysed.
-
-### ICA Table
-
-Annotation table of the ICs, can be directly edited, downloaded or
-uploaded. (`.csv`)
-
-### Visualisation
-
-Visualisation of the UMAP reduction, density and Scatter Pie
-representation of cell types.
-
-### Marker table
-
-Once clusterisation analysis has been carried out, this tab will display
-marker genes of each clusters.
-
-### Output
-
-Tab used to download the RDS output of the analysis, as well as
-subclusters of the object by cluster of cell types.
-
-## Exemple
-
-## Citation
-
-## License
-
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" alt="Licence Creative Commons" style="border-width:0"/></a><br />This
-work is distributed under the the terms of the creative commons
-attribution
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licence
-Creative Commons Attribution - No commercial use - shared in the same
-conditions 4.0 International</a>.
+# License
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licence Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is distributed under the the terms of the creative commons attribution <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licence Creative Commons Attribution - No commercial use - shared in the same conditions 4.0 International</a>.
