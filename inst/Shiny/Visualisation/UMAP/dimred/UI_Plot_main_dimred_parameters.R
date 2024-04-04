@@ -16,7 +16,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     tagList(
       textInput("reddim_named_by_user", "Dimred name", value = "umap"),
       selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
-                     choices = unique(names(values$annotation_for_output)),
+                     choices = unique(names(values$annotation_for_output[["Type"]])),
                      selected = NULL,
                      multiple = TRUE,
                      options = NULL),
@@ -40,7 +40,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     tagList(
       textInput("reddim_named_by_user", "Reduction name", value = "umap"),
       selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
-                     choices = unique(names(values$annotation_for_output)),
+                     choices = unique(names(values$annotation_for_output[["Type"]])),
                      selected = NULL,
                      multiple = TRUE,
                      options = NULL),
@@ -64,7 +64,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     tagList(
       textInput("reddim_named_by_user", "Reduction name", value = "tsne"),
       selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
-                     choices = unique(names(values$annotation_for_output)),
+                     choices = unique(names(values$annotation_for_output[["Type"]])),
                      selected = NULL,
                      multiple = TRUE,
                      options = NULL),

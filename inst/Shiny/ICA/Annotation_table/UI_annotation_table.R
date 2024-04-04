@@ -10,18 +10,7 @@ observeEvent(input$Annotation_table_UI_cell_edit, {
   values$Annotation[input$IC_choice, clmn] <- input$Annotation_table_UI_cell_edit$value
   
   # Get All annotations and their associated ICs
-  values$annotation_for_output = list()
-
-  # Get All annotations and their associated ICs
-  list_names_IC = unique(unlist(str_split(values$Annotation[,"Type"], pattern = ',', n = Inf, simplify = FALSE)))
-
-  for (list_annotation in list_names_IC) {
-    if(list_annotation != ""){
-      list_annotation <- gsub("\\+", "\\\\+", list_annotation)
-      result = values$Annotation[,'Use'] == TRUE & values$Annotation[,'Type'] == list_annotation
-      values$annotation_for_output[[list_annotation]] = names(result[result])
-    }
-  }
+  associate_signal_with_IC()
 
   annotation = values$Annotation
   

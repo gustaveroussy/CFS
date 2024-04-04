@@ -6,7 +6,7 @@ output[["Plot_main_parameters_cluster_UI"]] <- renderUI({
   req(values$annotation_for_output)
   tagList(
     selectizeInput("Plot_cluster_type_UMAP_choice", label = "Choose cell type to cluster",
-                   choices = unique(names(values$annotation_for_output)),
+                   choices = unique(names(values$annotation_for_output[["Type"]])),
                    selected = NULL,
                    multiple = TRUE,
                    options = NULL),

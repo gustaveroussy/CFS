@@ -108,15 +108,15 @@ UMAP_type <- reactive({
     name = paste(input$Plot_display_type_choice,collapse = ",")
     for (n_cell_type in 1:length(input$Plot_display_type_choice)) {
       if(n_cell_type == 1) {
-        type = values$annotation_for_output[[n_cell_type]]
+        type = values$annotation_for_output[["Type"]][[n_cell_type]]
       } else {
-        type = append(type, values$annotation_for_output[[n_cell_type]])
+        type = append(type, values$annotation_for_output[["Type"]][[n_cell_type]])
       }
     }
     type = unique(type)
   } else {
     name = input$Plot_display_type_choice
-    type = values$annotation_for_output[[input$Plot_display_type_choice]]
+    type = values$annotation_for_output[["Type"]][[input$Plot_display_type_choice]]
   }
   
   return(type)

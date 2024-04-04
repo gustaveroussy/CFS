@@ -14,6 +14,7 @@
 #' @import stringr
 #' @import scales
 #' @import ggplot2
+#' @import enrichR
 #' @import reticulate
 #' @import ica
 #' @import data.table

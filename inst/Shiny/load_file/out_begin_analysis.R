@@ -71,17 +71,7 @@ observeEvent(input$input_file, {
     
     values$Annotation = values$data@misc$annotation
     
-    # Get All annotations and their associated ICs
-    list_names_IC = unique(unlist(str_split(values$Annotation[,"Type"], pattern = ',', n = Inf, simplify = FALSE)))
-    
-    for (list_annotation in list_names_IC) {
-        if(list_annotation != ""){
-          list_annotation <- gsub("\\+", "\\\\+", list_annotation)
-          result = values$Annotation[,'Use'] == TRUE & values$Annotation[,'Type'] == list_annotation
-          values$annotation_for_output[[list_annotation]] = names(result[result])
-        }
-    }
-    
+    associate_signal_with_IC()
     
     if('image' %in% names(attributes(values$data@images[[1]]))){
       values$low_image = c(raster2uri(raster::as.raster(values$data@images[[1]]@image)))

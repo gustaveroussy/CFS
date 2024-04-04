@@ -14,19 +14,19 @@ marker_table <- observeEvent(input$start_cluster_plot, {
     if (!is.null(input$Plot_cluster_IC_choice)) {
       if (!is.null(input$Plot_cluster_type_UMAP_choice)){
         
-        incProgress(0.1, detail = "Determining IC associated types")
+        incProgress(0.1, detail = "Determining IC associated to types")
         
         if(length(input$Plot_cluster_type_UMAP_choice) != 1){
           for (n_cell_type in input$Plot_cluster_type_UMAP_choice) {
             if(is.null(type)) {
-              type = values$annotation_for_output[[n_cell_type]]
+              type = values$annotation_for_output[["Type"]][[n_cell_type]]
             } else {
-              type = append(type, values$annotation_for_output[[n_cell_type]])
+              type = append(type, values$annotation_for_output[["Type"]][[n_cell_type]])
             }
           }
           type = unique(type)
         } else {
-          type = values$annotation_for_output[[input$Plot_cluster_type_UMAP_choice]]
+          type = values$annotation_for_output[["Type"]][[input$Plot_cluster_type_UMAP_choice]]
         }
         
         type = type[type %in% rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"]]
@@ -49,20 +49,20 @@ marker_table <- observeEvent(input$start_cluster_plot, {
       
     } else if (!is.null(input$Plot_cluster_type_UMAP_choice)){
       
-      incProgress(0.1, detail = "Determining IC associated types")
+      incProgress(0.1, detail = "Determining IC associated to types")
       
       if(length(input$Plot_cluster_type_UMAP_choice) != 1){
         name = paste(input$Plot_cluster_type_UMAP_choice,collapse = ",")
         for (n_cell_type in input$Plot_cluster_type_UMAP_choice) {
           if(is.null(type)) {
-            type = values$annotation_for_output[[n_cell_type]]
+            type = values$annotation_for_output[["Type"]][[n_cell_type]]
           } else {
-            type = append(type, values$annotation_for_output[[n_cell_type]])
+            type = append(type, values$annotation_for_output[["Type"]][[n_cell_type]])
           }
         }
         type = unique(type)
       } else {
-        type = values$annotation_for_output[[input$Plot_cluster_type_UMAP_choice]]
+        type = values$annotation_for_output[["Type"]][[input$Plot_cluster_type_UMAP_choice]]
       }
       
       type = type[type %in% rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"]]

@@ -16,7 +16,7 @@ current_plot_spatial_scatter_pie <- reactive({
   
   if (input$Scatter_pie_values_selected == "IC"){
     if (!is.null(input$Scatter_pie_cell_type)){
-      type = unlist(values$annotation_for_output[input$Scatter_pie_cell_type], use.names=FALSE)
+      type = unlist(values$annotation_for_output[["Type"]][input$Scatter_pie_cell_type], use.names=FALSE)
       if (!is.null(input$Scatter_pie__IC_chosen_projection)){
         type=unique(c(input$Scatter_pie__IC_chosen_projection,type))
       }

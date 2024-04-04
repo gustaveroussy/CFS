@@ -15,14 +15,14 @@ current_plot_tSNE <- reactive({
       if(length(input$Plot_display_type_UMAP_choice) != 1){
         for (n_cell_type in input$Plot_display_type_UMAP_choice) {
           if(is.null(type)) {
-            type = values$annotation_for_output[[n_cell_type]]
+            type = values$annotation_for_output[["Type"]][[n_cell_type]]
           } else {
-            type = append(type, values$annotation_for_output[[n_cell_type]])
+            type = append(type, values$annotation_for_output[["Type"]][[n_cell_type]])
           }
         }
         type = unique(type)
       } else {
-        type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
+        type = values$annotation_for_output[["Type"]][[input$Plot_display_type_UMAP_choice]]
       }
       values$UMAP= RunTSNE(values$UMAP, reduction = "ica", dims = as.integer(gsub('[IC_]','',unique(c(type,input$Plot_display_IC_choice)))), perplexity = input$Plot_perplexity)
     } else {
@@ -33,14 +33,14 @@ current_plot_tSNE <- reactive({
       name = paste(input$Plot_display_type_UMAP_choice,collapse = ",")
       for (n_cell_type in input$Plot_display_type_UMAP_choice) {
         if(is.null(type)) {
-          type = values$annotation_for_output[[n_cell_type]]
+          type = values$annotation_for_output[["Type"]][[n_cell_type]]
         } else {
-          type = append(type, values$annotation_for_output[[n_cell_type]])
+          type = append(type, values$annotation_for_output[["Type"]][[n_cell_type]])
         }
       }
       type = unique(type)
     } else {
-      type = values$annotation_for_output[[input$Plot_display_type_UMAP_choice]]
+      type = values$annotation_for_output[["Type"]][[input$Plot_display_type_UMAP_choice]]
     }
     values$UMAP=RunTSNE(values$UMAP, reduction = "ica", dims = as.integer(gsub('[IC_]','',type)), perplexity = input$Plot_perplexity)
   } else {

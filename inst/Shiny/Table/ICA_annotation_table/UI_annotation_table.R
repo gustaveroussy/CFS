@@ -17,6 +17,17 @@ output[["ICA_table_UI"]] <- renderUI({
                    title = "Show additional information for this panel.",
                    style = "margin-right: 3px"
                  ),
+                 shinyWidgets::dropdownButton(
+                   tags$div(
+                     style = "color: black !important;",
+                     textInput('add_column_annotation_table_name','Column name', value = "", width = NULL, placeholder = NULL),
+                     actionButton('add_column_annotation_table','Add column', style = "color: black")
+                   ),
+                   circle = FALSE,
+                   icon = icon("cog"),
+                   inline = TRUE,
+                   size = "xs"
+                 ),
                ),
                status = "primary",
                solidHeader = TRUE,
@@ -38,28 +49,22 @@ output[["ICA_table_UI"]] <- renderUI({
 #output[["groups_tree_text"]] <- renderText({ "Data not available." })
 
 observeEvent(input$import_annotation_table, {
-  values$data = Launch_analysis()
   
   values$Annotation = NULL
   values$Annotation = as.matrix(read.csv(file = input$import_annotation_table$datapath, row.names = 1))
   
-  values$data@misc$annotation = values$Annotation
+  associate_signal_with_IC()
   
-  #values$IC_names = NULL
-  #values$IC_names = rownames(values$Annotation[which(values$Annotation[,'Use'] == "TRUE"),])
+})
+
+observeEvent(input$add_column_annotation_table, {
+
+  values$Annotation = cbind(values$Annotation,list("b" = c("")))
   
-  values$annotation_for_output = list()
+  colnames(values$Annotation)[ncol(values$Annotation)] = input$add_column_annotation_table_name
   
-  # Get All annotations and their associated ICs
-  list_names_IC = unique(unlist(str_split(values$Annotation[,"Type"], pattern = ',', n = Inf, simplify = FALSE)))
+  associate_signal_with_IC()
   
-  for (list_annotation in list_names_IC) {
-    if(list_annotation != ""){
-      list_annotation <- gsub("\\+", "\\\\+", list_annotation)
-      result = values$Annotation[,'Use'] == TRUE & values$Annotation[,'Type'] == list_annotation
-      values$annotation_for_output[[list_annotation]] = names(result[result])
-    }
-  }
 })
 
 ##----------------------------------------------------------------------------##

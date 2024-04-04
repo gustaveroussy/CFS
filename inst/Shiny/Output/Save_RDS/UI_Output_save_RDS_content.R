@@ -70,7 +70,7 @@ output$subclustering_automated <- renderUI({
     req(values$annotation_for_output)
     tagList(
       selectizeInput("Cell_type_subclustering_IC_export_choose", label = "Choose cell type to export",
-                     choices = names(values$annotation_for_output), selected = NULL, multiple = TRUE,
+                     choices = names(values$annotation_for_output[["Type"]]), selected = NULL, multiple = TRUE,
                      options = NULL),
       selectizeInput("Cell_type_subclustering_IC_def_export_choose", label = "Choose ICs to export",
                      choices = rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"], selected = NULL, multiple = TRUE,

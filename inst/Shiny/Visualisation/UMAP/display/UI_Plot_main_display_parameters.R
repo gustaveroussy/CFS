@@ -56,7 +56,7 @@ output[["Plot_main_parameters_display_2_UI"]] <- renderUI({
     req(values$annotation_for_output)
     tagList(
       selectizeInput("Plot_display_type_choice", label = "Choose cell type for density",
-                     choices = unique(names(values$annotation_for_output)),
+                     choices = unique(names(values$annotation_for_output[["Type"]])),
                      selected = NULL,
                      multiple = TRUE,
                      options = NULL),
@@ -163,7 +163,7 @@ output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
           size = NULL
         ),
         selectizeInput("Scatter_pie_cell_type", label = "choose cell type",
-                       choices = unique(names(values$annotation_for_output)),
+                       choices = unique(names(values$annotation_for_output[["Type"]])),
                        selected = NULL, multiple = TRUE, options = NULL),
         selectizeInput("Scatter_pie__IC_chosen_projection", label = "Choose IC to plot", choices = values$IC_names,
                        selected = NULL, multiple = TRUE,

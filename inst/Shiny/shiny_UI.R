@@ -21,19 +21,7 @@ if(Shiny.options[["offline_mode"]] == FALSE){
   # }
   
   reticulate::use_miniconda('r-reticulate')
-  library(enrichR)
-  library(ica)
 }
-
-##--------------------------------------------------------------------------##
-## Set class to read shiny object from saveForShiny
-##--------------------------------------------------------------------------##
-
-#setClass("shiny_visium", slots=list(ica="list", images="list"))
-
-##--------------------------------------------------------------------------##
-## Functions.
-##--------------------------------------------------------------------------##
 
 ##----------------------------------------------------------------------------##
 ## Load UI content for each tab.
@@ -47,6 +35,7 @@ source(paste0(Shiny.options[["shiny_root"]], "/Output/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Table/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Marker_table/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/About/UI.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/Signal_analysis/UI.R"), local = TRUE)
 
 # Define UI for app that draws a histogram ----
 ui <- dashboardPage(
@@ -58,6 +47,7 @@ ui <- dashboardPage(
       menuItem("ICA", tabName = "ICA", icon = icon("wave-square")),
       menuItem("IC gene weights", tabName = "ICA_table", icon = icon("table-list")),
       menuItem("ICA Table", tabName = "Table", icon = icon("table-list")),
+      menuItem("Signal analysis", tabName = "signal_analysis", icon = icon("wave-square")),
       menuItem("Visualization", tabName = "Visualization", icon = icon("display")),
       menuItem("Marker table", tabName = "Marker_table", icon = icon("table-list")),
       menuItem("Ouput", tabName = "Output", icon = icon("arrow-up-from-bracket")),
@@ -92,6 +82,7 @@ ui <- dashboardPage(
       tab_ICA,
       tab_ICA_table,
       tab_table,
+      tab_signal_analysis,
       tab_visualisation,
       tab_marker_table,
       tab_output,

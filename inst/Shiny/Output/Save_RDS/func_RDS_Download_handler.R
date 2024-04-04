@@ -76,14 +76,14 @@ output$download_subcluster_RDS <- downloadHandler(
         if(length(Cell_type) > 1){
           for (n in 1:length(Cell_type)) {
             if(n == 1) {
-              type = values$annotation_for_output[[n]]
+              type = values$annotation_for_output[["Type"]][[n]]
             } else {
-              type = append(type, values$annotation_for_output[[n]])
+              type = append(type, values$annotation_for_output[["Type"]][[n]])
             }
           }
           type = unique(type)
         } else if (length(Cell_type) == 1) {
-          type = values$annotation_for_output[[Cell_type]]
+          type = values$annotation_for_output[["Type"]][[Cell_type]]
         } else {
           type = NULL
         }

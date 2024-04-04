@@ -1,5 +1,5 @@
 ##----------------------------------------------------------------------------##
-## Server function for Cerebro.
+## Server
 ##----------------------------------------------------------------------------##
 server <- function(input, output, session) {
   
@@ -7,17 +7,11 @@ server <- function(input, output, session) {
 ## Functions
 ##--------------------------------------------------------------------------##
 
-  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/Cluster_ICA.R"), local = TRUE)
-  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/PseudoTime.R"), local = TRUE)
-  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/prepare_data.R"), local = TRUE)
-  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/Cluster_ICA.R"), local = TRUE)
-  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/RunICA.R"), local = TRUE)
-  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/Show_IC_and_Enrich.R"), local = TRUE)
-  # source(paste0( "/home/c_thuilliez/Desktop/SpICA/R/Minor_functions.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/Prepare_table_marker.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/Plotly_line.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/alpha_color_scale.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/Plotly_colorscale.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "/Functions/associate_signal_with_IC.R"), local = TRUE)
 
 ##--------------------------------------------------------------------------##
 ## Tabs.
@@ -31,6 +25,7 @@ server <- function(input, output, session) {
   source(paste0(Shiny.options[["shiny_root"]], "/Table/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Marker_table/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/About/server.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "/Signal_analysis/server.R"), local = TRUE)
   
 ########################################
 # IC_list
