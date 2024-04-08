@@ -22,7 +22,8 @@ output[["load_data_UI"]] <- renderUI({
              width = '350px',
              buttonLabel = "Browse...",
              placeholder = "No file selected"
-           )
+           ),
+           shinyFilesButton(id = "input_file_local", label = "Local load", title = "Select input data (.rds file)", multiple = FALSE)
     )
   )
 })
