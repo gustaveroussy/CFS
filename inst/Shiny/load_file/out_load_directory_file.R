@@ -15,7 +15,6 @@ observeEvent(input$input_file_local, {
   if(!is.null(input$input_file_local)){
     path = parseFilePaths(getVolumes(), input$input_file_local)
     if (length(path$datapath) != 0){
-      print(input$input_file_local)
       if (length(grep('.RDS',toupper(path[length(path$datapath)]))) != 0){
         
         values$annotation_for_output = list()
