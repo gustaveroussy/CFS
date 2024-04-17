@@ -34,14 +34,20 @@ observeEvent(input[["plot_export"]], {
   ## check if selection projection consists of 2 or 3 dimensions
   ## ... selection projection consists of 2 dimensions
   
-  if (input$Plot_analysis_type == "UMAP"){
-    plot = plots$umap
-  } else if (input$Plot_analysis_type == "Density") {
+  if (input$Plot_analysis_display_type == "Dimentional reduction"){
+    plot = current_plot_umap()
+  } else if (input$Plot_analysis_display_type == "Dimentional reduction" & input$Visualisation_selected_dimred_to_display == "tsne") {
+    plot = current_plot_tSNE()
+  } else if (input$Plot_analysis_display_type == "Density") {
     req(input$Plot_display_type_choice)
-    plot = plot_ly()#plots$density
-  } else if (input$Plot_analysis_type == "Scatter pie") {
+    if(input$Spatial_use_ggplot){
+      #plots$density = current_plot_density()
+    } else {
+      plot = current_plot_density()
+    }
+  } else if (input$Plot_analysis_display_type == "Scatter pie") {
     req(values$data)
-    plot = plots$spatial_scatter_pie
+    plot = current_plot_scatter_pie()
   }
   
   ## save plot
