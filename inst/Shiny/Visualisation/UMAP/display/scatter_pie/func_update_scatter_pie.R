@@ -27,7 +27,6 @@ current_plot_scatter_pie <- reactive({
         }
       }
     }
-  }
     
     if (input$Scatter_pie_values_selected == "IC"){
       if(!is.null(type)){
@@ -259,4 +258,8 @@ current_plot_scatter_pie <- reactive({
     }
     
     return(fig)
+    
+  } else {
+    return(NULL)
+  }
 })

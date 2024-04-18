@@ -64,7 +64,7 @@ observeEvent(input[["plot_spatial_export"]], {
     shinyWidgets::sendSweetAlert(
       session = session,
       title = "Success!",
-      text = paste0("Heatmap saved successfully as: ", save_file_path),
+      text = paste0("Plot saved successfully as: ", save_file_path),
       type = "success"
     )
     ## ... failed
