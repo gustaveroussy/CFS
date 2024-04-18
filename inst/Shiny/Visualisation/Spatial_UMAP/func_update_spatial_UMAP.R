@@ -35,7 +35,7 @@ current_plot_spatial <- reactive({
       if (!is.null(values$HD_image)) {
         fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
       } else {
-        if(!is.null(values$low_image)){
+        if(length(values$low_image) != 0){
           fig <- fig %>% add_trace(type="image", source = values$low_image[[n]], hoverinfo = 'skip')
         }
       }

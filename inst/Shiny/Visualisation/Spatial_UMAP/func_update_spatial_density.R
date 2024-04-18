@@ -86,7 +86,7 @@ current_plot_spatial_density <- reactive({
       # Add image in the background
       if (input$Spatial_display_image == TRUE) {
         if (is.null(values$HD_image)){
-          if(!is.null(values$low_image)){
+          if(length(values$low_image) != 0){
             fig <- fig %>% add_trace(type="image", source = values$low_image[[n]], hoverinfo = 'skip')
           }
         } else {
@@ -149,7 +149,7 @@ current_plot_spatial_density <- reactive({
          # Add image in the background
          if (input$Spatial_display_image == TRUE){
            if (is.null(values$HD_image)){
-             if(!is.null(values$low_image)){
+             if(length(values$low_image) != 0){
                fig <- fig %>% add_trace(type="image", source = values$low_image[[n]], hoverinfo = 'skip')
              }
            } else {

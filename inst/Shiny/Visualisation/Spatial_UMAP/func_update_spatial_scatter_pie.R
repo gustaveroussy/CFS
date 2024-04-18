@@ -11,12 +11,26 @@ current_plot_spatial_scatter_pie <- reactive({
   withProgress(message = 'Preparing Scatterpie', value = 0, {
   
   data <- values$data
-  max_col_img = dim(data@images[[1]]@image)[2]
-  max_row_img = dim(data@images[[1]]@image)[1]
+  
+  if("image" %in% slotNames(data@images[[input$Plot_image_spatial[1]]])){
+    max_col_img = dim(data@images[[input$Plot_image_spatial[1]]]@image)[2]
+    max_row_img = dim(data@images[[input$Plot_image_spatial[1]]]@image)[1]
+  } else {
+    max_col_img = max(data@images[[input$Plot_image_spatial[1]]]@coordinates[,"x"])
+    max_row_img = max(data@images[[input$Plot_image_spatial[1]]]@coordinates[,"y"])
+  }
   
   if (input$Scatter_pie_values_selected == "IC"){
     if (!is.null(input$Scatter_pie_cell_type)){
-      type = unlist(values$annotation_for_output[["Type"]][input$Scatter_pie_cell_type], use.names=FALSE)
+      
+      for (n_cell_type in input$Plot_display_type_UMAP_choice) {
+        if(is.null(type)) {
+          type = values$annotation_for_output[["Type"]][[n_cell_type]]
+        } else {
+          type = append(type, values$annotation_for_output[["Type"]][[n_cell_type]])
+        }
+      }
+      
       if (!is.null(input$Scatter_pie__IC_chosen_projection)){
         type=unique(c(input$Scatter_pie__IC_chosen_projection,type))
       }
@@ -98,7 +112,7 @@ current_plot_spatial_scatter_pie <- reactive({
       
       if (input$Spatial_display_image == TRUE){
         if (is.null(values$HD_image)){
-          if(!is.null(values$low_image)){
+          if(length(values$low_image) != 0){
             fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                                   yaxis = list(showgrid = FALSE, showticklabels=FALSE),
                                   grid = list(columns = max_row_img, rows = max_col_img),
@@ -218,7 +232,7 @@ current_plot_spatial_scatter_pie <- reactive({
       
       if (input$Spatial_display_image == TRUE){
         if (is.null(values$HD_image)){
-          if(!is.null(values$low_image)){
+          if(length(values$low_image) != 0){
             fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                                   yaxis = list(showgrid = FALSE, showticklabels=FALSE),
                                   grid = list(columns = max_row_img, rows = max_col_img),
@@ -332,7 +346,7 @@ current_plot_spatial_scatter_pie <- reactive({
     
     if (input$Spatial_display_image == TRUE){
       if (is.null(values$HD_image)){
-        if(!is.null(values$low_image)){
+        if(length(values$low_image) != 0){
           fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                                 yaxis = list(showgrid = FALSE, showticklabels=FALSE),
                                 grid = list(columns = max_row_img, rows = max_col_img),
