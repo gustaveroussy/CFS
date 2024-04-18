@@ -132,9 +132,9 @@ current_plot_umap <- reactive({
       }
     } else if (input$Plot_display_type == "gene") {
       if(input$image_display_UMAP){
-        scale.data = values$data@assays$SCT@scale.data[,(colnames(values$data@assays$SCT@scale.data) %in% unlist(c(sapply(TissueCoordinates,rownames))))]
+        scale.data = values$data@assays$SCT@data[,(colnames(values$data@assays$SCT@data) %in% unlist(c(sapply(TissueCoordinates,rownames))))]
       } else {
-        scale.data = values$data@assays$SCT@scale.data
+        scale.data = values$data@assays$SCT@data
       }
       
       if(ncol(cell.embeddings.umap) == 2){

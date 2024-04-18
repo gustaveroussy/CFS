@@ -110,7 +110,7 @@ current_plot_spatial <- reactive({
             )
       }
     } else if (input$Plot_display_type == "gene") {
-      scale.data = values$data@assays$SCT@scale.data[,(colnames(values$data@assays$SCT@scale.data) %in% rownames(TissueCoordinates))]
+      scale.data = values$data@assays$SCT@data[,(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))]
       
       fig <- fig %>%
         add_trace(

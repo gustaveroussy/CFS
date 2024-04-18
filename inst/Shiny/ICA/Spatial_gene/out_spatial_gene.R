@@ -40,14 +40,14 @@ spatial_gene_react <- reactive({
     }
     
     plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[[1]][,"imagecol"], y = TissueCoordinates()[[1]][,"imagerow"],
-                                                 marker = list(color = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates()[[1]])],
+                                                 marker = list(color = data@assays$SCT@data[x,][rownames(TissueCoordinates()[[1]])],
                                                                size = input$Plot_spatial_gene_size,
                                                                colorscale = colorscale_gene_spatial(),
                                                                reversescale=input$invert_color_gene_projection),
                                                  opacity = input$transparency_gene_projection,
                                                  type = 'scatter', mode = "markers",
-                                                 text = data@assays$SCT@scale.data[x,][rownames(TissueCoordinates()[[1]])],
-                                                 customdata = names(data@assays$SCT@scale.data[x,][rownames(TissueCoordinates()[[1]])]),
+                                                 text = data@assays$SCT@data[x,][rownames(TissueCoordinates()[[1]])],
+                                                 customdata = names(data@assays$SCT@data[x,][rownames(TissueCoordinates()[[1]])]),
                                                  hovertemplate = paste0("Cell : %{customdata}<br>",
                                                                         "Expression: %{text}<br>",
                                                                         "Associated IC:<br>",
