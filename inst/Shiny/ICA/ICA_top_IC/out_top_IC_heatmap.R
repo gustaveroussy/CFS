@@ -14,25 +14,33 @@ output_heatmap_all_ICs <- reactive({
     
     fig = plotly_figure_ICA_all_heatmaply()
     
-    # View(fig)
-    
-    if(!is.null(highlightcolumn_heatmaply())){
-
-      x = highlightcolumn_heatmaply()
+    if(!is.null(highlightcolumn_heatmaply()) && ncol(highlightcolumn_heatmaply()) == 4){
       
-      fig[["x"]][["layout"]][["shapes"]][[1]] = list(type = "rect",
+      l_row = as.double((highlightcolumn_heatmaply()["y"]/max(fig[["x"]][["data"]][[1]][["y"]], na.rm=T) * 0.2) + 0.8)
+      
+      fig[["x"]][["layout"]][["shapes"]][[4]] = list(type = "line",
+                                                     line = list(color="Red", width=3, dash="dashdot"), opacity = 1,
+                                                     x0 = 0,
+                                                     x1 = 0.8, xref = "paper",
+                                                     y0 = l_row, y1 = l_row, yref = "paper")
+    }
+    
+    if(!is.null(highlightcolumn_heatmaply()) && highlightcolumn_heatmaply()["curveNumber"] == 3){
+
+      x = highlightcolumn_heatmaply()["x"]
+      x = c(x)$x
+      
+      fig[["x"]][["layout"]][["shapes"]][[4]] = list(type = "rect",
                                                      fillcolor = "white", line = list(color = "black"), opacity = 0.1,
                                                      x0 = (x-0.5),
                                                      x1 = (x+0.5), xref = "x",
-                                                     y0 = 0, y1 = 0.8, yref = "paper") #(y+0.5)
+                                                     y0 = 0, y1 = 0.8, yref = "paper")
       
     }
     
   } else {
  
     fig = plotly_figure_ICA_all()
-    
-    # print(colnames(data_heat))
     
     if(!is.null(highlightcolumn())){
       
@@ -96,7 +104,8 @@ plotly_figure_ICA_all_heatmaply = reactive({
                     ylab = "Genes",
                     colors = eval(parse(text=paste0(input$select_color_IC_top,"(n=256)"))),
                     scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colours = viridis_pal(option = input$select_color_IC_top)(nrow(data_heat) * ncol(data_heat)), limits=c(input$slider_IC_top_range[1], input$slider_IC_top_range[2]), oob=squish),
-                    hclust_method = "ward.D"
+                    hclust_method = "ward.D",
+                    source = "F"
     )
   } else {
     fig = heatmaply(data_heat,
@@ -104,7 +113,8 @@ plotly_figure_ICA_all_heatmaply = reactive({
                     ylab = "Genes",
                     colors = eval(parse(text=paste0(input$select_color_IC_top,"(n=256)"))),
                     scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colours = viridis_pal(option = "D")(nrow(data_heat) * ncol(data_heat)), limits=c(input$slider_IC_top_range[1], input$slider_IC_top_range[2]), oob=squish),
-                    hclust_method = "ward.D"
+                    hclust_method = "ward.D",
+                    source = "F"
     )
   }
   
@@ -119,8 +129,7 @@ highlightcolumn = reactive({
 })
 
 highlightcolumn_heatmaply = reactive({
-  x = plotly::event_data(c("plotly_click"), source = "A")[3]
-  x = c(x)$x
+  x = plotly::event_data(c("plotly_click"), source = "A")
   return(x)
 })
 
@@ -171,3 +180,8 @@ top_IC_heatmap_table <- reactive({
   
   return(data_heat)
 })
+
+
+
+
+
