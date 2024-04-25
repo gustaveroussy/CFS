@@ -1,5 +1,5 @@
 ##----------------------------------------------------------------------------##
-## UI elements to set main parameters for the projection.
+## UI elements to set main parameters for preprocessing.
 ##----------------------------------------------------------------------------##
 
 output[["preprocessing_main_parameters_UI"]] <- renderUI({

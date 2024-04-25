@@ -26,6 +26,32 @@ output[["preprocessing_UI"]] <- renderUI({
           collapsible = TRUE,
           collapsed = FALSE,
           uiOutput("preprocessing_main_parameters_UI")
+      ),
+      box(id = "invert_IC_main_parameters",
+          title = tagList(
+            "Invert IC",
+            actionButton(
+              inputId = "invert_IC_main_parameters_info",
+              label = "info",
+              icon = NULL,
+              class = "btn-xs",
+              title = "Show additional information for this panel.",
+              style = "margin-right: 3px"
+            ),
+            shinyWidgets::dropdownButton(
+              circle = FALSE,
+              icon = icon("cog"),
+              inline = TRUE,
+              size = "xs"
+            )
+          ),
+          status = "primary",
+          solidHeader = TRUE,
+          width = 12,
+          height = NULL,
+          collapsible = TRUE,
+          collapsed = FALSE,
+          uiOutput("preprocessing_invert_IC_UI")
       )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",

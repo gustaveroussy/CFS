@@ -8,6 +8,8 @@ output[["Spatial_IC_plot"]] <- plotly::renderPlotly({
 
 IC_spatial_output_react <- reactive({
   req(values$data)
+  req(values$data@reductions$ica)
+  req(input$IC_choice)
   
   data <- values$data
   

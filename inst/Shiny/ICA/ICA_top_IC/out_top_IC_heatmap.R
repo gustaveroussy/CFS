@@ -153,6 +153,7 @@ output[["top_IC_plot_or_message"]] <- renderUI({
 top_IC_heatmap_table <- reactive({
   
   req(values$data)
+  req(values$data@misc$GeneAndStat)
   req(input$select_number_IC_top_heatmap)
   
   data <- values$data
