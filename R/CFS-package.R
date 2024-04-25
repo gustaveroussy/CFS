@@ -18,6 +18,8 @@
 #' @import reticulate
 #' @import ica
 #' @import data.table
+#' @import clustree
+#' @import ggdendro
 #' @importFrom viridis viridis
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG

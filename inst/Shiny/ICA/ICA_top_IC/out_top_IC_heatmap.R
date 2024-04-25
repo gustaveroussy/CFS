@@ -23,6 +23,7 @@ output_heatmap_all_ICs <- reactive({
                                                      x0 = 0,
                                                      x1 = 0.8, xref = "paper",
                                                      y0 = l_row, y1 = l_row, yref = "paper")
+      
     }
     
     if(!is.null(highlightcolumn_heatmaply()) && highlightcolumn_heatmaply()["curveNumber"] == 3){
