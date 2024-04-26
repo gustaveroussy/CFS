@@ -39,7 +39,8 @@ output[["Cell_reduction_UI"]] <- renderUI({
                height = NULL,
                collapsible = FALSE,
                collapsed = FALSE,
-               uiOutput("output_graph_auto_annotation")
+               uiOutput("output_graph_auto_annotation"),
+               uiOutput("output_graph_auto_annotation_2")
            )
     )
   )
