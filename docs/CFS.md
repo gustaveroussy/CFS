@@ -1,24 +1,24 @@
-CellsFromSpace (CFS) is an R package for spatial transcriptomics analysis using ICA. Documentation can be found at: [Tutorial and instructions](https://codimd.univ-rouen.fr/s/w0oZMV6fz)
+CellsFromSpace (CFS) is an R package for spatial transcriptomics analysis using ICA. Documentation can be found at: [Tutorial and instructions](https://github.com/gustaveroussy/CFS/blob/main/docs/CFS_Tuto_Visium.md)
 
 # Table of Contents
 
 -   [Installation](#installation)
--   [CFS Shiny interface](#Shiny)
-    -   [Load data](#Load)
-    -   [Pre-Processing](#process)
-    -   [ICA](#ICA)
-    -   [IC gene weights](#ICweights)
-    -   [ICA Table](#table)
-    -   [Visualization](#Viz)
-    -   [Marker Table](#marker)
-    -   [Output](#outputTab)
-    -   [Other](#other)
--   [CFS functions](#Functions)
--   [Citation](#Citation)
+-   [CFS Shiny interface](#cfs-Shiny-interface)
+    -   [Load data](#load-data)
+    -   [Pre-Processing](#pre-processing)
+    -   [ICA](#ica)
+    -   [IC gene weights](#ic-gene-weights)
+    -   [ICA Table](#ica-table)
+    -   [Visualization](#Visualization)
+    -   [Marker Table](#marker-table)
+    -   [Output](#output-object)
+    -   [Other](#other-options)
+-   [CFS functions](#cfs-functions)
+-   [Citation](#citation)
 
 ------------------------------------------------------------------------
 
-## Installation {#installation}
+## Installation
 
 CellsFromSpace can be installed from the github repository using the package devtools :
 
@@ -68,7 +68,7 @@ CFS contains functions for the processing of Spatial Transcriptomics (ST) data f
 
 ------------------------------------------------------------------------
 
-## CFS Shiny interface {#Shiny}
+## CFS Shiny interface
 
 The Shiny graphical interface for CFS is initiated with
 
@@ -92,7 +92,7 @@ All graphical outputs can be directly exported
 
 $~$
 
-### Load data {#Load}
+### Load data
 
 The load data window displays 5 data loading options:
 
@@ -106,7 +106,7 @@ $~$
 
 $~$
 
-### Pre-Processing {#process}
+### Pre-Processing
 
 Carry out the pre-processing steps of the loaded object. Launching this step will normalize data, run ICA, filter ICs and correct sign, identify contributive genes and query enrichment databases. 
 
@@ -125,7 +125,7 @@ Carry out the pre-processing steps of the loaded object. Launching this step wil
     -   **Enrichment database :** Select enrichment libraries from EnrichR, see <https://maayanlab.cloud/Enrichr/#libraries> for full list of available libraries
       -  *Only process positively associated genes :* Run EnrichR functional enrichment only on the positive
 
-#### Output {#output}
+#### Output
 
 -   **Pre-processing :** displays the number of spots and features present in the object
 
@@ -133,7 +133,7 @@ $~$
 
 $~$
 
-### ICA {#ICA}
+### ICA
 
 Cornerstone of the CFS workflow, this tab shows data related to individual ICs. Allows for the interpretation and annotation of each IC. *This is where the magic happens.* Hover on any point or bar for additional information.
 
@@ -200,7 +200,7 @@ $~$
 
 $~$
 
-### IC gene weights {#ICweights}
+### IC gene weights
 
 Searchable table of gene weights per IC. Genes can be filtered to query gienes of interest using the top left search box.
 
@@ -210,7 +210,7 @@ $~$
 
 $~$
 
-### ICA Table {#table}
+### ICA Table
 
 Full IC annotation table. can be directly edited, downloaded or uploaded. If imported, ensure the table structure is followed and data is saved as a `.csv` using comma separators (not semicolon or spaces). We recommend downloading the empty table and filling outside of the shiny UI as data is not saved dynamically. The complete table can then be easily imported back into the UI. The searchbox is useful for quick corrections or selection of all ICs containing the searched keyword. Total number of kurtosis-filtered ICs is displayed below the table.
 
@@ -225,7 +225,7 @@ $~$
 
 $~$
 
-### Visualization {#Viz}
+### Visualization
 
 Calculation of the spot clustering and UMAP/tSNE embedding and various data visualization options on both the UMAP/tSNE (top window) and spatial (bottom window) embeddings.
 
@@ -300,7 +300,7 @@ $~$
 
 $~$
 
-### Marker table {#marker}
+### Marker table
 
 Once clustering analysis has been carried out in the **Visualization** tab, differential gene expression analysis can be initiated and visualized within this tab for the calculated clusters. The FindMarkers Seurat function is used for DGE analysis.
 
@@ -323,7 +323,7 @@ $~$
 
 $~$
 
-### Output {#outputTab}
+### Output object
 
 Configure the export parameters for the analysed object. Writes out an `.rds` object containing the specified features. Also enables dataset subclustering by cluster identity or IC "Type" density.
 
@@ -353,7 +353,7 @@ $~$
 
 $~$
 
-### Other options {#other}
+### Other options
 
 The side menu also offers some additional options for object visualization:
 
@@ -369,7 +369,7 @@ $~$
 ------------------------------------------------------------------------
 
 
-## CFS functions {#Functions}
+## CFS functions
 
 ### launchCFS
 
@@ -530,7 +530,7 @@ data <- Cluster_ICA(data=data,
                     res=1.2)
 ```
 
-## Citation {#citation}
+## Citation
 
 This tool is not yet published, in the meantime, please cite our [preprint](https://www.biorxiv.org/content/10.1101/2023.08.30.555558v2)
 ``` r
