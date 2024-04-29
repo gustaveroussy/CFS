@@ -1,4 +1,4 @@
-CellsFromSpace (CFS) is an R package for spatial transcriptomics analysis using ICA. Documentation can be found at: [Tutorial and instructions](https://codimd.univ-rouen.fr/s/w0oZMV6fz)
+CellsFromSpace (CFS) is an R package for spatial transcriptomics analysis using ICA. Documentation can be found at: [Tutorial and instructions](https://github.com/gustaveroussy/CFS/blob/main/docs/CFS_Tuto_Visium.md)
 
 # Table of Contents
 
