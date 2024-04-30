@@ -1,0 +1,93 @@
+,Use,Type,Annotation
+IC_1,TRUE,Thalamus,VPM/VPL
+IC_2,TRUE,Cortex,"Isocortex layers 2,3"
+IC_3,TRUE,Cerebral Nuclei,Caudoputamen CP
+IC_4,TRUE,Thalamus,Medial dorsal thalamus
+IC_5,TRUE,Thalamus,midline
+IC_6,TRUE,Cortex,isocortex layer 4
+IC_7,TRUE,Fiber tract,"corticospinal tract, dorsal fornix"
+IC_8,TRUE,Hypothalamus,Ventromedial hypothalamic nucleus VMH
+IC_9,TRUE,Hippocampus,dentate gyrus
+IC_10,TRUE,Cerebral nuclei,Medial amygdalar nucleus anterodorsal MEAad
+IC_11,TRUE,Cortex,isocortex layer 5
+IC_12,TRUE,Thalamus,Lateral dorsal LD
+IC_13,TRUE,Cortex,isocortex layer 6
+IC_14,TRUE,Cerebral nuclei,Medial amygdalar nucleus
+IC_15,TRUE,Hippocampus,CA1-2 pyramidal layer
+IC_16,TRUE,Thalamus,Medial habenula MH
+IC_17,TRUE,Cortex,isocortex layer 6a
+IC_18,TRUE,Fiber tract,fornix system
+IC_19,TRUE,Thalamus,Reticular nucleus of the Thalamus RT
+IC_20,TRUE,Hippocampus,CA3 pyramidal layer
+IC_21,TRUE,Cortex,Endopiriform nucleus dorsal EPd+ isocortex layer 4
+IC_22,TRUE,Cortex,Basolateral amygdalar nucleus anterior BLAa
+IC_23,TRUE,Cortex,Piriform area molecular layer PIR1
+IC_24,TRUE,Cortex,isocortex layer 6b + Claustrum
+IC_25,TRUE,Cerebral nuclei,Entral amygdalar nucleus lateral CEAI
+IC_26,TRUE,Hypothalamus,Arcuate hypothalamic nucleus
+IC_27,TRUE,Cortex,Isocortex layer 4
+IC_28,TRUE,Cortex,isocortex layer 1
+IC_29,TRUE,Hippocampus,"Dentate gyrus molecular layer, CA1-3 stratum radiatum"
+IC_30,TRUE,Cerebral nuclei,Striatum
+IC_31,TRUE,Ventricle,Ventricle lining epithelium
+IC_32,FALSE,,
+IC_33,TRUE,Cortex,Retrosplenial area RSP
+IC_34,TRUE,Hypothalamus,Dorsomedial nucleus of the hypothalamus DMHa
+IC_35,TRUE,Fiber tract,Corticospinal internal capsule
+IC_36,FALSE,,
+IC_37,TRUE,Ventricle,"Ventricle lining, cycling"
+IC_38,FALSE,,
+IC_39,TRUE,Ventricle,Ventricle lining
+IC_40,TRUE,Cell type,Glutamatergic neuron
+IC_41,FALSE,,
+IC_42,TRUE,Ventricle,Ventricle lining
+IC_43,TRUE,Hippocampus,CA2 pyramidal layer
+IC_44,TRUE,Cell type,Oligodendrocyte
+IC_45,TRUE,Thalamus,Lateral habenula LH
+IC_46,TRUE,Cortex,Sensory Isocortex layer 1-2
+IC_47,TRUE,Cell type,Glial cells
+IC_48,FALSE,,
+IC_49,FALSE,,
+IC_50,FALSE,,
+IC_51,FALSE,,
+IC_52,FALSE,,
+IC_53,FALSE,,
+IC_54,FALSE,,
+IC_55,FALSE,,
+IC_56,FALSE,,
+IC_57,FALSE,,
+IC_58,FALSE,,
+IC_59,FALSE,,
+IC_60,FALSE,,
+IC_61,TRUE,Cell type,Vein endothelial
+IC_62,FALSE,,
+IC_63,FALSE,,
+IC_64,FALSE,,
+IC_65,FALSE,,
+IC_66,FALSE,,
+IC_67,FALSE,,
+IC_68,FALSE,,
+IC_69,FALSE,,
+IC_70,FALSE,,
+IC_71,FALSE,,
+IC_72,FALSE,,
+IC_73,FALSE,,
+IC_74,FALSE,,
+IC_75,TRUE,Cell type,Microglia
+IC_76,FALSE,,
+IC_77,FALSE,,
+IC_78,FALSE,,
+IC_79,FALSE,,
+IC_80,FALSE,,
+IC_81,FALSE,,
+IC_82,FALSE,,
+IC_83,FALSE,,
+IC_84,FALSE,,
+IC_85,FALSE,,
+IC_86,FALSE,,
+IC_87,FALSE,,
+IC_89,FALSE,,
+IC_90,FALSE,,
+IC_91,FALSE,,
+IC_92,FALSE,,
+IC_97,FALSE,,
