@@ -234,9 +234,9 @@ $~$
 
 ### IC visualizations
 
-Multiple visualization options are rendered when an IC is selected. All visualizations are interactive with the ability to modify paramaters (in the left box), zoom in, hover for more information, save snapshot as .png, and more. See the [CellsFromSpace documentation](https://github.com/gustaveroussy/CFS/blob/development/docs/CFS.md) for detailed descriptions of all functions
+Multiple visualization options are rendered when an IC is selected. All visualizations are interactive with the ability to modify parameters (in the left box), zoom in, hover for more information, save snapshot as .png, and more. See the [CellsFromSpace documentation](https://github.com/gustaveroussy/CFS/blob/development/docs/CFS.md) for detailed descriptions of all functions
 
-- **Global ICA heatmap**: Display the top contributor genes for each IC. In the cogwheel menu, user can select to cluster ICs based on feature weight profile. Values represent gene weights in each IC. *Note* this visualization is constant between ICs and may be collapsed to decrease render time between ICs.
+- **Global ICA heatmap**: Display the top contributor genes for each IC. In the cogwheel menu, user can select to cluster ICs based on feature weight profile. Values represent gene weights in each IC. *Note*: this visualization is constant between ICs and may be collapsed to decrease render time between ICs.
 
 ![ICA_Global_heatmap](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_Global_heatmap.png)
 
@@ -248,11 +248,11 @@ Multiple visualization options are rendered when an IC is selected. All visualiz
 
 ![ICA_topGenes](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_topGenes.png)
 
-- **IC-specific heatmap**: Display weights of selected IC's top contributory gene across all ICs. allows for rapid interpretation of gene list by expert and rapid identification of similar ICs. Underneath the heatmap, the number of total and positive contributor genes are displayed with buttons allowing the copy of the associated gene lists to clipboard.
+- **IC-specific heatmap**: Display weights of selected IC's top contributor genes across all ICs. Allows for rapid interpretation of gene list by expert and rapid identification of similar ICs. Underneath the heatmap, the number of total and positive contributor genes are displayed with adjacent buttons allowing the copy of the associated gene lists to clipboard.
 
 ![ICA_ICWeight](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_ICWeight.png)
 
-- **Functional enrichment**: Display the result of functional enrichment analysis. Select the database to display in the drop down menu in the left box. 
+- **Functional enrichment**: Display the result of functional enrichment analysis. Select the database to display in the drop down menu in the parameter selection box. 
 
 ![ICA_enrich](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_enrich.png)
 
@@ -275,7 +275,7 @@ $~$
 ### ICA table
 
 This tab displays the searchable, editable IC annotation table. An IC annotation table can be filled dynamically in the [**ICA**](#ica-annotation) tab, or imported using the **Choose CSV File** atop this tab. The annotation table can also be downloaded using the `Download table` button at the bottom of the table
-You can find an example of annotation table for the mouse brain visium sample [here](LINK TO THE TABLE), but exact IC ordering can vary slightly between runs, leading to downstream misinterpretation. Use with caution.
+An example of annotation table for the mouse brain visium sample can be found [here](LINK TO THE TABLE), but exact IC ordering can vary slightly between runs, leading to downstream misinterpretation. Use with caution.
 
 ![ICAtable](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICAtable.png)
 
@@ -285,7 +285,7 @@ $~$
 
 Once IC annotation is complete, different visualization options are offered within CFS in the **Visualization** tab.
 
-First, spots can be clustered and a dimensionality reduction (DimRed) calculated using the ICA latent space. To do so, Select one or more IC *Type* to be used for calculation in the **Choose cell type to cluster/for reduction** fields of both the **Clustering parameters** and **Dimension reduction parameters** panes. In our mouse brain example, we can calculate clusters and DimRed choosing all of the annotated IC Types with default parameters and a clustering resolution of 3.8 as shown below. 
+First, spots can be clustered and a dimensionality reduction (DimRed) calculated using the ICA latent space. To do so, Select one or more IC *Type* to be used for calculation in the **Choose cell type to cluster/for reduction** fields of both the **Clustering parameters** and **Dimension reduction parameters** panes. In our mouse brain example, we can calculate clusters and DimRed using all of the annotated IC Types with default parameters and a clustering resolution of 3.8 as shown below. 
 
 ![Vis_clust](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_clust.png)
 ![Vis_dimred](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_dimred.png)
