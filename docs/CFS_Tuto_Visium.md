@@ -275,7 +275,7 @@ $~$
 ### ICA table
 
 This tab displays the searchable, editable IC annotation table. An IC annotation table can be filled dynamically in the [**ICA**](#ica-annotation) tab, or imported using the **Choose CSV File** atop this tab. The annotation table can also be downloaded using the `Download table` button at the bottom of the table
-You can find an example of annotation table for the mouse brain visium sample [here](LINK TO THE TABLE), but exact IC ordering can vary slightly between runs, leading to downstream misinterpretation. Use with caution.
+You can find an example of annotation table for the mouse brain visium sample [here](https://github.com/gustaveroussy/CFS/blob/main/docs/Tables/Annotation.csv), but exact IC ordering can vary slightly between runs, leading to downstream misinterpretation. Use with caution.
 
 ![ICAtable](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICAtable.png)
 
