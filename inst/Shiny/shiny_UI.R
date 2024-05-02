@@ -36,6 +36,7 @@ source(paste0(Shiny.options[["shiny_root"]], "/Table/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Marker_table/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/About/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Signal_analysis/UI.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/Interaction_analysis/UI.R"), local = TRUE)
 
 # Define UI for app that draws a histogram ----
 ui <- dashboardPage(
@@ -47,6 +48,7 @@ ui <- dashboardPage(
       menuItem("ICA", tabName = "ICA", icon = icon("wave-square")),
       menuItem("IC gene weights", tabName = "ICA_table", icon = icon("table-list")),
       menuItem("ICA Table", tabName = "Table", icon = icon("table-list")),
+      menuItem("Distances analysis", tabName = "interaction_analysis", icon = icon("wave-square")),
       menuItem("Signal analysis", tabName = "signal_analysis", icon = icon("wave-square")),
       menuItem("Visualization", tabName = "Visualization", icon = icon("display")),
       menuItem("Marker table", tabName = "Marker_table", icon = icon("table-list")),
@@ -82,6 +84,7 @@ ui <- dashboardPage(
       tab_ICA,
       tab_ICA_table,
       tab_table,
+      tab_interaction_analysis,
       tab_signal_analysis,
       tab_visualisation,
       tab_marker_table,

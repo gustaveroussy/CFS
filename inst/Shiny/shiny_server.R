@@ -26,6 +26,7 @@ server <- function(input, output, session) {
   source(paste0(Shiny.options[["shiny_root"]], "/Marker_table/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/About/server.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Signal_analysis/server.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "/Interaction_analysis/server.R"), local = TRUE)
   
 ########################################
 # IC_list
