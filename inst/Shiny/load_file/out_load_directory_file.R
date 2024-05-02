@@ -31,7 +31,11 @@ observeEvent(input$input_file_local, {
           values$HD_image_2 = NULL
           
           
-          values$distances = list()
+          if(!is.null(values$data@misc$distances)){
+            values$distances = values$data@misc$distances
+          } else {
+            values$distances = list()
+          }
           
           incProgress(0.2, detail = "Reading RDS")
           

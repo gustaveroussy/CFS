@@ -53,9 +53,13 @@ observeEvent(input$input_file, {
   values$HD_image = NULL
   values$HD_image_2 = NULL
   
-  values$distances = list()
-  
   values$data = Launch_analysis()
+  
+  if(!is.null(values$data@misc$distances)){
+    values$distances = values$data@misc$distances
+  } else {
+    values$distances = list()
+  }
   
   if (!is.null(values$data)){
     
