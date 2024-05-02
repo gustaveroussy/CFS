@@ -33,6 +33,10 @@ output$download_RDS <- downloadHandler(
         data@misc$markers <- values$marker_gene
       }
       
+      if(input$output_distance_RDS == TRUE){
+        data@misc$distances <- values$distances
+      }
+      
       incProgress(0.20, detail = paste("Saving RDS"))
       saveRDS(data, file)
       incProgress(0.05, detail = paste("Done"))

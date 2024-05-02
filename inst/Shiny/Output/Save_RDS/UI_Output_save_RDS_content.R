@@ -10,6 +10,7 @@ output[["Output_or_message"]] <- renderUI({
            HTML("<b>Type of Data to add to the downloaded data :</b>"),
            checkboxInput("output_annotation_RDS", label = "Output Annotation table", value = TRUE),
            checkboxInput("output_UMAP_RDS", label = "Output UMAP + Clustering", value = TRUE),
+           checkboxInput("output_distance_RDS", label = "Output distances", value = TRUE),
            checkboxInput("output_markers_RDS", label = "Output marker genes", value = TRUE)
     )
   )

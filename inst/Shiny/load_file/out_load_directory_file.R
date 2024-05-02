@@ -30,6 +30,9 @@ observeEvent(input$input_file_local, {
           values$HD_image = NULL
           values$HD_image_2 = NULL
           
+          
+          values$distances = list()
+          
           incProgress(0.2, detail = "Reading RDS")
           
           values$data = readRDS(path$datapath)

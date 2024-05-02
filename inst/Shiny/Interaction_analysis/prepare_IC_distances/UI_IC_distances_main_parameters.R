@@ -3,7 +3,8 @@
 ## available.
 ##----------------------------------------------------------------------------##
 
-output[["IC_distance_main_parameters"]] <- renderUI({
+output[["IC_distance_main_parameters_UI"]] <- renderUI({
+  req(values$data)
   fluidRow(
     column(width = 12,
       selectInput("choose_method_for_distances",
@@ -15,7 +16,16 @@ output[["IC_distance_main_parameters"]] <- renderUI({
        width = NULL,
        size = NULL
       ),
-      actionButton("start_distance_ICs", "Start")
+      selectInput("choose_sample_for_distances",
+                  "Choose sample",
+                  names(values$data@images),
+                  multiple = FALSE,
+                  selectize = TRUE,
+                  width = NULL,
+                  size = NULL
+      ),
+      actionButton("start_distance_IC", "Start"),
+      downloadButton("download_distance_tables", "Download graph table")
     )
   )
 })
@@ -24,8 +34,8 @@ output[["IC_distance_main_parameters"]] <- renderUI({
 ## Text in info box.
 ##----------------------------------------------------------------------------##
 IC_distance_main_parameters_info <- list(
-  title = "Create cell annotation",
-  text = p("Create a reduction for a specific annotation")
+  title = "Main parameters for distances",
+  text = p("Options for the main parameters of distances")
 )
 
 ##----------------------------------------------------------------------------##

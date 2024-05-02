@@ -75,8 +75,8 @@ output[["IC_distances_UI"]] <- renderUI({
 ## Text in info box.
 ##----------------------------------------------------------------------------##
 IC_distance_info <- list(
-  title = "Create cell annotation",
-  text = p("Create a reduction for a specific annotation")
+  title = "Distances",
+  text = p("show distance graphs between different variables")
 )
 
 ##----------------------------------------------------------------------------##

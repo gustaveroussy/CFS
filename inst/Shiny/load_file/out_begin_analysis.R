@@ -10,7 +10,7 @@
 
 values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation = NULL,
                          annotation_for_output = list(), low_image = NULL, HD_image = NULL, HD_image_2 = NULL,
-                         cropped_image = NULL, marker_gene = NULL, integration_folders = NULL)
+                         cropped_image = NULL, marker_gene = NULL, integration_folders = NULL, distances = NULL)
 
 Launch_analysis <- reactive({
   if (length(grep('.RDS',toupper(input$input_file$datapath))) != 0) {
@@ -52,6 +52,8 @@ observeEvent(input$input_file, {
   values$low_image = NULL
   values$HD_image = NULL
   values$HD_image_2 = NULL
+  
+  values$distances = list()
   
   values$data = Launch_analysis()
   

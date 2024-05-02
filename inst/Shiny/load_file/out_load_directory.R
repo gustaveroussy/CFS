@@ -30,6 +30,8 @@ observeEvent(input$load_data_file_select, {
           values$HD_image = NULL
           values$HD_image_2 = NULL
           
+          values$distances = list()
+          
           incProgress(0.2, detail = "Loading spatial 10X")
           # load the seurat object
           files_names = list.files(path=path, pattern=".h5", all.files=TRUE, full.names=FALSE)

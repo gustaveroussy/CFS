@@ -20,6 +20,8 @@
 #' @import data.table
 #' @import clustree
 #' @import ggdendro
+#' @import spdep
+#' @importFrom igraph graph_from_data_frame layout_with_fr V
 #' @importFrom viridis viridis
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG
