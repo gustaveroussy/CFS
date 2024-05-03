@@ -34,7 +34,11 @@ observeEvent(input$start_distance_IC,{
     if(method == "Lee"){
       table = data@reductions$ica@cell.embeddings
       
-      table_sample = table[grepl(paste0(sample,"_[ACGT]"), rownames(table)),]
+      if(length(data@images) > 1){
+        table_sample = table[grepl(paste0(sample,"_[ACGT]"), rownames(table)),]
+      } else {
+        table_sample = table
+      }
       
       incProgress(0.1, detail = "Finding neighbors")
       
@@ -52,11 +56,13 @@ observeEvent(input$start_distance_IC,{
       
       df[,"Lee"] = x
       
-      df[,"Lee"] = scale(as.double(df[,"Lee"]))
+      df[,"Lee"] = scale(df[,"Lee"])
       
       df = df[!(as.double(df[,"Lee"]) <= 0),]
       
-      df = df[!(as.double(df[,"Lee"]) <= sd(as.double(df[,"Lee"]))),]
+      df = df[!(as.double(df[,"Lee"]) <= (sd(as.double(df[,"Lee"])) * input$Z_score_for_distances)),]
+      
+      df[,"Lee"] = 1/df[,"Lee"]
       
       values$distances[[sample]][[method]] = df
       
@@ -70,49 +76,56 @@ observeEvent(input$start_distance_IC,{
 fig_distance_graph_IC <- reactive({
   tree_table = values$distances[[input$choose_sample_for_distances]][[input$choose_method_for_distances]]
   
+  req(tree_table)
+  
   G = graph_from_data_frame(tree_table, directed = FALSE)
   
   layout <- layout_with_fr(G)
   
-  # create nodes
   Xn <- layout[,1]
   Yn <- layout[,2]
-  
-  network <- plot_ly(type = "scatter", x = ~Xn, y = ~Yn, mode = "markers",
-                     text = names(V(G)), hoverinfo = "text",
-                     color = values$Annotation[names(V(G)),"Type"])
-  
-  # create edges
-  Ne <- length(df[,1])
-  edge_shapes <- list()
-  for(i in 1:Ne) {
-    v0 <- df[i,1]
-    v1 <- df[i,2]
-    
-    rownames(layout) = names(V(G))
-    
-    edge_shape = list(
-      type = "line",
-      line = list(color = "#030303", width = 0.3),
-      x0 = as.double(layout[v0,1]),
-      y0 = as.double(layout[v0,2]),
-      x1 = as.double(layout[v1,1]),
-      y1 = as.double(layout[v1,2])
-    )
-    
-    edge_shapes[[i]] <- edge_shape
-  }
   
   #create graph
   axis <- list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE)
   
-  fig <- layout(
-    network,
-    title = 'IC distance graph',
-    shapes = edge_shapes,
+  fig = plot_ly()
+  
+  # create edges
+  for(i in 1:length(tree_table[,1])) {
+    v0 <- tree_table[i,1]
+    v1 <- tree_table[i,2]
+    
+    rownames(layout) = names(V(G))
+
+    fig = fig %>% add_segments(x = as.double(layout[v0,1]),
+                 xend = as.double(layout[v1,1]),
+                 y = as.double(layout[v0,2]),
+                 yend = as.double(layout[v1,2]),
+                 line=list(color="black",
+                           width = input$choose_edges_size_for_distances
+                           ))
+      
+  }
+
+  
+  # create vertices colors
+  colors = rep(base_palette(),ceiling(length(unique(values$Annotation[names(V(G)),"Type"]))/length(base_palette())))[as.double(as.factor(values$Annotation[names(V(G)),"Type"]))]
+  
+  #create edges
+  fig = fig %>%
+    add_markers(x = ~Xn, y = ~Yn,
+                text = names(V(G)), hoverinfo = "text",
+                marker = list(
+                  color = colors,
+                  size = input$choose_vertices_size_for_distances
+                ),
+                opacity = 1
+    ) %>% layout(
+    title = 'Distance graph',
     xaxis = axis,
     yaxis = axis
-  )
+  ) %>%
+  hide_legend()
   
   return(fig)
 })

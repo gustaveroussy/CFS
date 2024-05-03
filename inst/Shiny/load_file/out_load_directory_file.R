@@ -30,18 +30,17 @@ observeEvent(input$input_file_local, {
           values$HD_image = NULL
           values$HD_image_2 = NULL
           
+          incProgress(0.2, detail = "Reading RDS")
+          
+          values$data = readRDS(path$datapath)
+          
+          incProgress(0.5, detail = "Preparing object")
           
           if(!is.null(values$data@misc$distances)){
             values$distances = values$data@misc$distances
           } else {
             values$distances = list()
           }
-          
-          incProgress(0.2, detail = "Reading RDS")
-          
-          values$data = readRDS(path$datapath)
-          
-          incProgress(0.5, detail = "Preparing object")
           
           if(is.null(values$data@misc$GeneAndStat$kurtosis_value)){
             values$IC_names = names(values$data@misc$GeneAndStat$Kurtosis_ICs)[values$data@misc$GeneAndStat$Kurtosis_ICs > 3]
