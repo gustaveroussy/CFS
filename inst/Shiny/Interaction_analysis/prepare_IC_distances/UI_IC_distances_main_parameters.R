@@ -31,9 +31,9 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
                   size = NULL
       ),
       selectInput("choose_vertices_color_for_distances",
-                  "Color vertices by",
+                  "Vertices annotation",
                   colnames(values$Annotation),
-                  selected = "Annotation",
+                  selected = "Type",
                   multiple = FALSE,
                   selectize = TRUE,
                   width = NULL,

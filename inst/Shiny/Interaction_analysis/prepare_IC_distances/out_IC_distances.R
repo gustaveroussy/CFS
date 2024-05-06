@@ -24,11 +24,6 @@ observeEvent(input$start_distance_IC,{
   method = input$choose_method_for_distances
   sample = input$choose_sample_for_distances
   
-  lee_function = function(x){
-    n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"))
-    return(n$L)
-  }
-  
   withProgress(message = 'Calculating distances', value = 0, {
   
     if(method == "Lee"){
@@ -50,19 +45,19 @@ observeEvent(input$start_distance_IC,{
       
       df = t(combn(colnames(table_sample),2))
       df = as.data.frame(df)
-      x = apply(df,1,lee_function)
+      x = apply(df,1,function(x){n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"));return(n$L)})
       
       incProgress(0.7, detail = "Finished")
       
-      df[,"Lee"] = x
+      df[,"weight"] = x
       
-      df[,"Lee"] = scale(df[,"Lee"])
+      df[,"weight"] = scale(df[,"weight"])
       
-      df = df[!(as.double(df[,"Lee"]) <= 0),]
+      df = df[!(as.double(df[,"weight"]) <= 0),]
       
-      df = df[!(as.double(df[,"Lee"]) <= (sd(as.double(df[,"Lee"])) * input$Z_score_for_distances)),]
+      df = df[as.double(df[,"weight"]) >= (sd(as.double(df[,"weight"])) * input$Z_score_for_distances),]
       
-      df[,"Lee"] = 1/df[,"Lee"]
+      #df[,"weight"] = 1/df[,"weight"]
       
       values$distances[[sample]][[method]] = df
       
@@ -96,30 +91,50 @@ fig_distance_graph_IC <- reactive({
     v1 <- tree_table[i,2]
     
     rownames(layout) = names(V(G))
-
+    median_point = c((as.double(layout[v0,1]) + as.double(layout[v1,1]))/2,(as.double(layout[v0,2]) + as.double(layout[v1,2]))/2)
+    
     fig = fig %>% add_segments(x = as.double(layout[v0,1]),
-                 xend = as.double(layout[v1,1]),
+                 xend = median_point[1],
                  y = as.double(layout[v0,2]),
-                 yend = as.double(layout[v1,2]),
+                 yend = median_point[2],
                  line=list(color="black",
                            width = input$choose_edges_size_for_distances
-                           ))
+                           )
+                 )
+    
+    fig = fig %>% add_segments(x = median_point[1],
+                               xend = as.double(layout[v1,1]),
+                               y = median_point[2],
+                               yend = as.double(layout[v1,2]),
+                               line=list(color="black",
+                                         width = input$choose_edges_size_for_distances
+                               ),
+                               text = paste0(v0," <-> ",v1),
+                               customdata = tree_table[i,3],
+                               hovertemplate = paste0("%{text}<br>",
+                                                      "Value : %{customdata}",
+                                                      "<extra></extra>")
+                               )
       
   }
-
   
   # create vertices colors
-  colors = rep(base_palette(),ceiling(length(unique(values$Annotation[names(V(G)),"Type"]))/length(base_palette())))[as.double(as.factor(values$Annotation[names(V(G)),"Type"]))]
+  annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
+  colors = rep(base_palette(),ceiling(length(unique(annotation))/length(base_palette())))[as.numeric(as.factor(annotation))]
   
   #create edges
   fig = fig %>%
     add_markers(x = ~Xn, y = ~Yn,
-                text = names(V(G)), hoverinfo = "text",
                 marker = list(
                   color = colors,
                   size = input$choose_vertices_size_for_distances
                 ),
-                opacity = 1
+                opacity = 1,
+                text = names(V(G)),
+                customdata = annotation,
+                hovertemplate = paste0("IC : %{text}<br>",
+                                       "Annotation : %{customdata}",
+                                       "<extra></extra>")
     ) %>% layout(
     title = 'Distance graph',
     xaxis = axis,
