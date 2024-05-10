@@ -8,6 +8,6 @@ output$download_distance_tables <- downloadHandler(
   },
   content = function(file) {
     table = values$distances[[input$choose_sample_for_distances]][[input$choose_method_for_distances]]
-    write.csv(table, file, row.names=TRUE)
+    write.csv(table, file, row.names=FALSE)
   }
 )
