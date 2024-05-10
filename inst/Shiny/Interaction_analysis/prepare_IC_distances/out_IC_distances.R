@@ -72,75 +72,145 @@ fig_distance_graph_IC <- reactive({
   tree_table = values$distances[[input$choose_sample_for_distances]][[input$choose_method_for_distances]]
   
   req(tree_table)
+  req(input$choose_n_dim_for_distances)
   
   G = graph_from_data_frame(tree_table, directed = FALSE)
   
-  layout <- layout_with_fr(G)
+  layout <- layout_with_fr(G, dim = input$choose_n_dim_for_distances)
   
-  Xn <- layout[,1]
-  Yn <- layout[,2]
-  
-  #create graph
-  axis <- list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE)
-  
-  fig = plot_ly()
-  
-  # create edges
-  for(i in 1:length(tree_table[,1])) {
-    v0 <- tree_table[i,1]
-    v1 <- tree_table[i,2]
+  if(input$choose_n_dim_for_distances == 2){
+    Xn <- layout[,1]
+    Yn <- layout[,2]
     
-    rownames(layout) = names(V(G))
-    median_point = c((as.double(layout[v0,1]) + as.double(layout[v1,1]))/2,(as.double(layout[v0,2]) + as.double(layout[v1,2]))/2)
+    #create graph
+    axis <- list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE)
     
-    fig = fig %>% add_segments(x = as.double(layout[v0,1]),
-                 xend = median_point[1],
-                 y = as.double(layout[v0,2]),
-                 yend = median_point[2],
-                 line=list(color="black",
-                           width = input$choose_edges_size_for_distances
-                           )
-                 )
+    fig = plot_ly()
     
-    fig = fig %>% add_segments(x = median_point[1],
-                               xend = as.double(layout[v1,1]),
-                               y = median_point[2],
-                               yend = as.double(layout[v1,2]),
-                               line=list(color="black",
-                                         width = input$choose_edges_size_for_distances
-                               ),
-                               text = paste0(v0," <-> ",v1),
-                               customdata = tree_table[i,3],
-                               hovertemplate = paste0("%{text}<br>",
-                                                      "Value : %{customdata}",
-                                                      "<extra></extra>")
-                               )
+    # create edges
+    for(i in 1:length(tree_table[,1])) {
+      v0 <- tree_table[i,1]
+      v1 <- tree_table[i,2]
       
+      rownames(layout) = names(V(G))
+      median_point = c((as.double(layout[v0,1]) + as.double(layout[v1,1]))/2,(as.double(layout[v0,2]) + as.double(layout[v1,2]))/2)
+      
+      fig = fig %>% add_segments(x = as.double(layout[v0,1]),
+                   xend = median_point[1],
+                   y = as.double(layout[v0,2]),
+                   yend = median_point[2],
+                   line=list(color="black",
+                             width = input$choose_edges_size_for_distances
+                             )
+                   )
+      
+      fig = fig %>% add_segments(x = median_point[1],
+                                 xend = as.double(layout[v1,1]),
+                                 y = median_point[2],
+                                 yend = as.double(layout[v1,2]),
+                                 line=list(color="black",
+                                           width = input$choose_edges_size_for_distances
+                                 ),
+                                 text = paste0(v0," <-> ",v1),
+                                 customdata = tree_table[i,3],
+                                 hovertemplate = paste0("%{text}<br>",
+                                                        "Value : %{customdata}",
+                                                        "<extra></extra>")
+                                 )
+        
+    }
+    
+    # create vertices colors
+    annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
+    colors = rep(base_palette(),ceiling(length(unique(annotation))/length(base_palette())))[as.numeric(as.factor(annotation))]
+    
+    #create edges
+    fig = fig %>%
+      add_markers(x = ~Xn, y = ~Yn,
+                  marker = list(
+                    color = colors,
+                    size = input$choose_vertices_size_for_distances
+                  ),
+                  opacity = 1,
+                  text = names(V(G)),
+                  customdata = annotation,
+                  hovertemplate = paste0("IC : %{text}<br>",
+                                         "Annotation : %{customdata}",
+                                         "<extra></extra>")
+      ) %>% layout(
+      title = 'Distance graph',
+      xaxis = axis,
+      yaxis = axis
+    ) %>%
+    hide_legend()
+  } else if (input$choose_n_dim_for_distances == 3){
+    Xn <- layout[,1]
+    Yn <- layout[,2]
+    Zn <- layout[,3]
+    
+    #create graph
+    axis <- list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE)
+    
+    fig = plot_ly(type = 'scatter3d', mode = 'lines+markers')
+    
+    # create edges
+    for(i in 1:length(tree_table[,1])) {
+      v0 <- tree_table[i,1]
+      v1 <- tree_table[i,2]
+      
+      rownames(layout) = names(V(G))
+      median_point = c((as.double(layout[v0,1]) + as.double(layout[v1,1]))/2,(as.double(layout[v0,2]) + as.double(layout[v1,2]))/2,(as.double(layout[v0,3]) + as.double(layout[v1,3]))/2)
+      
+      fig = fig %>% add_trace(x=c(as.double(layout[v0,1]), median_point[1]), y=c(as.double(layout[v0,2]), median_point[2]), z=c(as.double(layout[v0,3]), median_point[3]),
+                              type="scatter3d", mode="lines",
+                              line=list(color="black",
+                                        width = input$choose_edges_size_for_distances
+                              ),
+                              text = paste0(v0," <-> ",v1),
+                              customdata = tree_table[i,3],
+                              hovertemplate = paste0("%{text}<br>",
+                                                     "Value : %{customdata}",
+                                                     "<extra></extra>")
+                              )
+      
+      fig = fig %>% add_trace(x=c(median_point[1],as.double(layout[v1,1])), y=c(median_point[2],as.double(layout[v1,2])), z=c(median_point[3],as.double(layout[v1,3])),
+                              type="scatter3d", mode="lines",
+                              line=list(color="black",
+                                        width = input$choose_edges_size_for_distances
+                              ),
+                              text = paste0(v0," <-> ",v1),
+                              customdata = tree_table[i,3],
+                              hovertemplate = paste0("%{text}<br>",
+                                                     "Value : %{customdata}",
+                                                     "<extra></extra>")
+                              )
+      
+    }
+    
+    # create vertices colors
+    annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
+    colors = rep(base_palette(),ceiling(length(unique(annotation))/length(base_palette())))[as.numeric(as.factor(annotation))]
+    
+    #create edges
+    fig = fig %>%
+      add_markers(x = ~Xn, y = ~Yn, z = ~Zn,
+                  marker = list(
+                    color = colors,
+                    size = input$choose_vertices_size_for_distances
+                  ),
+                  opacity = 1,
+                  text = names(V(G)),
+                  customdata = annotation,
+                  hovertemplate = paste0("IC : %{text}<br>",
+                                         "Annotation : %{customdata}",
+                                         "<extra></extra>")
+      ) %>% layout(
+        title = 'Distance graph',
+        xaxis = axis,
+        yaxis = axis
+      ) %>%
+      hide_legend()
   }
-  
-  # create vertices colors
-  annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
-  colors = rep(base_palette(),ceiling(length(unique(annotation))/length(base_palette())))[as.numeric(as.factor(annotation))]
-  
-  #create edges
-  fig = fig %>%
-    add_markers(x = ~Xn, y = ~Yn,
-                marker = list(
-                  color = colors,
-                  size = input$choose_vertices_size_for_distances
-                ),
-                opacity = 1,
-                text = names(V(G)),
-                customdata = annotation,
-                hovertemplate = paste0("IC : %{text}<br>",
-                                       "Annotation : %{customdata}",
-                                       "<extra></extra>")
-    ) %>% layout(
-    title = 'Distance graph',
-    xaxis = axis,
-    yaxis = axis
-  ) %>%
-  hide_legend()
   
   return(fig)
 })

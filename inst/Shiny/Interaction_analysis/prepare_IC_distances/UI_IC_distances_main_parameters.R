@@ -39,6 +39,10 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
                   width = NULL,
                   size = NULL
       ),
+      selectInput("choose_n_dim_for_distances",
+                  "number of dimensions",
+                  choices = list("2d" = 2,"3d" = 3)
+      ),
       numericInput("choose_vertices_size_for_distances",
                    "Vertices size",
                    10,
