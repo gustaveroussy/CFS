@@ -21,6 +21,8 @@ if(Shiny.options[["offline_mode"]] == FALSE){
   # }
   
   reticulate::use_miniconda('r-reticulate')
+  
+  library(enrichR)
 }
 
 ##----------------------------------------------------------------------------##
