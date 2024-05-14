@@ -51,14 +51,6 @@ observeEvent(input$start_distance_IC,{
       
       df[,"weight"] = x
       
-      df[,"weight"] = scale(df[,"weight"])
-      
-      df = df[!(as.double(df[,"weight"]) <= 0),]
-      
-      df = df[as.double(df[,"weight"]) >= (sd(as.double(df[,"weight"])) * input$Z_score_for_distances),]
-      
-      #df[,"weight"] = 1/df[,"weight"]
-      
       values$distances[[sample]][[method]] = df
       
     }
@@ -73,6 +65,14 @@ fig_distance_graph_IC <- reactive({
   
   req(tree_table)
   req(input$choose_n_dim_for_distances)
+  
+  tree_table[,"weight"] = scale(tree_table[,"weight"])
+  
+  tree_table = tree_table[!(as.double(tree_table[,"weight"]) <= 0),]
+  
+  tree_table = tree_table[as.double(tree_table[,"weight"]) >= (sd(as.double(tree_table[,"weight"])) * input$Z_score_for_distances),]
+  
+  #df[,"weight"] = 1/df[,"weight"]
   
   G = graph_from_data_frame(tree_table, directed = FALSE)
   
