@@ -204,7 +204,7 @@ $~$
 
 Searchable table of gene weights per IC. Genes can be filtered to query gienes of interest using the top left search box.
 
-When integrated analysis of multiple samples is performed, the **Sample based dotplot** shows the global distribution of ICs across samples with dot size representing the proportion of spots in each sample above the percentile threshold and the color indicating the percentile threshold value per sample. These metrics indicate samples where specific ICs are enriched or absent.
+When joint analysis of multiple samples is performed, the **Sample based dotplot** shows the global distribution of ICs across samples with dot size representing the proportion of spots in each sample above the percentile threshold and the color indicating the percentile threshold value per sample. These metrics indicate samples where specific ICs are enriched or absent.
 
 $~$
 
@@ -284,7 +284,7 @@ Calculation of the spot clustering and UMAP/tSNE embedding and various data visu
     -   Display plotly grid: Whether or not to display the grid behind the UMAP
     -   Use ggplot scatter pie: *currently not functional*
     -   **Select annotation :** Dropdown menu to select the information provided when hovering over spots. Choice between `None`, `IC`, `Mean IC`, `Full annotation` & `Mean full annotation`
-    -   Display only the UMAP of the currently selected image: When working with integrated objects with multiple images, display only the spots of the sample selected in the leftmost menu `Sample to display`
+    -   Display only the UMAP of the currently selected image: When working with joint objects with multiple images, display only the spots of the sample selected in the leftmost menu `Sample to display`
     -   Spot size: Adjust the size of each plotted spot
 -   **Plot_Spatial** window:
     -   Invert color scale: invert the selected color scale
@@ -398,6 +398,7 @@ Determine mitochondrial and hemoglobin gene ratios, normalises and scales counts
 -   data : Seurat object to analyse
 -   organism : "Hs" (human) or "Mm" (mice) (default = "Hs")
 -   variable_features : Number of variable features to use for the SCTransform (default = 20000)
+-   min_cells : Filters out genes detected in less than the specified number of spots. For joint analysis of multiple samples, min_cells = 0 is recommended.
 
 #### output
 
