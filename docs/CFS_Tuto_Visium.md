@@ -157,7 +157,7 @@ $~$
 ICA computing, IC fitlering with kurtosis and identification of IC contributory genes is done with the `ICASpatial` function. By default, 100 components are calculated with the *icafast* method and automatic IC filtering is done with a kurtosis value of 3 (through the `kurtosis` parameter), meaning all ICs with low tailedness of the distribution are filtered out. This value can be increased for more stringent filtering at the expense of potential loss of biologically relevant signal. Identification of IC contributory genes is done through automatic thresholding (through the `sd` parameter) of feature loadings by z-score. Genes with |z-score| above threshold are considered contributory.
 
 ``` r
-data <- ICASpatial(data=data,ncis=100,maxit=600,method="icafast",kurtosis = 3,sd=3)
+data <- ICASpatial(data=data,nics=100,maxit=600,method="icafast",kurtosis = 3,sd=3)
 ```
 
 $~$
