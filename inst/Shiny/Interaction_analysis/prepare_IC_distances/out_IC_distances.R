@@ -45,13 +45,16 @@ observeEvent(input$start_distance_IC,{
       
       df = t(combn(colnames(table_sample),2))
       df = as.data.frame(df)
-      x = apply(df,1,function(x){n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"));return(n$L)})
+      x = apply(df,1,function(x){n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"));return(n)})
       
       incProgress(0.7, detail = "Finished")
       
-      df[,"weight"] = x
+      df[,"weight"] = unlist(lapply(x,function(n){return(n$L)}))
       
-      values$distances[[sample]][[method]] = df
+      local = lapply(x,function(n){return(n$localL)})
+      names(local) = paste0(df[,1]," ",df[,2])
+      
+      values$distances[[sample]][[method]] = list(df = df,local = local)
       
     }
     
@@ -61,7 +64,7 @@ observeEvent(input$start_distance_IC,{
 
 
 fig_distance_graph_IC <- reactive({
-  tree_table = values$distances[[input$choose_sample_for_distances]][[input$choose_method_for_distances]]
+  tree_table = values$distances[[input$choose_sample_for_distances]][[input$choose_method_for_distances]][["df"]]
   
   req(tree_table)
   req(input$choose_n_dim_for_distances)
@@ -85,7 +88,7 @@ fig_distance_graph_IC <- reactive({
     #create graph
     axis <- list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE)
     
-    fig = plot_ly()
+    fig = plot_ly(source = "S")
     
     # create edges
     for(i in 1:length(tree_table[,1])) {
@@ -111,10 +114,8 @@ fig_distance_graph_IC <- reactive({
                                  line=list(color="black",
                                            width = input$choose_edges_size_for_distances
                                  ),
-                                 text = paste0(v0," <-> ",v1),
-                                 customdata = tree_table[i,3],
-                                 hovertemplate = paste0("%{text}<br>",
-                                                        "Value : %{customdata}",
+                                 customdata = paste0(v0," <-> ",v1,"<br>Value : ",tree_table[i,3]),
+                                 hovertemplate = paste0("%{customdata}",
                                                         "<extra></extra>")
                                  )
         
