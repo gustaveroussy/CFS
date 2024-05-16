@@ -25,6 +25,8 @@ current_plot_graph_interactions <- reactive({
   
   req(table)
   
+  print(table)
+  
   ICs = str_split(table$customdata,"<br>") |> unlist() |> str_split(" <-> ")
   ICs = ICs[[1]]
   
@@ -98,7 +100,9 @@ current_plot_graph_interactions <- reactive({
               y = ~y,
               marker = list(
                 color = datatable$IC_1,
-                size = 5
+                colorscale = colorscale_interactions(),
+                size = input$plot_interactions_size,
+                opacity = if(input$transparency_interactions_choice == 1){input$transparency_interactions_range}else{alpha_color_scale(values = datatable$IC_1, slider_1 = min(datatable$IC_1), slider_2 =max(datatable$IC_1), alpha = input$transparency_interactions_range)}
               ),
               showlegend = T,
               text = datatable$cell_name,
@@ -106,7 +110,8 @@ current_plot_graph_interactions <- reactive({
               hovertemplate = paste0("Cell : %{text}<br>",
                                      "IC : %{customdata}",
                                      "<extra></extra>")
-    )
+    ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                 yaxis = list(showgrid = FALSE, showticklabels=FALSE))
   
   fig2 <- fig2 %>%
     add_trace(data = datatable,
@@ -114,7 +119,9 @@ current_plot_graph_interactions <- reactive({
               y = ~y,
               marker = list(
                 color = datatable$local,
-                size = 5
+                colorscale = colorscale_interactions(),
+                size = input$plot_interactions_size,
+                opacity = if(input$transparency_interactions_choice == 1){input$transparency_interactions_range}else{alpha_color_scale(values = datatable$local, slider_1 = min(datatable$local), slider_2 =max(datatable$local), alpha = input$transparency_interactions_range)}
               ),
               showlegend = T,
               text = datatable$cell_name,
@@ -122,7 +129,8 @@ current_plot_graph_interactions <- reactive({
               hovertemplate = paste0("Cell : %{text}<br>",
                                      "local : %{customdata}",
                                      "<extra></extra>")
-    )
+    ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                 yaxis = list(showgrid = FALSE, showticklabels=FALSE))
   
   fig3 <- fig3 %>%
     add_trace(data = datatable,
@@ -130,7 +138,9 @@ current_plot_graph_interactions <- reactive({
               y = ~y,
               marker = list(
                 color = datatable$IC_2,
-                size = 5
+                colorscale = colorscale_interactions(),
+                size = input$plot_interactions_size,
+                opacity = if(input$transparency_interactions_choice == 1){input$transparency_interactions_range}else{alpha_color_scale(values = datatable$IC_2, slider_1 = min(datatable$IC_2), slider_2 =max(datatable$IC_2), alpha = input$transparency_interactions_range)}
               ),
               showlegend = T,
               text = datatable$cell_name,
@@ -138,16 +148,63 @@ current_plot_graph_interactions <- reactive({
               hovertemplate = paste0("Cell : %{text}<br>",
                                      "IC : %{customdata}",
                                      "<extra></extra>")
-    )
+    ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                  yaxis = list(showgrid = FALSE, showticklabels=FALSE))
   
-  fig <- subplot(fig1, fig2, fig3,
-                 nrows=1,
-                 shareX=TRUE,
-                 shareY=TRUE
-                 ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                        yaxis = list(showgrid = FALSE, showticklabels=FALSE)
-  ) %>% hide_legend()
+  fig <- subplot(list(fig1, fig2, fig3),
+                 nrows = 1
+                 ) %>% hide_legend()
+  
+  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", unlist(str_split(ICs," "))[1], "</i></b>"),
+                                        x = 0.15,
+                                        y = 0.2,
+                                        yref = "paper",
+                                        xref = "paper",
+                                        xanchor = "center",
+                                        yanchor = "center",
+                                        showarrow = FALSE,
+                                        font = list(size = 34))
+  
+  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", ICs, "</i></b>"),
+                                        x = 0.5,
+                                        y = 0.2,
+                                        yref = "paper",
+                                        xref = "paper",
+                                        xanchor = "center",
+                                        yanchor = "center",
+                                        showarrow = FALSE,
+                                        font = list(size = 34))
+  
+  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", unlist(str_split(ICs," "))[2], "</i></b>"),
+                                        x = 0.85,
+                                        y = 0.2,
+                                        yref = "paper",
+                                        xref = "paper",
+                                        xanchor = "center",
+                                        yanchor = "center",
+                                        showarrow = FALSE,
+                                        font = list(size = 34))
   
   return(fig)
   
+})
+
+
+##----------------------------------------------------------------------------##
+## Create the colorscale for IC spatial
+##----------------------------------------------------------------------------##
+colorscale_interactions <- reactive({
+  if(input$select_color_interactions %in% c("Blues", "Reds","YlGnBu","YlOrRd")){
+    return(input$select_color_interactions)
+  } else {
+    #prepare colorscales
+    l = list()
+    se = seq(0, 1, (1/(ncol(values$data)-1)))
+    col = viridis_pal(option = input$select_color_interactions)(ncol(values$data))
+    for(i in 1:length(se)){
+      l[[i]] = c(se[i],col[i])
+    }
+    
+    return(l)
+  }
 })

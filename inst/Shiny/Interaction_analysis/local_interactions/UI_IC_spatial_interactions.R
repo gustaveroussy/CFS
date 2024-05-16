@@ -1,11 +1,11 @@
 output[["IC_spatial_interactions_UI"]] <- renderUI({
   fluidRow(
     column(width = 3, offset = 0, style = "padding: 0px;",
-           box(id = "IC_distances_parameters_container",
+           box(id = "interactions_from_graph_parameters_container",
                title = tagList(
                  "Main parameters",
                  actionButton(
-                   inputId = "IC_interactions_main_parameters_info",
+                   inputId = "interactions_from_graph_main_parameters_info",
                    label = "info",
                    icon = NULL,
                    class = "btn-xs",
@@ -19,7 +19,7 @@ output[["IC_spatial_interactions_UI"]] <- renderUI({
                height = NULL,
                collapsible = FALSE,
                collapsed = FALSE,
-               #uiOutput("IC_interactins_main_parameters_UI")
+               uiOutput("plot_interactions_from_graph_main_parameters_UI")
            )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",
