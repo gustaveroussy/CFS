@@ -36,11 +36,11 @@ output[["IC_spatial_interactions_UI"]] <- renderUI({
                  ),
                  shinyWidgets::dropdownButton(
                    tags$div(
-                     style = "color: black !important;"# ,
-                     # numericInput('top_IC_heatmap_export_width','width',640,min = 1,max = NA,step = 1,width = NULL),
-                     # numericInput('top_IC_heatmap_export_height','height',480,min = 1,max = NA,step = 1,width = NULL),
-                     # numericInput('top_IC_heatmap_export_scale','scale',1,min = 0.001,max = NA,step = 0.01,width = NULL),
-                     # uiOutput("top_IC_heatmap_export_UI")
+                     style = "color: black !important;",
+                     numericInput('IC_interactions_export_width','width',640,min = 1,max = NA,step = 1,width = NULL),
+                     numericInput('IC_interactions_export_height','height',480,min = 1,max = NA,step = 1,width = NULL),
+                     numericInput('IC_interactions_export_scale','scale',1,min = 0.001,max = NA,step = 0.01,width = NULL),
+                     uiOutput("IC_interactions_export_UI")
                    ),
                    circle = FALSE,
                    icon = icon("download"),
@@ -74,22 +74,37 @@ output[["IC_spatial_interactions_UI"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-IC_distance_info <- list(
-  title = "Distances",
-  text = p("show distance graphs between different variables")
+IC_spatial_interactions_info <- list(
+  title = "Interactions",
+  text = p("Interactions plots between different variables")
 )
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["IC_distance_info"]], {
+observeEvent(input[["IC_spatial_interactions_info"]], {
   showModal(
     modalDialog(
-      IC_distance_info[["text"]],
-      title = IC_distance_info[["title"]],
+      IC_spatial_interactions_info[["text"]],
+      title = IC_spatial_interactions_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
     )
+  )
+})
+
+##----------------------------------------------------------------------------##
+## export button
+##----------------------------------------------------------------------------##
+output[["IC_interactions_export_UI"]] <- renderUI({
+  shinyFiles::shinySaveButton(
+    "IC_interactions_export",
+    label = HTML("<p style='color:black;'>export</p>"),
+    title = "png, jpg, jpeg, webp, svg, or pdf",
+    filetype = c("pdf", "png", "jpg", "jpeg", "webp", "svg"),
+    viewtype = "icon",
+    class = "btn-xs",
+    style = "margin-right: 3px"
   )
 })

@@ -48,11 +48,11 @@ output[["IC_distances_UI"]] <- renderUI({
                  ),
                  shinyWidgets::dropdownButton(
                    tags$div(
-                     style = "color: black !important;"# ,
-                     # numericInput('top_IC_heatmap_export_width','width',640,min = 1,max = NA,step = 1,width = NULL),
-                     # numericInput('top_IC_heatmap_export_height','height',480,min = 1,max = NA,step = 1,width = NULL),
-                     # numericInput('top_IC_heatmap_export_scale','scale',1,min = 0.001,max = NA,step = 0.01,width = NULL),
-                     # uiOutput("top_IC_heatmap_export_UI")
+                     style = "color: black !important;",
+                     numericInput('IC_distances_export_width','width',640,min = 1,max = NA,step = 1,width = NULL),
+                     numericInput('IC_distances_export_height','height',480,min = 1,max = NA,step = 1,width = NULL),
+                     numericInput('IC_distances_export_scale','scale',1,min = 0.001,max = NA,step = 0.01,width = NULL),
+                     uiOutput("IC_distances_export_UI")
                    ),
                    circle = FALSE,
                    icon = icon("download"),
@@ -103,5 +103,21 @@ observeEvent(input[["IC_distance_info"]], {
       footer = NULL,
       size = "l"
     )
+  )
+})
+
+
+##----------------------------------------------------------------------------##
+## export button
+##----------------------------------------------------------------------------##
+output[["IC_distances_export_UI"]] <- renderUI({
+  shinyFiles::shinySaveButton(
+    "IC_distances_export",
+    label = HTML("<p style='color:black;'>export</p>"),
+    title = "png, jpg, jpeg, webp, svg, or pdf",
+    filetype = c("pdf", "png", "jpg", "jpeg", "webp", "svg"),
+    viewtype = "icon",
+    class = "btn-xs",
+    style = "margin-right: 3px"
   )
 })

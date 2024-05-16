@@ -72,19 +72,19 @@ output[["IC_distance_main_parameters_UI_2"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-IC_distance_main_parameters_info <- list(
-  title = "Main parameters for distances",
-  text = p("Options for the main parameters of distances")
+interactions_from_graph_main_parameters_info <- list(
+  title = "Main parameters for interactions",
+  text = p("Options for the main parameters of interactions")
 )
 
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["IC_distance_main_parameters_info"]], {
+observeEvent(input[["interactions_from_graph_main_parameters_info"]], {
   showModal(
     modalDialog(
-      IC_distance_main_parameters_info[["text"]],
-      title = IC_distance_main_parameters_info[["title"]],
+      interactions_from_graph_main_parameters_info[["text"]],
+      title = interactions_from_graph_main_parameters_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
