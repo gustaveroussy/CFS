@@ -25,8 +25,6 @@ current_plot_graph_interactions <- reactive({
   
   req(table)
   
-  print(table)
-  
   ICs = str_split(table$customdata,"<br>") |> unlist() |> str_split(" <-> ")
   ICs = ICs[[1]]
   
@@ -86,9 +84,9 @@ current_plot_graph_interactions <- reactive({
     }
   }
   
-  fig1 = plot_ly(type = "scatter", mode = "markers")
-  fig2 = plot_ly(type = "scatter", mode = "markers")
-  fig3 = plot_ly(type = "scatter", mode = "markers")
+  fig1 = plot_ly(type = "scatter", mode = "markers", source = "T")
+  fig2 = plot_ly(type = "scatter", mode = "markers", source = "T")
+  fig3 = plot_ly(type = "scatter", mode = "markers", source = "T")
   
   fig1 <- fig1 %>% add_trace(type="image", source = image, hoverinfo = 'skip')
   fig2 <- fig2 %>% add_trace(type="image", source = image, hoverinfo = 'skip')
