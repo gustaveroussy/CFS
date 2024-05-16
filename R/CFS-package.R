@@ -25,6 +25,7 @@
 #' @importFrom viridis viridis
 #' @importFrom png readPNG
 #' @importFrom jpeg readJPEG
+#' @importFrom tiff readTIFF
 #' @importFrom heatmaply heatmaply
 #' @importFrom e1071 kurtosis
 #' @importFrom enrichR listEnrichrDbs setEnrichrSite enrichr

@@ -35,6 +35,7 @@ Imports:
     stringr,
     png,
     jpeg,
+    tiff,
     heatmaply,
     scales,
     enrichR,
