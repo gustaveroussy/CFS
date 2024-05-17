@@ -3,7 +3,7 @@
 ##----------------------------------------------------------------------------##
 
 output[["IC_distances_plot"]] <- plotly::renderPlotly({
-  req(values$distances[[input$choose_sample_for_distances]][[input$choose_method_for_distances]])
+  req(values$distances[[input$choose_distances_to_determine]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]])
   
   return(fig_distance_graph_IC())
 })
@@ -27,7 +27,12 @@ observeEvent(input$start_distance_IC,{
   withProgress(message = 'Calculating distances', value = 0, {
   
     if(method == "Lee"){
-      table = data@reductions$ica@cell.embeddings
+      
+      if(input$choose_distances_to_determine == "IC"){
+        table = data@reductions$ica@cell.embeddings
+      } else if (input$choose_distances_to_determine == "Genes") {
+        table = t(data@assays$SCT@data)
+      }
       
       if(length(data@images) > 1){
         table_sample = table[grepl(paste0(sample,"_[ACGT]"), rownames(table)),]
@@ -43,8 +48,19 @@ observeEvent(input$start_distance_IC,{
       
       incProgress(0.2, detail = "Calculating Lee")
       
-      df = t(combn(colnames(table_sample),2))
-      df = as.data.frame(df)
+      if (input$choose_distances_to_determine == "Genes") {
+        lr = read.delim("/home/c_thuilliez/Desktop/human_lr_pair.csv")$lr_pair
+        
+        df <- data.frame(lr=lr)
+        df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")
+        df = df[df[,1] %in% colnames(table_sample),]
+        df = df[df[,2] %in% colnames(table_sample),]
+        
+      } else if (input$choose_distances_to_determine == "IC"){
+        df = t(combn(colnames(table_sample),2))
+        df = as.data.frame(df)
+      }
+      
       x = apply(df,1,function(x){n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"));return(n)})
       
       incProgress(0.7, detail = "Finished")
@@ -54,7 +70,7 @@ observeEvent(input$start_distance_IC,{
       local = lapply(x,function(n){return(n$localL)})
       names(local) = paste0(df[,1]," ",df[,2])
       
-      values$distances[[sample]][[method]] = list(df = df,local = local)
+      values$distances[[input$choose_distances_to_determine]][[sample]][[method]] = list(df = df,local = local)
       
     }
     
@@ -64,7 +80,7 @@ observeEvent(input$start_distance_IC,{
 
 
 fig_distance_graph_IC <- reactive({
-  tree_table = values$distances[[input$choose_sample_for_distances]][[input$choose_method_for_distances]][["df"]]
+  tree_table = values$distances[[input$choose_distances_to_determine]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]][["df"]]
   
   req(tree_table)
   req(input$choose_n_dim_for_distances)

@@ -30,7 +30,7 @@ interactions_from_graph_main_parameters_info <- list(
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["IC_distance_main_parameters_info"]], {
+observeEvent(input[["interactions_from_graph_main_parameters_info"]], {
   showModal(
     modalDialog(
       interactions_from_graph_main_parameters_info[["text"]],

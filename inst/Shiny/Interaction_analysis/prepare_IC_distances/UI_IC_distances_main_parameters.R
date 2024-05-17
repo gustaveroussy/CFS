@@ -7,6 +7,15 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
   req(values$data)
   fluidRow(
     column(width = 12,
+       selectInput("choose_distances_to_determine",
+                   "Choose graph",
+                   c("IC","Genes"),
+                   selected = "IC",
+                   multiple = FALSE,
+                   selectize = TRUE,
+                   width = NULL,
+                   size = NULL
+       ),
       selectInput("choose_method_for_distances",
        "Choose method",
        c("Lee"),
