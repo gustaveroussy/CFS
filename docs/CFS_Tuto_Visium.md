@@ -25,14 +25,14 @@ CellsFromSpace can be installed from the github repository using the package dev
 
 ``` r
 install.packages("devtools")
-devtools::install_github("/gustaveroussy/CFS"
+devtools::install_github("gustaveroussy/CFS"
                          ,ref="main")
 ```
 
 To install the development branch with additional (potentially unstable) features, use:
 
 ``` r
-devtools::install_github("/gustaveroussy/CFS"
+devtools::install_github("gustaveroussy/CFS"
                          ,ref="development")
 ```
 
