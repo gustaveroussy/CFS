@@ -31,7 +31,7 @@ observeEvent(input$start_distance_IC,{
       if(input$choose_distances_to_determine == "IC"){
         table = data@reductions$ica@cell.embeddings
       } else if (input$choose_distances_to_determine == "Genes") {
-        table = t(data@assays$SCT@data)
+        table = raster::t(data@assays$SCT@data)
       }
       
       if(length(data@images) > 1){

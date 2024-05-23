@@ -108,7 +108,7 @@ interactions_IC_genes_top_by_ICs <- reactive({
       
       if(method == "Lee"){
         
-        table = t(data@assays$SCT@data)
+        table = raster::t(data@assays$SCT@data)
         
         if(length(data@images) > 1){
           table_sample = table[grepl(paste0(sample,"_[ACGT]"), rownames(table)),]
