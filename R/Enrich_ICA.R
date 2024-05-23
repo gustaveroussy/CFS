@@ -12,7 +12,17 @@
 #' data = Enrich_ICA(data=data,dbs=c("GO_Biological_Process_2015"), kurtosis = 3, overwrite = TRUE)
 #' 
 #' @export
-Enrich_ICA=function(data=NULL, dbs=c("GO_Biological_Process_2015"), kurtosis = 3, overwrite = TRUE, enrich_positive_genes = TRUE){
+Enrich_ICA=function(data=NULL, dbs=c("PanglaoDB_Augmented_2021",
+                                "CellMarker_Augmented_2021",
+                                "Azimuth_Cell_Types_2021",
+                                "Tabula_Sapiens",
+                                "Tabula_Muris",
+                                "GO_Biological_Process_2023",
+                                "GO_Molecular_Function_2023",
+                                "GO_Cellular_Component_2023",
+                                "MSigDB_Hallmark_2020",
+                                "Reactome_2022",
+                                "KEGG_2021_Human"), kurtosis = 3, overwrite = TRUE, enrich_positive_genes = TRUE){
   
   #check if online
   websiteLive <- getOption("enrichR.live")
