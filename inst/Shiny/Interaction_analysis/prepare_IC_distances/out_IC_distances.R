@@ -49,7 +49,7 @@ observeEvent(input$start_distance_IC,{
       incProgress(0.2, detail = "Calculating Lee")
       
       if (input$choose_distances_to_determine == "Genes") {
-        lr = read.delim("/home/c_thuilliez/Desktop/human_lr_pair.csv")$lr_pair
+        lr = read.delim(paste0(Shiny.options[["shiny_root"]], "../tmp_data/human_lr_pair.csv"))$lr_pair
         
         df <- data.frame(lr=lr)
         df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")

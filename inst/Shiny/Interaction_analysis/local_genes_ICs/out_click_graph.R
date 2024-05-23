@@ -16,13 +16,10 @@ output[["plot_interactions_IC_genes_from_graph_or_message"]] <- renderUI({
 })
 
 current_plot_graph_interactions_IC_genes <- reactive({
-  table = graph_click_interactions()
+  table = interactions_IC_genes_top_by_ICs()[["local"]]
   
   req(table)
   req((input$choose_distances_to_determine == "IC"))
-  
-  ICs = interactions_IC_genes_top_by_ICs()$ICs
-  ICs = paste0(ICs[1], " ", ICs[2])
   
   if(!is.null(values$HD_image)) {
     c <- values$data@images[[input$choose_sample_for_distances]]@coordinates * values$data@images[[input$choose_sample_for_distances]]@scale.factors$hires
@@ -65,9 +62,9 @@ current_plot_graph_interactions_IC_genes <- reactive({
   datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
                           "y" = as.vector(TissueCoordinates[,"imagerow"]),
                           "cell_name" = as.vector(rownames(meta.data)),
-                          "local" = interactions_IC_genes_top_by_ICs()[["local"]][[ICs]],
-                          "gene_1" = values$data@assays$SCT@data[unlist(str_split(input$select_Genes_interactions_IC_genes_choice," "))[1],(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates))],
-                          "gene_2" = values$data@assays$SCT@data[unlist(str_split(input$select_Genes_interactions_IC_genes_choice," "))[2],(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates))]
+                          "local" = interactions_IC_genes_top_by_ICs()[["local"]],
+                          "gene_1" = values$data@assays$SCT@data[input$select_Genes_interactions_IC_genes_choice_1,(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates))],
+                          "gene_2" = values$data@assays$SCT@data[input$select_Genes_interactions_IC_genes_choice_2,(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates))]
   )
   
   if (!is.null(values$HD_image)) {
@@ -93,7 +90,7 @@ current_plot_graph_interactions_IC_genes <- reactive({
               marker = list(
                 color = datatable$gene_1,
                 colorscale = colorscale_interactions_ICs_genes(),
-                size = input$plot_interactions_size,
+                size = input$plot_interactions_IC_genes_size,
                 opacity = if(input$transparency_interactions_IC_genes_choice == 1){input$transparency_interactions_IC_genes_range}else{alpha_color_scale(values = datatable$gene_1, slider_1 = min(datatable$gene_1), slider_2 =max(datatable$gene_1), alpha = input$transparency_interactions_IC_genes_range)}
               ),
               showlegend = T,
@@ -110,8 +107,8 @@ current_plot_graph_interactions_IC_genes <- reactive({
               marker = list(
                 color = datatable$local,
                 colorscale = colorscale_interactions_ICs_genes(),
-                size = input$plot_interactions_size,
-                opacity = if(input$transparency_interactions_IC_genes_choice == 1){input$transparency_interactions_IC_genes_range}else{alpha_color_scale(values = datatable$local, slider_1 = min(datatable$local), slider_2 =max(datatable$local), alpha = input$transparency_interactions_IC_genes_range)}
+                size = input$plot_interactions_IC_genes_size,
+                opacity = if(input$transparency_interactions_IC_genes_choice == 1){input$transparency_interactions_IC_genes_range}else{alpha_color_scale(values = datatable$gene_1, slider_1 = min(datatable$gene_1), slider_2 =max(datatable$gene_1), alpha = input$transparency_interactions_IC_genes_range)}
               ),
               showlegend = T,
               text = datatable$cell_name,
@@ -127,8 +124,8 @@ current_plot_graph_interactions_IC_genes <- reactive({
               marker = list(
                 color = datatable$gene_2,
                 colorscale = colorscale_interactions_ICs_genes(),
-                size = input$plot_interactions_size,
-                opacity = if(input$transparency_interactions_IC_genes_choice == 1){input$transparency_interactions_IC_genes_range}else{alpha_color_scale(values = datatable$gene_2, slider_1 = min(datatable$gene_2), slider_2 =max(datatable$gene_2), alpha = input$transparency_interactions_IC_genes_range)}
+                size = input$plot_interactions_IC_genes_size,
+                opacity = if(input$transparency_interactions_IC_genes_choice == 1){input$transparency_interactions_IC_genes_range}else{alpha_color_scale(values = datatable$gene_1, slider_1 = min(datatable$gene_1), slider_2 =max(datatable$gene_1), alpha = input$transparency_interactions_IC_genes_range)}
               ),
               showlegend = T,
               text = datatable$cell_name,
@@ -141,7 +138,7 @@ current_plot_graph_interactions_IC_genes <- reactive({
                  nrows = 1
                  ) %>% hide_legend()
   
-  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", str_split(input$select_Genes_interactions_IC_genes_choice," ")[1], "</i></b>"),
+  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", input$select_Genes_interactions_IC_genes_choice_1, "</i></b>"),
                                         x = 0.15,
                                         y = 0.2,
                                         yref = "paper",
@@ -151,7 +148,7 @@ current_plot_graph_interactions_IC_genes <- reactive({
                                         showarrow = FALSE,
                                         font = list(size = 34))
   
-  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", input$select_Genes_interactions_IC_genes_choice, "</i></b>"),
+  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", paste0(input$select_Genes_interactions_IC_genes_choice_1," ",input$select_Genes_interactions_IC_genes_choice_2), "</i></b>"),
                                         x = 0.5,
                                         y = 0.2,
                                         yref = "paper",
@@ -161,7 +158,7 @@ current_plot_graph_interactions_IC_genes <- reactive({
                                         showarrow = FALSE,
                                         font = list(size = 34))
   
-  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", str_split(input$select_Genes_interactions_IC_genes_choice," ")[2], "</i></b>"),
+  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", input$select_Genes_interactions_IC_genes_choice_2, "</i></b>"),
                                         x = 0.85,
                                         y = 0.2,
                                         yref = "paper",
