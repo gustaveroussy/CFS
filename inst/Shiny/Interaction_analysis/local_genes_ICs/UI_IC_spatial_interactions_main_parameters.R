@@ -3,25 +3,39 @@
 ## available.
 ##----------------------------------------------------------------------------##
 
+output[["plot_interactions_IC_genes_from_graph_main_parameters_UI_3"]] <- renderUI({
+  req(values$data)
+  tagList(
+    selectInput("select_Genes_interactions_IC_genes_type", label = "Type of observation", 
+                choices = c("LR","All genes"))
+  )
+})
+
 output[["plot_interactions_IC_genes_from_graph_main_parameters_UI_2"]] <- renderUI({
   req(values$data)
   req(genes_selection_IC_genes_top_by_ICs())
   if(input$choose_distances_to_determine == "IC"){
-    tagList(
-      selectInput("select_Genes_interactions_IC_genes_choice_1", label = "Select IC 1", 
-                  choices = genes_selection_IC_genes_top_by_ICs()[[1]]["gene"]),
-      selectInput("select_Genes_interactions_IC_genes_choice_2", label = "Select IC 2", 
-                  choices = genes_selection_IC_genes_top_by_ICs()[[2]]["gene"])
-    )
+    if(input$select_Genes_interactions_IC_genes_type == "LR"){
+      tagList(
+        selectInput("select_Genes_interactions_IC_genes_choice", label = "Select LR interactions", 
+                    choices = genes_selection_IC_genes_top_by_ICs()[["interactions"]])
+      )
+    } else if(input$select_Genes_interactions_IC_genes_type == "All genes") {
+      tagList(
+        selectInput("select_Genes_interactions_IC_genes_choice_1", label = "Select IC 1", 
+                    choices = genes_selection_IC_genes_top_by_ICs()[["Contrib_gene"]][[1]]["gene"]),
+        selectInput("select_Genes_interactions_IC_genes_choice_2", label = "Select IC 2", 
+                    choices = genes_selection_IC_genes_top_by_ICs()[["Contrib_gene"]][[2]]["gene"])
+      )
+    }
   }
 })
 
 output[["plot_interactions_IC_genes_from_graph_main_parameters_UI"]] <- renderUI({
   req(values$data)
-  req(graph_click_interactions())
   if(input$choose_distances_to_determine == "IC"){
     tagList(
-      sliderInput("IC_genes_Z_score_interactions_IC_genes_choice", "Z-score",
+      numericInput("IC_genes_Z_score_interactions_IC_genes_choice", "Z-score",
                   min = 0, max = 100,
                   value = 3, step = 0.01),
       radioButtons("transparency_interactions_IC_genes_choice", label = "Alpha type",
@@ -34,8 +48,7 @@ output[["plot_interactions_IC_genes_from_graph_main_parameters_UI"]] <- renderUI
       selectInput("select_color_interactions_IC_genes", label = "Select color", 
                   choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
                   selected = "D"),
-      checkboxInput("positive_genes_interactions_IC_genes", label = "Only search positively associated genes", value = TRUE, width = NULL),
-      actionButton("start_genes_IC_interactions", "Display interactions")
+      checkboxInput("positive_genes_interactions_IC_genes", label = "Only search positively associated genes", value = TRUE, width = NULL)
     )
   }
 })
@@ -67,6 +80,7 @@ observeEvent(input[["interactions_IC_genes_from_graph_main_parameters_info"]], {
 ## get contrib genes related to ICs
 ##----------------------------------------------------------------------------##
 genes_selection_IC_genes_top_by_ICs <- reactive({
+  req(graph_click_interactions())
   if(input$choose_distances_to_determine == "IC"){
     table = graph_click_interactions()
     
@@ -84,7 +98,15 @@ genes_selection_IC_genes_top_by_ICs <- reactive({
       Contrib_gene = lapply(Contrib_gene,function(x){return(x[x$Sig > 0,])})
     }
     
-    return(Contrib_gene)
+    lr = read.delim(paste0(Shiny.options[["shiny_root"]], "../tmp_data/human_lr_pair.csv"))$lr_pair
+    df <- data.frame(lr=lr)
+    
+    df_2 = expand.grid(Contrib_gene$IC_1$gene,Contrib_gene$IC_2$gene)
+    df_3 = expand.grid(Contrib_gene$IC_2$gene,Contrib_gene$IC_1$gene)
+    
+    interactions = c(paste0(df_2$Var1,"_",df_2$Var2)[paste0(df_2$Var1,"_",df_2$Var2) %in% df$lr],paste0(df_3$Var1,"_",df_3$Var2)[paste0(df_3$Var1,"_",df_3$Var2) %in% df$lr])
+    
+    return(list(Contrib_gene = Contrib_gene, interactions = interactions))
   }
   
 })
@@ -96,8 +118,9 @@ interactions_IC_genes_top_by_ICs <- reactive({
   req(values$data)
   req(values$data@reductions$ica)
   req(genes_selection_IC_genes_top_by_ICs())
+  
   if(input$choose_distances_to_determine == "IC"){
-    Contrib_gene = genes_selection_IC_genes_top_by_ICs()
+    Contrib_gene = genes_selection_IC_genes_top_by_ICs()[["Contrib_gene"]]
     
     data = values$data
     
@@ -124,7 +147,12 @@ interactions_IC_genes_top_by_ICs <- reactive({
         
         incProgress(0.2, detail = "Calculating Lee")
         
-        x = lee(table_sample[,input$select_Genes_interactions_IC_genes_choice_1], table_sample[,input$select_Genes_interactions_IC_genes_choice_2], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"))
+        if(input$select_Genes_interactions_IC_genes_type == "All genes"){
+          x = lee(table_sample[,input$select_Genes_interactions_IC_genes_choice_1], table_sample[,input$select_Genes_interactions_IC_genes_choice_2], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"))
+        } else if(input$select_Genes_interactions_IC_genes_type == "LR"){
+          req(input$select_Genes_interactions_IC_genes_choice)
+          x = lee(table_sample[,unlist(str_split(input$select_Genes_interactions_IC_genes_choice,"_"))[1]], table_sample[,unlist(str_split(input$select_Genes_interactions_IC_genes_choice,"_"))[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"))
+        }
         
         incProgress(0.7, detail = "Finished")
         

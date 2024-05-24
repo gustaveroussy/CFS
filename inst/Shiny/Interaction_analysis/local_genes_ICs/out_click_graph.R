@@ -8,10 +8,12 @@ output[["plot_interactions_IC_genes_from_graph"]] <- renderPlotly({
 })
 
 output[["plot_interactions_IC_genes_from_graph_or_message"]] <- renderUI({
+  req(interactions_IC_genes_top_by_ICs())
   tagList(
     plotly::plotlyOutput("plot_interactions_IC_genes_from_graph",
                          width = "auto",
-                         height = "85vh")
+                         height = "85vh"),
+    renderText({HTML(paste0("Lee value = ", interactions_IC_genes_top_by_ICs()[["L"]],"<br>p-value = "))})
   )
 })
 
@@ -58,14 +60,26 @@ current_plot_graph_interactions_IC_genes <- reactive({
   
   TissueCoordinates = c
   meta.data = values$data@meta.data[(rownames(values$data@meta.data) %in% rownames(TissueCoordinates)),]
-
-  datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
-                          "y" = as.vector(TissueCoordinates[,"imagerow"]),
-                          "cell_name" = as.vector(rownames(meta.data)),
-                          "local" = interactions_IC_genes_top_by_ICs()[["local"]],
-                          "gene_1" = values$data@assays$SCT@data[input$select_Genes_interactions_IC_genes_choice_1,(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates))],
-                          "gene_2" = values$data@assays$SCT@data[input$select_Genes_interactions_IC_genes_choice_2,(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates))]
-  )
+  
+  if(input$select_Genes_interactions_IC_genes_type == "All genes"){
+    datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
+                            "y" = as.vector(TissueCoordinates[,"imagerow"]),
+                            "cell_name" = as.vector(rownames(meta.data)),
+                            "local" = interactions_IC_genes_top_by_ICs()[["local"]],
+                            "gene_1" = values$data@assays$SCT@data[input$select_Genes_interactions_IC_genes_choice_1,(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates))],
+                            "gene_2" = values$data@assays$SCT@data[input$select_Genes_interactions_IC_genes_choice_2,(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates))]
+    )
+  } else if (input$select_Genes_interactions_IC_genes_type == "LR"){
+    genes = unlist(str_split(input$select_Genes_interactions_IC_genes_choice,"_"))
+    
+    datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
+                            "y" = as.vector(TissueCoordinates[,"imagerow"]),
+                            "cell_name" = as.vector(rownames(meta.data)),
+                            "local" = interactions_IC_genes_top_by_ICs()[["local"]],
+                            "gene_1" = values$data@assays$SCT@data[genes[1],(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates))],
+                            "gene_2" = values$data@assays$SCT@data[genes[2],(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates))]
+    )
+  }
   
   if (!is.null(values$HD_image)) {
     image <- values$HD_image
@@ -138,7 +152,8 @@ current_plot_graph_interactions_IC_genes <- reactive({
                  nrows = 1
                  ) %>% hide_legend()
   
-  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", input$select_Genes_interactions_IC_genes_choice_1, "</i></b>"),
+  fig = fig %>% plotly::add_annotations(text = if(input$select_Genes_interactions_IC_genes_type == "All genes"){paste0("<i><b>", input$select_Genes_interactions_IC_genes_choice_1, "</i></b>")}
+                                        else{paste0("<i><b>", genes[1], "</i></b>")},
                                         x = 0.15,
                                         y = 0.2,
                                         yref = "paper",
@@ -148,7 +163,8 @@ current_plot_graph_interactions_IC_genes <- reactive({
                                         showarrow = FALSE,
                                         font = list(size = 34))
   
-  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", paste0(input$select_Genes_interactions_IC_genes_choice_1," ",input$select_Genes_interactions_IC_genes_choice_2), "</i></b>"),
+  fig = fig %>% plotly::add_annotations(text = if(input$select_Genes_interactions_IC_genes_type == "All genes"){paste0("<i><b>", paste0(input$select_Genes_interactions_IC_genes_choice_1," ",input$select_Genes_interactions_IC_genes_choice_2), "</i></b>")}
+                                        else{paste0("<i><b>", paste0(genes, collapse="_"), "</i></b>")},
                                         x = 0.5,
                                         y = 0.2,
                                         yref = "paper",
@@ -158,7 +174,8 @@ current_plot_graph_interactions_IC_genes <- reactive({
                                         showarrow = FALSE,
                                         font = list(size = 34))
   
-  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", input$select_Genes_interactions_IC_genes_choice_2, "</i></b>"),
+  fig = fig %>% plotly::add_annotations(text = if(input$select_Genes_interactions_IC_genes_type == "All genes"){paste0("<i><b>", input$select_Genes_interactions_IC_genes_choice_2, "</i></b>")}
+                                        else{paste0("<i><b>", genes[2], "</i></b>")},
                                         x = 0.85,
                                         y = 0.2,
                                         yref = "paper",

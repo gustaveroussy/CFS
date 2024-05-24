@@ -19,6 +19,7 @@ output[["IC_spatial_interactions_IC_genes_UI"]] <- renderUI({
                height = NULL,
                collapsible = FALSE,
                collapsed = FALSE,
+               uiOutput("plot_interactions_IC_genes_from_graph_main_parameters_UI_3"),
                uiOutput("plot_interactions_IC_genes_from_graph_main_parameters_UI_2"),
                uiOutput("plot_interactions_IC_genes_from_graph_main_parameters_UI")
            )
