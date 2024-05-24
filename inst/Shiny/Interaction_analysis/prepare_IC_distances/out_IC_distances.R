@@ -29,15 +29,13 @@ observeEvent(input$start_distance_IC,{
     if(method == "Lee"){
       
       if(input$choose_distances_to_determine == "IC"){
-        table = data@reductions$ica@cell.embeddings
+        table_sample = data@reductions$ica@cell.embeddings
       } else if (input$choose_distances_to_determine == "Genes") {
-        table = raster::t(data@assays$SCT@data)
+        table_sample = raster::t(data@assays$SCT@data)
       }
       
       if(length(data@images) > 1){
-        table_sample = table[grepl(paste0(sample,"_[ACGT]"), rownames(table)),]
-      } else {
-        table_sample = table
+        table_sample = table_sample[grepl(paste0(sample,"_[ACGT]"), rownames(table_sample)),]
       }
       
       incProgress(0.1, detail = "Finding neighbors")
@@ -53,8 +51,8 @@ observeEvent(input$start_distance_IC,{
         
         df <- data.frame(lr=lr)
         df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")
-        df = df[df[,1] %in% colnames(table_sample),]
-        df = df[df[,2] %in% colnames(table_sample),]
+        df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample) > 0],]
+        df = df[df[,2] %in% colnames(table_sample)[colSums(table_sample) > 0],]
         
       } else if (input$choose_distances_to_determine == "IC"){
         df = t(combn(colnames(table_sample),2))
