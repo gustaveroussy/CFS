@@ -102,10 +102,10 @@ current_plot_spatial <- reactive({
                 size = input$Plot_scatter_size_spatial
               ),
               showlegend = T,
-              text = datatable$cell_name,#i,
-              customdata = datatable$t,
-              hovertemplate = paste0("Cell : %{text}<br>",
-                                     "%{customdata}",
+              customdata = datatable$cell_name,#i,
+              text = datatable$t,
+              hovertemplate = paste0("Cell : %{customdata}<br>",
+                                     "%{text}",
                                      "<extra></extra>")
             )
       }
@@ -218,6 +218,7 @@ current_plot_spatial <- reactive({
     
     fig <- fig %>% event_register('plotly_click')
     fig <- fig %>% event_register('plotly_brushed')
+    fig <- fig %>% event_register("plotly_selected")
     
     out[[n]] = fig
     

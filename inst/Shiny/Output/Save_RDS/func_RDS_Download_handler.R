@@ -147,6 +147,39 @@ output$download_subcluster_RDS <- downloadHandler(
       
       saveRDS(data, file)
       
+    } else if (input$export_sub_IC == "Manual Selection"){
+      
+      withProgress(message = 'Preparing RDS', value = 0, {
+      
+        incProgress(0.25, detail = paste("Preparing base data"))
+        data <- values$data
+        
+        incProgress(0.25, detail = paste("Preparing annotation"))
+        
+        data@misc$annotation <- values$Annotation
+  
+        data@misc$markers <- values$marker_gene
+  
+        data@misc$distances <- values$distances
+        
+        table = plotly::event_data(c("plotly_selected"), source = "C")
+        
+        incProgress(0.25, detail = paste("subsetting"))
+        
+        data <- subset(
+          x = data,
+          cells = table$customdata
+        )
+        
+        incProgress(0.20, detail = paste("Saving RDS"))
+        
+        saveRDS(data, file)
+        
+        incProgress(0.05, detail = paste("Done"))
+        
+        data = values$data
+        
+      })
     }
   }
 )

@@ -35,7 +35,7 @@ output[["Output_or_message_2"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 output$subclustering_type <- renderUI({
   selectInput("export_sub_IC", label = "Choose type of subclustering", 
-              choices = list("UMAP Cluster", "IC Cell types"), 
+              choices = list("UMAP Cluster", "IC Cell types", "Manual Selection"), 
               selected = "UMAP Cluster")
 })
   

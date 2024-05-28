@@ -22,6 +22,7 @@ square_cell_UMAP_spatial <- reactive({
 observeEvent(square_cell_UMAP_spatial(), {
   table = square_cell_UMAP_spatial()
   
-  shinyalert(html = TRUE, text = HTML(paste0("x: ", round(table$x[1],2), ", ", round(table$x[2],2), "<br>y: ", round(table$y[2],2), ", ", round(table$y[1],2))))
+  shinyalert(html = TRUE, text = HTML(paste0("x: ", round(table$x[1],2), ", ", round(table$x[2],2), "<br>y: ", round(table$y[2],2), ", ", round(table$y[1],2), "<br>Cells saved for manual export")))
+  
 })
 
