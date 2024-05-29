@@ -14,9 +14,7 @@ square_cell_UMAP_selected <- reactive({
 
 # search for the cells that were selected while in density
 square_cell_UMAP_spatial <- reactive({
-  if(!is.null(plots$spatial)){
-    return(plotly::event_data(c("plotly_brushed"), source = "C"))
-  }
+  return(plotly::event_data(c("plotly_brushed"), source = "C"))
 })
 
 observeEvent(square_cell_UMAP_spatial(), {
