@@ -13,17 +13,7 @@ output$download_RDS <- downloadHandler(
       
       data = values$data
       
-      incProgress(0.25, detail = paste("Preparing UMAP"))
-      
-      # if(input$output_UMAP_RDS == TRUE && !is.null(values$UMAP)){
-      #   data@meta.data <- values$UMAP@meta.data
-      #   data@active.ident <- values$UMAP@active.ident
-      #   data@graphs <- values$UMAP@graphs
-      #   data@reductions$umap <- values$UMAP@reductions$umap
-      #   data@commands <- values$UMAP@commands
-      # }
-      
-      incProgress(0.25, detail = paste("Preparing annotation"))
+      incProgress(0.5, detail = paste("Preparing annotation"))
       
       if(input$output_annotation_RDS == TRUE){
         data@misc$annotation <- values$Annotation
@@ -54,77 +44,59 @@ output$download_subcluster_RDS <- downloadHandler(
     paste("data", ".RDS", sep = "")
   },
   content = function(file) {
-    if (input$export_sub_IC == "IC Cell types"){
+    if (input$export_sub_IC == "IC annotation"){
       
+      type = NULL
       data <- values$data
       threshold = input$Cell_type_subclustering_density_export_choose
       Cell_type = input$Cell_type_subclustering_IC_export_choose
       
-      if (input$Plot_display_type_density_manual == "Manual"){
-        selected_cells = selected_cells_subcluster()$customdata
-        ## if cells were manually selected
-        # filter object
-        data <- subset(
-          x = data,
-          cells = selected_cells
-        )
-        
-        if(input$output_annotation_RDS == TRUE){
-          data@misc$annotation <- values$Annotation
-        }
-        
-        saveRDS(data, file)
-        
-      } else if (input$Plot_display_type_density_manual == "Automated"){
-        
-        if(length(Cell_type) > 1){
-          for (n in 1:length(Cell_type)) {
-            if(n == 1) {
-              type = values$annotation_for_output[["Type"]][[n]]
-            } else {
-              type = append(type, values$annotation_for_output[["Type"]][[n]])
-            }
+      if(length(Cell_type) > 1){
+        for (n in 1:length(Cell_type)) {
+          if(n == 1) {
+            type = values$annotation_for_output[[input$Annotation_type_subclustering_export_choose]][[Cell_type[n]]]
+          } else {
+            type = append(type, values$annotation_for_output[[input$Annotation_type_subclustering_export_choose]][[Cell_type[n]]])
           }
-          type = unique(type)
-        } else if (length(Cell_type) == 1) {
-          type = values$annotation_for_output[["Type"]][[Cell_type]]
-        } else {
-          type = NULL
         }
-        
-        type = type[type %in% rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"]]
-        
-        type = unique(c(type,input$Cell_type_subclustering_IC_def_export_choose))
-        
-        if(is.null(type)){
-          shinyalert("Oops!", "Enter a cell type or IC to extract", type = "error")
-        }
-        
-        if (length(type) >= 1){
-          ic_types=data@reductions$ica@cell.embeddings[,type]
-          ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
-          sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
-          sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
-          sum_IC = GetTissueCoordinates(data) %>%  cbind(.,sum_IC)
-          identity = rownames(sum_IC)[which(sum_IC[,'sum_IC'] >= mean(sum_IC[,'sum_IC']) + sd(sum_IC[,'sum_IC'])*input$Cell_type_subclustering_density_export_choose)]
-        } else {
-          identity = rownames(data@reductions$ica@cell.embeddings)
-        }
-        
-        data@misc$annotation <- values$Annotation
-        
-        data@misc$markers <- values$marker_gene
-        
-        data <- subset(
-          x = data,
-          cells = identity
-        )
-        
-        saveRDS(data, file)
-        
+        type = unique(type)
+      } else if (length(Cell_type) == 1) {
+        type = values$annotation_for_output[[input$Annotation_type_subclustering_export_choose]][[Cell_type]]
+      } else {
+        type = NULL
       }
       
-    } else if (input$export_sub_IC == "UMAP Cluster"){
+      type = type[type %in% rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"]]
+      
+      type = unique(c(type,input$Cell_type_subclustering_IC_def_export_choose))
+      
+      if(is.null(type)){
+        shinyalert("Oops!", "Enter a cell type or IC to extract", type = "error")
+      }
+      
+      if (length(type) >= 1){
+        ic_types=data@reductions$ica@cell.embeddings[,type]
+        ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
+        sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
+        sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
+        sum_IC = GetTissueCoordinates(data) %>%  cbind(.,sum_IC)
+        identity = rownames(sum_IC)[which(sum_IC[,'sum_IC'] >= mean(sum_IC[,'sum_IC']) + sd(sum_IC[,'sum_IC'])*input$Cell_type_subclustering_density_export_choose)]
+      } else {
+        identity = rownames(data@reductions$ica@cell.embeddings)[which(data@reductions$ica@cell.embeddings[,type] >= mean(data@reductions$ica@cell.embeddings[,type]) + sd(data@reductions$ica@cell.embeddings[,type])*input$Cell_type_subclustering_density_export_choose)]
+      }
+      
+      data@misc$annotation <- values$Annotation
+      
+      data@misc$markers <- values$marker_gene
+      
+      data <- subset(
+        x = data,
+        cells = identity
+      )
+      
+      saveRDS(data, file)
+      
+    } else if (input$export_sub_IC == "Metadata"){
       
       data <- values$data
       
