@@ -46,7 +46,6 @@ output$download_subcluster_RDS <- downloadHandler(
   content = function(file) {
     if (input$export_sub_IC == "IC annotation"){
       
-      type = NULL
       data <- values$data
       threshold = input$Cell_type_subclustering_density_export_choose
       Cell_type = input$Cell_type_subclustering_IC_export_choose
@@ -74,7 +73,7 @@ output$download_subcluster_RDS <- downloadHandler(
         shinyalert("Oops!", "Enter a cell type or IC to extract", type = "error")
       }
       
-      if (length(type) >= 1){
+      if (length(type) > 1){
         ic_types=data@reductions$ica@cell.embeddings[,type]
         ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
         sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
