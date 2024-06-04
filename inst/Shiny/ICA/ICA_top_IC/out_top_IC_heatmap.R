@@ -2,58 +2,92 @@
 ## top IC heatmap
 ##----------------------------------------------------------------------------##
 
-output[["top_gene_IC_plot"]] <- plotly::renderPlotly({
+output[["top_gene_IC_plot_interactive"]] <- plotly::renderPlotly({
   return(output_heatmap_all_ICs())
+})
+
+output[["top_gene_IC_plot"]] <- shiny::renderPlot({
+  plot(output_heatmap_all_ICs())
 })
 
 output_heatmap_all_ICs <- reactive({
   
   data_heat = top_IC_heatmap_table()
   
-  if (input$top_IC_column_organization == TRUE){
-    
-    fig = plotly_figure_ICA_all_heatmaply()
-    
-    if(!is.null(highlightcolumn_heatmaply()) && ncol(highlightcolumn_heatmaply()) == 4){
+  
+  if (input$heatmap_top_IC_interactive_display){
+    if (input$top_IC_column_organization){
       
-      l_row = as.double((highlightcolumn_heatmaply()["y"]/max(fig[["x"]][["data"]][[1]][["y"]], na.rm=T) * 0.2) + 0.8)
+      fig = plotly_figure_ICA_all_heatmaply()
       
-      fig[["x"]][["layout"]][["shapes"]][[4]] = list(type = "line",
-                                                     line = list(color="Red", width=3, dash="dashdot"), opacity = 1,
-                                                     x0 = 0,
-                                                     x1 = 0.8, xref = "paper",
-                                                     y0 = l_row, y1 = l_row, yref = "paper")
+      if(!is.null(highlightcolumn_heatmaply()) && ncol(highlightcolumn_heatmaply()) == 4){
+        
+        l_row = as.double((highlightcolumn_heatmaply()["y"]/max(fig[["x"]][["data"]][[1]][["y"]], na.rm=T) * 0.2) + 0.8)
+        
+        fig[["x"]][["layout"]][["shapes"]][[4]] = list(type = "line",
+                                                       line = list(color="Red", width=3, dash="dashdot"), opacity = 1,
+                                                       x0 = 0,
+                                                       x1 = 0.8, xref = "paper",
+                                                       y0 = l_row, y1 = l_row, yref = "paper")
+        
+      }
+      
+      if(!is.null(highlightcolumn_heatmaply()) && highlightcolumn_heatmaply()["curveNumber"] == 3){
+  
+        x = highlightcolumn_heatmaply()["x"]
+        x = c(x)$x
+        
+        fig[["x"]][["layout"]][["shapes"]][[4]] = list(type = "rect",
+                                                       fillcolor = "white", line = list(color = "black"), opacity = 0.1,
+                                                       x0 = (x-0.5),
+                                                       x1 = (x+0.5), xref = "x",
+                                                       y0 = 0, y1 = 0.8, yref = "paper")
+        
+      }
+      
+    } else {
+   
+      fig = plotly_figure_ICA_all()
+      
+      if(!is.null(highlightcolumn())){
+        
+        fig <- layout(fig,
+                     shapes = list(
+                       list(type = "rect",
+                            fillcolor = "white", line = list(color = "black"), opacity = 0.1,
+                            x0 = which(colnames(data_heat) == highlightcolumn())/ncol(data_heat)-(1/ncol(data_heat)), x1 = which(colnames(data_heat) == highlightcolumn())/ncol(data_heat), xref = "paper",
+                            y0 = 0, y1 = 1, yref = "paper")))
+                      
+      }
       
     }
-    
-    if(!is.null(highlightcolumn_heatmaply()) && highlightcolumn_heatmaply()["curveNumber"] == 3){
-
-      x = highlightcolumn_heatmaply()["x"]
-      x = c(x)$x
-      
-      fig[["x"]][["layout"]][["shapes"]][[4]] = list(type = "rect",
-                                                     fillcolor = "white", line = list(color = "black"), opacity = 0.1,
-                                                     x0 = (x-0.5),
-                                                     x1 = (x+0.5), xref = "x",
-                                                     y0 = 0, y1 = 0.8, yref = "paper")
-      
-    }
-    
   } else {
- 
-    fig = plotly_figure_ICA_all()
     
-    if(!is.null(highlightcolumn())){
+
+    melt = reshape2::melt(data_heat)
+    colnames(melt) = c("Genes", "IC", "value")
+
+    if(input$top_IC_column_organization){
+      n <- scale(t(data_heat))
+      ord <- hclust( dist(n, method = "euclidean"), method = "ward.D" )$order
       
-      fig <- layout(fig,
-                   shapes = list(
-                     list(type = "rect",
-                          fillcolor = "white", line = list(color = "black"), opacity = 0.1,
-                          x0 = which(colnames(data_heat) == highlightcolumn())/ncol(data_heat)-(1/ncol(data_heat)), x1 = which(colnames(data_heat) == highlightcolumn())/ncol(data_heat), xref = "paper",
-                          y0 = 0, y1 = 1, yref = "paper")))
-                    
+      n <- scale(data_heat)
+      ord_2 <- hclust( dist(n, method = "euclidean"), method = "ward.D" )$order
+      
+      melt$Genes <- factor( melt$Genes, levels = rownames(data_heat)[ord_2], labels = rownames(data_heat)[ord_2] )
+      melt$IC <- factor( melt$IC, levels = colnames(data_heat)[ord],  labels = colnames(data_heat)[ord] )
     }
-    
+
+    if(input$select_color_IC_top %in% c("A","B","C","D","E","F","G","H")){
+      fig = ggplot(melt, aes(IC, Genes)) +
+        geom_tile(aes(fill = value)) +
+        ggplot2::scale_fill_gradientn(colours = viridis_pal(option = input$select_color_IC_top)(nrow(data_heat) * ncol(data_heat)), limits=c(input$slider_IC_top_range[1], input$slider_IC_top_range[2]), oob=squish)
+
+    } else {
+      fig = ggplot(melt, aes(IC, Genes)) +
+        geom_tile(aes(fill = value)) +
+        ggplot2::scale_fill_gradientn(colours = viridis_pal(option = "D")(nrow(data_heat) * ncol(data_heat)), limits=c(input$slider_IC_top_range[1], input$slider_IC_top_range[2]), oob=squish)
+    }
   }
   
   return(fig)
@@ -140,11 +174,19 @@ highlightcolumn_heatmaply = reactive({
 ##----------------------------------------------------------------------------##
 
 output[["top_IC_plot_or_message"]] <- renderUI({
-  tagList(
-    plotly::plotlyOutput("top_gene_IC_plot",
-                         width = "auto",
-                         height = "85vh")
-  )
+  if(input$heatmap_top_IC_interactive_display){
+    tagList(
+      plotly::plotlyOutput("top_gene_IC_plot_interactive",
+                           width = "auto",
+                           height = "85vh")
+    )
+  } else {
+    tagList(
+      shiny::plotOutput("top_gene_IC_plot",
+                           width = "auto",
+                           height = "85vh")
+    )
+  }
 })
 
 ##----------------------------------------------------------------------------##
