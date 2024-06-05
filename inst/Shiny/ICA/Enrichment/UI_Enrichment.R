@@ -59,6 +59,7 @@ output[["IC_enrichment_UI"]] <- renderUI({
           shinyWidgets::dropdownButton(
             tags$div(
               style = "color: black !important;",
+              uiOutput("IC_enrichment_interactive_display_UI"),
               uiOutput("invert_color_enrichment_projection_UI")
             ),
             circle = FALSE,
@@ -98,16 +99,43 @@ outputOptions(
 )
 
 ##----------------------------------------------------------------------------##
+## invert color scale
+##----------------------------------------------------------------------------##
+
+output[["IC_enrichment_interactive_display_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "IC_enrichment_interactive_display",
+    label = "Interactive Display",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "IC_enrichment_interactive_display_UI",
+  suspendWhenHidden = FALSE
+)
+
+##----------------------------------------------------------------------------##
 ## UI element that either shows a plot or a text message if data is not
 ## available.
 ##----------------------------------------------------------------------------##
 
 output[["IC_enrichment_plot_or_message"]] <- renderUI({
+  if(input$IC_enrichment_interactive_display){
     tagList(
-      plotly::plotlyOutput("IC_enrichment",
+      plotly::plotlyOutput("IC_enrichment_interactive",
                            width = "auto",
                            height = "85vh")
     )
+  } else {
+    tagList(
+      shiny::plotOutput("IC_enrichment",
+                           width = "auto",
+                           height = "85vh")
+    )
+  }
 })
 
 ##----------------------------------------------------------------------------##
