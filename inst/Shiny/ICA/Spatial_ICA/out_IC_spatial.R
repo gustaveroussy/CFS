@@ -80,9 +80,9 @@ IC_spatial_output_react <- reactive({
       
       fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
         background_image(img[[sample]]) +
-        geom_point(data = coordinates[[sample]], aes(size=input$Plot_spatial_IC_size, color=value)) +
+        geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_spatial_IC_size) +
         ggplot2::scale_color_gradientn(name = IC_C,
-                                       colours = viridis_pal(option = if(input$select_color_gene_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_gene_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_IC_spatial_range[1], input$slider_IC_spatial_range[2]), oob=squish) +
+                                       colours = viridis_pal(option = if(input$select_color_IC_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_IC_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_IC_spatial_range[1], input$slider_IC_spatial_range[2]), oob=squish) +
         guides(size = "none") +
         theme_void() +
         xlim(0,ncol(img[[sample]])) +
@@ -93,8 +93,7 @@ IC_spatial_output_react <- reactive({
     }
     
     output = ggarrange(plotlist=list, 
-                       labels = input$Plot_image_spatial,
-                       nrow = ceiling(length(input$Plot_image_spatial)/3))
+                       labels = input$Plot_image_spatial)
   }
   
   return(output)
@@ -132,7 +131,7 @@ colorscale_IC_spatial <- reactive({
     #prepare colorscales
     l = list()
     se = seq(0, 1, (1/(ncol(values$data)-1)))
-    col = viridis_pal(option = input$select_color_gene_projection)(ncol(values$data))
+    col = viridis_pal(option = input$select_color_IC_projection)(ncol(values$data))
     for(i in 1:length(se)){
       l[[i]] = c(se[i],col[i])
     }
