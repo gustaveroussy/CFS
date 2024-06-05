@@ -1,7 +1,7 @@
 Package: CFS
 Type: Package
-Version: 0.9.10.1
-Date: 2024-03-01
+Version: 0.9.11.0
+Date: 2024-06-05
 Title: Spatial single cells analysis Package using ICA
 Authors@R: c(person("Corentin", "Thuilliez", email = "Corentin.THUILLIEZ@gustaveroussy.fr", role = c("aut", "cre")))
 Description: Allows for the analysis of spatial seurat objects using ICA
@@ -43,6 +43,7 @@ Imports:
     viridis,
     lubridate,
     ggplot2,
+    ggpubr,
     reticulate,
     clustree,
     ggdendro,

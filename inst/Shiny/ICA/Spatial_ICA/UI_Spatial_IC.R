@@ -57,6 +57,7 @@ output[["Spatial_IC_UI"]] <- renderUI({
           shinyWidgets::dropdownButton(
             tags$div(
               style = "color: black !important;",
+              uiOutput("interactive_ICA_projection_UI"),
               uiOutput("invert_color_ICA_projection_UI")
             ),
             circle = FALSE,
@@ -77,6 +78,23 @@ output[["Spatial_IC_UI"]] <- renderUI({
   )
 })
 
+##----------------------------------------------------------------------------##
+## interactive
+##----------------------------------------------------------------------------##
+output[["interactive_ICA_projection_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "interactive_ICA_projection",
+    label = "Interactive plot",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "interactive_ICA_projection_UI",
+  suspendWhenHidden = FALSE
+)
 
 ##----------------------------------------------------------------------------##
 ## invert color scale
