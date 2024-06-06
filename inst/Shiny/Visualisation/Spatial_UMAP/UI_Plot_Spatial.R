@@ -28,6 +28,7 @@ output[["Plot_Spatial_UI"]] <- renderUI({
           shinyWidgets::dropdownButton(
             tags$div(
               style = "color: black !important;",
+              uiOutput("interactive_display_visualisation_spatial_UI"),
               uiOutput("invert_color_visualisation_spatial_UI"),
               uiOutput("Spatial_display_image_UI")
             ),
@@ -55,20 +56,38 @@ output[["Plot_Spatial_UI"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 
 output[["Plot_Spatial_or_message"]] <- renderUI({
-  if(input$Spatial_use_ggplot){
+  if(input$interactive_display_visualisation_spatial){
     tagList(
-      shiny::plotOutput("Plot_Spatial_ggplot",
-                        width = "auto",
-                        height = "120vh")
-    )
-  } else {
-    tagList(
-      plotly::plotlyOutput("Plot_Spatial",
+      plotly::plotlyOutput("Plot_Spatial_interactive",
                            width = "auto",
                            height = "120vh")
     )
+  } else {
+    tagList(
+      shiny::plotOutput("Plot_Spatial",
+                        width = "auto",
+                        height = "120vh")
+    )
   }
 })
+
+##----------------------------------------------------------------------------##
+## interactive display
+##----------------------------------------------------------------------------##
+output[["interactive_display_visualisation_spatial_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "interactive_display_visualisation_spatial",
+    label = "Interactive Display",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "interactive_display_visualisation_spatial_UI",
+  suspendWhenHidden = FALSE
+)
 
 ##----------------------------------------------------------------------------##
 ## invert color scale

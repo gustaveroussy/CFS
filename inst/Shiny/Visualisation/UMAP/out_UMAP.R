@@ -77,14 +77,18 @@ observeEvent(input$start_display, {
   }
 })
 
-output[["Plot"]] <- plotly::renderPlotly({
+output[["Plot_interactive"]] <- plotly::renderPlotly({
   return(plots$display)
 })
 
-output[["Plot_Spatial"]] <- plotly::renderPlotly({
+output[["Plot"]] <- shiny::renderPlot({
+  return(plots$display)
+})
+
+output[["Plot_Spatial_interactive"]] <- plotly::renderPlotly({
   return(plots$spatial)
 })
 
-output[["Plot_Spatial_ggplot"]] <- shiny::renderPlot({
+output[["Plot_Spatial"]] <- shiny::renderPlot({
   return(plots$spatial)
 })
