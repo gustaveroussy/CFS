@@ -142,7 +142,21 @@ fig_distance_graph_IC <- reactive({
     }
     
     # create vertices colors
-    annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
+    if(input$choose_distances_to_determine == "IC"){
+      
+      annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
+      
+    } else if (input$choose_distances_to_determine == "Genes") {
+      annotation = c()
+      
+      for(i in names(V(G))){
+        ICs = lapply(data@misc$GeneAndStat$Contrib_gene,function(x){x = x[x$Sig > 0,];return(i %in% x$gene)})
+        ICs = names(ICs[ICs == TRUE])
+        annotation = c(annotation,paste(ICs,collapse = ", "))
+      }
+      
+    }
+    
     colors = rep(base_palette(),ceiling(length(unique(annotation))/length(base_palette())))[as.numeric(as.factor(annotation))]
     
     #create vertices
