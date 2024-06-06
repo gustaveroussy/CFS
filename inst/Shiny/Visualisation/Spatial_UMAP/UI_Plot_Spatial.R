@@ -78,7 +78,7 @@ output[["interactive_display_visualisation_spatial_UI"]] <- renderUI({
   shinyWidgets::awesomeCheckbox(
     inputId = "interactive_display_visualisation_spatial",
     label = "Interactive Display",
-    value = FALSE
+    value = TRUE
   )
 })
 

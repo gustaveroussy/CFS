@@ -126,7 +126,7 @@ output[["heatmap_top_IC_interactive_display_UI"]] <- renderUI({
   shinyWidgets::awesomeCheckbox(
     inputId = "heatmap_top_IC_interactive_display",
     label = "Interactive Display",
-    value = FALSE
+    value = TRUE
   )
 })
 

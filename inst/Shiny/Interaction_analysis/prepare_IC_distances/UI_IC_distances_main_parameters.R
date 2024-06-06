@@ -33,6 +33,11 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
                   width = NULL,
                   size = NULL
       ),
+      shinyWidgets::awesomeCheckbox(
+        inputId = "use_positive_values_for_distances",
+        label = "Use IC positive values",
+        value = TRUE
+      ),
       actionButton("start_distance_IC", "Start"),
       downloadButton("download_distance_tables", "Download graph table")
     )

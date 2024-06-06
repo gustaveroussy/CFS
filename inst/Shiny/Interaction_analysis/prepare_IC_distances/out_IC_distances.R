@@ -29,7 +29,13 @@ observeEvent(input$start_distance_IC,{
     if(method == "Lee"){
       
       if(input$choose_distances_to_determine == "IC"){
+        
         table_sample = data@reductions$ica@cell.embeddings
+        
+        if(input$use_positive_values_for_distances){
+          table_sample[table_sample < 0] = 0
+        }
+        
       } else if (input$choose_distances_to_determine == "Genes") {
         table_sample = raster::t(data@assays$SCT@data)
       }
@@ -139,7 +145,7 @@ fig_distance_graph_IC <- reactive({
     annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
     colors = rep(base_palette(),ceiling(length(unique(annotation))/length(base_palette())))[as.numeric(as.factor(annotation))]
     
-    #create edges
+    #create vertices
     fig = fig %>%
       add_markers(x = ~Xn, y = ~Yn,
                   marker = list(

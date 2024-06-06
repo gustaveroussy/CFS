@@ -85,7 +85,7 @@ output[["interactive_gene_projection_UI"]] <- renderUI({
   shinyWidgets::awesomeCheckbox(
     inputId = "interactive_gene_projection",
     label = "Interactive plot",
-    value = FALSE
+    value = TRUE
   )
 })
 

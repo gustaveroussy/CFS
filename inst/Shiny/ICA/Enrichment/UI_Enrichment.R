@@ -106,7 +106,7 @@ output[["IC_enrichment_interactive_display_UI"]] <- renderUI({
   shinyWidgets::awesomeCheckbox(
     inputId = "IC_enrichment_interactive_display",
     label = "Interactive Display",
-    value = FALSE
+    value = TRUE
   )
 })
 

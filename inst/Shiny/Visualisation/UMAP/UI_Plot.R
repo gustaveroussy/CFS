@@ -162,7 +162,7 @@ output[["interactive_display_visualisation_UMAP_UI"]] <- renderUI({
   shinyWidgets::awesomeCheckbox(
     inputId = "interactive_display_visualisation_UMAP",
     label = "Interactive Display",
-    value = FALSE
+    value = TRUE
   )
 })
 
