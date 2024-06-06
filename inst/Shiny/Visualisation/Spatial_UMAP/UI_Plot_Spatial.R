@@ -143,7 +143,7 @@ output[["Spatial_display_image_UI"]] <- renderUI({
       label = "Black background for scatter pie",
       value = FALSE
     ),
-    numericInput("Plot_scatter_size_spatial", "Spot size", 10, min = 0, max = NA)
+    numericInput("Plot_scatter_size_spatial", "Spot size", 5, min = 0, max = NA)
   )
 })
 
