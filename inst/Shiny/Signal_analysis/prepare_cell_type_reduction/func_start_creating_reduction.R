@@ -13,9 +13,9 @@ observeEvent(input$start_creating_reduction,{
   ICA_2.5pc = ICA_ratio
   ICA_2.5pc[ICA_2.5pc < 0] = 0
   ICA_2.5pc_clean <- ICA_2.5pc
-  ICA_2.5pc_clean[,values$data@misc$annotation[,"Use"]==FALSE] <- 0
+  ICA_2.5pc_clean[,!(as.logical(values$Annotation[,"Use"]))] <- 0
   ICA_2.5pc_clean_ratio <- sweep(ICA_2.5pc_clean, 1, rowSums(ICA_2.5pc_clean), "/") %>% as.data.frame()
-  ICA_2.5pc_clean_ratio[ICA_2.5pc_clean_ratio< input$choose_filter_value_column_for_reduction] <- 0
+  ICA_2.5pc_clean_ratio[ICA_2.5pc_clean_ratio < input$choose_filter_value_column_for_reduction] <- 0
   
   
   
@@ -25,16 +25,26 @@ observeEvent(input$start_creating_reduction,{
   for(i in names(values$annotation_for_output[[input$choose_annotation_column_for_reduction]])){
     
     ICs = values$annotation_for_output[[input$choose_annotation_column_for_reduction]][[i]]
-    type_signal = rowSums(ICA_2.5pc_clean_ratio[,ICs])
-    expression_signal = rowMeans(values$data@reductions$ica@feature.loadings[,ICs])
+    
+    if(length(ICs) > 1){
+      type_signal = rowSums(ICA_2.5pc_clean_ratio[,ICs])
+      expression_signal = rowMeans(values$data@reductions$ica@feature.loadings[,ICs])
+    } else {
+      type_signal = ICA_2.5pc_clean_ratio[,ICs]
+      expression_signal = values$data@reductions$ica@feature.loadings[,ICs]
+    }
     
     table = cbind(table,type_signal)
     table_genes = cbind(table_genes,expression_signal)
     
+    
+    colnames(table)[ncol(table)] = gsub(" ","_",i)
+    colnames(table_genes)[ncol(table_genes)] = gsub(" ","_",i)
+    
   }
   
-  colnames(table) = paste0(paste0(toupper(input$choose_annotation_column_for_reduction),"_"),1:ncol(table))
-  colnames(table_genes) = paste0(paste0(toupper(input$choose_annotation_column_for_reduction),"_"),1:ncol(table_genes))
+  colnames(table) = paste0(paste0(toupper(input$choose_annotation_column_for_reduction),"_"),colnames(table))
+  colnames(table_genes) = paste0(paste0(toupper(input$choose_annotation_column_for_reduction),"_"),colnames(table_genes))
   
   
   
