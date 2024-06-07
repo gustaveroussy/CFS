@@ -33,23 +33,23 @@ IC_spatial_output_react <- reactive({
         fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
       } else {
         if(length(values$low_image) != 0){
-          fig <- fig %>% add_trace(type="image", source = values$low_image[[n]], hoverinfo = 'skip')
+          fig <- fig %>% add_trace(type="image", source = values$low_image[[sample]], hoverinfo = 'skip')
         }
       }
       
       #prepare trace
       fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
-                               x = TissueCoordinates()[[n]][,"imagecol"], y = TissueCoordinates()[[n]][,"imagerow"],
-                               marker = list(color = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[n]])],
+                               x = TissueCoordinates()[[sample]][,"imagecol"], y = TissueCoordinates()[[sample]][,"imagerow"],
+                               marker = list(color = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])],
                                              colorscale = colorscale_IC_spatial(),
                                              cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
                                              size = input$Plot_spatial_IC_size,
                                              showscale = TRUE,
-                                             opacity = if(input$transparency_IC_spatial_choice == 1){input$transparency_IC_spatial_range}else{alpha_color_scale(values = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[n]])], slider_1 = input$slider_IC_spatial_range[1], slider_2 =input$slider_IC_spatial_range[2], alpha = input$transparency_IC_spatial_range)},
+                                             opacity = if(input$transparency_IC_spatial_choice == 1){input$transparency_IC_spatial_range}else{alpha_color_scale(values = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])], slider_1 = input$slider_IC_spatial_range[1], slider_2 =input$slider_IC_spatial_range[2], alpha = input$transparency_IC_spatial_range)},
                                              reversescale=input$invert_color_ICA_projection
                                              ),
-                               text = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[n]])],
-                               customdata = names(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[n]])]),
+                               text = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])],
+                               customdata = names(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])]),
                                hovertemplate = paste0("Cell : %{customdata}<br>",
                                                       "Expression: %{text}",
                                                       "<extra></extra>")

@@ -34,6 +34,7 @@ TissueCoordinates <- reactive({
         }
         TC = append(TC,list(c))
       }
+      
     } else {
       TC = list()
       for (image in input$Plot_image_spatial){
@@ -56,6 +57,8 @@ TissueCoordinates <- reactive({
       }
     }
   
-    return(TC)
+  names(TC) = input$Plot_image_spatial
+  
+  return(TC)
 })
 

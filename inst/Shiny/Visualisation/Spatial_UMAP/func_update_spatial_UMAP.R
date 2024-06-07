@@ -16,7 +16,7 @@ current_plot_spatial <- reactive({
     for(sample in input$Plot_image_spatial){
       n = n + 1
         
-      TissueCoordinates = TissueCoordinates()[[n]]
+      TissueCoordinates = TissueCoordinates()[[sample]]
       meta.data = values$data@meta.data[(rownames(values$data@meta.data) %in% rownames(TissueCoordinates)),]
       cell.embeddings <- values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),]
       annotation = values$data@misc$annotation
@@ -38,7 +38,7 @@ current_plot_spatial <- reactive({
           fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
         } else {
           if(length(values$low_image) != 0){
-            fig <- fig %>% add_trace(type="image", source = values$low_image[[n]], hoverinfo = 'skip')
+            fig <- fig %>% add_trace(type="image", source = values$low_image[[sample]], hoverinfo = 'skip')
           }
         }
       }

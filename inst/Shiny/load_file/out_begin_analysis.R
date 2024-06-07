@@ -146,4 +146,6 @@ observeEvent(input$Plot_image_spatial, {
       values$low_image = append(values$low_image,NULL)
     }
   }
+  
+  names(values$low_image) = input$Plot_image_spatial
 })
