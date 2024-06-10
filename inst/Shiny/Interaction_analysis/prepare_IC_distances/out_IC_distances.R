@@ -65,17 +65,20 @@ observeEvent(input$start_distance_IC,{
         df = as.data.frame(df)
       }
       
-      x = apply(df,1,function(x){n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"));return(n)})
-      
-      incProgress(0.7, detail = "Finished")
-      
-      df[,"weight"] = unlist(lapply(x,function(n){return(n$L)}))
-      
-      local = lapply(x,function(n){return(n$localL)})
-      names(local) = paste0(df[,1]," ",df[,2])
-      
-      values$distances[[input$choose_distances_to_determine]][[sample]][[method]] = list(df = df,local = local)
-      
+      if(nrow(df) > 0){
+        x = apply(df,1,function(x){n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"));return(n)})
+        
+        incProgress(0.7, detail = "Finished")
+        
+        df[,"weight"] = unlist(lapply(x,function(n){return(n$L)}))
+        
+        local = lapply(x,function(n){return(n$localL)})
+        names(local) = paste0(df[,1]," ",df[,2])
+        
+        values$distances[[input$choose_distances_to_determine]][[sample]][[method]] = list(df = df,local = local)
+      } else {
+        shinyalert("Oops!", "No LR interaction found within selected sample", type = "error")
+      }
     }
     
   })
