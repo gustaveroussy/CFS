@@ -57,11 +57,10 @@ observeEvent(input$start_distance_IC,{
         df <- data.frame(lr=lr)
         df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")
         
-        print(table_sample)
-        print(df)
+        table_sample = as.data.frame(table_sample[,colnames(table_sample) %in% unique(c(df$l,df$r))])
         
-        df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample != 0) > 0],]
-        df = df[df[,2] %in% colnames(table_sample)[colSums(table_sample != 0) > 0],]
+        df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample) > 0],]
+        df = df[df[,2] %in% colnames(table_sample)[colSums(table_sample) > 0],]
         
       } else if (input$choose_distances_to_determine == "IC"){
         df = t(combn(colnames(table_sample),2))
