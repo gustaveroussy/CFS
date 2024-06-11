@@ -41,7 +41,7 @@ observeEvent(input$start_distance_IC,{
       }
       
       if(length(data@images) > 1){
-        table_sample = table_sample[grepl(paste0(sample,"_[ACGT]"), rownames(table_sample)),]
+        table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
       }
       
       incProgress(0.1, detail = "Finding neighbors")

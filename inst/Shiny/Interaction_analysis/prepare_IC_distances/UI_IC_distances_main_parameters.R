@@ -27,7 +27,7 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
       ),
       selectInput("choose_sample_for_distances",
                   "Choose sample",
-                  names(values$data@images),
+                  chartr(".", "-", names(values$data@images)),
                   multiple = FALSE,
                   selectize = TRUE,
                   width = NULL,
