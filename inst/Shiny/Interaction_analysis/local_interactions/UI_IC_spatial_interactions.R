@@ -25,7 +25,7 @@ output[["IC_spatial_interactions_UI"]] <- renderUI({
     column(width = 9, offset = 0, style = "padding: 0px;",
            box(id = "IC_spatial_interactions_container",
                title = tagList(
-                 p("IC interactions", style = "padding-right: 5px; display: inline"),
+                 p("Interactions", style = "padding-right: 5px; display: inline"),
                  actionButton(
                    inputId = "IC_spatial_interactions_info",
                    label = "info",
