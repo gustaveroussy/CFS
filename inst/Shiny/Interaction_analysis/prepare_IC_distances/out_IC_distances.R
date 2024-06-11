@@ -45,7 +45,7 @@ observeEvent(input$start_distance_IC,{
       
       incProgress(0.1, detail = "Finding neighbors")
       
-      knn = knearneigh(GetTissueCoordinates(values$data, sample), k=6, longlat = NULL, use_kd_tree=TRUE)
+      knn = knearneigh(GetTissueCoordinates(values$data, gsub("-", ".", sample)), k=6, longlat = NULL, use_kd_tree=TRUE)
       neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
       listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
       
