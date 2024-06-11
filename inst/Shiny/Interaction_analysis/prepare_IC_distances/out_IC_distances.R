@@ -37,10 +37,13 @@ observeEvent(input$start_distance_IC,{
         
       } else if (input$choose_distances_to_determine == "Genes") {
         table_sample = raster::t(GetAssayData(values$data))
+        
+        View(table_sample)
       }
       
       if(length(values$data@images) > 1){
         table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
+        View(table_sample)
       }
       
       incProgress(0.1, detail = "Finding neighbors")
@@ -54,13 +57,8 @@ observeEvent(input$start_distance_IC,{
       if (input$choose_distances_to_determine == "Genes") {
         lr = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$lr_pair
         
-        View(lr)
-        
         df <- data.frame(lr=lr)
         df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")
-        
-        View(df)
-        
         df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample) > 0],]
         df = df[df[,2] %in% colnames(table_sample)[colSums(table_sample) > 0],]
         
