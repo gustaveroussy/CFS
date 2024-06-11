@@ -24,6 +24,8 @@ current_plot_graph_interactions <- reactive({
   table = graph_click_interactions()
   
   req(table)
+  sample = input$choose_sample_for_distances
+  
   
   ICs = str_split(table$customdata,"<br>") |> unlist() |> str_split(" <-> ")
   ICs = ICs[[1]]
@@ -31,7 +33,7 @@ current_plot_graph_interactions <- reactive({
   ICs = paste0(ICs[1], " ", ICs[2])
   
   if(!is.null(values$HD_image)) {
-    c <- values$data@images[[input$choose_sample_for_distances]]@coordinates * values$data@images[[input$choose_sample_for_distances]]@scale.factors$hires
+    c <- values$data@images[[gsub("-", ".", sample)]]@coordinates * values$data@images[[gsub("-", ".", sample)]]@scale.factors$hires
     names(c)[names(c) == "x"] <- "imagerow"
     names(c)[names(c) == "y"] <- "imagecol"
     
@@ -48,7 +50,7 @@ current_plot_graph_interactions <- reactive({
     }
     
   } else {
-    c <- GetTissueCoordinates(values$data, image = input$choose_sample_for_distances)
+    c <- GetTissueCoordinates(values$data, image = gsub("-", ".", sample))
     names(c)[names(c) == "x"] <- "imagerow"
     names(c)[names(c) == "y"] <- "imagecol"
     
@@ -73,7 +75,7 @@ current_plot_graph_interactions <- reactive({
     datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
                             "y" = as.vector(TissueCoordinates[,"imagerow"]),
                             "cell_name" = as.vector(rownames(meta.data)),
-                            "local" = values$distances[[input$choose_distances_to_determine]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]][["local"]][[ICs]],
+                            "local" = values$distances[[input$choose_distances_to_determine]][[gsub("-", ".", sample)]][[input$choose_method_for_distances]][["local"]][[ICs]],
                             "IC_1" = values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),unlist(str_split(ICs," "))[1]],
                             "IC_2" = values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),unlist(str_split(ICs," "))[2]]
     )
@@ -81,7 +83,7 @@ current_plot_graph_interactions <- reactive({
     datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
                             "y" = as.vector(TissueCoordinates[,"imagerow"]),
                             "cell_name" = as.vector(rownames(meta.data)),
-                            "local" = values$distances[[input$choose_distances_to_determine]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]][["local"]][[ICs]],
+                            "local" = values$distances[[input$choose_distances_to_determine]][[gsub("-", ".", sample)]][[input$choose_method_for_distances]][["local"]][[ICs]],
                             "IC_1" = values$data@assays$SCT@data[unlist(str_split(ICs," "))[1],(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))],
                             "IC_2" = values$data@assays$SCT@data[unlist(str_split(ICs," "))[2],(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))]
     )
@@ -91,7 +93,7 @@ current_plot_graph_interactions <- reactive({
     image <- values$HD_image
   } else {
     if(length(values$low_image) != 0){
-      image <- raster2uri(raster::as.raster(values$data@images[[input$choose_sample_for_distances]]@image))
+      image <- raster2uri(raster::as.raster(values$data@images[[gsub("-", ".", sample)]]@image))
     }
   }
   
