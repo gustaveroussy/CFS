@@ -20,7 +20,6 @@ observeEvent(input$start_distance_IC,{
   req(values$data)
   req(values$data@reductions$ica)
   
-  data = values$data
   method = input$choose_method_for_distances
   sample = input$choose_sample_for_distances
   
@@ -30,23 +29,23 @@ observeEvent(input$start_distance_IC,{
       
       if(input$choose_distances_to_determine == "IC"){
         
-        table_sample = data@reductions$ica@cell.embeddings
+        table_sample = values$data@reductions$ica@cell.embeddings
         
         if(input$use_positive_values_for_distances){
           table_sample[table_sample < 0] = 0
         }
         
       } else if (input$choose_distances_to_determine == "Genes") {
-        table_sample = raster::t(GetAssayData(data))
+        table_sample = raster::t(GetAssayData(values$data))
       }
       
-      if(length(data@images) > 1){
+      if(length(values$data@images) > 1){
         table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
       }
       
       incProgress(0.1, detail = "Finding neighbors")
       
-      knn = knearneigh(GetTissueCoordinates(data, sample), k=6, longlat = NULL, use_kd_tree=TRUE)
+      knn = knearneigh(GetTissueCoordinates(values$data, sample), k=6, longlat = NULL, use_kd_tree=TRUE)
       neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
       listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
       
