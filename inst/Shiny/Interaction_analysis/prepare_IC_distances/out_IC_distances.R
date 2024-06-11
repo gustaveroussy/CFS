@@ -54,13 +54,14 @@ observeEvent(input$start_distance_IC,{
       if (input$choose_distances_to_determine == "Genes") {
         lr = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$lr_pair
         
-        print(table_sample)
-        print(colSums(table_sample))
-        
         df <- data.frame(lr=lr)
         df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")
-        df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample) > 0],]
-        df = df[df[,2] %in% colnames(table_sample)[colSums(table_sample) > 0],]
+        
+        print(table_sample)
+        print(df)
+        
+        df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample != 0) > 0],]
+        df = df[df[,2] %in% colnames(table_sample)[colSums(table_sample != 0) > 0],]
         
       } else if (input$choose_distances_to_determine == "IC"){
         df = t(combn(colnames(table_sample),2))
