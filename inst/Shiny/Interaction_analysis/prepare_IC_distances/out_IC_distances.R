@@ -94,13 +94,9 @@ fig_distance_graph_IC <- reactive({
   req(tree_table)
   req(input$choose_n_dim_for_distances)
   
-  tree_table[,"weight"] = scale(tree_table[,"weight"])
+  tree_table = tree_table[(as.double(tree_table[,"weight"]) > 0),]
   
-  tree_table = tree_table[!(as.double(tree_table[,"weight"]) <= 0),]
-  
-  tree_table = tree_table[as.double(tree_table[,"weight"]) >= (sd(as.double(tree_table[,"weight"])) * input$Z_score_for_distances),]
-  
-  #df[,"weight"] = 1/df[,"weight"]
+  tree_table = tree_table[scale(tree_table[,"weight"]) > input$Z_score_for_distances,]
   
   G = graph_from_data_frame(tree_table, directed = FALSE)
   

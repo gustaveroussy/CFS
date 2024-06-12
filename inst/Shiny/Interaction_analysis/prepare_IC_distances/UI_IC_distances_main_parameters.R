@@ -33,6 +33,12 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
                   width = NULL,
                   size = NULL
       ),
+      conditionalPanel(
+        condition = "input.choose_distances_to_determine == 'Genes'",
+        selectizeInput("choose_ic_for_genes_filter_for_distances", "Filter genes by ICs",
+                       choices = rownames(values$Annotation)
+                      )
+      ),
       shinyWidgets::awesomeCheckbox(
         inputId = "use_positive_values_for_distances",
         label = "Use IC positive values",
