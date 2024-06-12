@@ -208,6 +208,7 @@ fig_distance_graph_IC <- reactive({
         xaxis = axis,
         yaxis = axis
       ) %>%
+      add_text(x = ~Xn, y = ~Yn, text = names(V(G)), textposition = "center") %>%
       hide_legend()
     } else if (input$choose_n_dim_for_distances == 3){
       Xn <- layout[,1]
@@ -275,6 +276,7 @@ fig_distance_graph_IC <- reactive({
           xaxis = axis,
           yaxis = axis
         ) %>%
+        add_text(x = ~Xn, y = ~Yn, z = ~Zn, text = names(V(G)), textposition = "center") %>%
         hide_legend()
     }
     

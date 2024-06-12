@@ -78,13 +78,13 @@ output[["IC_distance_main_parameters_UI_2"]] <- renderUI({
            ),
            numericInput("choose_vertices_size_for_distances",
                         "Vertices size",
-                        10,
+                        40,
                         min = 1,
                         step = 0.01
            ),
            numericInput("choose_edges_size_for_distances",
                         "Edges size",
-                        2,
+                        5,
                         min = 0.01,
                         step = 0.01
            )
