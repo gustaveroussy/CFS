@@ -87,6 +87,78 @@ observeEvent(input$start_distance_IC,{
   
 })
 
+observeEvent(input$start_distance_IC_batch,{
+  req(values$data)
+  req(values$data@reductions$ica)
+  
+  method = input$choose_method_for_distances
+  sample_all = if(length(values$data@images) > 1){unique(sapply(strsplit(rownames(values$data@meta.data), "_"),"[[",1))} else {names(values$data@images)}
+  
+  for(sample in sample_all){
+    withProgress(message = paste0('Calculating ',sample), value = 0, {
+      
+      if(method == "Lee"){
+        
+        if(input$choose_distances_to_determine == "IC"){
+          
+          table_sample = values$data@reductions$ica@cell.embeddings
+          
+          if(input$use_positive_values_for_distances){
+            table_sample[table_sample < 0] = 0
+          }
+          
+        } else if (input$choose_distances_to_determine == "Genes") {
+          table_sample = raster::t(GetAssayData(values$data))
+        }
+        
+        if(length(values$data@images) > 1){
+          table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
+        }
+        
+        incProgress(0.1, detail = "Finding neighbors")
+        
+        knn = knearneigh(GetTissueCoordinates(values$data, gsub("-", ".", sample)), k=6, longlat = NULL, use_kd_tree=TRUE)
+        neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
+        listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
+        
+        incProgress(0.2, detail = "Calculating Lee")
+        
+        if (input$choose_distances_to_determine == "Genes") {
+          lr = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$lr_pair
+          
+          df <- data.frame(lr=lr)
+          df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")
+          
+          table_sample = as.data.frame(table_sample[,colnames(table_sample) %in% unique(c(df$l,df$r))])
+          
+          df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample) > 0],]
+          df = df[df[,2] %in% colnames(table_sample)[colSums(table_sample) > 0],]
+          
+        } else if (input$choose_distances_to_determine == "IC"){
+          df = t(combn(colnames(table_sample),2))
+          df = as.data.frame(df)
+        }
+        
+        if(nrow(df) > 0){
+          x = apply(df,1,function(x){n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"));return(n)})
+          
+          incProgress(0.7, detail = "Finished")
+          
+          df[,"weight"] = unlist(lapply(x,function(n){return(n$L)}))
+          
+          local = lapply(x,function(n){return(n$localL)})
+          names(local) = paste0(df[,1]," ",df[,2])
+          
+          values$distances[[input$choose_distances_to_determine]][[sample]][[method]] = list(df = df,local = local)
+        } else {
+          shinyalert("Oops!", "No LR interaction found within selected sample", type = "error")
+        }
+      }
+      
+    })
+  }
+  
+})
 
 fig_distance_graph_IC <- reactive({
   tree_table = values$distances[[input$choose_distances_to_determine]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]][["df"]]

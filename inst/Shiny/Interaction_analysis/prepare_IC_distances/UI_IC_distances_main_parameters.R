@@ -42,12 +42,16 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
                     choices = rownames(values$Annotation), multiple = TRUE
         )
       ),
-      shinyWidgets::awesomeCheckbox(
-        inputId = "use_positive_values_for_distances",
-        label = "Use IC positive values",
-        value = TRUE
+      conditionalPanel(
+        condition = "input.choose_distances_to_determine == 'IC'",
+          shinyWidgets::awesomeCheckbox(
+            inputId = "use_positive_values_for_distances",
+            label = "Use IC positive values",
+            value = TRUE
+          )
       ),
       actionButton("start_distance_IC", "Start"),
+      actionButton("start_distance_IC_batch", "Batch process"),
       downloadButton("download_distance_tables", "Download graph table")
     )
   )
