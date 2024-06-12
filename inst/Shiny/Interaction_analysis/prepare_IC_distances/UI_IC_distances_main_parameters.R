@@ -27,7 +27,7 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
       ),
       selectInput("choose_sample_for_distances",
                   "Choose sample",
-                  unique(sapply(strsplit(rownames(values$data@meta.data), "_"),"[[",1)),
+                  if(length(values$data@images) > 1){unique(sapply(strsplit(rownames(values$data@meta.data), "_"),"[[",1))} else {names(values$data@images)},
                   multiple = FALSE,
                   selectize = TRUE,
                   width = NULL,
@@ -35,9 +35,12 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
       ),
       conditionalPanel(
         condition = "input.choose_distances_to_determine == 'Genes'",
-        selectizeInput("choose_ic_for_genes_filter_for_distances", "Filter genes by ICs",
-                       choices = rownames(values$Annotation)
-                      )
+        selectInput("choose_ic_for_genes_filter_for_distances_ligand", "Filter ligands by ICs",
+                       choices = rownames(values$Annotation), multiple = TRUE
+                      ),
+        selectInput("choose_ic_for_genes_filter_for_distances_receptor", "Filter receptors by ICs",
+                    choices = rownames(values$Annotation), multiple = TRUE
+        )
       ),
       shinyWidgets::awesomeCheckbox(
         inputId = "use_positive_values_for_distances",
