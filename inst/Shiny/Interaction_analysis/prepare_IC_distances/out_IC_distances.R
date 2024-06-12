@@ -201,7 +201,7 @@ fig_distance_graph_IC <- reactive({
   
   if(gsize(G) > 0){
 
-    edges_list = as_edgelist(G)
+    edges_list = as.data.frame(as_edgelist(G))
     layout <- layout_with_fr(G, dim = input$choose_n_dim_for_distances)
     
     if(input$choose_n_dim_for_distances == 2){
@@ -213,36 +213,41 @@ fig_distance_graph_IC <- reactive({
       
       fig = plot_ly(source = "S")
       
+      rownames(layout) = names(V(G))
+      
       # create edges
-      for(i in 1:length(edges_list[,1])) {
-        v0 <- edges_list[i,1]
-        v1 <- edges_list[i,2]
-        
-        rownames(layout) = names(V(G))
-        median_point = c((as.double(layout[v0,1]) + as.double(layout[v1,1]))/2,(as.double(layout[v0,2]) + as.double(layout[v1,2]))/2)
-        
-        fig = fig %>% add_segments(x = as.double(layout[v0,1]),
-                     xend = median_point[1],
-                     y = as.double(layout[v0,2]),
-                     yend = median_point[2],
-                     line=list(color="black",
-                               width = input$choose_edges_size_for_distances
-                               )
-                     )
-        
-        fig = fig %>% add_segments(x = median_point[1],
-                                   xend = as.double(layout[v1,1]),
-                                   y = median_point[2],
-                                   yend = as.double(layout[v1,2]),
-                                   line=list(color="black",
-                                             width = input$choose_edges_size_for_distances
-                                   ),
-                                   customdata = paste0(v0," <-> ",v1,"<br>Value : ",tree_table[i,3]),
-                                   hovertemplate = paste0("%{customdata}",
-                                                          "<extra></extra>")
-                                   )
-          
-      }
+      edges_list[,"x_start"] = as.double(layout[edges_list[,1],1])
+      edges_list[,"x_end"] = as.double(layout[edges_list[,2],1])
+      edges_list[,"y_start"] = as.double(layout[edges_list[,1],2])
+      edges_list[,"y_end"] = as.double(layout[edges_list[,2],2])
+      edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
+      edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
+      edges_list[,"weight"] = tree_table$weight
+      edges_list[,"colors"] = tree_table$weight
+      edges_list[,"text"] = paste0(edges_list$V1," <-> ",edges_list$V2,"<br>Value : ",edges_list$weight)
+      
+      fig = fig %>% add_segments(data = edges_list,
+                      x = ~x_start,
+                      xend = ~x_median,
+                      y = ~y_start,
+                      yend = ~y_median,
+                      line=list(color = "black",
+                                width = input$choose_edges_size_for_distances
+                                )
+                      )
+      
+      fig = fig %>% add_segments(data = edges_list,
+                                 x = ~x_median,
+                                 xend = ~x_end,
+                                 y = ~y_median,
+                                 yend = ~y_end,
+                                 line=list(color="black",
+                                           width = input$choose_edges_size_for_distances
+                                 ),
+                                 customdata = ~text,
+                                 hovertemplate = paste0("%{customdata}",
+                                                        "<extra></extra>")
+                                 )
       
       # create vertices colors
       if(input$choose_distances_to_determine == "IC"){
