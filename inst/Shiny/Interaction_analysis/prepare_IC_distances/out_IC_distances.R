@@ -265,7 +265,8 @@ fig_distance_graph_IC <- reactive({
         for(i in names(V(G))){
           ICs = lapply(values$data@misc$GeneAndStat$Contrib_gene,function(x){x = x[x$Sig > 0,];return(i %in% x$gene)})
           ICs = names(ICs[ICs == TRUE])
-          annotation = c(annotation,paste(ICs,collapse = ", "))
+          ICs = paste0(ICs, " : ", values$Annotation[ICs,"Type"] ," : ",values$Annotation[ICs,"Annotation"])
+          annotation = c(annotation,paste(ICs,collapse = "<br>"))
         }
         
       }
