@@ -168,7 +168,7 @@ fig_distance_graph_IC <- reactive({
   
   tree_table = tree_table[(as.double(tree_table[,"weight"]) > 0),]
   
-  tree_table = tree_table[scale(tree_table[,"weight"]) > input$Z_score_for_distances,]
+  tree_table = tree_table[as.double(scale(tree_table[,"weight"])) > input$Z_score_for_distances,]
   
   G = graph_from_data_frame(tree_table, directed = FALSE)
   
@@ -215,6 +215,9 @@ fig_distance_graph_IC <- reactive({
       
       rownames(layout) = names(V(G))
       
+      limits=range(tree_table$weight)
+      pal = viridis::viridis(100)
+      
       # create edges
       edges_list[,"x_start"] = as.double(layout[edges_list[,1],1])
       edges_list[,"x_end"] = as.double(layout[edges_list[,2],1])
@@ -223,31 +226,33 @@ fig_distance_graph_IC <- reactive({
       edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
       edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
       edges_list[,"weight"] = tree_table$weight
-      edges_list[,"colors"] = tree_table$weight
+      edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
       edges_list[,"text"] = paste0(edges_list$V1," <-> ",edges_list$V2,"<br>Value : ",edges_list$weight)
       
-      fig = fig %>% add_segments(data = edges_list,
-                      x = ~x_start,
-                      xend = ~x_median,
-                      y = ~y_start,
-                      yend = ~y_median,
-                      line=list(color = "black",
-                                width = input$choose_edges_size_for_distances
-                                )
-                      )
-      
-      fig = fig %>% add_segments(data = edges_list,
-                                 x = ~x_median,
-                                 xend = ~x_end,
-                                 y = ~y_median,
-                                 yend = ~y_end,
-                                 line=list(color="black",
-                                           width = input$choose_edges_size_for_distances
-                                 ),
-                                 customdata = ~text,
-                                 hovertemplate = paste0("%{customdata}",
-                                                        "<extra></extra>")
-                                 )
+      for(i in 1:nrow(edges_list)){
+        fig = fig %>% add_segments(data = edges_list[i,],
+                                   x = ~x_start,
+                                   xend = ~x_median,
+                                   y = ~y_start,
+                                   yend = ~y_median,
+                                   line=list(color = ~colors,
+                                             width = input$choose_edges_size_for_distances
+                                   )
+        )
+        
+        fig = fig %>% add_segments(data = edges_list[i,],
+                                   x = ~x_median,
+                                   xend = ~x_end,
+                                   y = ~y_median,
+                                   yend = ~y_end,
+                                   line=list(color=~colors,
+                                             width = input$choose_edges_size_for_distances
+                                   ),
+                                   customdata = ~text,
+                                   hovertemplate = paste0("%{customdata}",
+                                                          "<extra></extra>")
+        )
+      }
       
       # create vertices colors
       if(input$choose_distances_to_determine == "IC"){
