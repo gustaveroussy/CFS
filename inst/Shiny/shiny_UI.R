@@ -20,7 +20,7 @@ if(Shiny.options[["offline_mode"]] == FALSE){
   #   reticulate::conda_install('r-reticulate', 'leidenalg')
   # }
   
-  reticulate::use_miniconda('r-reticulate')
+  try(reticulate::use_miniconda('r-reticulate'))
   
   library(enrichR)
 }
