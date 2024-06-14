@@ -37,5 +37,6 @@ observeEvent(input$preprocessing_invert_IC_action_button,{
     values$data@misc[["GeneAndStat"]][["Kurtosis_ICs"]]["IC_1"] = kurtosis(values$data@reductions$ica@feature.loadings[,input$preprocessing_select_inver_IC])
   }
   
+  shinyalert("Success!", paste0(input$preprocessing_select_inver_IC," has been inverted"), type = "success")
   
 })
