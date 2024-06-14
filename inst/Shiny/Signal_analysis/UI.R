@@ -3,5 +3,5 @@
 ##----------------------------------------------------------------------------##
 tab_signal_analysis <- tabItem(
   tabName = "signal_analysis",
-  uiOutput("Cell_reduction_UI")
+  uiOutput("Auto_annotation_UI")
 )
