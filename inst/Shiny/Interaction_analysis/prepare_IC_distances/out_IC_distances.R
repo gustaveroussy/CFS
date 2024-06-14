@@ -333,11 +333,9 @@ fig_distance_graph_IC <- reactive({
                                 line=list(color=edges_list[i,"colors"],
                                           width = input$choose_edges_size_for_distances
                                 ),
-                                text = edges_list[i,"text"],
-                                customdata = tree_table[i,3],
-                                hovertemplate = paste0("%{text}<br>",
-                                                       "Value : %{customdata}",
-                                                       "<extra></extra>")
+                                customdata = edges_list[i,"text"],
+                                hovertemplate = paste0("%{customdata}",
+                                                         "<extra></extra>")
                                 )
         
         fig = fig %>% add_trace(x=c(as.double(edges_list[i,"x_median"]), as.double(edges_list[i,"x_end"])), y=c(as.double(edges_list[i,"y_median"]), as.double(edges_list[i,"y_end"])), z=c(as.double(edges_list[i,"z_median"]), as.double(edges_list[i,"z_end"])),
@@ -345,17 +343,30 @@ fig_distance_graph_IC <- reactive({
                                 line=list(color=edges_list[i,"colors"],
                                           width = input$choose_edges_size_for_distances
                                 ),
-                                text = edges_list[i,"text"],
-                                customdata = tree_table[i,3],
-                                hovertemplate = paste0("%{text}<br>",
-                                                       "Value : %{customdata}",
+                                customdata = edges_list[i,"text"],
+                                hovertemplate = paste0("%{customdata}",
                                                        "<extra></extra>")
         )
 
       }
       
       # create vertices colors
-      annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
+      if(input$choose_distances_to_determine == "IC"){
+        
+        annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
+        
+      } else if (input$choose_distances_to_determine == "Genes") {
+        annotation = c()
+        
+        for(i in names(V(G))){
+          ICs = lapply(values$data@misc$GeneAndStat$Contrib_gene,function(x){x = x[x$Sig > 0,];return(i %in% x$gene)})
+          ICs = names(ICs[ICs == TRUE])
+          ICs = paste0(ICs, " : ", values$Annotation[rownames(values$Annotation) %in% ICs,"Type"] ," : ",values$Annotation[rownames(values$Annotation) %in% ICs,"Annotation"])
+          annotation = c(annotation,paste(ICs,collapse = "<br>"))
+        }
+        
+      }
+      
       colors = rep(base_palette(),ceiling(length(unique(annotation))/length(base_palette())))[as.numeric(as.factor(annotation))]
       
       #create edges
@@ -369,7 +380,7 @@ fig_distance_graph_IC <- reactive({
                     text = names(V(G)),
                     customdata = annotation,
                     hovertemplate = paste0(input$choose_distances_to_determine, " : %{text}<br>",
-                                           "Annotation : %{customdata}",
+                                           "Annotation :<br>%{customdata}",
                                            "<extra></extra>")
         ) %>% layout(
           title = 'Distance graph',
