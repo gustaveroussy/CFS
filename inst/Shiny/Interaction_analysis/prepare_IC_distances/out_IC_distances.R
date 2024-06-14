@@ -202,7 +202,16 @@ fig_distance_graph_IC <- reactive({
   if(gsize(G) > 0){
 
     edges_list = as.data.frame(as_edgelist(G))
-    layout <- layout_with_fr(G, dim = input$choose_n_dim_for_distances)
+    
+    if(input$choose_layout_for_distances %in% c("fr","kk","mds")){
+      layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G, dim = input$choose_n_dim_for_distances))
+    } else if(input$choose_layout_for_distances %in% c("sugiyama")){
+      layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G))$layout
+    } else {
+      layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G))
+    }
+    
+    
     
     if(input$choose_n_dim_for_distances == 2){
       Xn <- layout[,1]
@@ -222,7 +231,12 @@ fig_distance_graph_IC <- reactive({
       edges_list[,"y_end"] = as.double(layout[edges_list[,2],2])
       edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
       edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
-      edges_list[,"weight"] = tree_table[(paste0(tree_table$l,"_",tree_table$r) %in% paste0(edges_list$V1,"_",edges_list$V2)) ,"weight"]
+      if(input$choose_distances_to_determine == "IC"){
+        edges_list[,"weight"] = tree_table[,"weight"]
+      } else {
+        edges_list[,"weight"] = tree_table[(paste0(tree_table$l,"_",tree_table$r) %in% paste0(edges_list$V1,"_",edges_list$V2)) ,"weight"]
+      }
+      
       
       limits=range(edges_list[,"weight"])
       pal = viridis::viridis(100)

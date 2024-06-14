@@ -67,6 +67,17 @@ output[["IC_distance_main_parameters_UI_2"]] <- renderUI({
                         min = 0,
                         step = 0.01
            ),
+           selectInput("choose_layout_for_distances",
+                       "Layout",
+                       list("Fruchterman Reingold" = "fr", "Davidson Harel" = "dh",
+                            "graphopt" = "graphopt", "Kamada Kawai" = "kk",
+                            "Multidimensional Scaling" = "mds", "Sugiyama" = "sugiyama"),
+                       selected = "fr",
+                       multiple = FALSE,
+                       selectize = TRUE,
+                       width = NULL,
+                       size = NULL
+           ),
            selectInput("choose_vertices_color_for_distances",
                        "Vertices annotation",
                        colnames(values$Annotation),
