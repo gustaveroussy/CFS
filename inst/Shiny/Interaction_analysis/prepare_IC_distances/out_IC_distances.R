@@ -285,12 +285,13 @@ fig_distance_graph_IC <- reactive({
                     text = names(V(G)),
                     customdata = annotation,
                     hovertemplate = paste0("IC : %{text}<br>",
-                                           "Annotation : %{customdata}",
+                                           "Annotation :<br>%{customdata}",
                                            "<extra></extra>")
         ) %>% layout(
         title = 'Distance graph',
         xaxis = axis,
-        yaxis = axis
+        yaxis = axis,
+        hoverlabel = list(align = "left")
       ) %>%
       add_text(x = ~Xn, y = ~Yn, text = names(V(G)), textposition = "center") %>%
       hide_legend()
@@ -358,7 +359,8 @@ fig_distance_graph_IC <- reactive({
         ) %>% layout(
           title = 'Distance graph',
           xaxis = axis,
-          yaxis = axis
+          yaxis = axis,
+          hoverlabel = list(align = "left")
         ) %>%
         add_text(x = ~Xn, y = ~Yn, z = ~Zn, text = names(V(G)), textposition = "center") %>%
         hide_legend()
