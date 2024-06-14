@@ -225,7 +225,7 @@ fig_distance_graph_IC <- reactive({
       edges_list[,"y_end"] = as.double(layout[edges_list[,2],2])
       edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
       edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
-      edges_list[,"weight"] = tree_table$weight
+      edges_list[,"weight"] = tree_table[(paste0(tree_table$l,"_",tree_table$r) == paste0(edges_list$V1,"_",edges_list$V2)) ,"weight"]
       edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
       edges_list[,"text"] = paste0(edges_list$V1," <-> ",edges_list$V2,"<br>Value : ",edges_list$weight)
       
