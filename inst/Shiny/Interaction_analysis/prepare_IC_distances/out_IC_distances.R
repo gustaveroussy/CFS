@@ -284,7 +284,7 @@ fig_distance_graph_IC <- reactive({
                     opacity = 1,
                     text = names(V(G)),
                     customdata = annotation,
-                    hovertemplate = paste0("IC : %{text}<br>",
+                    hovertemplate = paste0(input$choose_distances_to_determine, " : %{text}<br>",
                                            "Annotation :<br>%{customdata}",
                                            "<extra></extra>")
         ) %>% layout(
@@ -295,7 +295,9 @@ fig_distance_graph_IC <- reactive({
       ) %>%
       add_text(x = ~Xn, y = ~Yn, text = names(V(G)), textposition = "center") %>%
       hide_legend()
+      
     } else if (input$choose_n_dim_for_distances == 3){
+      
       Xn <- layout[,1]
       Yn <- layout[,2]
       Zn <- layout[,3]
@@ -305,38 +307,51 @@ fig_distance_graph_IC <- reactive({
       
       fig = plot_ly(type = 'scatter3d', mode = 'lines+markers')
       
+      rownames(layout) = names(V(G))
+      
       # create edges
-      for(i in 1:length(edges_list[,1])) {
-        v0 <- edges_list[i,1]
-        v1 <- edges_list[i,2]
-        
-        rownames(layout) = names(V(G))
-        median_point = c((as.double(layout[v0,1]) + as.double(layout[v1,1]))/2,(as.double(layout[v0,2]) + as.double(layout[v1,2]))/2,(as.double(layout[v0,3]) + as.double(layout[v1,3]))/2)
-        
-        fig = fig %>% add_trace(x=c(as.double(layout[v0,1]), median_point[1]), y=c(as.double(layout[v0,2]), median_point[2]), z=c(as.double(layout[v0,3]), median_point[3]),
+      edges_list[,"x_start"] = as.double(layout[edges_list[,1],1])
+      edges_list[,"x_end"] = as.double(layout[edges_list[,2],1])
+      edges_list[,"y_start"] = as.double(layout[edges_list[,1],2])
+      edges_list[,"y_end"] = as.double(layout[edges_list[,2],2])
+      edges_list[,"z_start"] = as.double(layout[edges_list[,1],3])
+      edges_list[,"z_end"] = as.double(layout[edges_list[,2],3])
+      edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
+      edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
+      edges_list[,"z_median"] = (edges_list[,"z_start"] + edges_list[,"z_end"])/2
+      edges_list[,"weight"] = tree_table[(paste0(tree_table$l,"_",tree_table$r) %in% paste0(edges_list$V1,"_",edges_list$V2)) ,"weight"]
+      
+      limits=range(edges_list[,"weight"])
+      pal = viridis::viridis(100)
+      
+      edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
+      edges_list[,"text"] = paste0(edges_list$V1," <-> ",edges_list$V2,"<br>Value : ",edges_list$weight)
+      
+      for(i in 1:nrow(edges_list)){
+        fig = fig %>% add_trace(x=c(as.double(edges_list[i,"x_start"]), as.double(edges_list[i,"x_median"])), y=c(as.double(edges_list[i,"y_start"]), as.double(edges_list[i,"y_median"])), z=c(as.double(edges_list[i,"z_start"]), as.double(edges_list[i,"z_median"])),
                                 type="scatter3d", mode="lines",
-                                line=list(color="black",
+                                line=list(color=edges_list[i,"colors"],
                                           width = input$choose_edges_size_for_distances
                                 ),
-                                text = paste0(v0," <-> ",v1),
+                                text = edges_list[i,"text"],
                                 customdata = tree_table[i,3],
                                 hovertemplate = paste0("%{text}<br>",
                                                        "Value : %{customdata}",
                                                        "<extra></extra>")
                                 )
         
-        fig = fig %>% add_trace(x=c(median_point[1],as.double(layout[v1,1])), y=c(median_point[2],as.double(layout[v1,2])), z=c(median_point[3],as.double(layout[v1,3])),
+        fig = fig %>% add_trace(x=c(as.double(edges_list[i,"x_median"]), as.double(edges_list[i,"x_end"])), y=c(as.double(edges_list[i,"y_median"]), as.double(edges_list[i,"y_end"])), z=c(as.double(edges_list[i,"z_median"]), as.double(edges_list[i,"z_end"])),
                                 type="scatter3d", mode="lines",
-                                line=list(color="black",
+                                line=list(color=edges_list[i,"colors"],
                                           width = input$choose_edges_size_for_distances
                                 ),
-                                text = paste0(v0," <-> ",v1),
+                                text = edges_list[i,"text"],
                                 customdata = tree_table[i,3],
                                 hovertemplate = paste0("%{text}<br>",
                                                        "Value : %{customdata}",
                                                        "<extra></extra>")
-                                )
-        
+        )
+
       }
       
       # create vertices colors
@@ -353,7 +368,7 @@ fig_distance_graph_IC <- reactive({
                     opacity = 1,
                     text = names(V(G)),
                     customdata = annotation,
-                    hovertemplate = paste0("IC : %{text}<br>",
+                    hovertemplate = paste0(input$choose_distances_to_determine, " : %{text}<br>",
                                            "Annotation : %{customdata}",
                                            "<extra></extra>")
         ) %>% layout(
