@@ -30,18 +30,14 @@ observeEvent(input$preprocessing_reduction_action_button, {
     values$data=ICASpatial(data=values$data,nics=input$preprocessing_number_of_ICs,maxit=input$preprocessing_maxit,method=input$preprocessing_ICA_function, kurtosis = input$preprocessing_kurtosis, sd = input$preprocessing_sd)
     
     incProgress(0.3, detail = "Preparing table")
-    if(is.null(values$data@misc$GeneAndStat$kurtosis_value)){
-      values$IC_names = names(values$data@misc$GeneAndStat$Kurtosis_ICs)[values$data@misc$GeneAndStat$Kurtosis_ICs > 3]
-    } else {
-      values$IC_names = names(values$data@misc$GeneAndStat$Kurtosis_ICs)[values$data@misc$GeneAndStat$Kurtosis_ICs > values$data@misc$GeneAndStat$kurtosis_value]
-    }
     
     
-    row_names = values$IC_names
-    values$data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
-    rownames(values$data@misc$annotation) = row_names
+    values$data@misc$annotation = matrix(data = "", nrow = length(colnames(values$data@reductions$ica@cell.embeddings)), ncol = 3)
+    rownames(values$data@misc$annotation) = colnames(values$data@reductions$ica@cell.embeddings)
     colnames(values$data@misc$annotation) = c('Use','Type','Annotation')
-    values$data@misc$annotation[,'Use'] = TRUE
+    values$data@misc$annotation[,'Use'] = as.character(values$data@misc$GeneAndStat$Kurtosis_ICs > input$preprocessing_kurtosis)
+    
+    values$IC_names = names(values$data@misc$GeneAndStat$Kurtosis_ICs)[as.logical(values$data@misc$GeneAndStat$Kurtosis_ICs > 3)]
     
     values$data@misc$annotation = as.matrix(values$data@misc$annotation)
     
