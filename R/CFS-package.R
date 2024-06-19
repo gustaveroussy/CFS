@@ -22,6 +22,7 @@
 #' @import clustree
 #' @import ggdendro
 #' @import spdep
+#' @import colourpicker
 #' @importFrom igraph graph_from_data_frame subgraph layout_with_fr as_edgelist V gsize
 #' @importFrom viridis viridis
 #' @importFrom png readPNG

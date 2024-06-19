@@ -40,6 +40,7 @@ source(paste0(Shiny.options[["shiny_root"]], "/About/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Signal_analysis/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Interaction_analysis/UI.R"), local = TRUE)
 source(paste0(Shiny.options[["shiny_root"]], "/Compositional_analysis/UI.R"), local = TRUE)
+source(paste0(Shiny.options[["shiny_root"]], "/Palette/UI.R"), local = TRUE)
 
 # Define UI for app that draws a histogram ----
 ui <- dashboardPage(
@@ -57,6 +58,7 @@ ui <- dashboardPage(
       menuItem("Visualization", tabName = "Visualization", icon = icon("display")),
       menuItem("Marker table", tabName = "Marker_table", icon = icon("table-list")),
       menuItem("Ouput", tabName = "Output", icon = icon("arrow-up-from-bracket")),
+      menuItem("Palette", tabName = "Palette", icon = icon("palette")),
       menuItem("About", tabName = "About", icon = icon("bars"))
     ),
     uiOutput("IC_list_UI"),
@@ -94,6 +96,7 @@ ui <- dashboardPage(
       tab_visualisation,
       tab_marker_table,
       tab_output,
+      tab_palette,
       tab_about
     )
   )

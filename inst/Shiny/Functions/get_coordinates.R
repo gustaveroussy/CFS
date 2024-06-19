@@ -11,8 +11,10 @@ TissueCoordinates <- reactive({
     names(c)[names(c) == "y"] <- "imagecol"
     
     if(is.null(values$HD_image)) {
-      c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$lowres
-      c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$lowres
+      if(class(values$data@images[[image]])[1] == "VisiumV2"){
+        c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$lowres
+        c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$lowres
+      }
     } else {
       c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$hires
       c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$hires

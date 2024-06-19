@@ -45,6 +45,14 @@ current_plot_spatial <- reactive({
       
       if (input$Plot_analysis_display_type == "Dimentional reduction"){
         if (input$Plot_display_type == "seurat_clusters"){
+          
+          ##### palette
+          palette = palette()
+          while(length(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))) > length(palette)){
+            palette = c(palette,palette)
+          }
+          
+          ##### clusters
           for (i in as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))[order(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]]))))]){
             if(length(which(meta.data[["seurat_clusters"]]==i)) == 1){
               table = t(as.data.frame(cell.embeddings[which(meta.data[["seurat_clusters"]]==i),]))
@@ -100,7 +108,7 @@ current_plot_spatial <- reactive({
                 y = ~y,
                 name = i,
                 marker = list(
-                  color = palette()[i+1],
+                  color = palette[i+1],
                   size = input$Plot_scatter_size_spatial
                 ),
                 showlegend = T,
@@ -189,6 +197,13 @@ current_plot_spatial <- reactive({
           fig <- fig %>% layout(showlegend = F)
           
         } else {
+          
+            ##### palette
+            palette = palette()
+            while(length(unique(meta.data[[input$Plot_display_type]])) > length(palette)){
+              palette = c(palette,palette)
+            }
+            
             c = 1
             for (i in unique(meta.data[[input$Plot_display_type]])[order(unique(meta.data[[input$Plot_display_type]]))]){
               fig <- fig %>%
@@ -197,7 +212,7 @@ current_plot_spatial <- reactive({
                   y = TissueCoordinates[,"imagerow"][which(meta.data[[input$Plot_display_type]]==i)],
                   name = i,
                   marker = list(
-                    color = palette()[c],
+                    color = palette[c],
                     size = input$Plot_scatter_size_spatial
                   ),
                   showlegend = T,
@@ -248,6 +263,7 @@ current_plot_spatial <- reactive({
           fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
             background_image(img[[sample]]) +
             geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_scatter_size_spatial) +
+            #scale_colour_manual(name = "value", values = palette()) +
             guides(size = "none") +
             theme_void() +
             xlim(0,ncol(img[[sample]])) +
