@@ -112,7 +112,7 @@ current_plot_spatial <- reactive({
               )
         }
       } else if (input$Plot_display_type == "gene") {
-        scale.data = GetAssay(values$data, assay = values$data@active.assay)[,(colnames(GetAssay(values$data, assay = values$data@active.assay)) %in% rownames(TissueCoordinates))]
+        scale.data = GetAssayData(values$data, assay = values$data@active.assay)[,(colnames(GetAssayData(values$data, assay = values$data@active.assay)) %in% rownames(TissueCoordinates))]
         
         fig <- fig %>%
           add_trace(
@@ -267,7 +267,7 @@ current_plot_spatial <- reactive({
         
         img = lapply(data@images,function(n){return(n@image)})
         
-        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],GetAssay(values$data, assay = values$data@active.assay)[input$gene_UMAP_choice, rownames(coordinates[[sample]])]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
+        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],GetAssayData(values$data, assay = values$data@active.assay)[input$gene_UMAP_choice, rownames(coordinates[[sample]])]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
         names(coordinates) = input$Plot_image_spatial
         
         for(sample in input$Plot_image_spatial){

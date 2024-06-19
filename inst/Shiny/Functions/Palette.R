@@ -1,5 +1,5 @@
 ########################################
-# reactive of the image to plot by plotly
+# Color palette
 ########################################
 
 base_palette <- reactive({

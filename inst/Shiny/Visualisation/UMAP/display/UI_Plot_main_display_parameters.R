@@ -84,10 +84,10 @@ output[["Plot_main_parameters_display_3_UI"]] <- renderUI({
     if(input$Plot_display_type == "gene"){
       tagList(
         sliderInput("slider_visual_spatial_range", label = "Color range",
-                    min = round(min(GetAssay(values$data, assay = values$data@active.assay)[input$gene_UMAP_choice,]), digits = 2), 
-                    max = round(max(GetAssay(values$data, assay = values$data@active.assay)[input$gene_UMAP_choice,]), digits = 2),
-                    value = c(round(min(GetAssay(values$data, assay = values$data@active.assay)[input$gene_UMAP_choice,]),digits = 2),
-                              round(max(GetAssay(values$data, assay = values$data@active.assay)[input$gene_UMAP_choice,]), digits = 2)),
+                    min = round(min(GetAssayData(values$data, assay = values$data@active.assay)[input$gene_UMAP_choice,]), digits = 2), 
+                    max = round(max(GetAssayData(values$data, assay = values$data@active.assay)[input$gene_UMAP_choice,]), digits = 2),
+                    value = c(round(min(GetAssayData(values$data, assay = values$data@active.assay)[input$gene_UMAP_choice,]),digits = 2),
+                              round(max(GetAssayData(values$data, assay = values$data@active.assay)[input$gene_UMAP_choice,]), digits = 2)),
                     step = 0.01),
         radioButtons("transparency_visual_spatial_choice", label = "Alpha type",
                      choices = list("Constant" = 1, "Scaling" = 2), 
