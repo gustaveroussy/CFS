@@ -66,6 +66,49 @@ observeEvent(input$start_integration_button, {
     incProgress(0.1, detail = "Done")
     
     })
+  } else if (length(values$integration_folders) == 1) {
+    
+    # load the seurat object
+    files_names = list.files(path=values$integration_folders, pattern=".h5", all.files=TRUE, full.names=FALSE)
+    files_names = files_names[grepl("filtered",files_names)][1]
+    
+    if (file.exists(paste0(values$integration_folders,'/',files_names)) & file.exists(paste0(values$integration_folders,'/spatial/tissue_lowres_image.png'))){
+      withProgress(message = 'Loading Visium output', value = 0, {
+        incProgress(0.4, detail = "Cleaning Shiny")
+        # empty relevant values
+        values$annotation_for_output = list()
+        values$data = NULL
+        values$IC_names = NULL
+        values$Stat = NULL
+        values$Annotation = NULL
+        values$low_image = NULL
+        values$marker_gene = NULL
+        values$IC_names = NULL
+        values$HD_image = NULL
+        values$HD_image_2 = NULL
+        
+        values$distances = list()
+        
+        incProgress(0.2, detail = "Loading spatial 10X")
+        # load the seurat object
+        values$data = Load10X_Spatial(values$integration_folders,
+                                      filename = files_names,
+                                      assay = "Spatial",
+                                      slice = basename(values$integration_folders)
+        )
+        
+        if('image' %in% names(attributes(values$data@images[[1]]))){
+          values$low_image = raster2uri(raster::as.raster(values$data@images[[1]]@image))
+        }
+        
+        incProgress(0.4, detail = "Done")
+      
+      })
+    } else {
+      shinyalert("Wrong format", "requires Visium output", type = "error")
+    }
+  } else {
+    shinyalert("No input", "Select data to load", type = "error")
   }
 })
 
