@@ -13,7 +13,7 @@
 output[["load_data_integration_UI"]] <- renderUI({
   fluidRow(
     column(12,
-           titlePanel("Load Visium output folder Integration"),
+           titlePanel("Load Visium output folder"),
            shinyDirButton('load_data_file_select_integration', label='Select a folder', title='Please select a folder', multiple=TRUE),
            actionButton("reset_integration_button", "Reset", class = "btn btn-primary"),
            actionButton("start_integration_button", "Start", class = "btn btn-primary"),
