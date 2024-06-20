@@ -172,7 +172,7 @@ fig_distance_graph_IC <- reactive({
   
   G = graph_from_data_frame(tree_table, directed = FALSE)
   
-  if(!is.null(input$choose_ic_for_genes_filter_for_distances_ligand) | !is.null(input$choose_ic_for_genes_filter_for_distances_receptor)){
+  if(input$choose_distances_to_determine == "Genes" & !is.null(input$choose_ic_for_genes_filter_for_distances_ligand) | !is.null(input$choose_ic_for_genes_filter_for_distances_receptor)){
     l = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$ligand_gene_symbol
     r = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$receptor_gene_symbol
     
