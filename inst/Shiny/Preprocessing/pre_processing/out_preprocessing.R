@@ -6,12 +6,20 @@ preprocessing_values <- reactiveValues(button_check = 1, preprocessing_text_disp
 
 observeEvent(input$preprocessing_normalisation_action_button, {
   req(values$data)
-  
-  i <- if(substr(packageVersion("Seurat"),1,1) == "5"){(Matrix::colSums(values$data@assays$Spatial$counts, na.rm=T) != 0)}else{(Matrix::colSums(values$data@assays$Spatial@counts, na.rm=T) != 0)}
-  row_names_df_to_keep<-colnames(values$data@assays$Spatial)[i]
-  values$data = values$data[, row_names_df_to_keep]
-  
-  values$data = PrepNormData(data=values$data,organism=input$preprocessing_specie_select,variable_features=input$preprocessing_variable_features, min_cells = input$preprocessing_minimum_cell)
+  withProgress(message = 'Normalization', value = 0, {
+    
+    incProgress(0.4, detail = "Filtering empty spots")
+    
+    i <- if(substr(packageVersion("Seurat"),1,1) == "5"){(Matrix::colSums(values$data@assays$Spatial$counts, na.rm=T) != 0)}else{(Matrix::colSums(values$data@assays$Spatial@counts, na.rm=T) != 0)}
+    row_names_df_to_keep<-colnames(values$data@assays$Spatial)[i]
+    values$data = values$data[, row_names_df_to_keep]
+    
+    incProgress(0.4, detail = "Normalizing")
+    
+    values$data = PrepNormData(data=values$data,organism=input$preprocessing_specie_select,variable_features=input$preprocessing_variable_features, min_cells = input$preprocessing_minimum_cell)
+
+    incProgress(0.2, detail = "Done")
+  })
 })
 
 observeEvent(input$preprocessing_reduction_action_button, {
