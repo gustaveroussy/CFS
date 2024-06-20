@@ -20,5 +20,3 @@ palette <- reactive({
   
   return(palette)
 })
-
-

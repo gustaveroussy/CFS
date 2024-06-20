@@ -52,7 +52,8 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
       ),
       actionButton("start_distance_IC", "Start"),
       actionButton("start_distance_IC_batch", "Batch process"),
-      downloadButton("download_distance_tables", "Download graph table")
+      downloadButton("download_distance_tables", "Download graph table"),
+      shinyDirButton("download_distance_tables_batch", "Batch download", "Choose a directory",FALSE)
     )
   )
 })
