@@ -63,7 +63,12 @@ IC_spatial_output_react <- reactive({
       out[[n]] = fig
     }
     
-    output <- subplot(out, nrows = ceiling(length(TissueCoordinates())/3))
+    if(length(out) > 1){
+      output <- subplot(out, nrows = ceiling(length(TissueCoordinates())/3))
+    } else {
+      output <- out[[1]]
+    }
+    
     
   } else {
     list = list()
