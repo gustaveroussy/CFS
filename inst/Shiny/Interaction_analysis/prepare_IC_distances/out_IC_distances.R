@@ -286,7 +286,9 @@ fig_distance_graph_IC <- reactive({
         
       }
       
-      colors = rep(base_palette(),ceiling(length(unique(annotation))/length(base_palette())))[as.numeric(as.factor(annotation))]
+      
+      
+      colors = rep(palette(),ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
       
       #create vertices
       fig = fig %>%
@@ -381,7 +383,7 @@ fig_distance_graph_IC <- reactive({
         
       }
       
-      colors = rep(base_palette(),ceiling(length(unique(annotation))/length(base_palette())))[as.numeric(as.factor(annotation))]
+      colors = rep(palette(),ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
       
       #create edges
       fig = fig %>%
