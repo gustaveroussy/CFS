@@ -16,15 +16,17 @@ output[["Palette_UI"]] <- renderUI({
                height = NULL,
                collapsible = TRUE,
                collapsed = FALSE,
-               tagList(
-                 lapply(1:length(colors), function(n) {
-                   colourInput(inputId = paste0("palette_colors_",n), paste0("Color ",n), value = colors[n])
-                 }),
-                 actionButton("reset_palette_default_values", "Reset")
+               div(id = "dynamic_palette_ui",
+                   lapply(1:length(colors), function(n) {
+                     div(id = paste0("palette_colors_div_",n),colourInput(inputId = paste0("palette_colors_",n), paste0("Color ",n), value = colors[n]))
+                   })
+                  ),
+                 actionButton("reset_palette_default_values", "Reset"),
+                 actionButton("remove_palette_values", "Remove Color"),
+                 actionButton("add_palette_values", "Add Color"),
                )
            )
     )
-  )
 })
 
 outputOptions(
