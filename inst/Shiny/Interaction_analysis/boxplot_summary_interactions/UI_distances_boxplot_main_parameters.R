@@ -7,7 +7,8 @@ output[["Boxplot_distance_main_parameters_UI"]] <- renderUI({
   req(values$data)
   fluidRow(
     column(width = 12,
-           actionButton("start_distance_boxplot", "Start")
+           selectInput(inputId = "boxplot_interaction_boxploint_type", label = "Type of point display", choices = c("all","outliers","suspectedoutliers","FALSE")),
+           numericInput(inputId = "boxplot_interaction_z_score_filter",label = "Z-score filter",value = 3, min = 0)
     )
   )
 })

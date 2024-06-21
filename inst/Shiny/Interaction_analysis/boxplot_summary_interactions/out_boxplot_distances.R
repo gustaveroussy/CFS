@@ -18,7 +18,7 @@ output[["Boxplot_distances_plot_or_message"]] <- renderUI({
 
 fig_distance_boxplot <- reactive({
   
-  samples <- names(data@images)
+  samples <- names(values$data@images)
   
   df = lapply(samples,function(sample){return(values$distances[[input$choose_distances_to_determine]][[sample]][[input$choose_method_for_distances]][["df"]])})
   
@@ -33,21 +33,25 @@ fig_distance_boxplot <- reactive({
   agg_df$x = scale(as.double(agg_df$x))
   
   # take the values that stand out the most
-  agg_df = agg_df[agg_df$x > 3,]
+  agg_df = agg_df[agg_df$x > input$boxplot_interaction_z_score_filter,]
   
   df = df[df$lr %in% agg_df$Group.1,]
   
-  fig <- plot_ly(df, x = ~lr, y = ~weight, type = "box")
+  df$samples = as.character(factor(df$samples, labels = samples))
   
-  # ggplot(df)+ 
-  #   geom_boxplot(aes(x=fct_reorder(lr, weight, .fun=median, .desc=T),y=weight), lwd=1)+
-  #   scale_y_continuous(trans = ggallin::pseudolog10_trans, breaks = c(-100,-50,-10,-2,2,10,50,100), labels = c(-100,-50,-10,-2,2,10,50,100))+
-  #   theme_pubr()+
-  #   theme(axis.text.x=element_text(angle = 45, hjust = 1))+
-  #   ggtitle(query1)+
-  #   xlab("Associated ligands")+
-  #   geom_hline(yintercept = 0, color="red", linetype="dashed")+
-  #   geom_hline(yintercept = 2, color="blue", linetype="dashed")
+  lvls <- df %>%
+    group_by(lr) %>%
+    summarise(m = median(weight)) %>%
+    arrange(desc(m)) %>%
+    pull(lr)
+  
+  
+  fig <- plot_ly(df, x = ~factor(lr,lvls), y = ~weight, boxmean = TRUE, boxpoints = input$boxplot_interaction_boxploint_type,
+                 type = "box", text = ~samples,
+                 hovertemplate = paste0("Sample : %{text}<br>",
+                                        "Association : %{x}",
+                                        "Value: %{y}",
+                                        "<extra></extra>"))
   
   return(fig)
 })
