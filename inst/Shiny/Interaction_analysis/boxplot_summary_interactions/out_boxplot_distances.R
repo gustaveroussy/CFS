@@ -24,12 +24,16 @@ fig_distance_boxplot <- reactive({
   
   df = dplyr::bind_rows(df, .id = "samples")
   
-  df$lr <- paste0(df$l,"_",df$r)
+  if(input$choose_distances_to_determine == "IC"){
+    df$lr <- paste0(df$V1,"_",df$V2)
+  } else if (input$choose_distances_to_determine == "Genes") {
+    df$lr <- paste0(df$l,"_",df$r)
+  }
   
   df = df[order(df$weight,decreasing = TRUE),]
   
   agg_df <- aggregate(df$weight, by=list(df$lr), FUN=mean)
-  
+
   agg_df$x = scale(as.double(agg_df$x))
   
   # take the values that stand out the most
@@ -45,11 +49,10 @@ fig_distance_boxplot <- reactive({
     arrange(desc(m)) %>%
     pull(lr)
   
-  
   fig <- plot_ly(df, x = ~factor(lr,lvls), y = ~weight, boxmean = TRUE, boxpoints = input$boxplot_interaction_boxploint_type,
                  type = "box", text = ~samples,
                  hovertemplate = paste0("Sample : %{text}<br>",
-                                        "Association : %{x}",
+                                        "Association : %{x}<br>",
                                         "Value: %{y}",
                                         "<extra></extra>"))
   
