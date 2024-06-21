@@ -211,9 +211,8 @@ fig_distance_graph_IC <- reactive({
       layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G))
     }
     
-    
-    
     if(input$choose_n_dim_for_distances == 2){
+      
       Xn <- layout[,1]
       Yn <- layout[,2]
       
@@ -268,7 +267,6 @@ fig_distance_graph_IC <- reactive({
                                                           "<extra></extra>")
         )
       }
-      
       # create vertices colors
       if(input$choose_distances_to_determine == "IC"){
         
@@ -285,8 +283,6 @@ fig_distance_graph_IC <- reactive({
         }
         
       }
-      
-      
       
       colors = rep(palette(),ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
       
@@ -311,6 +307,17 @@ fig_distance_graph_IC <- reactive({
       ) %>%
       add_text(x = ~Xn, y = ~Yn, text = names(V(G)), textposition = "center") %>%
       hide_legend()
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
       
     } else if (input$choose_n_dim_for_distances == 3){
       
