@@ -18,5 +18,7 @@ palette <- reactive({
     colors = input[[paste0("palette_colors_",n)]]
   }
   
+  saveRDS(palette,paste0(Shiny.options[["shiny_root"]], "/../tmp_data/palette.RDS"))
+  
   return(palette)
 })
