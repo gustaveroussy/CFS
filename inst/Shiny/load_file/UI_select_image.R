@@ -16,13 +16,14 @@ output[["load_image_UI"]] <- renderUI({
            titlePanel("Load high res image"),
            fileInput(
              inputId = "input_image",
-             label = "Select image (.png/.jpg file)",
+             label = "Select image (.png/.jpg/.tif file)",
              multiple = FALSE,
-             accept = c(".png",".jpg"),
+             accept = c(".png",".jpg",".tif",".tiff"),
              width = '350px',
              buttonLabel = "Browse...",
              placeholder = "No file selected"
-           )
+           ),
+           shinyFilesButton(id = "input_image_local", label = "Local load", title = "Select image (.png/.jpg/.tif file)", multiple = FALSE)
     )
   )
 })

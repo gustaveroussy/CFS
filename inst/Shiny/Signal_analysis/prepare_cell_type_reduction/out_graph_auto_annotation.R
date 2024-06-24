@@ -106,6 +106,8 @@ figure_and_tree_cutoff_annotation = reactive({
 observeEvent(input$start_add_annotation,{
   values$Annotation = cbind(values$Annotation,figure_and_tree_cutoff_annotation()$clusters)
   colnames(values$Annotation)[ncol(values$Annotation)] = input$new_col_name_annotation
+  
+  associate_signal_with_IC()
 })
 
 

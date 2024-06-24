@@ -58,6 +58,7 @@ output[["IC_gene_heatmap_UI"]] <- renderUI({
           shinyWidgets::dropdownButton(
             tags$div(
               style = "color: black !important;",
+              uiOutput("heatmap_IC_gene_interactive_display_UI"),
               uiOutput("heatmap_IC_gene_column_organization_UI"),
               uiOutput("invert_color_gene_heatmap_UI")
             ),
@@ -103,6 +104,24 @@ output[["invert_color_gene_heatmap_UI"]] <- renderUI({
 outputOptions(
   output,
   "invert_color_gene_heatmap_UI",
+  suspendWhenHidden = FALSE
+)
+
+##----------------------------------------------------------------------------##
+## interactive display
+##----------------------------------------------------------------------------##
+output[["heatmap_IC_gene_interactive_display_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "heatmap_IC_gene_interactive_display",
+    label = "Interactive Display",
+    value = TRUE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "heatmap_IC_gene_interactive_display_UI",
   suspendWhenHidden = FALSE
 )
 

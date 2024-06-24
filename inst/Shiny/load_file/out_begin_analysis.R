@@ -90,30 +90,38 @@ observeEvent(input$input_file, {
 
 observeEvent(input$input_image, {
   values$HD_image = NULL
-  if (length(grep('.JPG',toupper(input$input_image$datapath))) != 0) {
-    values$HD_image <- raster2uri(raster::as.raster(readJPEG(input$input_image$datapath)))
-  } else if (length(grep('.PNG',toupper(input$input_image$datapath))) != 0){
-    values$HD_image <- raster2uri(raster::as.raster(readPNG(input$input_image$datapath)))
+  if (grepl('.*JPG$',toupper(input$input_image$datapath))) {
+    values$HD_image <- raster2uri(readJPEG(input$input_image$datapath))
+  } else if (grepl('.*PNG$',toupper(input$input_image$datapath))){
+    values$HD_image <- raster2uri(readPNG(input$input_image$datapath))
+  } else if (grepl('.*TIF$',toupper(input$input_image$datapath))){
+    values$HD_image = raster2uri(readTIFF(input$input_image$datapath))
+  } else if (grepl('.*TIFF$',toupper(input$input_image$datapath))){
+    values$HD_image = raster2uri(readTIFF(input$input_image$datapath))
   } else {
-    shinyalert("Oops!", "Wrong format (expecting .png or .jpg)", type = "error")
+    shinyalert("Oops!", "Wrong format (expecting .png, .jpg or .tif)", type = "error")
   }
 })
 
 observeEvent(input$input_image_2, {
   values$HD_image_2 = NULL
-  if (length(grep('.JPG',toupper(input$input_image_2$datapath))) != 0) {
+  if (grepl('.*JPG$',toupper(input$input_image_2$datapath))) {
     values$HD_image_2 <- readJPEG(input$input_image_2$datapath)
-  } else if (length(grep('.PNG',toupper(input$input_image_2$datapath))) != 0){
+  } else if (grepl('.*PNG$',toupper(input$input_image_2$datapath))){
     values$HD_image_2 <- readPNG(input$input_image_2$datapath)
+  } else if (grepl('.*TIF$',toupper(input$input_image_2$datapath))){
+    values$HD_image_2 = readTIFF(input$input_image_2$datapath)
+  } else if (grepl('.*TIFF$',toupper(input$input_image_2$datapath))){
+    values$HD_image_2 = readTIFF(input$input_image_2$datapath)
   } else {
-    shinyalert("Oops!", "Wrong format (expecting .png or .jpg)", type = "error")
+    shinyalert("Oops!", "Wrong format (expecting .png, .jpg or .tif)", type = "error")
   }
 })
 
 images_names <- reactive({
   if(is.null(values$data)){
     return(NULL)
-  }else{
+  } else {
     return(names(values$data@images))
   }
 })
@@ -138,4 +146,6 @@ observeEvent(input$Plot_image_spatial, {
       values$low_image = append(values$low_image,NULL)
     }
   }
+  
+  names(values$low_image) = input$Plot_image_spatial
 })

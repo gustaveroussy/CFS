@@ -2,8 +2,7 @@
 ## UI elements to set main parameters for preprocessing.
 ##----------------------------------------------------------------------------##
 
-output[["preprocessing_main_parameters_UI"]] <- renderUI({
-  websiteLive <- getOption("enrichR.live")
+output[["preprocessing_main_parameters_UI_1"]] <- renderUI({
   tagList(
     HTML("<h3><b>Normalisation process</b></h3>"),
     selectInput("preprocessing_specie_select", label = "Select organism", 
@@ -13,6 +12,12 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
                  min = 10, step = 1),
     numericInput("preprocessing_minimum_cell", label = "Minimum gene presence (in spots)", value = 5,
                  min = 0, step = 1),
+    actionButton("preprocessing_normalisation_action_button", label = "Normalize")
+  )
+})
+
+output[["preprocessing_main_parameters_UI_2"]] <- renderUI({
+  tagList(
     HTML("<h3><b>ICA process</b></h3>"),
     numericInput("preprocessing_number_of_ICs", label = "Number of ICs", value = 100,
                  min = 2, step = 1),
@@ -25,6 +30,13 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
                  min = 0, step = 0.01),
     numericInput("preprocessing_sd", label = "Genes standard deviation", value = 3,
                  min = 0, step = 0.01),
+    actionButton("preprocessing_reduction_action_button", label = "Reduce")
+  )
+})
+
+output[["preprocessing_main_parameters_UI_3"]] <- renderUI({
+  websiteLive <- getOption("enrichR.live")
+  tagList(
     HTML("<h3><b>Enrichment process</b></h3>"),
     selectizeInput("preprocessing_database", label = "Enrichment database",
                    choices = if (websiteLive){enrichR::listEnrichrDbs()$libraryName} else {NULL},
@@ -42,7 +54,7 @@ output[["preprocessing_main_parameters_UI"]] <- renderUI({
                    options = NULL),
     checkboxInput("preprocessing_enrichment_positive", label = "Only process positively associated genes",
                   value = TRUE, width = NULL),
-    actionButton("preprocessing_action_button", label = "Process")
+    actionButton("preprocessing_enrichment_action_button", label = "Enrich")
     )
 })
 

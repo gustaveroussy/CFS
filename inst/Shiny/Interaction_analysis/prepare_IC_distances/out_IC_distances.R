@@ -3,7 +3,7 @@
 ##----------------------------------------------------------------------------##
 
 output[["IC_distances_plot"]] <- plotly::renderPlotly({
-  req(values$distances[[input$choose_sample_for_distances]][[input$choose_method_for_distances]])
+  req(values$distances[[input$choose_distances_to_determine]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]])
   
   return(fig_distance_graph_IC())
 })
@@ -20,99 +20,403 @@ observeEvent(input$start_distance_IC,{
   req(values$data)
   req(values$data@reductions$ica)
   
-  data = values$data
   method = input$choose_method_for_distances
   sample = input$choose_sample_for_distances
-  
-  lee_function = function(x){
-    n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"))
-    return(n$L)
-  }
   
   withProgress(message = 'Calculating distances', value = 0, {
   
     if(method == "Lee"){
-      table = data@reductions$ica@cell.embeddings
       
-      table_sample = table[grepl(paste0(sample,"_[ACGT]"), rownames(table)),]
+      if(input$choose_distances_to_determine == "IC"){
+        
+        table_sample = values$data@reductions$ica@cell.embeddings
+        
+        if(input$use_positive_values_for_distances){
+          table_sample[table_sample < 0] = 0
+        }
+        
+      } else if (input$choose_distances_to_determine == "Genes") {
+        table_sample = raster::t(GetAssayData(values$data))
+      }
+      
+      if(length(values$data@images) > 1){
+        table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
+      }
       
       incProgress(0.1, detail = "Finding neighbors")
       
-      knn = knearneigh(GetTissueCoordinates(data, sample), k=6, longlat = NULL, use_kd_tree=TRUE)
+      knn = knearneigh(GetTissueCoordinates(values$data, gsub("-", ".", sample)), k=6, longlat = NULL, use_kd_tree=TRUE)
       neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
       listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
       
       incProgress(0.2, detail = "Calculating Lee")
       
-      df = t(combn(colnames(table_sample),2))
-      df = as.data.frame(df)
-      x = apply(df,1,lee_function)
+      if (input$choose_distances_to_determine == "Genes") {
+        lr = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$lr_pair
+        
+        df <- data.frame(lr=lr)
+        df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")
+        
+        table_sample = as.data.frame(table_sample[,colnames(table_sample) %in% unique(c(df$l,df$r))])
+        
+        df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample) > 0],]
+        df = df[df[,2] %in% colnames(table_sample)[colSums(table_sample) > 0],]
+        
+      } else if (input$choose_distances_to_determine == "IC"){
+        df = t(combn(colnames(table_sample),2))
+        df = as.data.frame(df)
+      }
       
-      incProgress(0.7, detail = "Finished")
-      
-      df[,"Lee"] = x
-      
-      df[,"Lee"] = scale(as.double(df[,"Lee"]))
-      
-      df = df[!(as.double(df[,"Lee"]) <= 0),]
-      
-      df = df[!(as.double(df[,"Lee"]) <= sd(as.double(df[,"Lee"]))),]
-      
-      values$distances[[sample]][[method]] = df
-      
+      if(nrow(df) > 0){
+        x = apply(df,1,function(x){n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"));return(n)})
+        
+        incProgress(0.7, detail = "Finished")
+        
+        df[,"weight"] = unlist(lapply(x,function(n){return(n$L)}))
+        
+        local = lapply(x,function(n){return(n$localL)})
+        names(local) = paste0(df[,1]," ",df[,2])
+        
+        values$distances[[input$choose_distances_to_determine]][[sample]][[method]] = list(df = df,local = local)
+      } else {
+        shinyalert("Oops!", "No LR interaction found within selected sample", type = "error")
+      }
     }
     
   })
   
 })
 
+observeEvent(input$start_distance_IC_batch,{
+  req(values$data)
+  req(values$data@reductions$ica)
+  
+  method = input$choose_method_for_distances
+  sample_all = if(length(values$data@images) > 1){unique(sapply(strsplit(rownames(values$data@meta.data), "_"),"[[",1))} else {names(values$data@images)}
+  
+  for(sample in sample_all){
+    withProgress(message = paste0('Calculating ',sample), value = 0, {
+      
+      if(method == "Lee"){
+        
+        if(input$choose_distances_to_determine == "IC"){
+          
+          table_sample = values$data@reductions$ica@cell.embeddings
+          
+          if(input$use_positive_values_for_distances){
+            table_sample[table_sample < 0] = 0
+          }
+          
+        } else if (input$choose_distances_to_determine == "Genes") {
+          table_sample = raster::t(GetAssayData(values$data))
+        }
+        
+        if(length(values$data@images) > 1){
+          table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
+        }
+        
+        incProgress(0.1, detail = "Finding neighbors")
+        
+        knn = knearneigh(GetTissueCoordinates(values$data, gsub("-", ".", sample)), k=6, longlat = NULL, use_kd_tree=TRUE)
+        neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
+        listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
+        
+        incProgress(0.2, detail = "Calculating Lee")
+        
+        if (input$choose_distances_to_determine == "Genes") {
+          lr = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$lr_pair
+          
+          df <- data.frame(lr=lr)
+          df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")
+          
+          table_sample = as.data.frame(table_sample[,colnames(table_sample) %in% unique(c(df$l,df$r))])
+          
+          df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample) > 0],]
+          df = df[df[,2] %in% colnames(table_sample)[colSums(table_sample) > 0],]
+          
+        } else if (input$choose_distances_to_determine == "IC"){
+          df = t(combn(colnames(table_sample),2))
+          df = as.data.frame(df)
+        }
+        
+        if(nrow(df) > 0){
+          x = apply(df,1,function(x){n = lee(table_sample[,x[1]], table_sample[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"));return(n)})
+          
+          incProgress(0.7, detail = "Finished")
+          
+          df[,"weight"] = unlist(lapply(x,function(n){return(n$L)}))
+          
+          local = lapply(x,function(n){return(n$localL)})
+          names(local) = paste0(df[,1]," ",df[,2])
+          
+          values$distances[[input$choose_distances_to_determine]][[sample]][[method]] = list(df = df,local = local)
+        } else {
+          shinyalert("Oops!", "No LR interaction found within selected sample", type = "error")
+        }
+      }
+      
+    })
+  }
+  
+})
 
 fig_distance_graph_IC <- reactive({
-  tree_table = values$distances[[input$choose_sample_for_distances]][[input$choose_method_for_distances]]
+  tree_table = values$distances[[input$choose_distances_to_determine]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]][["df"]]
+  
+  req(tree_table)
+  req(input$choose_n_dim_for_distances)
+  
+  tree_table = tree_table[(as.double(tree_table[,"weight"]) > 0),]
+  
+  tree_table = tree_table[as.double(scale(tree_table[,"weight"])) > input$Z_score_for_distances,]
   
   G = graph_from_data_frame(tree_table, directed = FALSE)
   
-  layout <- layout_with_fr(G)
-  
-  # create nodes
-  Xn <- layout[,1]
-  Yn <- layout[,2]
-  
-  network <- plot_ly(type = "scatter", x = ~Xn, y = ~Yn, mode = "markers",
-                     text = names(V(G)), hoverinfo = "text",
-                     color = values$Annotation[names(V(G)),"Type"])
-  
-  # create edges
-  Ne <- length(df[,1])
-  edge_shapes <- list()
-  for(i in 1:Ne) {
-    v0 <- df[i,1]
-    v1 <- df[i,2]
+  if(input$choose_distances_to_determine == "Genes" & !is.null(input$choose_ic_for_genes_filter_for_distances_ligand) | !is.null(input$choose_ic_for_genes_filter_for_distances_receptor)){
+    l = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$ligand_gene_symbol
+    r = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$receptor_gene_symbol
     
-    rownames(layout) = names(V(G))
+    if(!is.null(input$choose_ic_for_genes_filter_for_distances_ligand)){
+      genes_ICs = lapply(input$choose_ic_for_genes_filter_for_distances_ligand,function(n){return(values$data@misc$GeneAndStat$Contrib_gene[[n]])})
+      genes_ICs = bind_rows(genes_ICs)
+      genes_ICs = genes_ICs %>%
+        arrange(desc(Sig)) %>%
+        filter(Sig>=0)
+      l = l[l %in% unique(genes_ICs$gene)]
+    }
     
-    edge_shape = list(
-      type = "line",
-      line = list(color = "#030303", width = 0.3),
-      x0 = as.double(layout[v0,1]),
-      y0 = as.double(layout[v0,2]),
-      x1 = as.double(layout[v1,1]),
-      y1 = as.double(layout[v1,2])
-    )
+    if(!is.null(input$choose_ic_for_genes_filter_for_distances_receptor)){
+      genes_ICs = lapply(input$choose_ic_for_genes_filter_for_distances_receptor,function(n){return(values$data@misc$GeneAndStat$Contrib_gene[[n]])})
+      genes_ICs = bind_rows(genes_ICs)
+      genes_ICs = genes_ICs %>%
+        arrange(desc(Sig)) %>%
+        filter(Sig>=0)
+      r = r[r %in% unique(genes_ICs$gene)]
+    }
     
-    edge_shapes[[i]] <- edge_shape
+    genes = c(l,r)
+    
+    G = subgraph(G, genes[genes %in% names(V(G))])
   }
   
-  #create graph
-  axis <- list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE)
-  
-  fig <- layout(
-    network,
-    title = 'IC distance graph',
-    shapes = edge_shapes,
-    xaxis = axis,
-    yaxis = axis
-  )
-  
-  return(fig)
+  if(gsize(G) > 0){
+
+    edges_list = as.data.frame(as_edgelist(G))
+    
+    if(input$choose_layout_for_distances %in% c("fr","kk","mds")){
+      layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G, dim = input$choose_n_dim_for_distances))
+    } else if(input$choose_layout_for_distances %in% c("sugiyama")){
+      layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G))$layout
+    } else {
+      layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G))
+    }
+    
+    if(input$choose_n_dim_for_distances == 2){
+      
+      Xn <- layout[,1]
+      Yn <- layout[,2]
+      
+      #create graph
+      axis <- list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE)
+      
+      fig = plot_ly(source = "S")
+      
+      rownames(layout) = names(V(G))
+      
+      # create edges
+      edges_list[,"x_start"] = as.double(layout[edges_list[,1],1])
+      edges_list[,"x_end"] = as.double(layout[edges_list[,2],1])
+      edges_list[,"y_start"] = as.double(layout[edges_list[,1],2])
+      edges_list[,"y_end"] = as.double(layout[edges_list[,2],2])
+      edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
+      edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
+      if(input$choose_distances_to_determine == "IC"){
+        edges_list[,"weight"] = tree_table[,"weight"]
+      } else {
+        edges_list[,"weight"] = tree_table[(paste0(tree_table$l,"_",tree_table$r) %in% paste0(edges_list$V1,"_",edges_list$V2)) ,"weight"]
+      }
+      
+      
+      limits=range(edges_list[,"weight"])
+      pal = viridis::viridis(100)
+      
+      edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
+      edges_list[,"text"] = paste0(edges_list$V1," <-> ",edges_list$V2,"<br>Value : ",edges_list$weight)
+      
+      for(i in 1:nrow(edges_list)){
+        fig = fig %>% add_segments(data = edges_list[i,],
+                                   x = ~x_start,
+                                   xend = ~x_median,
+                                   y = ~y_start,
+                                   yend = ~y_median,
+                                   line=list(color = ~colors,
+                                             width = input$choose_edges_size_for_distances
+                                   )
+        )
+        
+        fig = fig %>% add_segments(data = edges_list[i,],
+                                   x = ~x_median,
+                                   xend = ~x_end,
+                                   y = ~y_median,
+                                   yend = ~y_end,
+                                   line=list(color=~colors,
+                                             width = input$choose_edges_size_for_distances
+                                   ),
+                                   customdata = ~text,
+                                   hovertemplate = paste0("%{customdata}",
+                                                          "<extra></extra>")
+        )
+      }
+      # create vertices colors
+      if(input$choose_distances_to_determine == "IC"){
+        
+        annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
+        
+      } else if (input$choose_distances_to_determine == "Genes") {
+        annotation = c()
+        
+        for(i in names(V(G))){
+          ICs = lapply(values$data@misc$GeneAndStat$Contrib_gene,function(x){x = x[x$Sig > 0,];return(i %in% x$gene)})
+          ICs = names(ICs[ICs == TRUE])
+          ICs = paste0(ICs, " : ", values$Annotation[rownames(values$Annotation) %in% ICs,"Type"] ," : ",values$Annotation[rownames(values$Annotation) %in% ICs,"Annotation"])
+          annotation = c(annotation,paste(ICs,collapse = "<br>"))
+        }
+        
+      }
+      
+      colors = rep(palette(),ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
+      
+      #create vertices
+      fig = fig %>%
+        add_markers(x = ~Xn, y = ~Yn,
+                    marker = list(
+                      color = colors,
+                      size = input$choose_vertices_size_for_distances
+                    ),
+                    opacity = 1,
+                    text = names(V(G)),
+                    customdata = annotation,
+                    hovertemplate = paste0(input$choose_distances_to_determine, " : %{text}<br>",
+                                           "Annotation :<br>%{customdata}",
+                                           "<extra></extra>")
+        ) %>% layout(
+        title = 'Distance graph',
+        xaxis = axis,
+        yaxis = axis,
+        hoverlabel = list(align = "left")
+      ) %>%
+      add_text(x = ~Xn, y = ~Yn, text = names(V(G)), textposition = "center") %>%
+      hide_legend()
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    } else if (input$choose_n_dim_for_distances == 3){
+      
+      Xn <- layout[,1]
+      Yn <- layout[,2]
+      Zn <- layout[,3]
+      
+      #create graph
+      axis <- list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE)
+      
+      fig = plot_ly(type = 'scatter3d', mode = 'lines+markers')
+      
+      rownames(layout) = names(V(G))
+      
+      # create edges
+      edges_list[,"x_start"] = as.double(layout[edges_list[,1],1])
+      edges_list[,"x_end"] = as.double(layout[edges_list[,2],1])
+      edges_list[,"y_start"] = as.double(layout[edges_list[,1],2])
+      edges_list[,"y_end"] = as.double(layout[edges_list[,2],2])
+      edges_list[,"z_start"] = as.double(layout[edges_list[,1],3])
+      edges_list[,"z_end"] = as.double(layout[edges_list[,2],3])
+      edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
+      edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
+      edges_list[,"z_median"] = (edges_list[,"z_start"] + edges_list[,"z_end"])/2
+      edges_list[,"weight"] = tree_table[(paste0(tree_table$l,"_",tree_table$r) %in% paste0(edges_list$V1,"_",edges_list$V2)) ,"weight"]
+      
+      limits=range(edges_list[,"weight"])
+      pal = viridis::viridis(100)
+      
+      edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
+      edges_list[,"text"] = paste0(edges_list$V1," <-> ",edges_list$V2,"<br>Value : ",edges_list$weight)
+      
+      for(i in 1:nrow(edges_list)){
+        fig = fig %>% add_trace(x=c(as.double(edges_list[i,"x_start"]), as.double(edges_list[i,"x_median"])), y=c(as.double(edges_list[i,"y_start"]), as.double(edges_list[i,"y_median"])), z=c(as.double(edges_list[i,"z_start"]), as.double(edges_list[i,"z_median"])),
+                                type="scatter3d", mode="lines",
+                                line=list(color=edges_list[i,"colors"],
+                                          width = input$choose_edges_size_for_distances
+                                ),
+                                customdata = edges_list[i,"text"],
+                                hovertemplate = paste0("%{customdata}",
+                                                         "<extra></extra>")
+                                )
+        
+        fig = fig %>% add_trace(x=c(as.double(edges_list[i,"x_median"]), as.double(edges_list[i,"x_end"])), y=c(as.double(edges_list[i,"y_median"]), as.double(edges_list[i,"y_end"])), z=c(as.double(edges_list[i,"z_median"]), as.double(edges_list[i,"z_end"])),
+                                type="scatter3d", mode="lines",
+                                line=list(color=edges_list[i,"colors"],
+                                          width = input$choose_edges_size_for_distances
+                                ),
+                                customdata = edges_list[i,"text"],
+                                hovertemplate = paste0("%{customdata}",
+                                                       "<extra></extra>")
+        )
+
+      }
+      
+      # create vertices colors
+      if(input$choose_distances_to_determine == "IC"){
+        
+        annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
+        
+      } else if (input$choose_distances_to_determine == "Genes") {
+        annotation = c()
+        
+        for(i in names(V(G))){
+          ICs = lapply(values$data@misc$GeneAndStat$Contrib_gene,function(x){x = x[x$Sig > 0,];return(i %in% x$gene)})
+          ICs = names(ICs[ICs == TRUE])
+          ICs = paste0(ICs, " : ", values$Annotation[rownames(values$Annotation) %in% ICs,"Type"] ," : ",values$Annotation[rownames(values$Annotation) %in% ICs,"Annotation"])
+          annotation = c(annotation,paste(ICs,collapse = "<br>"))
+        }
+        
+      }
+      
+      colors = rep(palette(),ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
+      
+      #create edges
+      fig = fig %>%
+        add_markers(x = ~Xn, y = ~Yn, z = ~Zn,
+                    marker = list(
+                      color = colors,
+                      size = input$choose_vertices_size_for_distances
+                    ),
+                    opacity = 1,
+                    text = names(V(G)),
+                    customdata = annotation,
+                    hovertemplate = paste0(input$choose_distances_to_determine, " : %{text}<br>",
+                                           "Annotation :<br>%{customdata}",
+                                           "<extra></extra>")
+        ) %>% layout(
+          title = 'Distance graph',
+          xaxis = axis,
+          yaxis = axis,
+          hoverlabel = list(align = "left")
+        ) %>%
+        add_text(x = ~Xn, y = ~Yn, z = ~Zn, text = names(V(G)), textposition = "center") %>%
+        hide_legend()
+    }
+    
+    return(fig)
+  } else {
+    return(NULL)
+  }
 })

@@ -15,17 +15,17 @@ observeEvent(clicked_cell_UMAP(), {
   table = clicked_cell_UMAP()
   
   if (is.null(values$HD_image)) {
-    table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
-    table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["lowres"]])
+    table$x = table$x * (1/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors[["lowres"]])
+    table$y = table$y * (1/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors[["lowres"]])
   } else {
-    table$x = table$x * (1/values$data@images[["slice1"]]@scale.factors[["hires"]])
-    table$y = table$y * (1/values$data@images[["slice1"]]@scale.factors[["hires"]])
+    table$x = table$x * (1/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors[["hires"]])
+    table$y = table$y * (1/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors[["hires"]])
   }
   
-  min_x = table$x-ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
-  min_y = table$y-ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
-  max_x = table$x+ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
-  max_y = table$y+ceiling(1/(values$data@images[["slice1"]]@spot.radius))*2
+  min_x = table$x-ceiling(1/(values$data@images[[input$Plot_image_spatial[1]]]@spot.radius))*2
+  min_y = table$y-ceiling(1/(values$data@images[[input$Plot_image_spatial[1]]]@spot.radius))*2
+  max_x = table$x+ceiling(1/(values$data@images[[input$Plot_image_spatial[1]]]@spot.radius))*2
+  max_y = table$y+ceiling(1/(values$data@images[[input$Plot_image_spatial[1]]]@spot.radius))*2
   
   cropped_image = values$HD_image_2[min_y:max_y,min_x:max_x,]
 
@@ -44,9 +44,9 @@ output[["mini_plot_UMAP"]] <- renderPlotly({
                 shapes = list(
                   list(type = "circle",
                        fillcolor = NULL, line = list(color = "black"), opacity = 0.5,
-                       x0 = ceiling(1/(values$data@images[["slice1"]]@spot.radius)),
-                       x1 = ceiling(1/(values$data@images[["slice1"]]@spot.radius))*3, xref = "x",
-                       y0 = ceiling(1/(values$data@images[["slice1"]]@spot.radius)),
-                       y1 = ceiling(1/(values$data@images[["slice1"]]@spot.radius))*3, yref = "y")))
+                       x0 = ceiling(1/(values$data@images[[input$Plot_image_spatial[1]]]@spot.radius)),
+                       x1 = ceiling(1/(values$data@images[[input$Plot_image_spatial[1]]]@spot.radius))*3, xref = "x",
+                       y0 = ceiling(1/(values$data@images[[input$Plot_image_spatial[1]]]@spot.radius)),
+                       y1 = ceiling(1/(values$data@images[[input$Plot_image_spatial[1]]]@spot.radius))*3, yref = "y")))
 })
 

@@ -1,9 +1,9 @@
 output[["preprocessing_UI"]] <- renderUI({
   fluidRow(
     column(width = 3, offset = 0, style = "padding: 0px;",
-      box(id = "preprocessing_main_parameters",
+      box(id = "preprocessing_main_parameters_1",
           title = tagList(
-            "Main parameters",
+            "Normalization",
             actionButton(
               inputId = "preprocessing_main_parameters_info",
               label = "info",
@@ -25,7 +25,59 @@ output[["preprocessing_UI"]] <- renderUI({
           height = NULL,
           collapsible = TRUE,
           collapsed = FALSE,
-          uiOutput("preprocessing_main_parameters_UI")
+          uiOutput("preprocessing_main_parameters_UI_1")
+      ),
+      box(id = "preprocessing_main_parameters_2",
+          title = tagList(
+            "Reduction",
+            actionButton(
+              inputId = "preprocessing_main_parameters_info",
+              label = "info",
+              icon = NULL,
+              class = "btn-xs",
+              title = "Show additional information for this panel.",
+              style = "margin-right: 3px"
+            ),
+            shinyWidgets::dropdownButton(
+              circle = FALSE,
+              icon = icon("cog"),
+              inline = TRUE,
+              size = "xs"
+            )
+          ),
+          status = "primary",
+          solidHeader = TRUE,
+          width = 12,
+          height = NULL,
+          collapsible = TRUE,
+          collapsed = FALSE,
+          uiOutput("preprocessing_main_parameters_UI_2")
+      ),
+      box(id = "preprocessing_main_parameters_3",
+          title = tagList(
+            "Enrichment",
+            actionButton(
+              inputId = "preprocessing_main_parameters_info",
+              label = "info",
+              icon = NULL,
+              class = "btn-xs",
+              title = "Show additional information for this panel.",
+              style = "margin-right: 3px"
+            ),
+            shinyWidgets::dropdownButton(
+              circle = FALSE,
+              icon = icon("cog"),
+              inline = TRUE,
+              size = "xs"
+            )
+          ),
+          status = "primary",
+          solidHeader = TRUE,
+          width = 12,
+          height = NULL,
+          collapsible = TRUE,
+          collapsed = FALSE,
+          uiOutput("preprocessing_main_parameters_UI_3")
       ),
       box(id = "invert_IC_main_parameters",
           title = tagList(

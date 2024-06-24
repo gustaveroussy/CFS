@@ -119,6 +119,7 @@ output[["Plot_UI"]] <- renderUI({
             size = "xs",
             tags$div(
               style = "color: black !important;",
+              uiOutput("interactive_display_visualisation_UMAP_UI"),
               uiOutput("invert_color_visualisation_UMAP_UI"),
               uiOutput("ggplot_scatter_pie_UI")
             )
@@ -154,6 +155,24 @@ outputOptions(
   suspendWhenHidden = FALSE
 )
 
+##----------------------------------------------------------------------------##
+## interactive display
+##----------------------------------------------------------------------------##
+output[["interactive_display_visualisation_UMAP_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "interactive_display_visualisation_UMAP",
+    label = "Interactive Display",
+    value = TRUE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "interactive_display_visualisation_UMAP_UI",
+  suspendWhenHidden = FALSE
+)
+
 output[["ggplot_scatter_pie_UI"]] <- renderUI({
   tagList(
     shinyWidgets::awesomeCheckbox(
@@ -186,7 +205,7 @@ output[["ggplot_scatter_pie_UI"]] <- renderUI({
       label = "Display only the UMAP of the currently selected samples",
       value = FALSE
     ),
-    numericInput("Plot_scatter_size_UMAP", "Spot size", 10, min = 0, max = NA)
+    numericInput("Plot_scatter_size_UMAP", "Spot size", 3, min = 0, max = NA)
   )
 })
 
@@ -216,11 +235,19 @@ output[["plot_export_UI"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 
 output[["Plot_or_message"]] <- renderUI({
+  if(input$interactive_display_visualisation_UMAP){
     tagList(
-      plotly::plotlyOutput("Plot",
+      plotly::plotlyOutput("Plot_interactive",
                            width = "auto",
                            height = "85vh")
     )
+  } else {
+    tagList(
+      shiny::plotOutput("Plot",
+                        width = "auto",
+                        height = "85vh")
+    )
+  }
 })
 
 ##----------------------------------------------------------------------------##

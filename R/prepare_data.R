@@ -5,11 +5,12 @@
 #' @param data Seurat object to analyse
 #' @param organism "Hs" (human) or "Mm" (mice)
 #' @param variable_features Number of variable features to use for the SCTransform
+#' @param min_cells Filters genes less present than the indicated number of spots to use for the SCTransform
 #' 
 #' @return an object with normalized data
 #' 
 #' @examples 
-#' data <- PrepNormData(data=data,organism="Hs",variable_features=20000)
+#' data <- PrepNormData(data=data,organism="Hs",variable_features=20000, min_cells = 5)
 #' @export
 PrepNormData=function(data=NULL,organism="Hs",variable_features=20000, min_cells = 5){
   if(organism=="Hs"){

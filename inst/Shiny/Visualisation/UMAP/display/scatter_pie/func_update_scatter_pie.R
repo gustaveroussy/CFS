@@ -46,10 +46,6 @@ current_plot_scatter_pie <- reactive({
         
         #We build the plot
         
-        #img<-grDevices::as.raster(data@images$slice1@image)
-        
-        #ic_types$imagerow = max(ic_types$imagerow) - ic_types$imagerow + min(ic_types$imagerow)
-        
         ####
         
         min_col = min(ic_types[,1])
@@ -129,10 +125,6 @@ current_plot_scatter_pie <- reactive({
         
         #We build the plot
         
-        #img<-grDevices::as.raster(data@images$slice1@image)
-        
-        #ic_types$imagerow = max(ic_types$imagerow) - ic_types$imagerow + min(ic_types$imagerow)
-        
         ####
         
         min_col = min(ic_types[,1])
@@ -197,10 +189,6 @@ current_plot_scatter_pie <- reactive({
       types<-cbind(data[[input$Visualisation_selected_dimred_to_display]]@cell.embeddings,types) %>%  cbind(.,sum)
       
       #We build the plot
-      
-      #img<-grDevices::as.raster(data@images$slice1@image)
-      
-      #types$imagerow = max(types$imagerow) - types$imagerow + min(types$imagerow)
       
       ####
       

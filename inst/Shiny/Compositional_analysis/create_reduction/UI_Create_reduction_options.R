@@ -17,7 +17,7 @@ output[["Output_or_message_cell_reduction"]] <- renderUI({
       ),
       numericInput(
         "choose_filter_value_column_for_reduction",
-        "Low pass filter",
+        "High pass filter",
         value = 0.025,
         min = 0,
         max = 1,

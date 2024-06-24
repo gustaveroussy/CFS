@@ -17,6 +17,8 @@ PrepNormData(
 \item{organism}{"Hs" (human) or "Mm" (mice)}
 
 \item{variable_features}{Number of variable features to use for the SCTransform}
+
+\item{min_cells}{Filters genes less present than the indicated number of spots to use for the SCTransform}
 }
 \value{
 an object with normalized data
@@ -25,5 +27,5 @@ an object with normalized data
 Determine mitochondrial ratio, hb ratio and normalise using SCTransform
 }
 \examples{
-data <- PrepNormData(data=data,organism="Hs",variable_features=20000)
+data <- PrepNormData(data=data,organism="Hs",variable_features=20000, min_cells = 5)
 }
