@@ -1,24 +1,23 @@
-########################################
-# Color palette
-########################################
-
-palette <- reactive({
+##--------------------------------------------------------------------------##
+## colors palette load
+##--------------------------------------------------------------------------##
+update_palette = reactive({
   req(input$palette_colors_1)
   
   n = 1
-  palette = c()
+  values$palette = c()
   colors = input[["palette_colors_1"]]
   
   while(length(colors) != 0){
     n = n + 1
     
-    palette = c(palette,colors)
+    values$palette = c(values$palette,colors)
     
     colors = input[[paste0("palette_colors_",n)]]
-
+    
   }
   
-  saveRDS(palette,paste0(Shiny.options[["shiny_root"]], "/../tmp_data/palette.RDS"))
+  saveRDS(values$palette,paste0(Shiny.options[["shiny_root"]], "/../tmp_data/palette.RDS"))
   
-  return(palette)
+  return(values$palette)
 })

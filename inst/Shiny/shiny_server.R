@@ -56,5 +56,7 @@ server <- function(input, output, session) {
       choices = images_names()
     )
   })
+  
+  values$palette = if(file.exists(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/palette.RDS"))){readRDS(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/palette.RDS"))} else {readRDS(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/def_palette.RDS"))}
 
-  }
+}
