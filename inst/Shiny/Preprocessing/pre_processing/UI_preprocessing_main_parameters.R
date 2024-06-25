@@ -54,6 +54,8 @@ output[["preprocessing_main_parameters_UI_3"]] <- renderUI({
                    options = NULL),
     checkboxInput("preprocessing_enrichment_positive", label = "Only process positively associated genes",
                   value = TRUE, width = NULL),
+    checkboxInput("preprocessing_enrichment_overwrite", label = "Overwrite previous enrichment",
+                  value = TRUE, width = NULL),
     actionButton("preprocessing_enrichment_action_button", label = "Enrich")
     )
 })

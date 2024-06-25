@@ -70,7 +70,7 @@ observeEvent(input$preprocessing_enrichment_action_button, {
   withProgress(message = 'Enrichment', value = 0, {
     incProgress(0.5)
     if(!is.null(input$preprocessing_database)){
-      values$data = Enrich_ICA(data=values$data,dbs=input$preprocessing_database, kurtosis = values$data@misc$GeneAndStat$kurtosis_value, enrich_positive_genes = input$preprocessing_enrichment_positive)
+      values$data = Enrich_ICA(data=values$data,dbs=input$preprocessing_database, kurtosis = values$data@misc$GeneAndStat$kurtosis_value, enrich_positive_genes = input$preprocessing_enrichment_positive, overwrite = input$preprocessing_enrichment_overwrite)
     }
   })
 })
