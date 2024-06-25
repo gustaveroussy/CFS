@@ -27,7 +27,7 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
       ),
       selectInput("choose_sample_for_distances",
                   "Choose sample",
-                  if(length(values$data@images) > 1){unique(sapply(strsplit(rownames(values$data@meta.data), "_"),"[[",1))} else {names(values$data@images)},
+                  names(values$data@images),
                   multiple = FALSE,
                   selectize = TRUE,
                   width = NULL,

@@ -92,7 +92,7 @@ observeEvent(input$start_distance_IC_batch,{
   req(values$data@reductions$ica)
   
   method = input$choose_method_for_distances
-  sample_all = if(length(values$data@images) > 1){unique(sapply(strsplit(rownames(values$data@meta.data), "_"),"[[",1))} else {names(values$data@images)}
+  sample_all = names(values$data@images)
   
   for(sample in sample_all){
     withProgress(message = paste0('Calculating ',sample), value = 0, {
@@ -112,12 +112,12 @@ observeEvent(input$start_distance_IC_batch,{
         }
         
         if(length(values$data@images) > 1){
-          table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
+          table_sample = table_sample[grepl(paste0(gsub("\\.", "-", sample),"_[ACGT]+"), rownames(table_sample)),]
         }
         
         incProgress(0.1, detail = "Finding neighbors")
         
-        knn = knearneigh(GetTissueCoordinates(values$data, gsub("-", ".", sample)), k=6, longlat = NULL, use_kd_tree=TRUE)
+        knn = knearneigh(GetTissueCoordinates(values$data, sample), k=6, longlat = NULL, use_kd_tree=TRUE)
         neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
         listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
         
