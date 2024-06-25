@@ -38,7 +38,7 @@ current_plot_umap <- reactive({
         ################# utiliser la fonction , split = de plotly et pas une boucle
         for (i in as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))[order(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]]))))]){
           ##### palette
-          palette = palette()
+          palette = values$palette
           while(length(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))) > length(palette)){
             palette = c(palette,palette)
           }
@@ -292,7 +292,7 @@ current_plot_umap <- reactive({
           
         } else {
           ##### palette
-          palette = palette()
+          palette = values$palette
           while(length(unique(meta.data[[input$Plot_display_type]])) > length(palette)){
             palette = c(palette,palette)
           }
@@ -327,7 +327,7 @@ current_plot_umap <- reactive({
                   z = cell.embeddings.umap[which(meta.data[[input$Plot_display_type]]==i),3],
                   name = i,
                   marker = list(
-                    color = palette()[c],
+                    color = values$palette[c],
                     size = input$Plot_scatter_size_UMAP
                   ),
                   showlegend = T,

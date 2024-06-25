@@ -47,7 +47,7 @@ current_plot_spatial <- reactive({
         if (input$Plot_display_type == "seurat_clusters"){
           
           ##### palette
-          palette = palette()
+          palette = values$palette
           while(length(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))) > length(palette)){
             palette = c(palette,palette)
           }
@@ -199,7 +199,7 @@ current_plot_spatial <- reactive({
         } else {
           
             ##### palette
-            palette = palette()
+            palette = values$palette
             while(length(unique(meta.data[[input$Plot_display_type]])) > length(palette)){
               palette = c(palette,palette)
             }
