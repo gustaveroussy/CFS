@@ -23,6 +23,7 @@ Imports:
     pheatmap,
     ica,
     Seurat,
+    hdf5r,
     plotly,
     raster,
     RColorBrewer,
