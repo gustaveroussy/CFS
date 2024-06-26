@@ -24,6 +24,7 @@
 #' @import spdep
 #' @import colourpicker
 #' @import hdf5r
+#' @import paletteer
 #' @importFrom igraph graph_from_data_frame subgraph layout_with_fr layout_with_sugiyama layout_with_mds layout_with_kk layout_with_graphopt layout_with_dh as_edgelist V gsize
 #' @importFrom viridis viridis
 #' @importFrom png readPNG

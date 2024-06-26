@@ -50,6 +50,7 @@ Imports:
     clustree,
     ggdendro,
     spdep,
-    igraph
+    igraph,
+    paletteer
 Suggests:
     sf

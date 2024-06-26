@@ -21,6 +21,16 @@ output[["Palette_UI"]] <- renderUI({
                  actionButton("reset_palette_default_values", "Reset"),
                  actionButton("remove_palette_values", "Remove Color"),
                  actionButton("add_palette_values", "Add Color"),
+                 selectInput(
+                   "palettee_palette_choice",
+                   "Select palette",
+                   c("None",paste0(palettes_d_names$package,"::",palettes_d_names$palette)),
+                   selected = "None",
+                   multiple = FALSE,
+                   selectize = TRUE,
+                   width = NULL,
+                   size = NULL
+                 )
                )
            )
     )
