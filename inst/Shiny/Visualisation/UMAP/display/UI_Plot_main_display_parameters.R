@@ -5,7 +5,7 @@
 output[["Plot_type_display_UI"]] <- renderUI({
   tagList(
     selectInput("Plot_analysis_display_type", label = "Select method to use", 
-                choices = list("Dimentional reduction","Density","Scatter pie"),
+                choices = c("Dimentional reduction","Density","Scatter pie"),
                 selected = "Dimentional reduction"),
     selectInput(
       "Visualisation_selected_dimred_to_display",
@@ -21,16 +21,14 @@ output[["Plot_type_display_UI"]] <- renderUI({
 })
 
 output[["Plot_main_parameters_display_UI"]] <- renderUI({
-  if(!(input$Plot_analysis_display_type == "Scatter pie")){
-    tagList(
-      selectInput("Plot_display_type", label = "Select what to color", 
-                  choices = unique(c("gene","IC",colnames(values$data@meta.data))),
-                  selected = if("seurat_clusters" %in% colnames(values$data@meta.data)){"seurat_clusters"}else{"gene"}),
-      selectInput("select_color_visualisation_projection", label = "Select color", 
-                  choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
-                  selected = "D")
-    )
-  }
+  tagList(
+    selectInput("Plot_display_type", label = "Select what to color", 
+                choices = unique(c("gene","IC",colnames(values$data@meta.data))),
+                selected = if("seurat_clusters" %in% colnames(values$data@meta.data)){"seurat_clusters"}else{"gene"}),
+    selectInput("select_color_visualisation_projection", label = "Select color", 
+                choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
+                selected = "D")
+  )
 })
 
 output[["Plot_main_parameters_display_2_UI"]] <- renderUI({
