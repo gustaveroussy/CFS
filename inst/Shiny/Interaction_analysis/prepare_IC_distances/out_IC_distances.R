@@ -45,7 +45,7 @@ observeEvent(input$start_distance_IC,{
       
       incProgress(0.1, detail = "Finding neighbors")
       
-      knn = knearneigh(GetTissueCoordinates(values$data, gsub("-", ".", sample)), k=6, longlat = NULL, use_kd_tree=TRUE)
+      knn = knearneigh(GetTissueCoordinates(values$data, sample), k=6, longlat = NULL, use_kd_tree=TRUE)
       neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
       listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
       
@@ -74,10 +74,7 @@ observeEvent(input$start_distance_IC,{
         
         df[,"weight"] = unlist(lapply(x,function(n){return(n$L)}))
         
-        local = lapply(x,function(n){return(n$localL)})
-        names(local) = paste0(df[,1]," ",df[,2])
-        
-        values$distances[[input$choose_distances_to_determine]][[sample]][[method]] = list(df = df,local = local)
+        values$distances[[input$choose_distances_to_determine]][[sample]][[method]] = df
       } else {
         shinyalert("Oops!", "No LR interaction found within selected sample", type = "error")
       }
@@ -146,10 +143,7 @@ observeEvent(input$start_distance_IC_batch,{
           
           df[,"weight"] = unlist(lapply(x,function(n){return(n$L)}))
           
-          local = lapply(x,function(n){return(n$localL)})
-          names(local) = paste0(df[,1]," ",df[,2])
-          
-          values$distances[[input$choose_distances_to_determine]][[sample]][[method]] = list(df = df,local = local)
+          values$distances[[input$choose_distances_to_determine]][[sample]][[method]] = df
         } else {
           shinyalert("Oops!", "No LR interaction found within selected sample", type = "error")
         }
@@ -161,7 +155,7 @@ observeEvent(input$start_distance_IC_batch,{
 })
 
 fig_distance_graph_IC <- reactive({
-  tree_table = values$distances[[input$choose_distances_to_determine]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]][["df"]]
+  tree_table = values$distances[[input$choose_distances_to_determine]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]]
   
   req(tree_table)
   req(input$choose_n_dim_for_distances)

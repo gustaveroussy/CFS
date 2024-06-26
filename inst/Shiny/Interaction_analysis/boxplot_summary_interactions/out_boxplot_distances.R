@@ -20,7 +20,7 @@ fig_distance_boxplot <- reactive({
   
   samples <- names(values$data@images)
   
-  df = lapply(samples,function(sample){return(values$distances[[input$choose_distances_to_determine]][[sample]][[input$choose_method_for_distances]][["df"]])})
+  df = lapply(samples,function(sample){return(values$distances[[input$choose_distances_to_determine]][[sample]][[input$choose_method_for_distances]])})
   
   df = dplyr::bind_rows(df, .id = "samples")
   
