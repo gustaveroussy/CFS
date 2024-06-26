@@ -148,10 +148,8 @@ observeEvent(input$start_distance_IC_batch,{
           shinyalert("Oops!", "No LR interaction found within selected sample", type = "error")
         }
       }
-      
     })
   }
-  
 })
 
 fig_distance_graph_IC <- reactive({

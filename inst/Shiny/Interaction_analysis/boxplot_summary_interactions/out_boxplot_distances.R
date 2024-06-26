@@ -44,7 +44,7 @@ fig_distance_boxplot <- reactive({
       
     } else if (input$boxplot_interaction_filter_type == "lr interactions"){
       
-      df = df[df[,2] %in% input$boxplot_interaction_filter_2,]
+      df = df[df[,2] %in% input$boxplot_interaction_filter_1,]
       
     }
   }
@@ -57,7 +57,7 @@ fig_distance_boxplot <- reactive({
     } else if (input$boxplot_interaction_filter_type %in% colnames(values$Annotation)){
       
       IC_filter = rownames(values$Annotation)[values$Annotation[,input$boxplot_interaction_filter_type] %in% input$boxplot_interaction_filter_2]
-      df = df[df[,2] %in% IC_filter,]
+      df = df[df[,3] %in% IC_filter,]
       
     } else if (input$boxplot_interaction_filter_type == "lr interactions"){
       
