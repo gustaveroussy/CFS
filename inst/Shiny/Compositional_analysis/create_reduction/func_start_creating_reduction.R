@@ -44,6 +44,7 @@ observeEvent(input$start_creating_reduction,{
   }
   
   colnames(table) = paste0(paste0(toupper(input$choose_annotation_column_for_reduction),"_"),colnames(table),"_",1:ncol(table))
+  rownames(table) = rownames(values$data@meta.data)
   colnames(table_genes) = paste0(paste0(toupper(input$choose_annotation_column_for_reduction),"_"),colnames(table_genes),"_",1:ncol(table_genes))
   
   values$data@reductions[[input$choose_annotation_column_for_reduction]] = CreateDimReducObject(
