@@ -13,8 +13,7 @@
 #' 
 #' @export
 Enrich_ICA=function(data=NULL, dbs=c("PanglaoDB_Augmented_2021",
-                                "CellMarker_Augmented_2021",
-                                "Azimuth_Cell_Types_2021",
+                                "CellMarker_2024",
                                 "Tabula_Sapiens",
                                 "Tabula_Muris",
                                 "GO_Biological_Process_2023",
