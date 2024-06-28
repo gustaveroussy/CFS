@@ -84,6 +84,7 @@ ui <- dashboardPage(
     )
   ),
   dashboardBody(
+    shinyjs::useShinyjs(),
     tabItems(
       tab_load,
       tab_preprocessing,

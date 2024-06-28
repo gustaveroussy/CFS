@@ -81,12 +81,12 @@ output[["Plot_UI"]] <- renderUI({
                collapsible = TRUE,
                collapsed = TRUE,
                uiOutput("Plot_type_display_UI"),
-               conditionalPanel("input$Plot_analysis_display_type %in% c('Dimentional reduction','Density')",
-                uiOutput("Plot_main_parameters_display_UI")
-               ),
-               uiOutput("Plot_main_parameters_display_2_UI"),
-               uiOutput("Plot_main_parameters_display_3_UI"),
                uiOutput("start_display_UI")
+               # ,
+               # uiOutput("Plot_main_parameters_display_UI"),
+               # uiOutput("Plot_main_parameters_display_2_UI"),
+               # uiOutput("Plot_main_parameters_display_3_UI"),
+               # 
            )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",
