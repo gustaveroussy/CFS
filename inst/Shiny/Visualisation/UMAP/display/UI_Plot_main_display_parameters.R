@@ -2,11 +2,12 @@
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
 
-check_visual_tab <- reactiveValues(slider_visual_spatial_range_ui_check = F,
+check_visual_tab = reactiveValues(slider_visual_spatial_range_ui_check = F,
                                   select_color_visualisation_projection_ui_check = F,
                                   Scatter_pie_metadata_select_ui_check = F,
-                                  Scatter_pie_cell_type_ui_check = F
-                                  )
+                                  Scatter_pie_cell_type_ui_check = F,
+                                  Plot_display_type_choice_ui_check = F
+)
 
 output[["Plot_type_display_UI"]] <- renderUI({
   
@@ -106,7 +107,7 @@ observeEvent(input$Plot_analysis_display_type,{
     
     req(values$annotation_for_output)
     
-    if(is.null(input$Plot_display_type_choice)){
+    if(!(check_visual_tab$Plot_display_type_choice_ui_check)){
       
       insertUI(
         selector = "#plot_type_display_ui_type",
@@ -117,6 +118,8 @@ observeEvent(input$Plot_analysis_display_type,{
                                                                                  options = NULL)
                  )
       )
+      
+      check_visual_tab$Plot_display_type_choice_ui_check = TRUE
       
     } else {
       shinyjs::show(id = "Plot_display_type_choice_ui")
@@ -235,7 +238,7 @@ observeEvent(input$what_to_display_UMAP_choice,{
   
   if(!(input$Plot_display_type == "metadata" && !is.numeric(values$data@meta.data[, input$what_to_display_UMAP_choice]))){
     
-    if(!check_visual_tab$select_color_visualisation_projection_ui_check){
+    if(!(check_visual_tab$select_color_visualisation_projection_ui_check)){
       insertUI(
         selector = "#what_to_display_UMAP_choice_ui",
         ui = div(id = "select_color_visualisation_projection_ui", selectInput("select_color_visualisation_projection", label = "Select color", 
@@ -243,7 +246,7 @@ observeEvent(input$what_to_display_UMAP_choice,{
                                                                               selected = "D"))
       )
       
-      check_visual_tab$select_color_visualisation_projection_ui_check = T
+      check_visual_tab$select_color_visualisation_projection_ui_check = TRUE
       
     } else {
         shinyjs::show(id = "select_color_visualisation_projection_ui")
@@ -254,7 +257,7 @@ observeEvent(input$what_to_display_UMAP_choice,{
     min = if(input$Plot_display_type == "gene") {round(min(GetAssayData(values$data, assay = values$data@active.assay)[input$what_to_display_UMAP_choice,]), digits = 2)} else if (input$Plot_display_type == "IC") {round(min(values$data@reductions$ica@cell.embeddings[, input$what_to_display_UMAP_choice]), digits = 0)} else if (input$Plot_display_type == "metadata") {round(min(values$data@meta.data[, input$what_to_display_UMAP_choice]), digits = 0)}
     max = if(input$Plot_display_type == "gene") {round(max(GetAssayData(values$data, assay = values$data@active.assay)[input$what_to_display_UMAP_choice,]), digits = 2)} else if (input$Plot_display_type == "IC") {round(max(values$data@reductions$ica@cell.embeddings[, input$what_to_display_UMAP_choice]), digits = 0)} else if (input$Plot_display_type == "metadata") {round(max(values$data@meta.data[, input$what_to_display_UMAP_choice]), digits = 0)}
     
-    if(!check_visual_tab$slider_visual_spatial_range_ui_check){
+    if(!(check_visual_tab$slider_visual_spatial_range_ui_check)){
       insertUI(
         selector = "#select_color_visualisation_projection_ui",
         ui = div(id = "slider_visual_spatial_range_ui", sliderInput("slider_visual_spatial_range", label = "Color range",
@@ -271,7 +274,7 @@ observeEvent(input$what_to_display_UMAP_choice,{
         )
       )
       
-      check_visual_tab$slider_visual_spatial_range_ui_check = T
+      check_visual_tab$slider_visual_spatial_range_ui_check = TRUE
       
     } else {
       shinyjs::show(id = "slider_visual_spatial_range_ui")
@@ -306,7 +309,7 @@ observeEvent(input$Scatter_pie_values_selected,{
     
     shinyjs::hide(id = "Scatter_pie_metadata_select_ui")
     
-    if(!check_visual_tab$Scatter_pie_cell_type_ui_check){
+    if(!(check_visual_tab$Scatter_pie_cell_type_ui_check)){
       
       insertUI(
         selector = "#plot_type_display_ui_type",
@@ -321,11 +324,10 @@ observeEvent(input$Scatter_pie_values_selected,{
         )
       )
       
-      print(check_visual_tab$Scatter_pie_cell_type_ui_check)
-      check_visual_tab$Scatter_pie_cell_type_ui_check = T
+      check_visual_tab$Scatter_pie_cell_type_ui_check = TRUE
       
     } else {
-      print(check_visual_tab$Scatter_pie_cell_type_ui_check)
+      
       shinyjs::show(id = "Scatter_pie_cell_type_ui")
     }
     
@@ -333,7 +335,7 @@ observeEvent(input$Scatter_pie_values_selected,{
     
     shinyjs::hide(id = "Scatter_pie_cell_type_ui")
     
-    if(!check_visual_tab$Scatter_pie_metadata_select_ui_check){
+    if(!(check_visual_tab$Scatter_pie_metadata_select_ui_check)){
       
       insertUI(
         selector = "#plot_type_display_ui_type",
@@ -345,7 +347,7 @@ observeEvent(input$Scatter_pie_values_selected,{
         )
       )
       
-      check_visual_tab$Scatter_pie_metadata_select_ui_check = T
+      check_visual_tab$Scatter_pie_metadata_select_ui_check = TRUE
       
     } else {
       shinyjs::show(id = "Scatter_pie_metadata_select_ui")
