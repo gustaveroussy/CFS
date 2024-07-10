@@ -298,12 +298,6 @@ observeEvent(input$what_to_display_UMAP_choice,{
 })
 
 
-
-
-
-
-
-
 observeEvent(input$Scatter_pie_values_selected,{
   if(input$Scatter_pie_values_selected == "IC"){
     

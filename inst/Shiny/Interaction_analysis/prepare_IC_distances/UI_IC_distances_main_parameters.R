@@ -6,16 +6,28 @@
 output[["IC_distance_main_parameters_UI"]] <- renderUI({
   req(values$data)
   fluidRow(
-    column(width = 12,
-       selectInput("choose_distances_to_determine",
-                   "Choose graph",
-                   c("IC","Genes"),
-                   selected = "IC",
+           column(width = 6,
+             selectInput("choose_distances_to_determine",
+                   "Choose value 1",
+                   c(names(data@reductions)[!(names(data@reductions) %in% c("umap", "pca"))],"Genes"),
                    multiple = FALSE,
                    selectize = TRUE,
                    width = NULL,
                    size = NULL
-       ),
+             )
+            ),
+           column(width = 6,
+             selectInput("choose_distances_to_determine_2",
+                         "Choose value 2",
+                         c(names(data@reductions)[!(names(data@reductions) %in% c("umap", "pca"))],"Genes"),
+                         selected = "IC",
+                         multiple = FALSE,
+                         selectize = TRUE,
+                         width = NULL,
+                         size = NULL
+             )
+          ),
+    column(width = 12,
       selectInput("choose_method_for_distances",
        "Choose method",
        c("Lee"),
@@ -34,7 +46,7 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
                   size = NULL
       ),
       conditionalPanel(
-        condition = "input.choose_distances_to_determine == 'Genes'",
+        condition = "input.choose_distances_to_determine == 'Genes' | input.choose_distances_to_determine_2 == 'Genes'",
         selectInput("choose_ic_for_genes_filter_for_distances_ligand", "Filter ligands by ICs",
                        choices = rownames(values$Annotation), multiple = TRUE
                       ),
@@ -43,10 +55,10 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
         )
       ),
       conditionalPanel(
-        condition = "input.choose_distances_to_determine == 'IC'",
+        condition = "input.choose_distances_to_determine != 'Genes' | input.choose_distances_to_determine_2 != 'Genes'",
           shinyWidgets::awesomeCheckbox(
             inputId = "use_positive_values_for_distances",
-            label = "Use IC positive values",
+            label = "Use positive values",
             value = TRUE
           )
       ),
