@@ -3,7 +3,7 @@
 ##----------------------------------------------------------------------------##
 
 output[["Boxplot_distances_plot"]] <- plotly::renderPlotly({
-  req(values$distances[[input$choose_distances_to_determine]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]])
+  req(fig_distance_boxplot())
   
   return(fig_distance_boxplot())
 })
@@ -20,50 +20,20 @@ fig_distance_boxplot <- reactive({
   
   samples <- names(values$data@images)
   
-  df = lapply(samples,function(sample){return(values$distances[[input$choose_distances_to_determine]][[sample]][[input$choose_method_for_distances]])})
+  df = lapply(samples,function(sample){return(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[input$choose_method_for_distances]])})
   
   df = dplyr::bind_rows(df, .id = "samples")
   
-  if(input$choose_distances_to_determine == "IC"){
-    df$lr <- paste0(df$V1,"_",df$V2)
-  } else if (input$choose_distances_to_determine == "Genes") {
-    df$lr <- paste0(df$l,"_",df$r)
-  }
+  df$lr <- paste0(df[,2],"_",df[,3])
   
   df = df[order(df$weight,decreasing = TRUE),]
   
   if(!is.null(input$boxplot_interaction_filter_1)){
-    if(input$boxplot_interaction_filter_type == "IC"){
-      
       df = df[df[,2] %in% input$boxplot_interaction_filter_1,]
-      
-    } else if (input$boxplot_interaction_filter_type %in% colnames(values$Annotation)){
-      
-      IC_filter = rownames(values$Annotation)[values$Annotation[,input$boxplot_interaction_filter_type] %in% input$boxplot_interaction_filter_1]
-      df = df[df[,2] %in% IC_filter,]
-      
-    } else if (input$boxplot_interaction_filter_type == "lr interactions"){
-      
-      df = df[df[,2] %in% input$boxplot_interaction_filter_1,]
-      
-    }
   }
   
   if(!is.null(input$boxplot_interaction_filter_2)){
-    if(input$boxplot_interaction_filter_type == "IC"){
-      
-      df = df[df[,3] %in% input$boxplot_interaction_filter_2,]
-      
-    } else if (input$boxplot_interaction_filter_type %in% colnames(values$Annotation)){
-      
-      IC_filter = rownames(values$Annotation)[values$Annotation[,input$boxplot_interaction_filter_type] %in% input$boxplot_interaction_filter_2]
-      df = df[df[,3] %in% IC_filter,]
-      
-    } else if (input$boxplot_interaction_filter_type == "lr interactions"){
-      
-      df = df[df[,3] %in% input$boxplot_interaction_filter_2,]
-      
-    }
+    df = df[df[,3] %in% input$boxplot_interaction_filter_2,]
   }
   
   if(nrow(df) > length(samples)){
@@ -80,6 +50,7 @@ fig_distance_boxplot <- reactive({
   }
   
   if(nrow(df) > 0){
+    
     df$samples = as.character(factor(df$samples, labels = samples))
     
     lvls <- df %>%
