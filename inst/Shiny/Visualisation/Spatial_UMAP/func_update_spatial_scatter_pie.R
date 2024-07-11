@@ -34,12 +34,15 @@ current_plot_spatial_scatter_pie <- reactive({
       if (!is.null(input$Scatter_pie_IC_chosen_projection)){
         type=unique(c(input$Scatter_pie_IC_chosen_projection,type))
       }
+      
     } else {
+      
       if (!is.null(input$Scatter_pie_IC_chosen_projection)){
         type=input$Scatter_pie_IC_chosen_projection
       } else {
         type = NULL
       }
+      
     }
   }
   
@@ -70,7 +73,7 @@ current_plot_spatial_scatter_pie <- reactive({
       
       ####
   } else {
-    ic_types=data@meta.data[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates()[[input$Plot_image_spatial[1]]])),input$Scatter_pie_metadata_select]
+    ic_types=data@meta.data[(rownames(data@meta.data) %in% rownames(TissueCoordinates()[[input$Plot_image_spatial[1]]])),input$Scatter_pie_metadata_select]
     
     #We normalize by the sum
     sum<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
@@ -90,7 +93,7 @@ current_plot_spatial_scatter_pie <- reactive({
       #Radius(data@images[[1]])
       for (i in 1:nrow(ic_types)) {
         if (input$Scatter_pie_values_selected == "IC"){
-          #incProgress(0.7/nrow(ic_types), detail = "Preparing scatterpie data")
+          incProgress(0.7/nrow(ic_types), detail = "Preparing scatterpie data")
           t = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
           v = round(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])/sum(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]))*100,2)
           q = list()
@@ -130,8 +133,6 @@ current_plot_spatial_scatter_pie <- reactive({
           y = c((row_coordinates/max_row_img)-(Radius(data@images[[input$Plot_image_spatial[1]]]))/2,(row_coordinates/max_row_img)+(Radius(data@images[[input$Plot_image_spatial[1]]]))/2)
         }
         
-        saveRDS(ic_types,"/home/c_thuilliez/Desktop/ic_types.RDS")
-        
         if (input$Scatter_pie_values_selected == "IC"){
         fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = values$Annotation[colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),'Annotation'],
                                  values = as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),
@@ -151,7 +152,7 @@ current_plot_spatial_scatter_pie <- reactive({
         }
         
       }
-      #incProgress(0.1, detail = "Preparing image")
+      incProgress(0.1, detail = "Preparing image")
       
       if (input$Spatial_display_image == TRUE){
         if (is.null(values$HD_image)){
@@ -212,7 +213,7 @@ current_plot_spatial_scatter_pie <- reactive({
       }
 
   })
-  
+  incProgress(0.1, detail = "Done")
   return(fig)
 })
 
