@@ -16,12 +16,12 @@ current_plot_scatter_pie <- reactive({
     if (input$Scatter_pie_values_selected == "IC"){
       if (!is.null(input$Scatter_pie_cell_type)){
         type = unlist(values$annotation_for_output[["Type"]][input$Scatter_pie_cell_type], use.names=FALSE)
-        if (!is.null(input$Scatter_pie__IC_chosen_projection)){
-          type=unique(c(input$Scatter_pie__IC_chosen_projection,type))
+        if (!is.null(input$Scatter_pie_IC_chosen_projection)){
+          type=unique(c(input$Scatter_pie_IC_chosen_projection,type))
         }
       } else {
-        if (!is.null(input$Scatter_pie__IC_chosen_projection)){
-          type=input$Scatter_pie__IC_chosen_projection
+        if (!is.null(input$Scatter_pie_IC_chosen_projection)){
+          type=input$Scatter_pie_IC_chosen_projection
         } else {
           type = NULL
         }

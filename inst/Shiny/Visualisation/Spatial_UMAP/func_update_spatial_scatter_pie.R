@@ -31,12 +31,12 @@ current_plot_spatial_scatter_pie <- reactive({
         }
       }
       
-      if (!is.null(input$Scatter_pie__IC_chosen_projection)){
-        type=unique(c(input$Scatter_pie__IC_chosen_projection,type))
+      if (!is.null(input$Scatter_pie_IC_chosen_projection)){
+        type=unique(c(input$Scatter_pie_IC_chosen_projection,type))
       }
     } else {
-      if (!is.null(input$Scatter_pie__IC_chosen_projection)){
-        type=input$Scatter_pie__IC_chosen_projection
+      if (!is.null(input$Scatter_pie_IC_chosen_projection)){
+        type=input$Scatter_pie_IC_chosen_projection
       } else {
         type = NULL
       }
@@ -48,7 +48,7 @@ current_plot_spatial_scatter_pie <- reactive({
     if(!is.null(type)){
       ic_types=data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates()[[input$Plot_image_spatial[1]]])),type]
     }else{
-      ic_types=data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates()[[input$Plot_image_spatial[1]]])),]
+      ic_types=data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates()[[input$Plot_image_spatial[1]]])),rownames(values$Annotation)[as.logical(values$Annotation[,"Use"])]]
     }
       
       ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
@@ -87,7 +87,6 @@ current_plot_spatial_scatter_pie <- reactive({
       max_row = max(ic_types[,"imagerow"])
       
       fig <- plot_ly()
-      
       #Radius(data@images[[1]])
       for (i in 1:nrow(ic_types)) {
         if (input$Scatter_pie_values_selected == "IC"){
@@ -118,7 +117,6 @@ current_plot_spatial_scatter_pie <- reactive({
             text_final = paste(text_final,paste0(input$Scatter_pie_metadata_select[k]," : ",v[k],"%<br>"))
           }
         }
-          
 
         
         col_coordinates = (ic_types[i,"imagecol"])
@@ -132,6 +130,7 @@ current_plot_spatial_scatter_pie <- reactive({
           y = c((row_coordinates/max_row_img)-(Radius(data@images[[input$Plot_image_spatial[1]]]))/2,(row_coordinates/max_row_img)+(Radius(data@images[[input$Plot_image_spatial[1]]]))/2)
         }
         
+        saveRDS(ic_types,"/home/c_thuilliez/Desktop/ic_types.RDS")
         
         if (input$Scatter_pie_values_selected == "IC"){
         fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = values$Annotation[colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),'Annotation'],
@@ -151,9 +150,7 @@ current_plot_spatial_scatter_pie <- reactive({
                                                           "<extra></extra>"))
         }
         
-        
       }
-      
       #incProgress(0.1, detail = "Preparing image")
       
       if (input$Spatial_display_image == TRUE){
@@ -213,6 +210,7 @@ current_plot_spatial_scatter_pie <- reactive({
           )
         }
       }
+
   })
   
   return(fig)
