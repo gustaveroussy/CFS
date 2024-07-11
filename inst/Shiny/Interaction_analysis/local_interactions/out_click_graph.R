@@ -24,6 +24,7 @@ current_plot_graph_interactions <- reactive({
   table = graph_click_interactions()
   
   req(table)
+  
   sample = input$choose_sample_for_distances
   
   
@@ -33,46 +34,59 @@ current_plot_graph_interactions <- reactive({
   TissueCoordinates = TissueCoordinates()[[sample]]
   meta.data = values$data@meta.data[(rownames(values$data@meta.data) %in% rownames(TissueCoordinates)),]
   
-  if(input$choose_distances_to_determine == "IC"){
+  if (input$choose_distances_to_determine == "Genes") {
     
-    table_sample = values$data@reductions$ica@cell.embeddings
+    table_sample = raster::t(GetAssayData(values$data))
+    
+  } else if(input$choose_distances_to_determine != "Genes"){
+    
+    table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
     
     if(input$use_positive_values_for_distances){
       table_sample[table_sample < 0] = 0
     }
     
-  } else if (input$choose_distances_to_determine == "Genes") {
-    table_sample = raster::t(GetAssayData(values$data))
+    if(input$choose_distances_to_determine != "ica"){
+      colnames(table_sample) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]
+    }
+  }
+  
+  if (input$choose_distances_to_determine_2 == "Genes") {
+    
+    table_sample_2 = raster::t(GetAssayData(values$data))
+    
+  } else if(input$choose_distances_to_determine_2 != "Genes"){
+    
+    table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings
+    
+    if(input$choose_distances_to_determine_2 != "ica"){
+      colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]
+    }
+    
+    if(input$use_positive_values_for_distances){
+      table_sample_2[table_sample_2 < 0] = 0
+    }
+    
   }
   
   if(length(values$data@images) > 1){
     table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
+    table_sample_2 = table_sample_2[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample_2)),]
   }
   
   knn = knearneigh(GetTissueCoordinates(values$data, sample), k=6, longlat = NULL, use_kd_tree=TRUE)
   neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
   listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
   
-  x = lee(table_sample[,ICs[1]], table_sample[,ICs[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"))
+  x = lee(table_sample[,ICs[1]], table_sample_2[,ICs[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"))
   
-  if(input$choose_distances_to_determine == "IC"){
-    
-    datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
-                            "y" = as.vector(TissueCoordinates[,"imagerow"]),
-                            "cell_name" = as.vector(rownames(meta.data)),
-                            "local" = x$localL,
-                            "IC_1" = values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),ICs[1]],
-                            "IC_2" = values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),ICs[2]]
-    )
-  } else if (input$choose_distances_to_determine == "Genes"){
-    datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
-                            "y" = as.vector(TissueCoordinates[,"imagerow"]),
-                            "cell_name" = as.vector(rownames(meta.data)),
-                            "local" = x$localL,
-                            "IC_1" = values$data@assays$SCT@data[ICs[1],(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))],
-                            "IC_2" = values$data@assays$SCT@data[ICs[2],(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))]
-    )
-  }
+  datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
+                          "y" = as.vector(TissueCoordinates[,"imagerow"]),
+                          "cell_name" = as.vector(rownames(meta.data)),
+                          "local" = x$localL,
+                          "IC_1" = if (input$choose_distances_to_determine == "Genes"){values$data@assays$SCT@data[ICs[1],(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))]} else {table_sample[(rownames(table_sample) %in% rownames(TissueCoordinates)),ICs[1]]},
+                          "IC_2" = if (input$choose_distances_to_determine_2 == "Genes"){values$data@assays$SCT@data[ICs[2],(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))]} else {table_sample_2[(rownames(table_sample_2) %in% rownames(TissueCoordinates)),ICs[2]]}
+  )
   
   if (!is.null(values$HD_image)) {
     image <- values$HD_image
@@ -89,7 +103,7 @@ current_plot_graph_interactions <- reactive({
   fig1 <- fig1 %>% add_trace(type="image", source = image, hoverinfo = 'skip')
   fig2 <- fig2 %>% add_trace(type="image", source = image, hoverinfo = 'skip')
   fig3 <- fig3 %>% add_trace(type="image", source = image, hoverinfo = 'skip')
-  
+
   fig1 <- fig1 %>%
     add_trace(data = datatable,
               x = ~x,
@@ -103,10 +117,10 @@ current_plot_graph_interactions <- reactive({
               showlegend = T,
               text = datatable$cell_name,
               customdata = datatable$IC_1,
-              hovertemplate = if(input$choose_distances_to_determine == "IC"){"Cell : %{text}<br>IC : %{customdata}<extra></extra>"} else if (input$choose_distances_to_determine == "Genes"){"Cell : %{text}<br>Gene : %{customdata}<extra></extra>"}
+              hovertemplate = if(input$choose_distances_to_determine != "Genes"){"Cell : %{text}<br>IC : %{customdata}<extra></extra>"} else if (input$choose_distances_to_determine == "Genes"){"Cell : %{text}<br>Gene : %{customdata}<extra></extra>"}
     ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                  yaxis = list(showgrid = FALSE, showticklabels=FALSE))
-  
+
   fig2 <- fig2 %>%
     add_trace(data = datatable,
               x = ~x,
@@ -120,10 +134,10 @@ current_plot_graph_interactions <- reactive({
               showlegend = T,
               text = datatable$cell_name,
               customdata = datatable$local,
-              hovertemplate = if(input$choose_distances_to_determine == "IC"){"Cell : %{text}<br>IC : %{customdata}<extra></extra>"} else if (input$choose_distances_to_determine == "Genes"){"Cell : %{text}<br>Gene : %{customdata}<extra></extra>"}
+              hovertemplate = "Cell : %{text}<br>Interaction : %{customdata}<extra></extra>"
     ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                  yaxis = list(showgrid = FALSE, showticklabels=FALSE))
-  
+
   fig3 <- fig3 %>%
     add_trace(data = datatable,
               x = ~x,
@@ -137,14 +151,14 @@ current_plot_graph_interactions <- reactive({
               showlegend = T,
               text = datatable$cell_name,
               customdata = datatable$IC_2,
-              hovertemplate = if(input$choose_distances_to_determine == "IC"){"Cell : %{text}<br>IC : %{customdata}<extra></extra>"} else if (input$choose_distances_to_determine == "Genes"){"Cell : %{text}<br>Gene : %{customdata}<extra></extra>"}
+              hovertemplate = if(input$choose_distances_to_determine_2 != "Genes"){"Cell : %{text}<br>IC : %{customdata}<extra></extra>"} else if (input$choose_distances_to_determine_2 == "Genes"){"Cell : %{text}<br>Gene : %{customdata}<extra></extra>"}
     ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                   yaxis = list(showgrid = FALSE, showticklabels=FALSE))
   
   fig <- subplot(list(fig1, fig2, fig3),
                  nrows = 1
                  ) %>% hide_legend()
-  
+
   fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", ICs[1], "</i></b>"),
                                         x = 0.15,
                                         y = 0.2,
