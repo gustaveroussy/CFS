@@ -8,6 +8,26 @@ output[["Boxplot_distance_main_parameters_UI"]] <- renderUI({
   fluidRow(
     column(width = 12,
            selectInput(
+             "boxplot_type_of_visualisation",
+             "observe",
+             c("Absolute value", "Frequencies"),
+             selected = NULL,
+             multiple = FALSE,
+             selectize = TRUE,
+             width = NULL,
+             size = NULL
+           ),
+           selectInput(
+             "boxplot_type_of_filter",
+             "Type of filter",
+             c("mean values", "each values"),
+             selected = NULL,
+             multiple = FALSE,
+             selectize = TRUE,
+             width = NULL,
+             size = NULL
+           ),
+           selectInput(
              "boxplot_interaction_filter_1",
              "Filter by",
              NULL,
