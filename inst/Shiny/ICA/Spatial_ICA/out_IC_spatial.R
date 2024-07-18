@@ -90,8 +90,8 @@ IC_spatial_output_react <- reactive({
                                        colours = viridis_pal(option = if(input$select_color_IC_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_IC_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_IC_spatial_range[1], input$slider_IC_spatial_range[2]), oob=squish) +
         guides(size = "none") +
         theme_void() +
-        xlim(0,ncol(img[[sample]])) +
-        ylim(-nrow(img[[sample]]),0) 
+        xlim(25,ncol(img[[sample]])-25) +
+        ylim(-nrow(img[[sample]])+25,-25)
         
       
       list[[sample]] = fig

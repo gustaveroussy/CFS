@@ -100,8 +100,8 @@ spatial_gene_react <- reactive({
                                        colours = viridis_pal(option = if(input$select_color_gene_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_gene_projection}else{"D"})(ncol(values$data)), oob=squish) +
         guides(size = "none") +
         theme_void() +
-        xlim(0,ncol(img)) +
-        ylim(-nrow(img),0) 
+        xlim(25,ncol(img)-25) +
+        ylim(-nrow(img)+25,-25)
       
       
       plotList[[genes]] = fig
