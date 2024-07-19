@@ -20,8 +20,8 @@ output[["Plot_type_display_UI"]] <- renderUI({
       selectInput(
         "Visualisation_selected_dimred_to_display",
         "Reduction to Display",
-        names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca"))],
-        selected = names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca"))][1],
+        names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca",names(values$data@misc$reduction_names)))],
+        selected = names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca",names(values$data@misc$reduction_names)))][1],
         multiple = FALSE,
         selectize = TRUE,
         width = NULL,
@@ -57,7 +57,7 @@ observeEvent(input$Plot_analysis_display_type,{
       insertUI(
         selector = "#plot_type_display_ui_type",
         ui = div(id = "Plot_display_type_ui", selectInput("Plot_display_type", label = "Select what to color", 
-                                                          choices = unique(c("gene","IC","metadata")),
+                                                          choices = unique(c("metadata","gene",names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","tsne"))])),
                                                           selected = "metadata"))
       )
     } else {
@@ -216,7 +216,7 @@ observeEvent(input$Plot_display_type,{
     insertUI(
       selector = "#Plot_display_type_ui",
       ui = div(id = "what_to_display_UMAP_choice_ui", selectizeInput("what_to_display_UMAP_choice", label = paste0("Choose ",input$Plot_display_type),
-                                                          choices = if(input$Plot_display_type == "IC"){colnames(values$data@reductions$ica@cell.embeddings)} else if (input$Plot_display_type == "gene"){rownames(GetAssay(values$data, assay = values$data@active.assay))} else if (input$Plot_display_type == "metadata"){colnames(values$data@meta.data)},
+                                                          choices = if(input$Plot_display_type == "ica"){colnames(values$data@reductions$ica@cell.embeddings)} else if (input$Plot_display_type == "gene"){rownames(GetAssay(values$data, assay = values$data@active.assay))} else if (input$Plot_display_type == "metadata"){colnames(values$data@meta.data)} else if (input$Plot_display_type %in% names(values$data@misc$reduction_names)){values$data@misc$reduction_names[[input$Plot_display_type]]},
                                                           selected = NULL,
                                                           multiple = FALSE,
                                                           options = NULL)
@@ -226,7 +226,7 @@ observeEvent(input$Plot_display_type,{
     shinyjs::show(id = "what_to_display_UMAP_choice_ui")
     updateSelectInput(session,"what_to_display_UMAP_choice",
                       label = paste0("Choose ",input$Plot_display_type),
-                      choices = if(input$Plot_display_type == "IC"){colnames(values$data@reductions$ica@cell.embeddings)} else if (input$Plot_display_type == "gene"){rownames(GetAssay(values$data, assay = values$data@active.assay))} else if (input$Plot_display_type == "metadata"){colnames(values$data@meta.data)}
+                      choices = if(input$Plot_display_type == "ica"){colnames(values$data@reductions$ica@cell.embeddings)} else if (input$Plot_display_type == "gene"){rownames(GetAssay(values$data, assay = values$data@active.assay))} else if (input$Plot_display_type == "metadata"){colnames(values$data@meta.data)} else if (input$Plot_display_type %in% names(values$data@misc$reduction_names)){values$data@misc$reduction_names[[input$Plot_display_type]]}
                       )
   }
 })
@@ -254,8 +254,8 @@ observeEvent(input$what_to_display_UMAP_choice,{
     
     
     #slide values
-    min = if(input$Plot_display_type == "gene") {round(min(GetAssayData(values$data, assay = values$data@active.assay)[input$what_to_display_UMAP_choice,]), digits = 2)} else if (input$Plot_display_type == "IC") {round(min(values$data@reductions$ica@cell.embeddings[, input$what_to_display_UMAP_choice]), digits = 0)} else if (input$Plot_display_type == "metadata") {round(min(values$data@meta.data[, input$what_to_display_UMAP_choice]), digits = 0)}
-    max = if(input$Plot_display_type == "gene") {round(max(GetAssayData(values$data, assay = values$data@active.assay)[input$what_to_display_UMAP_choice,]), digits = 2)} else if (input$Plot_display_type == "IC") {round(max(values$data@reductions$ica@cell.embeddings[, input$what_to_display_UMAP_choice]), digits = 0)} else if (input$Plot_display_type == "metadata") {round(max(values$data@meta.data[, input$what_to_display_UMAP_choice]), digits = 0)}
+    min = if(input$Plot_display_type == "gene") {round(min(GetAssayData(values$data, assay = values$data@active.assay)[input$what_to_display_UMAP_choice,]), digits = 2)} else if (input$Plot_display_type == "ica") {round(min(values$data@reductions$ica@cell.embeddings[, input$what_to_display_UMAP_choice]), digits = 0)} else if (input$Plot_display_type == "metadata") {round(min(values$data@meta.data[, input$what_to_display_UMAP_choice]), digits = 0)} else if (input$Plot_display_type %in% names(values$data@misc$reduction_names)){round(min(values$data@reductions[[input$Plot_display_type]]@cell.embeddings[, which(values$data@misc$reduction_names[[input$Plot_display_type]] == input$what_to_display_UMAP_choice)]), digits = 0)}
+    max = if(input$Plot_display_type == "gene") {round(max(GetAssayData(values$data, assay = values$data@active.assay)[input$what_to_display_UMAP_choice,]), digits = 2)} else if (input$Plot_display_type == "ica") {round(max(values$data@reductions$ica@cell.embeddings[, input$what_to_display_UMAP_choice]), digits = 0)} else if (input$Plot_display_type == "metadata") {round(max(values$data@meta.data[, input$what_to_display_UMAP_choice]), digits = 0)} else if (input$Plot_display_type %in% names(values$data@misc$reduction_names)){round(max(values$data@reductions[[input$Plot_display_type]]@cell.embeddings[, which(values$data@misc$reduction_names[[input$Plot_display_type]] == input$what_to_display_UMAP_choice)]), digits = 0)}
     
     if(!(check_visual_tab$slider_visual_spatial_range_ui_check)){
       insertUI(

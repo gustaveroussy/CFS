@@ -294,51 +294,61 @@ current_plot_umap <- reactive({
         
         fig <- fig %>% layout(showlegend = F)
         
-      } else if (input$Plot_display_type == "IC") {
-      if (ncol(cell.embeddings.umap) == 2){
-        fig <- fig %>%
-          add_trace(
-            x = cell.embeddings.umap[,1],
-            y = cell.embeddings.umap[,2],
-            marker = list(
-              color = cell.embeddings[,input$what_to_display_UMAP_choice],
-              colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
-              reversescale=input$invert_color_visualisation_UMAP,
-              size = input$Plot_scatter_size_UMAP,
-              showscale = T,
-              cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
-              opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = cell.embeddings[,input$what_to_display_UMAP_choice], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)}
-            ),
-            showlegend = T,
-            text = cell.embeddings[,input$what_to_display_UMAP_choice],
-            customdata = rownames(meta.data),
-            hovertemplate = paste0("Cell : %{customdata}<br>",
-                                   "Value : %{text}",
-                                   "<extra></extra>")
-          )
-      } else if (ncol(cell.embeddings.umap) == 3){
-        fig <- fig %>%
-          add_trace(
-            x = cell.embeddings.umap[,1],
-            y = cell.embeddings.umap[,2],
-            z = cell.embeddings.umap[,3],
-            marker = list(
-              color = cell.embeddings[,input$what_to_display_UMAP_choice],
-              colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
-              reversescale=input$invert_color_visualisation_UMAP,
-              size = input$Plot_scatter_size_UMAP,
-              showscale = T,
-              cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
-              opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = cell.embeddings[,input$what_to_display_UMAP_choice], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)}
-            ),
-            showlegend = T,
-            text = cell.embeddings[,input$what_to_display_UMAP_choice],
-            customdata = rownames(meta.data),
-            hovertemplate = paste0("Cell : %{customdata}<br>",
-                                   "Value : %{text}",
-                                   "<extra></extra>")
-          )
-      }
+      } else if (input$Plot_display_type == "ica" | input$Plot_display_type %in% names(values$data@misc$reduction_names)){
+        
+        # get reductions values
+        cell.embeddings <- values$data@reductions[[input$Plot_display_type]]@cell.embeddings[(rownames(values$data@reductions[[input$Plot_display_type]]@cell.embeddings) %in% unlist(c(sapply(TissueCoordinates,rownames)))),]
+        
+        if (input$Plot_display_type == "ica"){
+          dimension_query = input$what_to_display_UMAP_choice
+        } else {
+          dimension_query = which(values$data@misc$reduction_names[[input$Plot_display_type]] == input$what_to_display_UMAP_choice)
+        }
+        
+        if (ncol(cell.embeddings.umap) == 2){
+          fig <- fig %>%
+            add_trace(
+              x = cell.embeddings.umap[,1],
+              y = cell.embeddings.umap[,2],
+              marker = list(
+                color = cell.embeddings[,dimension_query],
+                colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
+                reversescale=input$invert_color_visualisation_UMAP,
+                size = input$Plot_scatter_size_UMAP,
+                showscale = T,
+                cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+                opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = cell.embeddings[,dimension_query], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)}
+              ),
+              showlegend = T,
+              text = cell.embeddings[,dimension_query],
+              customdata = rownames(meta.data),
+              hovertemplate = paste0("Cell : %{customdata}<br>",
+                                     "Value : %{text}",
+                                     "<extra></extra>")
+            )
+        } else if (ncol(cell.embeddings.umap) == 3){
+          fig <- fig %>%
+            add_trace(
+              x = cell.embeddings.umap[,1],
+              y = cell.embeddings.umap[,2],
+              z = cell.embeddings.umap[,3],
+              marker = list(
+                color = cell.embeddings[,dimension_query],
+                colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
+                reversescale=input$invert_color_visualisation_UMAP,
+                size = input$Plot_scatter_size_UMAP,
+                showscale = T,
+                cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
+                opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = cell.embeddings[,dimension_query], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)}
+              ),
+              showlegend = T,
+              text = cell.embeddings[,dimension_query],
+              customdata = rownames(meta.data),
+              hovertemplate = paste0("Cell : %{customdata}<br>",
+                                     "Value : %{text}",
+                                     "<extra></extra>")
+            )
+        }
         
         fig <- fig %>% layout(showlegend = F)
         
@@ -399,12 +409,25 @@ current_plot_umap <- reactive({
           guides(size = "none") +
           theme_void()
         
-      } else if (input$Plot_display_type == "IC") {
+      } else if (input$Plot_display_type == "ica" | input$Plot_display_type %in% names(values$data@misc$reduction_names)) {
+        cell.embeddings <- values$data@reductions[[input$Plot_display_type]]@cell.embeddings[(rownames(values$data@reductions[[input$Plot_display_type]]@cell.embeddings) %in% unlist(c(sapply(TissueCoordinates,rownames)))),]
+        
+        if (input$Plot_display_type == "ica"){
+          dimension_query = input$what_to_display_UMAP_choice
+        } else {
+          dimension_query = which(values$data@misc$reduction_names[[input$Plot_display_type]] == input$what_to_display_UMAP_choice)
+        }
+        
+        limits = c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2])
+        
+        if(limits[1] == limits[2]){
+          limits = c(min(cell.embeddings[,dimension_query]),max(cell.embeddings[,dimension_query]))
+        }
         
         fig = ggplot() +
-          geom_point(aes(cell.embeddings.umap[,1], cell.embeddings.umap[,2], color=cell.embeddings[,input$what_to_display_UMAP_choice]), size = input$Plot_scatter_size_UMAP) +
+          geom_point(aes(cell.embeddings.umap[,1], cell.embeddings.umap[,2], color=cell.embeddings[,dimension_query]), size = input$Plot_scatter_size_UMAP) +
           ggplot2::scale_color_gradientn(name = input$what_to_display_UMAP_choice,
-                                         colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2]), oob=squish) +
+                                         colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(limits[1], limits[2]), oob=squish) +
           guides(size = "none") +
           theme_void()
         

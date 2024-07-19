@@ -206,26 +206,40 @@ current_plot_spatial <- reactive({
         
         fig <- fig %>% layout(showlegend = F)
           
-        }  else if (input$Plot_display_type == "IC") {
+        }  else if (input$Plot_display_type == "ica" | input$Plot_display_type %in% names(values$data@misc$reduction_names)) {
           
           req(input$select_color_visualisation_projection)
           req(input$slider_visual_spatial_range)
+          
+          # get reductions values
+          cell.embeddings <- values$data@reductions[[input$Plot_display_type]]@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),]
+          
+          # keep cells based on UMAP
+          if(!is.null(square_cell_UMAP_selected())){
+            cell.embeddings = values$data@reductions[[input$Plot_display_type]]@cell.embeddings[square_cell_UMAP_selected()$customdata,]
+          }
+          
+          if (input$Plot_display_type == "ica"){
+            dimension_query = input$what_to_display_UMAP_choice
+          } else {
+            dimension_query = which(values$data@misc$reduction_names[[input$Plot_display_type]] == input$what_to_display_UMAP_choice)
+          }
           
           fig <- fig %>%
             add_trace(
               x = TissueCoordinates[,"imagecol"],
               y = TissueCoordinates[,"imagerow"],
               marker = list(
-                color = cell.embeddings[,input$what_to_display_UMAP_choice],
+                color = cell.embeddings[,dimension_query],
                 colorscale = plotly_colorscale(colorscale = input$select_color_visualisation_projection),
                 reversescale=input$invert_color_visualisation_spatial,
                 size = input$Plot_scatter_size_spatial,
                 cmin = input$slider_visual_spatial_range[1], cmax=input$slider_visual_spatial_range[2],
-                opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = cell.embeddings[,input$what_to_display_UMAP_choice], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)},
+                opacity = if(input$transparency_visual_spatial_choice == 1){input$transparency_visual_spatial_range}else{alpha_color_scale(values = cell.embeddings[,dimension_query], slider_1 =input$slider_visual_spatial_range[1], slider_2 = input$slider_visual_spatial_range[2], alpha = input$transparency_visual_spatial_range)},
                 showscale = T
               ),
               showlegend = T,
-              text = cell.embeddings[,input$what_to_display_UMAP_choice],
+              text = cell.embeddings[,dimension_query],
               customdata = rownames(meta.data),
               hovertemplate = paste0("Cell : %{customdata}<br>",
                                      "Value : %{text}",
@@ -386,23 +400,35 @@ current_plot_spatial <- reactive({
         output = ggarrange(plotlist=list, 
                            labels = input$Plot_image_spatial)
         
-      }  else if (input$Plot_display_type == "IC") {
+      }  else if (input$Plot_display_type == "ica" | input$Plot_display_type %in% names(values$data@misc$reduction_names)) {
+        
+        if (input$Plot_display_type == "ica"){
+          dimension_query = input$what_to_display_UMAP_choice
+        } else {
+          dimension_query = which(values$data@misc$reduction_names[[input$Plot_display_type]] == input$what_to_display_UMAP_choice)
+        }
         
         coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(values$data,n))})
         names(coordinates) = input$Plot_image_spatial
         
         img = lapply(values$data@images,function(n){return(n@image)})
         
-        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],values$data@reductions$ica@cell.embeddings[rownames(coordinates[[sample]]), input$what_to_display_UMAP_choice]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
+        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],values$data@reductions[[input$Plot_display_type]]@cell.embeddings[rownames(coordinates[[sample]]), dimension_query]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
         names(coordinates) = input$Plot_image_spatial
         
+        limits = c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2])
+        
         for(sample in input$Plot_image_spatial){
+          
+          if(limits[1] == limits[2]){
+            limits = c(min(coordinates[[sample]]$value),max(coordinates[[sample]]$value))
+          }
           
           fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
             background_image(img[[sample]]) +
             geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_scatter_size_spatial) +
             ggplot2::scale_color_gradientn(name = input$what_to_display_UMAP_choice,
-                                           colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2]), oob=squish) +
+                                           colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(limits[1], limits[2]), oob=squish) +
             guides(size = "none") +
             theme_void() +
             xlim(25,ncol(img[[sample]])-25) +
