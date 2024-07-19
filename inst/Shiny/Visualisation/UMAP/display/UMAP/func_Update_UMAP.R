@@ -359,15 +359,30 @@ current_plot_umap <- reactive({
   } else {
     
     if (input$Plot_analysis_display_type == "Dimentional reduction"){
-      if (input$Plot_display_type == "seurat_clusters"){
+      if (input$Plot_display_type == "metadata"){
+        if(input$what_to_display_UMAP_choice == "seurat_clusters"){
         
-        value = as.factor(meta.data[["seurat_clusters"]])
-        
-        fig = ggplot() +
-          geom_point(aes(cell.embeddings.umap[,1], cell.embeddings.umap[,2], color=value), size = input$Plot_scatter_size_UMAP) +
-          theme_void()
-          
-        
+            value = as.factor(values$data@meta.data[["seurat_clusters"]])
+            
+            fig = ggplot() +
+              geom_point(aes(cell.embeddings.umap[,1], cell.embeddings.umap[,2], color=value), size = input$Plot_scatter_size_UMAP) +
+              theme_void()
+              
+        } else if(typeof(values$data@meta.data[[input$what_to_display_UMAP_choice]]) == "double" | grepl('nCount_|nFeature_|percent_', input$what_to_display_UMAP_choice)){
+            
+              fig = ggplot() +
+                geom_point(aes(cell.embeddings.umap[,1], cell.embeddings.umap[,2], color=as.double(values$data@meta.data[[input$what_to_display_UMAP_choice]])), size = input$Plot_scatter_size_UMAP) +
+                ggplot2::scale_color_gradientn(name = input$what_to_display_UMAP_choice,
+                                               colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2]), oob=squish) +
+                guides(size = "none") +
+                theme_void()
+              
+          } else {
+              fig = ggplot() +
+                geom_point(aes(cell.embeddings.umap[,1], cell.embeddings.umap[,2], color=as.factor(values$data@meta.data[[input$what_to_display_UMAP_choice]])), size = input$Plot_scatter_size_UMAP) +
+                labs(color = input$what_to_display_UMAP_choice) +
+                theme_void()
+          }
         
       } else if (input$Plot_display_type == "gene") {
         
@@ -393,22 +408,6 @@ current_plot_umap <- reactive({
           guides(size = "none") +
           theme_void()
         
-      } else {
-        if(typeof(meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
-          
-          fig = ggplot() +
-            geom_point(aes(cell.embeddings.umap[,1], cell.embeddings.umap[,2], color=as.double(meta.data[[input$Plot_display_type]])), size = input$Plot_scatter_size_UMAP) +
-            ggplot2::scale_color_gradientn(name = input$Plot_display_type,
-                                           colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2]), oob=squish) +
-            guides(size = "none") +
-            theme_void()
-      
-        } else {
-          fig = ggplot() +
-            geom_point(aes(cell.embeddings.umap[,1], cell.embeddings.umap[,2], color=as.factor(meta.data[[input$Plot_display_type]])), size = input$Plot_scatter_size_UMAP) +
-            labs(color = input$Plot_display_type) +
-            theme_void()
-        }
       }
     }
     

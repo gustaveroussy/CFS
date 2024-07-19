@@ -260,15 +260,18 @@ current_plot_spatial <- reactive({
     list = list()
     
     if (input$Plot_analysis_display_type == "Dimentional reduction"){
-      if (input$Plot_display_type == "seurat_clusters"){
+      if (input$Plot_display_type == "metadata"){
+        if(input$what_to_display_UMAP_choice == "seurat_clusters"){
         
-        coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(data,n))})
+        coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(values$data,n))})
         names(coordinates) = input$Plot_image_spatial
         
-        img = lapply(data@images,function(n){return(n@image)})
+        img = lapply(values$data@images,function(n){return(n@image)})
         
-        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],data@meta.data[rownames(coordinates[[sample]]), "seurat_clusters"]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
+        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],values$data@meta.data[rownames(coordinates[[sample]]), "seurat_clusters"]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
         names(coordinates) = input$Plot_image_spatial
+        
+        View(coordinates)
         
         for(sample in input$Plot_image_spatial){
           
@@ -288,12 +291,78 @@ current_plot_spatial <- reactive({
         output = ggarrange(plotlist=list, 
                            labels = input$Plot_image_spatial)
         
+        
+        
+        
+        } else if(typeof(values$data@meta.data[[input$what_to_display_UMAP_choice]]) == "double" | grepl('nCount_|nFeature_|percent_', input$what_to_display_UMAP_choice)){
+          
+          coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(values$data,n))})
+          names(coordinates) = input$Plot_image_spatial
+          
+          img = lapply(values$data@images,function(n){return(n@image)})
+          
+          coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],values$data@meta.data[rownames(coordinates[[sample]]), input$what_to_display_UMAP_choice]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
+          names(coordinates) = input$Plot_image_spatial
+          
+          for(sample in input$Plot_image_spatial){
+            
+            fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
+              background_image(img[[sample]]) +
+              geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_scatter_size_spatial) +
+              ggplot2::scale_color_gradientn(name = input$what_to_display_UMAP_choice,
+                                             colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2]), oob=squish) +
+              guides(size = "none") +
+              theme_void() +
+              xlim(25,ncol(img[[sample]])-25) +
+              ylim(-nrow(img[[sample]])+25,-25)
+            
+            
+            list[[sample]] = fig
+          }
+          
+          output = ggarrange(plotlist=list, 
+                             labels = input$Plot_image_spatial)
+          
+        } else {
+          
+          coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(values$data,n))})
+          names(coordinates) = input$Plot_image_spatial
+          
+          img = lapply(values$data@images,function(n){return(n@image)})
+          
+          coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],values$data@meta.data[rownames(coordinates[[sample]]), input$what_to_display_UMAP_choice]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
+          names(coordinates) = input$Plot_image_spatial
+          
+          for(sample in input$Plot_image_spatial){
+            
+            fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
+              background_image(img[[sample]]) +
+              geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_scatter_size_spatial) +
+              guides(size = "none") +
+              theme_void() +
+              xlim(25,ncol(img[[sample]])-25) +
+              ylim(-nrow(img[[sample]])+25,-25)
+            
+            
+            list[[sample]] = fig
+          }
+          
+          output = ggarrange(plotlist=list, 
+                             labels = input$Plot_image_spatial)
+          
+        }
+        
+        
+        
+        
+        
+        
       } else if (input$Plot_display_type == "gene") {
         
-        coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(data,n))})
+        coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(values$data,n))})
         names(coordinates) = input$Plot_image_spatial
         
-        img = lapply(data@images,function(n){return(n@image)})
+        img = lapply(values$data@images,function(n){return(n@image)})
         
         coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],GetAssayData(values$data, assay = values$data@active.assay)[input$what_to_display_UMAP_choice, rownames(coordinates[[sample]])]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
         names(coordinates) = input$Plot_image_spatial
@@ -319,12 +388,12 @@ current_plot_spatial <- reactive({
         
       }  else if (input$Plot_display_type == "IC") {
         
-        coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(data,n))})
+        coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(values$data,n))})
         names(coordinates) = input$Plot_image_spatial
         
-        img = lapply(data@images,function(n){return(n@image)})
+        img = lapply(values$data@images,function(n){return(n@image)})
         
-        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],data@reductions$ica@cell.embeddings[rownames(coordinates[[sample]]), input$what_to_display_UMAP_choice]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
+        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],values$data@reductions$ica@cell.embeddings[rownames(coordinates[[sample]]), input$what_to_display_UMAP_choice]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
         names(coordinates) = input$Plot_image_spatial
         
         for(sample in input$Plot_image_spatial){
@@ -346,65 +415,6 @@ current_plot_spatial <- reactive({
         output = ggarrange(plotlist=list, 
                            labels = input$Plot_image_spatial)
         
-      } else {
-      
-        if(typeof(meta.data[[input$Plot_display_type]]) == "double" | grepl('nCount_|nFeature_|percent_', input$Plot_display_type)){
-        
-          coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(data,n))})
-          names(coordinates) = input$Plot_image_spatial
-          
-          img = lapply(data@images,function(n){return(n@image)})
-          
-          coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],data@meta.data[rownames(coordinates[[sample]]), input$Plot_display_type]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
-          names(coordinates) = input$Plot_image_spatial
-          
-          for(sample in input$Plot_image_spatial){
-            
-            fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
-              background_image(img[[sample]]) +
-              geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_scatter_size_spatial) +
-              ggplot2::scale_color_gradientn(name = input$Plot_display_type,
-                                             colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2]), oob=squish) +
-              guides(size = "none") +
-              theme_void() +
-              xlim(25,ncol(img[[sample]])-25) +
-              ylim(-nrow(img[[sample]])+25,-25)
-            
-            
-            list[[sample]] = fig
-          }
-          
-          output = ggarrange(plotlist=list, 
-                             labels = input$Plot_image_spatial)
-          
-        } else {
-          
-          coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(data,n))})
-          names(coordinates) = input$Plot_image_spatial
-          
-          img = lapply(data@images,function(n){return(n@image)})
-          
-          coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],data@meta.data[rownames(coordinates[[sample]]), input$Plot_display_type]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
-          names(coordinates) = input$Plot_image_spatial
-          
-          for(sample in input$Plot_image_spatial){
-            
-            fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
-              background_image(img[[sample]]) +
-              geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_scatter_size_spatial) +
-              guides(size = "none") +
-              theme_void() +
-              xlim(25,ncol(img[[sample]])-25) +
-              ylim(-nrow(img[[sample]])+25,-25)
-            
-            
-            list[[sample]] = fig
-          }
-          
-          output = ggarrange(plotlist=list, 
-                             labels = input$Plot_image_spatial)
-          
-        }
       }
     }
     return(output)
