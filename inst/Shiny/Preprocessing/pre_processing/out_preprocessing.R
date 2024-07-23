@@ -10,7 +10,19 @@ observeEvent(input$preprocessing_normalisation_action_button, {
     
     incProgress(0.4, detail = "Filtering empty spots")
     
-    i <- if(substr(packageVersion("Seurat"),1,1) == "5"){(Matrix::colSums(values$data@assays$Spatial$counts, na.rm=T) != 0)}else{(Matrix::colSums(values$data@assays$Spatial@counts, na.rm=T) != 0)}
+    if(substr(packageVersion("Seurat"),1,1) == "5"){
+      i = c()
+      
+      for(x in values$data@assays$Spatial@layers){
+        i = c(i,(Matrix::colSums(x, na.rm=T) != 0))
+      }
+      
+    }else{
+      
+      i = (Matrix::colSums(values$data@assays$Spatial@counts, na.rm=T) != 0)
+      
+    }
+    
     row_names_df_to_keep<-colnames(values$data@assays$Spatial)[i]
     values$data = values$data[, row_names_df_to_keep]
     
