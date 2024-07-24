@@ -8,7 +8,7 @@ output[["sample_based_dotplot"]] <- plotly::renderPlotly({
 
 sample_based_dotplot_react <- reactive({
   req(values$data)
-  if(length(values$data@images) > 2){
+  if(length(values$data@images) >= 2){
     
     ICA = values$data@reductions$ica@cell.embeddings
     ICA[ICA < 0] = 0
