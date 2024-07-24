@@ -126,11 +126,11 @@ current_plot_spatial_scatter_pie <- reactive({
         row_coordinates = max_row_img-(ic_types[i,"imagerow"])
         
         if(input$Scatter_pie_size_activate){
-          x = c((col_coordinates/max_col_img)-(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col_img)+(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2)
-          y = c((row_coordinates/max_row_img)-(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row_img)+(Radius(data@images[[input$Plot_image_spatial[1]]])*ic_types[i,"sum_IC"])/2)
+          x = c((col_coordinates/max_col_img)-(Radius(data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids)*ic_types[i,"sum_IC"])/2,(col_coordinates/max_col_img)+(Radius(data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids)*ic_types[i,"sum_IC"])/2)
+          y = c((row_coordinates/max_row_img)-(Radius(data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids)*ic_types[i,"sum_IC"])/2,(row_coordinates/max_row_img)+(Radius(data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids)*ic_types[i,"sum_IC"])/2)
         } else {
-          x = c((col_coordinates/max_col_img)-(Radius(data@images[[input$Plot_image_spatial[1]]]))/2,(col_coordinates/max_col_img)+(Radius(data@images[[input$Plot_image_spatial[1]]]))/2)
-          y = c((row_coordinates/max_row_img)-(Radius(data@images[[input$Plot_image_spatial[1]]]))/2,(row_coordinates/max_row_img)+(Radius(data@images[[input$Plot_image_spatial[1]]]))/2)
+          x = c((col_coordinates/max_col_img)-(Radius(data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids))/2,(col_coordinates/max_col_img)+(Radius(data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids))/2)
+          y = c((row_coordinates/max_row_img)-(Radius(data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids))/2,(row_coordinates/max_row_img)+(Radius(data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids))/2)
         }
         
         if (input$Scatter_pie_values_selected == "IC"){
@@ -217,13 +217,96 @@ current_plot_spatial_scatter_pie <- reactive({
   return(fig)
 })
 
-#for ggplot
+#####for ggplot
 current_plot_spatial_scatter_pie_ggplot <- reactive({
   req(values$data)
   
+  data <- values$data
+  
+  if("image" %in% slotNames(data@images[[input$Plot_image_spatial[1]]])){
+    max_col_img = dim(data@images[[input$Plot_image_spatial[1]]]@image)[2]
+    max_row_img = dim(data@images[[input$Plot_image_spatial[1]]]@image)[1]
+  } else {
+    max_col_img = max(data@images[[input$Plot_image_spatial[1]]]@coordinates[,"x"])
+    max_row_img = max(data@images[[input$Plot_image_spatial[1]]]@coordinates[,"y"])
+  }
+  
+  if (input$Scatter_pie_values_selected == "IC"){
+    if (!is.null(input$Scatter_pie_cell_type)){
+      
+      for (n_cell_type in input$Plot_display_type_UMAP_choice) {
+        if(is.null(type)) {
+          type = values$annotation_for_output[["Type"]][[n_cell_type]]
+        } else {
+          type = append(type, values$annotation_for_output[["Type"]][[n_cell_type]])
+        }
+      }
+      
+      if (!is.null(input$Scatter_pie_IC_chosen_projection)){
+        type=unique(c(input$Scatter_pie_IC_chosen_projection,type))
+      }
+      
+    } else {
+      
+      if (!is.null(input$Scatter_pie_IC_chosen_projection)){
+        type=input$Scatter_pie_IC_chosen_projection
+      } else {
+        type = NULL
+      }
+      
+    }
+  }
+  
+  incProgress(0.1, detail = "getting ICs")
+  if (input$Scatter_pie_values_selected == "IC"){
+    if(!is.null(type)){
+      ic_types=data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates()[[input$Plot_image_spatial[1]]])),type]
+    }else{
+      ic_types=data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates()[[input$Plot_image_spatial[1]]])),rownames(values$Annotation)[as.logical(values$Annotation[,"Use"])]]
+    }
+    
+    ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
+    
+    #We normalize by the sum
+    sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
+    #we calculate the factor of size to reduce pie size where IC are low
+    sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
+    
+    #ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
+    # We build the final object
+    ic_types<-cbind(TissueCoordinates()[[input$Plot_image_spatial[1]]],ic_types) %>%  cbind(.,sum_IC)
+    
+    #We build the plot
+    
+    #img<-grDevices::as.raster(data@images[[1]]@image)
+    
+    #ic_types$imagerow = max(ic_types$imagerow) - ic_types$imagerow + min(ic_types$imagerow)
+    
+    ####
+  } else {
+    ic_types=data@meta.data[(rownames(data@meta.data) %in% rownames(TissueCoordinates()[[input$Plot_image_spatial[1]]])),input$Scatter_pie_metadata_select]
+    
+    #We normalize by the sum
+    sum<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
+    
+    #we calculate the factor of size to reduce pie size where IC are low
+    sum=sqrt((rowSums(sum)/max(rowSums(sum))))
+    
+    #ic_types<-apply(ic_types,1,function(x){x/sum(x); return(x)})
+    # We build the final object
+    ic_types<-cbind(GetTissueCoordinates(data),ic_types) %>%  cbind(.,sum)
+  }
+  
+  ic_types$radius = (Radius(data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids)*ic_types[,"sum_IC"])
+  
+  img = data@images[[1]]@image
+  
+  ic_types$imagerow = -(ic_types$imagerow)
+  
   fig = ggplot() +
-    geom_scatterpie(aes(x=long, y=lat, group=region), data=d,
-                    cols=LETTERS[1:4]) + coord_equal()
+    background_image(img) +
+    geom_scatterpie(aes(x=imagecol, y=imagerow, r=radius), data=ic_types,
+                    cols=type) + coord_equal()
   
   return(fig)
 })

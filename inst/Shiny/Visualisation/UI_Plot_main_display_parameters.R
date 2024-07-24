@@ -229,9 +229,13 @@ observeEvent(input$Plot_display_type,{
                       choices = if(input$Plot_display_type == "ica"){colnames(values$data@reductions$ica@cell.embeddings)} else if (input$Plot_display_type == "gene"){rownames(GetAssay(values$data, assay = values$data@active.assay))} else if (input$Plot_display_type == "metadata"){colnames(values$data@meta.data)} else if (input$Plot_display_type %in% names(values$data@misc$reduction_names)){values$data@misc$reduction_names[[input$Plot_display_type]]}
                       )
   }
+  
+  
 })
 
-
+#####-----------------------------------------------------------------------#####
+##### what to display when dimentional reduction is selected
+#####-----------------------------------------------------------------------#####
 
 observeEvent(input$what_to_display_UMAP_choice,{
   req(input$what_to_display_UMAP_choice)
@@ -297,6 +301,9 @@ observeEvent(input$what_to_display_UMAP_choice,{
   
 })
 
+#####-----------------------------------------------------------------------#####
+##### Scatter pie values options
+#####-----------------------------------------------------------------------#####
 
 observeEvent(input$Scatter_pie_values_selected,{
   if(input$Scatter_pie_values_selected == "IC"){
