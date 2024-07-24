@@ -30,7 +30,8 @@ output[["Plot_Spatial_UI"]] <- renderUI({
               style = "color: black !important;",
               uiOutput("interactive_display_visualisation_spatial_UI"),
               uiOutput("invert_color_visualisation_spatial_UI"),
-              uiOutput("Spatial_display_image_UI")
+              uiOutput("Spatial_display_image_UI"),
+              uiOutput("apply_umap_selection_filter_UI")
             ),
             circle = FALSE,
             icon = icon("cog"),
@@ -106,6 +107,25 @@ outputOptions(
   "invert_color_visualisation_spatial_UI",
   suspendWhenHidden = FALSE
 )
+
+##----------------------------------------------------------------------------##
+## filter based on UMAP selection
+##----------------------------------------------------------------------------##
+output[["apply_umap_selection_filter_UI"]] <- renderUI({
+  shinyWidgets::awesomeCheckbox(
+    inputId = "apply_umap_selection_filter",
+    label = "Filter spots based on UMAP selection",
+    value = FALSE
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "apply_umap_selection_filter_UI",
+  suspendWhenHidden = FALSE
+)
+
 
 ##----------------------------------------------------------------------------##
 ## Drop down column organization

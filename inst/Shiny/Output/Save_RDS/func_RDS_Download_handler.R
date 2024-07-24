@@ -133,9 +133,7 @@ output$download_subcluster_RDS <- downloadHandler(
   
         data@misc$distances <- values$distances
         
-        
-        
-        table = plotly::event_data(c("plotly_selected"), source = "C")
+        table = values$cells_to_export
         
         incProgress(0.25, detail = paste("subsetting"))
         
