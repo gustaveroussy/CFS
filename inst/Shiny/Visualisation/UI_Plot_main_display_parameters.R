@@ -353,8 +353,7 @@ observeEvent(input$Scatter_pie_values_selected,{
 output[["start_display_UI"]] <- renderUI({
   tagList(
     actionButton("start_display_UMAP", "Display UMAP"),
-    actionButton("start_display_Spatial", "Display Spatial"),
-    actionButton("start_display", "Display Both")
+    actionButton("start_display_Spatial", "Display Spatial")
   )
 })
 
