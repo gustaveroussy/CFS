@@ -21,18 +21,18 @@ observeEvent(input$start_display_Spatial, {
   
   if (input$Plot_analysis_display_type == "Density") {
     req(input$Plot_display_type_choice)
-    if(input$Spatial_use_ggplot){
-      plots$spatial = current_plot_spatial_density_ggplot()
-    } else {
+    if(input$interactive_display_visualisation_spatial){
       plots$spatial = current_plot_spatial_density()
+    } else {
+      plots$spatial = current_plot_spatial_density_ggplot()
     }
   }
   
   if (input$Plot_analysis_display_type == "Scatter pie") {
-    if(input$Spatial_use_ggplot){
-      plots$spatial = current_plot_spatial_scatter_pie_ggplot()
-    } else {
+    if(input$interactive_display_visualisation_spatial){
       plots$spatial = current_plot_spatial_scatter_pie()
+    } else {
+      plots$spatial = current_plot_spatial_scatter_pie_ggplot()
     }
   }
   

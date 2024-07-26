@@ -138,11 +138,6 @@ output[["Spatial_display_image_UI"]] <- renderUI({
       label = "Display",
       value = TRUE
     ),
-    shinyWidgets::awesomeCheckbox(
-      inputId = "Spatial_use_ggplot",
-      label = "Use ggplot",
-      value = FALSE
-    ),
     selectInput(
       inputId = "full_annotation_spatial",
       label = "Select annotation",

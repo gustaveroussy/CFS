@@ -20,15 +20,19 @@ observeEvent(input$start_display_UMAP, {
     
     if (input$Plot_analysis_display_type == "Density") {
       req(input$Plot_display_type_choice)
-      if(input$Spatial_use_ggplot){
-        #plots$density = current_plot_density()
-      } else {
+      if(input$interactive_display_visualisation_UMAP){
         plots$display = current_plot_density()
+      } else {
+        plots$display = NULL
       }
     }
       
     if (input$Plot_analysis_display_type == "Scatter pie") {
-      plots$display = current_plot_scatter_pie()
+      if(input$interactive_display_visualisation_UMAP){
+        plots$display = current_plot_scatter_pie()
+      } else {
+        plots$display = NULL
+      }
     }
     
 })
