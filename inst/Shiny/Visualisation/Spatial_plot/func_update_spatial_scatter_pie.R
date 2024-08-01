@@ -3,6 +3,8 @@
 ##############################
 
 current_plot_spatial_scatter_pie <- reactive({
+    req(values$data)
+    req(input$Plot_image_spatial)
   
     if(!(input$Spatial_visualisation_comput)){
       return(NULL)
@@ -111,7 +113,10 @@ current_plot_spatial_scatter_pie <- reactive({
           y = list((row_coordinates/max_row_img)-(Radius(values$data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids)*ic_types[,"sum_IC"])/2,(row_coordinates/max_row_img)+(Radius(values$data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids)*ic_types[,"sum_IC"])/2)
       }
 
-      test = abs(as.vector(scale(abs(x[[2]]) - abs(x[[1]])))) > 1
+      test_1 = abs(as.vector(scale(abs(x[[2]]) - abs(x[[1]])))) > 1
+      test_2 = ic_types[,"sum_IC"] != 0
+      
+      test = test_1 | test_2
       
       x[[1]] = x[[1]][test]
       x[[2]] = x[[2]][test]
@@ -126,7 +131,7 @@ current_plot_spatial_scatter_pie <- reactive({
         incProgress(0.7/nrow(ic_types), detail = "Preparing scatterpie data")
         
         if (input$Scatter_pie_values_selected == "ica"){
-          t = colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
+          t = names(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
           v = round(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])/sum(as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]))*100,2)
           q = list()
           for (IC in t){
@@ -167,13 +172,16 @@ current_plot_spatial_scatter_pie <- reactive({
         }
 
         if (input$Scatter_pie_values_selected == "ica"){
-          fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = values$Annotation[colnames(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),'Annotation'],
+          label = names(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)])
+          
+          fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = label,
                                    values = as.double(ic_types[i,grep('IC_',colnames(ic_types))][which(ic_types[i,grep('IC_',colnames(ic_types))] != 0)]),
                                    name = rownames(ic_types[i,]), domain = list(x = c(x[[1]][i],x[[2]][i]), y = c(y[[1]][i],y[[2]][i])),
                                    showlegend = TRUE, textposition = "none", textinfo = "none",
                                    text = text_final,
                                    hovertemplate = paste0("%{text}",
                                                           "<extra></extra>"))
+          
         } else if (input$Scatter_pie_values_selected == "Metadata") {
 
           fig <- fig %>% add_trace(type = 'pie', data = ic_types, labels = input$Scatter_pie_metadata_select,
