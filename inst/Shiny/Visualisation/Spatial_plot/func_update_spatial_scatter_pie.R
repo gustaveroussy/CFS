@@ -225,7 +225,7 @@ current_plot_spatial_scatter_pie <- reactive({
                                     yanchor = 'top',
                                     xanchor = 'left'
                                   )
-            ) 
+            )
           }
         } else {
           fig <- fig %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
