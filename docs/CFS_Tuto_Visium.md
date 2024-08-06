@@ -370,18 +370,21 @@ $~$
 
 ## Citation
 
-This tool is not yet published. In the meantime, please cite our [preprint](https://www.biorxiv.org/content/10.1101/2023.08.30.555558v2)
+This work is published in [Bioinformatics Advances](https://doi.org/10.1093/bioadv/vbae081). You can cite the article as:
 ``` r
-@article {Thuilliez2023.08.30.555558,
-	author = {Corentin Thuilliez & Gaël Moquin-Beaudry et al.},
-	title = {CellsFromSpace: A fast, accurate and reference-free tool to deconvolve and annotate spatially distributed Omics data},
-	elocation-id = {2023.08.30.555558},
-	year = {2024},
-	doi = {10.1101/2023.08.30.555558},
-	publisher = {Cold Spring Harbor Laboratory},
-	URL = {https://www.biorxiv.org/content/early/2024/02/15/2023.08.30.555558},
-	eprint = {https://www.biorxiv.org/content/early/2024/02/15/2023.08.30.555558.full.pdf},
-	journal = {bioRxiv}
+@article{10.1093/bioadv/vbae081,
+    author = {Thuilliez, Corentin and Moquin-Beaudry, Gaël et al.},
+    title = "{CellsFromSpace: a fast, accurate, and reference-free tool to deconvolve and annotate spatially distributed omics data}",
+    journal = {Bioinformatics Advances},
+    volume = {4},
+    number = {1},
+    pages = {vbae081},
+    year = {2024},
+    month = {05},
+    issn = {2635-0041},
+    doi = {10.1093/bioadv/vbae081},
+    url = {https://doi.org/10.1093/bioadv/vbae081},
+    eprint = {https://academic.oup.com/bioinformaticsadvances/article-pdf/4/1/vbae081/58310899/vbae081.pdf},
 }
 
 ``` 

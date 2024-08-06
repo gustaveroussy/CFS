@@ -22,10 +22,13 @@ current_plot_spatial <- reactive({
       annotation = values$data@misc$annotation
       
       # keep cells based on UMAP
-      if(!is.null(square_cell_UMAP_selected())){
-        cell.embeddings = values$data@reductions$ica@cell.embeddings[square_cell_UMAP_selected()$customdata,]
-        TissueCoordinates = TissueCoordinates[square_cell_UMAP_selected()$customdata,]
-        meta.data = values$data@meta.data[square_cell_UMAP_selected()$customdata,]
+      
+      if(input$apply_umap_selection_filter){
+        if(!is.null(selected_cell_UMAP_selected())){
+          cell.embeddings = values$data@reductions$ica@cell.embeddings[selected_cell_UMAP_selected()$customdata,]
+          TissueCoordinates = TissueCoordinates[selected_cell_UMAP_selected()$customdata,]
+          meta.data = values$data@meta.data[selected_cell_UMAP_selected()$customdata,]
+        }
       }
       
       fig <- plot_ly(type = 'scatter',
@@ -181,6 +184,11 @@ current_plot_spatial <- reactive({
         req(input$slider_visual_spatial_range)
         
         scale.data = GetAssayData(values$data, assay = values$data@active.assay)[,(colnames(GetAssayData(values$data, assay = values$data@active.assay)) %in% rownames(TissueCoordinates))]
+        if(input$apply_umap_selection_filter){
+          if(!is.null(selected_cell_UMAP_selected())){
+            scale.data = scale.data[,selected_cell_UMAP_selected()$customdata]
+          }
+        }
         
         fig <- fig %>%
           add_trace(
@@ -215,8 +223,10 @@ current_plot_spatial <- reactive({
           cell.embeddings <- values$data@reductions[[input$Plot_display_type]]@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),]
           
           # keep cells based on UMAP
-          if(!is.null(square_cell_UMAP_selected())){
-            cell.embeddings = values$data@reductions[[input$Plot_display_type]]@cell.embeddings[square_cell_UMAP_selected()$customdata,]
+          if(input$apply_umap_selection_filter){
+            if(!is.null(selected_cell_UMAP_selected())){
+              cell.embeddings = values$data@reductions[[input$Plot_display_type]]@cell.embeddings[selected_cell_UMAP_selected()$customdata,]
+            }
           }
           
           if (input$Plot_display_type == "ica"){

@@ -9,35 +9,43 @@ observeEvent(input$start_creating_reduction,{
     incProgress(0.2, detail = "Calculating ratios")
     # Convert ICA to ratio after removing negative weights
     ICA = values$data@reductions$ica@cell.embeddings
+    ICA <- ICA[,rownames(values$Annotation[as.logical(values$Annotation[,"Use"]),])]
     ICA[ICA < 0] = 0
     ICA_ratio <- sweep(ICA, 1, rowSums(ICA), "/") %>% as.data.frame()
     
     # Filter out rejected ICs
-    ICA_2.5pc = ICA_ratio
-    ICA_2.5pc[ICA_2.5pc < 0] = 0
-    ICA_2.5pc_clean <- ICA_2.5pc
-    ICA_2.5pc_clean[,!(as.logical(values$Annotation[,"Use"]))] <- 0
-    ICA_2.5pc_clean_ratio <- sweep(ICA_2.5pc_clean, 1, rowSums(ICA_2.5pc_clean), "/") %>% as.data.frame()
-    ICA_2.5pc_clean_ratio[ICA_2.5pc_clean_ratio < input$choose_filter_value_column_for_reduction] <- 0
+    ICA_ratio[ICA_ratio < input$choose_filter_value_column_for_reduction] <- 0
     
     incProgress(0.3, detail = "Creating tables")
     
-    table = NULL
-    table_genes = NULL
+    table = matrix(nrow = nrow(ICA_ratio), ncol = 0)
+    rownames(table) = rownames(ICA_ratio)
+    table_genes = matrix(nrow = nrow(GetAssayData(values$data)), ncol = 0)
+    rownames(table_genes) = rownames(nrow(GetAssayData(values$data)))
+    
+    
+    #Combinaison ICs -> broad
+    combi = data.frame(matrix(nrow = nrow(ICA_ratio), ncol = length(unique(values$Annotation[,input$choose_annotation_column_for_reduction]))))
+    rownames(combi) <- rownames(ICA_ratio)
+    colnames(combi) <- unique(values$Annotation[,input$choose_annotation_column_for_reduction])
     
     for(i in names(values$annotation_for_output[[input$choose_annotation_column_for_reduction]])){
       
       ICs = values$annotation_for_output[[input$choose_annotation_column_for_reduction]][[i]]
       
       if(length(ICs) > 1){
-        type_signal = rowSums(ICA_2.5pc_clean_ratio[,ICs])
+        IC_combi <- as.data.frame(ICA_ratio[,ICs])
+        sum_IC <- rowSums(IC_combi)
+        combi[,i] <- sum_IC
         expression_signal = rowMeans(values$data@reductions$ica@feature.loadings[,ICs])
       } else {
-        type_signal = ICA_2.5pc_clean_ratio[,ICs]
+        type_signal = as.data.frame(ICA_ratio[,ICs])
+        sum_IC <- rowSums(IC_combi)
+        combi[,i] <- sum_IC
         expression_signal = values$data@reductions$ica@feature.loadings[,ICs]
       }
       
-      table = cbind(table,type_signal)
+      table = cbind(table,combi[,i])
       table_genes = cbind(table_genes,expression_signal)
       
       

@@ -6,6 +6,7 @@ check_visual_tab = reactiveValues(slider_visual_spatial_range_ui_check = F,
                                   select_color_visualisation_projection_ui_check = F,
                                   Scatter_pie_metadata_select_ui_check = F,
                                   Scatter_pie_cell_type_ui_check = F,
+                                  Scatter_pie_other_type_ui_check = F,
                                   Plot_display_type_choice_ui_check = F
 )
 
@@ -180,8 +181,8 @@ observeEvent(input$Plot_analysis_display_type,{
         selector = "#plot_type_display_ui_type",
         ui = div(id = "Scatter_pie_values_selected_ui", selectInput("Scatter_pie_values_selected",
                                                                   "Values for Scatterpie",
-                                                                  c("IC","Metadata"),
-                                                                  selected = "IC")
+                                                                  c("Metadata", names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","tsne"))])
+                                                                  )
         )
       )
       
@@ -229,9 +230,13 @@ observeEvent(input$Plot_display_type,{
                       choices = if(input$Plot_display_type == "ica"){colnames(values$data@reductions$ica@cell.embeddings)} else if (input$Plot_display_type == "gene"){rownames(GetAssay(values$data, assay = values$data@active.assay))} else if (input$Plot_display_type == "metadata"){colnames(values$data@meta.data)} else if (input$Plot_display_type %in% names(values$data@misc$reduction_names)){values$data@misc$reduction_names[[input$Plot_display_type]]}
                       )
   }
+  
+  
 })
 
-
+#####-----------------------------------------------------------------------#####
+##### what to display when dimentional reduction is selected
+#####-----------------------------------------------------------------------#####
 
 observeEvent(input$what_to_display_UMAP_choice,{
   req(input$what_to_display_UMAP_choice)
@@ -297,11 +302,15 @@ observeEvent(input$what_to_display_UMAP_choice,{
   
 })
 
+#####-----------------------------------------------------------------------#####
+##### Scatter pie values options
+#####-----------------------------------------------------------------------#####
 
 observeEvent(input$Scatter_pie_values_selected,{
-  if(input$Scatter_pie_values_selected == "IC"){
+  if(input$Scatter_pie_values_selected == "ica"){
     
     shinyjs::hide(id = "Scatter_pie_metadata_select_ui")
+    shinyjs::hide(id = "Scatter_pie_other_type_ui")
     
     if(!(check_visual_tab$Scatter_pie_cell_type_ui_check)){
       
@@ -323,11 +332,13 @@ observeEvent(input$Scatter_pie_values_selected,{
     } else {
       
       shinyjs::show(id = "Scatter_pie_cell_type_ui")
+      
     }
     
   } else if (input$Scatter_pie_values_selected == "Metadata") {
     
     shinyjs::hide(id = "Scatter_pie_cell_type_ui")
+    shinyjs::hide(id = "Scatter_pie_other_type_ui")
     
     if(!(check_visual_tab$Scatter_pie_metadata_select_ui_check)){
       
@@ -344,7 +355,34 @@ observeEvent(input$Scatter_pie_values_selected,{
       check_visual_tab$Scatter_pie_metadata_select_ui_check = TRUE
       
     } else {
+      
       shinyjs::show(id = "Scatter_pie_metadata_select_ui")
+      
+    }
+    
+  } else {
+    
+    shinyjs::hide(id = "Scatter_pie_cell_type_ui")
+    shinyjs::hide(id = "Scatter_pie_metadata_select_ui")
+    
+    if(!(check_visual_tab$Scatter_pie_other_type_ui_check)){
+      
+      insertUI(
+        selector = "#plot_type_display_ui_type",
+        ui = div(id = "Scatter_pie_other_type_ui",
+                 selectizeInput("Scatter_pie_other_type", label = paste0("choose ",input$Scatter_pie_values_selected),
+                                choices = values$data@misc$reduction_names[[input$Scatter_pie_values_selected]],
+                                selected = NULL, multiple = TRUE, options = NULL)
+                 
+        )
+      )
+      
+      check_visual_tab$Scatter_pie_other_type_ui_check = TRUE
+      
+    } else {
+      
+      shinyjs::show(id = "Scatter_pie_other_type_ui")
+      
     }
     
   }
@@ -353,8 +391,7 @@ observeEvent(input$Scatter_pie_values_selected,{
 output[["start_display_UI"]] <- renderUI({
   tagList(
     actionButton("start_display_UMAP", "Display UMAP"),
-    actionButton("start_display_Spatial", "Display Spatial"),
-    actionButton("start_display", "Display Both")
+    actionButton("start_display_Spatial", "Display Spatial")
   )
 })
 

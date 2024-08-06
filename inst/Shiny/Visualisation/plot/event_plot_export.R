@@ -35,19 +35,29 @@ observeEvent(input[["plot_export"]], {
   ## ... selection projection consists of 2 dimensions
   
   if (input$Plot_analysis_display_type == "Dimentional reduction"){
-    plot = current_plot_umap()
-  } else if (input$Plot_analysis_display_type == "Dimentional reduction" & input$Visualisation_selected_dimred_to_display == "tsne") {
-    plot = current_plot_tSNE()
-  } else if (input$Plot_analysis_display_type == "Density") {
-    req(input$Plot_display_type_choice)
-    if(input$Spatial_use_ggplot){
-      #plots$density = current_plot_density()
-    } else {
-      plot = current_plot_density()
+    req(input$Visualisation_selected_dimred_to_display)
+    if (values$data@reductions[[input$Visualisation_selected_dimred_to_display]]@key == "umap_"){
+      plot = current_plot_umap()
+    } else if (values$data@reductions[[input$Visualisation_selected_dimred_to_display]]@key == "tsne_") {
+      plot = current_plot_tSNE()
     }
-  } else if (input$Plot_analysis_display_type == "Scatter pie") {
-    req(values$data)
-    plot = current_plot_scatter_pie()
+  }
+  
+  if (input$Plot_analysis_display_type == "Density") {
+    req(input$Plot_display_type_choice)
+    if(input$interactive_display_visualisation_UMAP){
+      plot = current_plot_density()
+    } else {
+      plot = NULL
+    }
+  }
+  
+  if (input$Plot_analysis_display_type == "Scatter pie") {
+    if(input$interactive_display_visualisation_UMAP){
+      plot = current_plot_scatter_pie()
+    } else {
+      plot = NULL
+    }
   }
   
   ## save plot
