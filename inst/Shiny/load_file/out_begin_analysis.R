@@ -13,10 +13,12 @@ values <- reactiveValues(data = NULL, IC_names = NULL, Stat = NULL, Annotation =
                          cropped_image = NULL, marker_gene = NULL, integration_folders = NULL, distances = NULL)
 
 Launch_analysis <- reactive({
+
   if (length(grep('.RDS',toupper(input$input_file$datapath))) != 0) {
-    
+
     data <- readRDS(input$input_file$datapath)
     
+
     if(is.null(data@misc$GeneAndStat$kurtosis_value)){
       values$IC_names = names(data@misc$GeneAndStat$Kurtosis_ICs)[data@misc$GeneAndStat$Kurtosis_ICs > 3]
     } else {
@@ -31,7 +33,7 @@ Launch_analysis <- reactive({
       colnames(data@misc$annotation) = c('Use','Type','Annotation')
       data@misc$annotation[,'Use'] = TRUE
     }
-    
+
     data@misc$annotation = as.matrix(data@misc$annotation)
     
     return(data)
@@ -54,6 +56,13 @@ observeEvent(input$input_file, {
   values$HD_image_2 = NULL
   
   values$data = Launch_analysis()
+
+  updateSelectizeInput(
+    session = getDefaultReactiveDomain(),
+    "Plot_image_spatial",
+    selected = images_names()[1],
+    choices = images_names()
+  )
   
   if(!is.null(values$data@misc$distances)){
     values$distances = values$data@misc$distances
@@ -68,7 +77,7 @@ observeEvent(input$input_file, {
     } else {
       values$marker_gene = NULL
     }
-    
+
     values$Stat = values$data@misc[["GeneAndStat"]]
     
     updateSelectizeInput(session, "Ic_list", label = "list of IC",
@@ -82,7 +91,7 @@ observeEvent(input$input_file, {
     if('image' %in% names(attributes(values$data@images[[1]]))){
       values$low_image = c(raster2uri(raster::as.raster(values$data@images[[1]]@image)))
     }
-    
+
   } else {
     shinyalert("Wrong format", "requires .RDS.", type = "error")
   }
@@ -126,26 +135,25 @@ images_names <- reactive({
   }
 })
 
-observe({
-  updateSelectizeInput(
-    session = getDefaultReactiveDomain(),
-    "Plot_image_spatial",
-    selected = images_names()[1],
-    choices = images_names()
-    )
-})
-
 observeEvent(input$Plot_image_spatial, {
   req(values$data)
   values$low_image = list()
+
   for(image in input$Plot_image_spatial){
     req(values$data@images[[image]])
+
     if("image" %in% slotNames(values$data@images[[image]])){
+
       values$low_image = append(values$low_image,raster2uri(raster::as.raster(values$data@images[[image]]@image)))
     } else {
+
       values$low_image = append(values$low_image,NULL)
     }
   }
   
-  names(values$low_image) = input$Plot_image_spatial
+  if(!is.null(values$low_image)){
+    names(values$low_image) = input$Plot_image_spatial
+
+  }
+
 })

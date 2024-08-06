@@ -101,6 +101,13 @@ observeEvent(input$start_integration_button, {
           values$low_image = raster2uri(raster::as.raster(values$data@images[[1]]@image))
         }
         
+        updateSelectizeInput(
+          session = getDefaultReactiveDomain(),
+          "Plot_image_spatial",
+          selected = images_names()[1],
+          choices = images_names()
+        )
+        
         incProgress(0.4, detail = "Done")
       
       })

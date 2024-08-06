@@ -16,8 +16,10 @@ TissueCoordinates <- reactive({
         c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$lowres
       }
     } else {
-      c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$hires
-      c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$hires
+      if(class(values$data@images[[image]])[1] == "VisiumV2" | class(values$data@images[[image]])[1] == "VisiumV1"){
+        c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$hires
+        c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$hires
+      }
     }
     
     if(input$spatial_mirror_X){
