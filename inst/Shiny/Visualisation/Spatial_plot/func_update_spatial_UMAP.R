@@ -295,8 +295,6 @@ current_plot_spatial <- reactive({
         coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],values$data@meta.data[rownames(coordinates[[sample]]), "seurat_clusters"]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
         names(coordinates) = input$Plot_image_spatial
         
-        View(coordinates)
-        
         for(sample in input$Plot_image_spatial){
           
           fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +

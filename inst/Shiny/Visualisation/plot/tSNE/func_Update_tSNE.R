@@ -74,7 +74,6 @@ current_plot_tSNE <- reactive({
   
   if (input$Plot_analysis_type == "Dimentional reduction"){
     if (input$Plot_display_type == "seurat_clusters"){
-      print("yes")
       
       ################# utiliser la fonction , split = de plotly et pas une boucle
       for (i in as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))[order(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]]))))]){

@@ -162,8 +162,6 @@ current_plot_spatial_density <- reactive({
       
   output = subplot(out, nrows = ceiling(length(input$Plot_image_spatial)/3))
 
-  
-  print(output)
   return(output)
 })
 

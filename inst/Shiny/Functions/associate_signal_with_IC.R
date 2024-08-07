@@ -2,7 +2,6 @@ associate_signal_with_IC <- function(){
   
     
   values$annotation_for_output = list()
-  View(colnames(values$Annotation))
 
   for(i in colnames(values$Annotation)){
     values$annotation_for_output[[i]] = list()
