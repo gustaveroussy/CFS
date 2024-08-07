@@ -19,7 +19,7 @@ current_plot_spatial <- reactive({
       TissueCoordinates = TissueCoordinates()[[sample]]
       meta.data = values$data@meta.data[(rownames(values$data@meta.data) %in% rownames(TissueCoordinates)),]
       cell.embeddings <- values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),]
-      annotation = values$data@misc$annotation
+      annotation = values$Annotation
       
       # keep cells based on UMAP
       
@@ -36,7 +36,7 @@ current_plot_spatial <- reactive({
                      source = "C"
       )
       
-      if (input$Spatial_display_image == TRUE){
+      if (input$Spatial_display_image){
         if (!is.null(values$HD_image)) {
           fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
         } else {
@@ -56,6 +56,8 @@ current_plot_spatial <- reactive({
               palette = c(palette,palette)
             }
             
+            color_n = 1
+            
             ##### clusters
             for (i in as.numeric(as.vector(unique(meta.data[["seurat_clusters"]])))[order(as.numeric(as.vector(unique(meta.data[["seurat_clusters"]]))))]){
               if(length(which(meta.data[["seurat_clusters"]]==i)) == 1){
@@ -66,6 +68,7 @@ current_plot_spatial <- reactive({
               }
               
               list_cells_ICs = c()
+              
               for(k in 1:length(rownames(table))){
                 if(input$full_annotation_spatial == "IC" | input$full_annotation_spatial == "Full annotation" | input$full_annotation_spatial == "Mean IC" | input$full_annotation_spatial == "Mean full annotation"){
                   if(input$full_annotation_spatial == "IC" | input$full_annotation_spatial == "Full annotation"){
@@ -112,7 +115,7 @@ current_plot_spatial <- reactive({
                   y = ~y,
                   name = i,
                   marker = list(
-                    color = palette[i+1],
+                    color = palette[color_n],
                     size = input$Plot_scatter_size_spatial
                   ),
                   showlegend = T,
@@ -122,6 +125,9 @@ current_plot_spatial <- reactive({
                                          "%{text}",
                                          "<extra></extra>")
                 )
+              
+              color_n = color_n + 1
+              
             }
           }  else if (typeof(meta.data[[input$what_to_display_UMAP_choice]]) == "double" | grepl('nCount_|nFeature_|percent_', input$what_to_display_UMAP_choice)){
               req(input$select_color_visualisation_projection)
