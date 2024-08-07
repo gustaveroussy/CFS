@@ -25,11 +25,11 @@ observeEvent(input$Plot_image_spatial, {
       
     }
   }
-  
-  if(values$low_image != list() & !is.null(input$Plot_image_spatial)){
-    
+
+  if(length(values$low_image) > 0){
+
     names(values$low_image) = input$Plot_image_spatial
-    
+
   }
   
 })

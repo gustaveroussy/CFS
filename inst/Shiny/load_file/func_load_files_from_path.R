@@ -27,7 +27,6 @@ load_file_from_path <- function(filepath = NULL){
         values$IC_names = names(values$data@misc$GeneAndStat$Kurtosis_ICs)[values$data@misc$GeneAndStat$Kurtosis_ICs > values$data@misc$GeneAndStat$kurtosis_value]
       }
       
-      
       if (is.null(values$data@misc$annotation)){
         row_names = values$IC_names
         values$data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
@@ -45,13 +44,13 @@ load_file_from_path <- function(filepath = NULL){
         selected = images_names()[1],
         choices = images_names()
       )
-      
+
       if(!is.null(values$data@misc$distances)){
         values$distances = values$data@misc$distances
       } else {
         values$distances = list()
       }
-      
+
       if (!is.null(values$data@misc$markers)){
         values$marker_gene = values$data@misc$markers
       } else {
@@ -70,12 +69,11 @@ load_file_from_path <- function(filepath = NULL){
       associate_signal_with_IC()
       
       incProgress(0.2, detail = "Reading image")
-      
+
       if('image' %in% names(attributes(values$data@images[[1]]))){
         values$low_image = c(raster2uri(raster::as.raster(values$data@images[[1]]@image)))
       }
-    
-    
+
     })
     
   } else {
