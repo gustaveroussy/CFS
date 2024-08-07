@@ -1,8 +1,27 @@
 ##----------------------------------------------------------------------------##
 ## Tab: Load data
 ##
-## Select local file
+## Select full res image file
 ##----------------------------------------------------------------------------##
+
+##----------------------------------------------------------------------------##
+## treat the input from import file
+##----------------------------------------------------------------------------##
+
+observeEvent(input$input_image_2, {
+  values$HD_image_2 = NULL
+  if (grepl('.*JPG$',toupper(input$input_image_2$datapath))) {
+    values$HD_image_2 <- readJPEG(input$input_image_2$datapath)
+  } else if (grepl('.*PNG$',toupper(input$input_image_2$datapath))){
+    values$HD_image_2 <- readPNG(input$input_image_2$datapath)
+  } else if (grepl('.*TIF$',toupper(input$input_image_2$datapath))){
+    values$HD_image_2 = readTIFF(input$input_image_2$datapath)
+  } else if (grepl('.*TIFF$',toupper(input$input_image_2$datapath))){
+    values$HD_image_2 = readTIFF(input$input_image_2$datapath)
+  } else {
+    shinyalert("Oops!", "Wrong format (expecting .png, .jpg or .tif)", type = "error")
+  }
+})
 
 ##----------------------------------------------------------------------------##
 ## treat the input from local file
@@ -21,13 +40,13 @@ observeEvent(input$input_image_2_local, {
       
       incProgress(0.2, detail = "Loading image")
       
-      if (grepl('.[JPG]$',toupper(path$datapath))) {
+      if (grepl('.*JPG$',toupper(path$datapath))) {
         values$HD_image_2 <- readJPEG(path$datapath)
-      } else if (grepl('.[PNG]$',toupper(path$datapath))){
+      } else if (grepl('.*PNG$',toupper(path$datapath))){
         values$HD_image_2 <- readPNG(path$datapath)
-      } else if (grepl('.[TIF]$',toupper(path$datapath))){
+      } else if (grepl('.*TIF$',toupper(path$datapath))){
         values$HD_image_2 = readTIFF(path$datapath)
-      } else if (grepl('.[TIFF]$',toupper(path$datapath))){
+      } else if (grepl('.*TIFF$',toupper(path$datapath))){
         values$HD_image_2 = readTIFF(path$datapath)
       } else {
         shinyalert("Oops!", "Wrong format (expecting .png, .jpg or .tif)", type = "error")

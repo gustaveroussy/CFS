@@ -1,13 +1,6 @@
 ##----------------------------------------------------------------------------##
-## UI element that either shows a plot or a text message if data is not
-## available.
+## event update the table when edited
 ##----------------------------------------------------------------------------##
-# make Annotation table
-output[["Table_or_message"]] <- renderDT({
-  DT = values$Annotation
-  datatable(DT, editable = list(target = 'cell', disable = list(columns = c(0))), options = list(pageLength = 100), class = 'cell-border stripe', colnames = c('IC' = 1))
-})
-
 observeEvent(input$Table_or_message_cell_edit, {
   clmn <- input$Table_or_message_cell_edit$col
   rown <- input$Table_or_message_cell_edit$row

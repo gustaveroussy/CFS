@@ -44,9 +44,8 @@ output[["ICA_table_UI"]] <- renderUI({
 })
 
 ##----------------------------------------------------------------------------##
-## Alternative text message if data is missing.
+## Import the annotation table
 ##----------------------------------------------------------------------------##
-#output[["groups_tree_text"]] <- renderText({ "Data not available." })
 
 observeEvent(input$import_annotation_table, {
   
@@ -56,6 +55,10 @@ observeEvent(input$import_annotation_table, {
   associate_signal_with_IC()
   
 })
+
+##----------------------------------------------------------------------------##
+## add an annotation column
+##----------------------------------------------------------------------------##
 
 observeEvent(input$add_column_annotation_table, {
 

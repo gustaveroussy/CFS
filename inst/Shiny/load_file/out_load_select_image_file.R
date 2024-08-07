@@ -1,8 +1,27 @@
 ##----------------------------------------------------------------------------##
 ## Tab: Load data
 ##
-## Select local file
+## Select high res image file
 ##----------------------------------------------------------------------------##
+
+##----------------------------------------------------------------------------##
+## treat the input from import file
+##----------------------------------------------------------------------------##
+
+observeEvent(input$input_image, {
+  values$HD_image = NULL
+  if (grepl('.*JPG$',toupper(input$input_image$datapath))) {
+    values$HD_image <- raster2uri(readJPEG(input$input_image$datapath))
+  } else if (grepl('.*PNG$',toupper(input$input_image$datapath))){
+    values$HD_image <- raster2uri(readPNG(input$input_image$datapath))
+  } else if (grepl('.*TIF$',toupper(input$input_image$datapath))){
+    values$HD_image = raster2uri(readTIFF(input$input_image$datapath))
+  } else if (grepl('.*TIFF$',toupper(input$input_image$datapath))){
+    values$HD_image = raster2uri(readTIFF(input$input_image$datapath))
+  } else {
+    shinyalert("Oops!", "Wrong format (expecting .png, .jpg or .tif)", type = "error")
+  }
+})
 
 ##----------------------------------------------------------------------------##
 ## treat the input from local file
