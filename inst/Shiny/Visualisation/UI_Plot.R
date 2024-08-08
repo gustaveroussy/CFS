@@ -81,6 +81,9 @@ output[["Plot_UI"]] <- renderUI({
                collapsible = TRUE,
                collapsed = TRUE,
                uiOutput("Plot_type_display_UI"),
+               uiOutput("Plot_type_display_UI_1"),
+               uiOutput("Plot_type_display_UI_2"),
+               uiOutput("Plot_type_display_UI_3"),
                uiOutput("start_display_UI")
            )
     ),
