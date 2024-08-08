@@ -4,9 +4,10 @@
 
 output[["preprocessing_invert_IC_UI"]] <- renderUI({
   tagList(
-    selectizeInput("preprocessing_select_inver_IC", label = "IC to invert",
-                   choices = colnames(values$data@reductions[["ica"]]@cell.embeddings), multiple = FALSE,
-                   options = NULL),
+    selectInput("preprocessing_select_inver_IC",
+                   label = "IC to invert",
+                   choices = colnames(values$data@reductions[["ica"]]@cell.embeddings)
+                ),
     actionButton("preprocessing_invert_IC_action_button", label = "Invert")
     )
 })
