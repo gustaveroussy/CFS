@@ -129,7 +129,7 @@ current_plot_spatial <- reactive({
               color_n = color_n + 1
               
             }
-          }  else if (typeof(meta.data[[input$what_to_display_UMAP_choice]]) == "double" | grepl('nCount_|nFeature_|percent_', input$what_to_display_UMAP_choice)){
+          } else if (typeof(meta.data[[input$what_to_display_UMAP_choice]]) == "double" | grepl('nCount_|nFeature_|percent_', input$what_to_display_UMAP_choice)){
               req(input$select_color_visualisation_projection)
               req(input$slider_visual_spatial_range)
               fig <- fig %>%
@@ -178,7 +178,7 @@ current_plot_spatial <- reactive({
                     text = meta.data[[input$what_to_display_UMAP_choice]][which(meta.data[[input$what_to_display_UMAP_choice]]==i)],
                     customdata = rownames(meta.data)[which(meta.data[[input$what_to_display_UMAP_choice]]==i)],
                     hovertemplate = paste("Cell : %{customdata}<br>",
-                                          "Ploïdie : %{text}<br>",
+                                          "Value : %{text}<br>",
                                           "<extra></extra>")
                   )
                 c = c + 1
