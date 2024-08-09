@@ -15,8 +15,6 @@ IC_spatial_output_react <- reactive({
   req(values$data@reductions$ica)
   req(input$IC_choice)
   
-  data <- values$data
-  
   IC_C = input[["IC_choice"]]
   
   out = list()
@@ -40,16 +38,16 @@ IC_spatial_output_react <- reactive({
       #prepare trace
       fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
                                x = TissueCoordinates()[[sample]][,"imagecol"], y = TissueCoordinates()[[sample]][,"imagerow"],
-                               marker = list(color = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])],
+                               marker = list(color = values$data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])],
                                              colorscale = colorscale_IC_spatial(),
                                              cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
                                              size = input$Plot_spatial_IC_size,
                                              showscale = TRUE,
-                                             opacity = if(input$transparency_IC_spatial_choice == 1){input$transparency_IC_spatial_range}else{alpha_color_scale(values = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])], slider_1 = input$slider_IC_spatial_range[1], slider_2 =input$slider_IC_spatial_range[2], alpha = input$transparency_IC_spatial_range)},
+                                             opacity = if(input$transparency_IC_spatial_choice == 1){input$transparency_IC_spatial_range}else{alpha_color_scale(values = values$data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])], slider_1 = input$slider_IC_spatial_range[1], slider_2 =input$slider_IC_spatial_range[2], alpha = input$transparency_IC_spatial_range)},
                                              reversescale=input$invert_color_ICA_projection
                                              ),
-                               text = data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])],
-                               customdata = names(data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])]),
+                               text = values$data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])],
+                               customdata = names(values$data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])]),
                                hovertemplate = paste0("Cell : %{customdata}<br>",
                                                       "Expression: %{text}",
                                                       "<extra></extra>")
@@ -73,27 +71,37 @@ IC_spatial_output_react <- reactive({
   } else {
     list = list()
     
-    coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(data,n))})
-    names(coordinates) = input$Plot_image_spatial
+    img = lapply(values$data@images,function(n){if("image" %in% names(n)){return(n@image)}})
     
-    img = lapply(data@images,function(n){return(n@image)})
-    
-    coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],data@reductions$ica@cell.embeddings[rownames(coordinates[[sample]]), IC_C]); colnames(coordinates[[sample]]) = c("imagerow","imagecol","value");return(coordinates[[sample]])})
+    coordinates = list()
+    coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@reductions$ica@cell.embeddings[rownames(coordinates[[sample]]), IC_C]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
     names(coordinates) = input$Plot_image_spatial
     
     for(sample in input$Plot_image_spatial){
       
-      fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
-        background_image(img[[sample]]) +
-        geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_spatial_IC_size) +
-        ggplot2::scale_color_gradientn(name = IC_C,
-                                       colours = viridis_pal(option = if(input$select_color_IC_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_IC_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_IC_spatial_range[1], input$slider_IC_spatial_range[2]), oob=squish) +
-        guides(size = "none") +
-        theme_void() +
-        xlim(25,ncol(img[[sample]])-25) +
-        ylim(-nrow(img[[sample]])+25,-25)
+      if(!is.null(img[[sample]])){
         
-      
+        fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
+          background_image(img[[sample]]) +
+          geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_spatial_IC_size) +
+          ggplot2::scale_color_gradientn(name = IC_C,
+                                         colours = viridis_pal(option = if(input$select_color_IC_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_IC_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_IC_spatial_range[1], input$slider_IC_spatial_range[2]), oob=squish) +
+          guides(size = "none") +
+          theme_void() +
+          xlim(25,ncol(img[[sample]])-25) +
+          ylim(-nrow(img[[sample]])+25,-25)
+        
+      } else {
+        
+        fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
+          geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_spatial_IC_size) +
+          ggplot2::scale_color_gradientn(name = IC_C,
+                                         colours = viridis_pal(option = if(input$select_color_IC_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_IC_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_IC_spatial_range[1], input$slider_IC_spatial_range[2]), oob=squish) +
+          guides(size = "none") +
+          theme_void()
+        
+      }
+        
       list[[sample]] = fig
     }
     

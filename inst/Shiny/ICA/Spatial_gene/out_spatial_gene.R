@@ -15,11 +15,9 @@ spatial_gene_react <- reactive({
   req(values$data@misc$GeneAndStat)
   req(input$gene_projection_gene_choice)
   
-  data <- values$data
-  
   IC_C = input[["IC_choice"]]
 
-  contrib_byIC <- data@misc$GeneAndStat$Contrib_gene
+  contrib_byIC <- values$data@misc$GeneAndStat$Contrib_gene
   contrib_byIC_pos <- lapply(contrib_byIC, function(obj) obj[obj$Sig >0,])
     
   plotList <- list()
@@ -50,14 +48,14 @@ spatial_gene_react <- reactive({
       }
       
       plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[[input$Plot_image_spatial[[1]]]][,"imagecol"], y = TissueCoordinates()[[input$Plot_image_spatial[[1]]]][,"imagerow"],
-                                                   marker = list(color = data@assays$SCT@data[x,][rownames(TissueCoordinates()[[input$Plot_image_spatial[[1]]]])],
+                                                   marker = list(color = values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[input$Plot_image_spatial[[1]]]])],
                                                                  size = input$Plot_spatial_gene_size,
                                                                  colorscale = colorscale_gene_spatial(),
                                                                  reversescale=input$invert_color_gene_projection),
                                                    opacity = input$transparency_gene_projection,
                                                    type = 'scatter', mode = "markers",
-                                                   text = data@assays$SCT@data[x,][rownames(TissueCoordinates()[[input$Plot_image_spatial[[1]]]])],
-                                                   customdata = names(data@assays$SCT@data[x,][rownames(TissueCoordinates()[[input$Plot_image_spatial[[1]]]])]),
+                                                   text = values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[input$Plot_image_spatial[[1]]]])],
+                                                   customdata = names(values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[input$Plot_image_spatial[[1]]]])]),
                                                    hovertemplate = paste0("Cell : %{customdata}<br>",
                                                                           "Expression: %{text}<br>",
                                                                           "Associated IC:<br>",
@@ -73,36 +71,54 @@ spatial_gene_react <- reactive({
     return(subplot(plotList, nrows = ceiling(length(input$gene_projection_gene_choice)/3)) %>% layout(showlegend = FALSE))
   } else {
     
-    coordinates = lapply(input$Plot_image_spatial,function(n){return(GetTissueCoordinates(data,n))})
-    names(coordinates) = input$Plot_image_spatial
-    
-    img = lapply(data@images,function(n){return(n@image)})
+    img = lapply(values$data@images,function(n){if("image" %in% names(n)){return(n@image)}})
     img = img[[input$Plot_image_spatial[1]]]
     
+    
+    coordinates = list()
+    
     if(length(input$gene_projection_gene_choice) > 1){
-      coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],t(data@assays$SCT@data[input$gene_projection_gene_choice, rownames(coordinates[[sample]])]));return(coordinates[[sample]])})
+      
+      coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],t(values$data@assays$SCT@data[input$gene_projection_gene_choice,rownames(coordinates[[sample]])])); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");return(coordinates[[sample]])})
+    
     } else {
-      coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = cbind(coordinates[[sample]],data@assays$SCT@data[input$gene_projection_gene_choice, rownames(coordinates[[sample]])]);colnames(coordinates[[sample]]) = c("imagerow", "imagecol", input$gene_projection_gene_choice);return(coordinates[[sample]])})
+      
+      coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@assays$SCT@data[input$gene_projection_gene_choice, rownames(coordinates[[sample]])]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c(input$gene_projection_gene_choice);return(coordinates[[sample]])})
+      
     }
     
     names(coordinates) = input$Plot_image_spatial
     
     coordinates = coordinates[[input$Plot_image_spatial[1]]]
     
+    plotList <- list()
+    
     for(genes in input$gene_projection_gene_choice){
       
       gene = enquo(genes)
       
-      fig = ggplot(coordinates, aes(imagecol, -imagerow)) +
-        background_image(img) +
-        geom_point(data = coordinates, aes(color=coordinates[,!!gene]), size=input$Plot_spatial_gene_size) +
-        ggplot2::scale_color_gradientn(name = genes,
-                                       colours = viridis_pal(option = if(input$select_color_gene_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_gene_projection}else{"D"})(ncol(values$data)), oob=squish) +
-        guides(size = "none") +
-        theme_void() +
-        xlim(25,ncol(img)-25) +
-        ylim(-nrow(img)+25,-25)
-      
+      if(!is.null(img[[input$Plot_image_spatial[1]]])){
+        
+        fig = ggplot(coordinates, aes(imagecol, -imagerow)) +
+          background_image(img) +
+          geom_point(data = coordinates, aes(color=coordinates[,!!gene]), size=input$Plot_spatial_gene_size) +
+          ggplot2::scale_color_gradientn(name = genes,
+                                         colours = viridis_pal(option = if(input$select_color_gene_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_gene_projection}else{"D"})(ncol(values$data)), oob=squish) +
+          guides(size = "none") +
+          theme_void() +
+          xlim(25,ncol(img)-25) +
+          ylim(-nrow(img)+25,-25)
+        
+      } else {
+        
+        fig = ggplot(coordinates, aes(imagecol, -imagerow)) +
+          geom_point(data = coordinates, aes(color=coordinates[,!!gene]), size=input$Plot_spatial_gene_size) +
+          ggplot2::scale_color_gradientn(name = genes,
+                                         colours = viridis_pal(option = if(input$select_color_gene_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_gene_projection}else{"D"})(ncol(values$data)), oob=squish) +
+          guides(size = "none") +
+          theme_void()
+        
+      }
       
       plotList[[genes]] = fig
     }
