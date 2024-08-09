@@ -20,7 +20,7 @@ observeEvent(input$start_creating_reduction,{
     
     table = matrix(nrow = nrow(ICA_ratio), ncol = 0)
     rownames(table) = rownames(ICA_ratio)
-    table_genes = matrix(nrow = nrow(GetAssayData(values$data)), ncol = 0)
+    table_genes = matrix(nrow = nrow(values$data@reductions$ica@feature.loadings), ncol = 0)
     rownames(table_genes) = rownames(nrow(GetAssayData(values$data)))
     
     
@@ -39,7 +39,7 @@ observeEvent(input$start_creating_reduction,{
         combi[,i] <- sum_IC
         expression_signal = rowMeans(values$data@reductions$ica@feature.loadings[,ICs])
       } else {
-        type_signal = as.data.frame(ICA_ratio[,ICs])
+        IC_combi = as.data.frame(ICA_ratio[,ICs])
         sum_IC <- rowSums(IC_combi)
         combi[,i] <- sum_IC
         expression_signal = values$data@reductions$ica@feature.loadings[,ICs]

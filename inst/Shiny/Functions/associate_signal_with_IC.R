@@ -1,6 +1,5 @@
 associate_signal_with_IC <- function(){
   
-    
   values$annotation_for_output = list()
 
   for(i in colnames(values$Annotation)){
