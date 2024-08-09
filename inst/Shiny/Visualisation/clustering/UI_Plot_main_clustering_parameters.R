@@ -5,14 +5,24 @@
 output[["Plot_main_parameters_cluster_UI"]] <- renderUI({
   req(values$annotation_for_output)
   tagList(
+    selectInput("Plot_cluster_reduction_to_use", label = "Select reduction to use", 
+                choices = names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","tsne"))],
+                selected = "ica")
+  )
+})
+
+output[["start_cluster_UI"]] <- renderUI({
+  tagList(
+    if(input$Plot_cluster_reduction_to_use == "ica"){
     selectizeInput("Plot_cluster_type_UMAP_choice", label = "Choose cell type to cluster",
                    choices = unique(names(values$annotation_for_output[["Type"]])),
                    selected = NULL,
                    multiple = TRUE,
-                   options = NULL),
-    selectizeInput("Plot_cluster_IC_choice", label = "Choose IC to cluster",
-                   choices = values$IC_names,
-                   selected = input$Ic_list,
+                   options = NULL)
+      },
+    selectizeInput("Plot_cluster_IC_choice", label = "Choose value to cluster",
+                   choices = if(input$Plot_cluster_reduction_to_use == "ica"){values$IC_names} else {values$data@misc$reduction_names[[input$Plot_cluster_reduction_to_use]]},
+                   selected = if(input$Plot_cluster_reduction_to_use == "ica"){input$Ic_list} else {NULL},
                    multiple = TRUE,
                    options = NULL),
     selectInput("select_algorithm_clusterisation", label = "Select algorithm", 
@@ -21,12 +31,7 @@ output[["Plot_main_parameters_cluster_UI"]] <- renderUI({
     numericInput("Clustering_resolution", "Clustering resolution", 1.2,
                  min = 0.1, max = 10, step = 0.1
     ),
-    textInput("cluster_named_by_user", "Clustering name", value = "clustering_1")
-  )
-})
-
-output[["start_cluster_UI"]] <- renderUI({
-  tagList(
+    textInput("cluster_named_by_user", "Clustering name", value = "clustering_1"),
     actionButton("Select_all_ICs_cluster", "Select all ICs"),
     actionButton("start_cluster_plot", "Start Cluster")
   )

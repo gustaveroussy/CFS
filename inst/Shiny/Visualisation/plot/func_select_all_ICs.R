@@ -11,5 +11,9 @@ observeEvent(input$Select_all_ICs_visualisation, {
 })
 
 observeEvent(input$Select_all_ICs_cluster, {
-  updateSelectizeInput(session,"Plot_cluster_IC_choice", selected = rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"])
+  if(input$Plot_cluster_reduction_to_use == "ica"){
+    updateSelectizeInput(session,"Plot_cluster_IC_choice", selected = rownames(values$Annotation)[values$Annotation[,"Use"] == "TRUE"])
+  } else {
+    updateSelectizeInput(session,"Plot_cluster_IC_choice", selected = values$data@misc$reduction_names[[input$Plot_cluster_reduction_to_use]])
+  }
 })
