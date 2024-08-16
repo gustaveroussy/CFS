@@ -50,5 +50,7 @@ ICASpatial=function(data=NULL,nics=100,maxit=600,method="icafast", kurtosis = 3,
   
   data@misc$GeneAndStat <- list(Kurtosis_ICs=kurt_cob,Contrib_gene=Contrib_gene,All_Contrib_Gene=list_all_gene, kurtosis_value = kurtosis)
   
+  gc()
+  
   return(data)
 }

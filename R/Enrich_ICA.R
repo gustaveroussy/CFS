@@ -60,5 +60,8 @@ Enrich_ICA=function(data=NULL, dbs=c("PanglaoDB_Augmented_2021",
       }
     }
   }
+  
+  gc()
+  
   return(data)
 }

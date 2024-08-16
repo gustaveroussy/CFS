@@ -23,5 +23,6 @@ PrepNormData=function(data=NULL,organism="Hs",variable_features=20000, min_cells
   else{stop("error either Hs or Mm")}
   #regress out nCount_spatial
   data<- SCTransform(data,assay = "Spatial",variable.features.n = variable_features,vars.to.regress="nCount_Spatial", return.only.var.genes = FALSE, min_cells = min_cells, conserve.memory = TRUE)
+  gc()
   return(data)        
 }
