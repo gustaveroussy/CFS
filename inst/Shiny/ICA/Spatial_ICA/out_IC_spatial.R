@@ -61,7 +61,7 @@ IC_spatial_output_react <- reactive({
       out[[n]] = fig
     }
     
-    if(length(out) > 1){
+    if(length(out) > 1){input$Plot_image_spatial
       output <- subplot(out, nrows = ceiling(length(TissueCoordinates())/3))
     } else {
       output <- out[[1]]
@@ -71,7 +71,7 @@ IC_spatial_output_react <- reactive({
   } else {
     list = list()
     
-    img = lapply(values$data@images,function(n){if("image" %in% names(n)){return(n@image)}})
+    img = lapply(values$data@images,function(n){if("image" %in% slotNames(n)){return(n@image)}})
     
     coordinates = list()
     coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@reductions$ica@cell.embeddings[rownames(coordinates[[sample]]), IC_C]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
