@@ -17,13 +17,10 @@ IC_spatial_output_react <- reactive({
   
   IC_C = input[["IC_choice"]]
   
-  n = 0
-  
   if(input$interactive_ICA_projection){
     out = list()
     
     for(sample in input$Plot_image_spatial){
-      n = n+1
       
       fig <- plot_ly(source = "E")
       
@@ -58,7 +55,7 @@ IC_spatial_output_react <- reactive({
                             showlegend = FALSE
       )
       
-      out[[n]] = fig
+      out[[sample]] = fig
     }
     
     if(length(out) > 1){
