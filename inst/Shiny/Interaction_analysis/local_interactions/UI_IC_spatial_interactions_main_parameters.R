@@ -6,6 +6,12 @@
 output[["plot_interactions_from_graph_main_parameters_UI"]] <- renderUI({
   req(values$data)
   tagList(
+    selectInput("select_interaction_1", label = "Interaction 1", 
+                choices = if(input$choose_distances_to_determine == "Genes") {rownames(GetAssayData(values$data))} else if(input$choose_distances_to_determine == "ica"){colnames(values$data@reductions$ica@cell.embeddings)}else{values$data@misc$reduction_names[[input$choose_distances_to_determine]]}
+                ),
+    selectInput("select_interaction_2", label = "Interaction 2", 
+                choices = if(input$choose_distances_to_determine_2 == "Genes") {rownames(GetAssayData(values$data))} else if(input$choose_distances_to_determine_2 == "ica"){colnames(values$data@reductions$ica@cell.embeddings)}else{values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]},
+                ),
     radioButtons("transparency_interactions_choice", label = "Alpha type",
                  choices = list("Constant" = 1, "Scaling" = 2), 
                  selected = 1),
@@ -15,9 +21,16 @@ output[["plot_interactions_from_graph_main_parameters_UI"]] <- renderUI({
     numericInput("plot_interactions_size", "Spot size", 4, min = 0, max = NA),
     selectInput("select_color_interactions", label = "Select color", 
                 choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
-                selected = "D")
+                selected = "D"),
+    actionButton("interaction_plot_start", "Start")
   )
 })
+
+##----------------------------------------------------------------------------##
+## update when clicking an edge
+##----------------------------------------------------------------------------##
+
+
 
 ##----------------------------------------------------------------------------##
 ## Text in info box.

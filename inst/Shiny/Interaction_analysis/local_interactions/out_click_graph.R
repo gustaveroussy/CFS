@@ -15,78 +15,49 @@ output[["plot_interactions_from_graph_or_message"]] <- renderUI({
   )
 })
 
-graph_click_interactions <- reactive({
-  return(plotly::event_data(c("plotly_click"), source = "S"))
-})
-
-
-current_plot_graph_interactions <- reactive({
-  table = graph_click_interactions()
-  
-  req(table)
-  
-  sample = input$choose_sample_for_distances
-  
+observeEvent(plotly::event_data(c("plotly_click"), source = "S"),{
+  table = plotly::event_data(c("plotly_click"), source = "S")
   
   ICs = str_split(table$customdata,"<br>") |> unlist() |> str_split(" <-> ")
   ICs = ICs[[1]]
   
+  print(ICs)
+  
+  updateSelectizeInput(session,"select_interaction_1", selected = ICs[1])
+  
+  updateSelectizeInput(session,"select_interaction_2", selected = ICs[2])
+})
+
+current_plot_graph_interactions <- eventReactive(input$interaction_plot_start, {
+  print("hello")
+  
+  sample = input$choose_sample_for_distances
   TissueCoordinates = TissueCoordinates()[[sample]]
   meta.data = values$data@meta.data[(rownames(values$data@meta.data) %in% rownames(TissueCoordinates)),]
-  
-  if (input$choose_distances_to_determine == "Genes") {
-    
-    table_sample = raster::t(GetAssayData(values$data))
-    
-  } else if(input$choose_distances_to_determine != "Genes"){
-    
-    table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
-    
-    if(input$use_positive_values_for_distances){
-      table_sample[table_sample < 0] = 0
-    }
-    
-    if(input$choose_distances_to_determine != "ica"){
-      colnames(table_sample) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]
-    }
-  }
-  
-  if (input$choose_distances_to_determine_2 == "Genes") {
-    
-    table_sample_2 = raster::t(GetAssayData(values$data))
-    
-  } else if(input$choose_distances_to_determine_2 != "Genes"){
-    
-    table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings
-    
-    if(input$choose_distances_to_determine_2 != "ica"){
-      colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]
-    }
-    
-    if(input$use_positive_values_for_distances){
-      table_sample_2[table_sample_2 < 0] = 0
-    }
-    
-  }
-  
+  print("hello2")
+  if (input$choose_distances_to_determine == "Genes") {table_sample_1 = raster::t(GetAssayData(values$data))} else if(input$choose_distances_to_determine != "Genes"){table_sample_1 = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings;if(input$use_positive_values_for_distances){table_sample_1[table_sample_1 < 0] = 0};if(input$choose_distances_to_determine != "ica"){colnames(table_sample_1) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]}}
+  if (input$choose_distances_to_determine_2 == "Genes") {table_sample_2 = raster::t(GetAssayData(values$data))} else if(input$choose_distances_to_determine_2 != "Genes"){table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings;if(input$use_positive_values_for_distances){table_sample_2[table_sample_2 < 0] = 0};if(input$choose_distances_to_determine_2 != "ica"){colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]}}
+
   if(length(values$data@images) > 1){
-    table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
+    table_sample_1 = table_sample_1[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample_1)),]
     table_sample_2 = table_sample_2[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample_2)),]
   }
-  
+  print("hello3")
   knn = knearneigh(GetTissueCoordinates(values$data, sample), k=6, longlat = NULL, use_kd_tree=TRUE)
   neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
   listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
-  
-  x = lee(table_sample[,ICs[1]], table_sample_2[,ICs[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"))
-  
+  print("hello5")
+  x = lee(table_sample_1[,input$select_interaction_1], table_sample_2[,input$select_interaction_2], listw, nrow(table_sample_1), zero.policy=attr(listw, "zero.policy"))
+  print("hello4")
   datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
                           "y" = as.vector(TissueCoordinates[,"imagerow"]),
                           "cell_name" = as.vector(rownames(meta.data)),
                           "local" = x$localL,
-                          "IC_1" = if (input$choose_distances_to_determine == "Genes"){values$data@assays$SCT@data[ICs[1],(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))]} else {table_sample[(rownames(table_sample) %in% rownames(TissueCoordinates)),ICs[1]]},
-                          "IC_2" = if (input$choose_distances_to_determine_2 == "Genes"){values$data@assays$SCT@data[ICs[2],(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))]} else {table_sample_2[(rownames(table_sample_2) %in% rownames(TissueCoordinates)),ICs[2]]}
+                          "value_1" = if (input$choose_distances_to_determine == "Genes"){values$data@assays$SCT@data[input$select_interaction_1,(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))]} else {table_sample_1[(rownames(table_sample_1) %in% rownames(TissueCoordinates)),input$select_interaction_1]},
+                          "value_2" = if (input$choose_distances_to_determine_2 == "Genes"){values$data@assays$SCT@data[input$select_interaction_2,(colnames(values$data@assays$SCT@data) %in% rownames(TissueCoordinates))]} else {table_sample_2[(rownames(table_sample_2) %in% rownames(TissueCoordinates)),input$select_interaction_2]}
   )
+  
+  print("hello6")
   
   if (!is.null(values$HD_image)) {
     image <- values$HD_image
@@ -96,27 +67,31 @@ current_plot_graph_interactions <- reactive({
     }
   }
   
+  print("hello7")
+  
   fig1 = plot_ly(type = "scatter", mode = "markers", source = "T")
   fig2 = plot_ly(type = "scatter", mode = "markers", source = "T")
   fig3 = plot_ly(type = "scatter", mode = "markers", source = "T")
-  
+
   fig1 <- fig1 %>% add_trace(type="image", source = image, hoverinfo = 'skip')
   fig2 <- fig2 %>% add_trace(type="image", source = image, hoverinfo = 'skip')
   fig3 <- fig3 %>% add_trace(type="image", source = image, hoverinfo = 'skip')
-
+  
+  print("hello8")
+  
   fig1 <- fig1 %>%
     add_trace(data = datatable,
               x = ~x,
               y = ~y,
               marker = list(
-                color = datatable$IC_1,
+                color = datatable$value_1,
                 colorscale = colorscale_interactions(),
                 size = input$plot_interactions_size,
-                opacity = if(input$transparency_interactions_choice == 1){input$transparency_interactions_range}else{alpha_color_scale(values = datatable$IC_1, slider_1 = min(datatable$IC_1), slider_2 =max(datatable$IC_1), alpha = input$transparency_interactions_range)}
+                opacity = if(input$transparency_interactions_choice == 1){input$transparency_interactions_range}else{alpha_color_scale(values = datatable$value_1, slider_1 = min(datatable$value_1), slider_2 =max(datatable$value_1), alpha = input$transparency_interactions_range)}
               ),
               showlegend = T,
               text = datatable$cell_name,
-              customdata = datatable$IC_1,
+              customdata = datatable$value_1,
               hovertemplate = if(input$choose_distances_to_determine != "Genes"){"Cell : %{text}<br>IC : %{customdata}<extra></extra>"} else if (input$choose_distances_to_determine == "Genes"){"Cell : %{text}<br>Gene : %{customdata}<extra></extra>"}
     ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                  yaxis = list(showgrid = FALSE, showticklabels=FALSE))
@@ -143,23 +118,27 @@ current_plot_graph_interactions <- reactive({
               x = ~x,
               y = ~y,
               marker = list(
-                color = datatable$IC_2,
+                color = datatable$value_2,
                 colorscale = colorscale_interactions(),
                 size = input$plot_interactions_size,
-                opacity = if(input$transparency_interactions_choice == 1){input$transparency_interactions_range}else{alpha_color_scale(values = datatable$IC_2, slider_1 = min(datatable$IC_2), slider_2 =max(datatable$IC_2), alpha = input$transparency_interactions_range)}
+                opacity = if(input$transparency_interactions_choice == 1){input$transparency_interactions_range}else{alpha_color_scale(values = datatable$value_2, slider_1 = min(datatable$value_2), slider_2 =max(datatable$value_2), alpha = input$transparency_interactions_range)}
               ),
               showlegend = T,
               text = datatable$cell_name,
-              customdata = datatable$IC_2,
+              customdata = datatable$value_2,
               hovertemplate = if(input$choose_distances_to_determine_2 != "Genes"){"Cell : %{text}<br>IC : %{customdata}<extra></extra>"} else if (input$choose_distances_to_determine_2 == "Genes"){"Cell : %{text}<br>Gene : %{customdata}<extra></extra>"}
     ) %>% layout(xaxis=list(showgrid = FALSE, showticklabels=FALSE),
                   yaxis = list(showgrid = FALSE, showticklabels=FALSE))
   
+  print("hello9")
+  
   fig <- subplot(list(fig1, fig2, fig3),
                  nrows = 1
                  ) %>% hide_legend()
-
-  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", ICs[1], "</i></b>"),
+  
+  print("hello10")
+  
+  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", input$select_interaction_1, "</i></b>"),
                                         x = 0.15,
                                         y = 0.2,
                                         yref = "paper",
@@ -168,8 +147,8 @@ current_plot_graph_interactions <- reactive({
                                         yanchor = "center",
                                         showarrow = FALSE,
                                         font = list(size = 34))
-  
-  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", paste0(ICs[1], " ", ICs[2]), "</i></b>"),
+
+  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", paste0(input$select_interaction_1, " ", input$select_interaction_2), "</i></b>"),
                                         x = 0.5,
                                         y = 0.2,
                                         yref = "paper",
@@ -178,8 +157,8 @@ current_plot_graph_interactions <- reactive({
                                         yanchor = "center",
                                         showarrow = FALSE,
                                         font = list(size = 34))
-  
-  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", ICs[2], "</i></b>"),
+
+  fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", input$select_interaction_2, "</i></b>"),
                                         x = 0.85,
                                         y = 0.2,
                                         yref = "paper",
@@ -188,11 +167,10 @@ current_plot_graph_interactions <- reactive({
                                         yanchor = "center",
                                         showarrow = FALSE,
                                         font = list(size = 34))
-  
+
   return(fig)
   
 })
-
 
 ##----------------------------------------------------------------------------##
 ## Create the colorscale for IC spatial
