@@ -424,7 +424,14 @@ fig_distance_graph_IC <- reactive({
       if(input$choose_distances_to_determine != "Genes" & input$choose_distances_to_determine_2 != "Genes"){
         
         # annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])} else if(!("IC" %in% str_split(x))){return(values$Annotation[rownames(values$Annotation)[values$Annotation[,toupper(colnames(values$Annotation)) %in% unlist(str_split(x,"_"))[1]] == unlist(str_split(x,"_"))[2]],input$choose_vertices_color_for_distances])} else {return("")}}))
-        annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])} else {return("")}}))
+        annotation = unlist(lapply(names(V(G)), function(x){
+          
+        if(x %in% rownames(values$Annotation)){
+            return(values$Annotation[x,input$choose_vertices_color_for_distances])
+          } else {
+            return("")
+          }
+        }))
         
       } else if (input$choose_distances_to_determine == "Genes" | input$choose_distances_to_determine_2 == "Genes") {
         

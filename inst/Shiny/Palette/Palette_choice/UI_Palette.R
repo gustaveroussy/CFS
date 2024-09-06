@@ -1,3 +1,7 @@
+output[["Select_palette_UI"]] <- renderUI({
+  selectizeInput("type_of_palette_to_modify", label = NULL, choices = c("Scatter", "Interaction analysis"))
+})
+
 output[["Palette_UI"]] <- renderUI({
   fluidRow(
     column(width = 12, offset = 0, style = "padding: 0px;",
@@ -39,5 +43,11 @@ output[["Palette_UI"]] <- renderUI({
 outputOptions(
   output,
   "Palette_UI",
+  suspendWhenHidden = FALSE
+)
+
+outputOptions(
+  output,
+  "Select_palette_UI",
   suspendWhenHidden = FALSE
 )
