@@ -35,7 +35,7 @@ IC_spatial_output_react <- reactive({
       #prepare trace
       fig <- fig %>% add_trace(type = 'scatter', mode = "markers",
                                x = TissueCoordinates()[[sample]][,"imagecol"], y = TissueCoordinates()[[sample]][,"imagerow"],
-                               marker = list(color = values$data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])],
+                               marker = list(color = as.double(values$data@reductions$ica@cell.embeddings[, IC_C][rownames(TissueCoordinates()[[sample]])]),
                                              colorscale = colorscale_IC_spatial(),
                                              cmin = input$slider_IC_spatial_range[1], cmax=input$slider_IC_spatial_range[2],
                                              size = input$Plot_spatial_IC_size,
@@ -58,8 +58,8 @@ IC_spatial_output_react <- reactive({
       out[[sample]] = fig
     }
     
-    if(length(out) > 1){input$Plot_image_spatial
-      output <- subplot(out, nrows = ceiling(length(TissueCoordinates())/3))
+    if(length(out) > 1){
+      output <- subplot(out, nrows = ceiling(length(input$Plot_image_spatial)/3))
     } else {
       output <- out[[1]]
     }

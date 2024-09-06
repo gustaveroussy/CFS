@@ -18,9 +18,12 @@ output[["Boxplot_distances_plot_or_message"]] <- renderUI({
 
 fig_distance_boxplot <- reactive({
   
+  req(values$distances)
+  req(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]])
+  
   samples <- names(values$data@images)
   
-  df = lapply(samples,function(sample){return(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[input$choose_method_for_distances]])})
+  df = lapply(samples,function(sample){table = values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[input$choose_method_for_distances]]; colnames(table) = c(input$choose_distances_to_determine,input$choose_distances_to_determine_2,"weight");return(table)})
   df = lapply(df,function(d){d$scaled_weight = scale(d$weight);return(d)})
   names(df) = samples
   Annotation = as.data.frame(values$Annotation)
@@ -45,8 +48,6 @@ fig_distance_boxplot <- reactive({
     # take the values that stand out the most
     if(input$boxplot_type_of_filter == "mean values"){
       
-      if(nrow(df) > length(samples)){
-        
         agg_df <- aggregate(df$weight, by=list(df$lr), FUN=mean)
         
         agg_df$x = scale(as.double(agg_df$x))
@@ -56,8 +57,6 @@ fig_distance_boxplot <- reactive({
         
         df = df[df$lr %in% agg_df$Group.1,]
         
-      }
-      
     } else if(input$boxplot_type_of_filter == "each values"){
       df = df[df$scaled_weight > input$boxplot_interaction_z_score_filter,]
     }

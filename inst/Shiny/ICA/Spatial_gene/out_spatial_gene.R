@@ -97,7 +97,7 @@ spatial_gene_react <- reactive({
       
       gene = enquo(genes)
       
-      if(!is.null(img[[input$Plot_image_spatial[1]]])){
+      if(!is.null(img)){
         
         fig = ggplot(coordinates, aes(imagecol, -imagerow)) +
           background_image(img) +

@@ -310,7 +310,11 @@ fig_distance_graph_IC <- reactive({
   req(tree_table)
   req(input$choose_n_dim_for_distances)
   
-
+  if(input$choose_distances_to_determine == input$choose_distances_to_determine_2){
+    colnames(tree_table) = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2,"_2"),"weight")
+  } else {
+    colnames(tree_table) = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2),"weight")
+  }
   
   tree_table = tree_table[(as.double(tree_table[,"weight"]) > 0),]
   
@@ -434,7 +438,7 @@ fig_distance_graph_IC <- reactive({
             annotation = c(annotation,paste(ICs,collapse = "<br>"))
           } else {
             if(i %in% rownames(values$Annotation)){
-              annotation = c(annotation,values$Annotation[x,input$choose_vertices_color_for_distances])
+              annotation = c(annotation,values$Annotation[i,input$choose_vertices_color_for_distances])
             } else {
               annotation = c(annotation,"")
             }
@@ -443,9 +447,9 @@ fig_distance_graph_IC <- reactive({
         }
         
       }
-      
+
       colors = rep(values$palette,ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
-      
+
       #create vertices
       fig = fig %>%
         add_markers(x = ~Xn, y = ~Yn,
@@ -467,8 +471,6 @@ fig_distance_graph_IC <- reactive({
       ) %>%
       add_text(x = ~Xn, y = ~Yn, text = names(V(G)), textposition = "center") %>%
       hide_legend()
-      
-
       
       
       
@@ -544,7 +546,7 @@ fig_distance_graph_IC <- reactive({
         
       }
       
-      colors = rep(palette(),ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
+      colors = rep(values$palette,ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
       
       #create edges
       fig = fig %>%
