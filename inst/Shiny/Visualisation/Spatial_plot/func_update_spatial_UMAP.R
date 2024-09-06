@@ -293,7 +293,7 @@ current_plot_spatial <- reactive({
       if (input$Plot_display_type == "metadata"){
         if(input$what_to_display_UMAP_choice == "seurat_clusters"){
         
-        img = lapply(values$data@images,function(n){if("image" %in% slotNames(n)){return(n@image)}})
+        img = img_ggplot()
         
         coordinates = list()
         coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@meta.data[rownames(coordinates[[sample]]), "seurat_clusters"]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
@@ -329,7 +329,7 @@ current_plot_spatial <- reactive({
         
         } else if(typeof(values$data@meta.data[[input$what_to_display_UMAP_choice]]) == "double" | grepl('nCount_|nFeature_|percent_', input$what_to_display_UMAP_choice)){
           
-          img = lapply(values$data@images,function(n){if("image" %in% slotNames(n)){return(n@image)}})
+          img = img_ggplot()
           
           coordinates = list()
           coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@meta.data[rownames(coordinates[[sample]]), input$what_to_display_UMAP_choice]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
@@ -364,7 +364,7 @@ current_plot_spatial <- reactive({
           
         } else {
           
-          img = lapply(values$data@images,function(n){if("image" %in% slotNames(n)){return(n@image)}})
+          img = img_ggplot()
           
           coordinates = list()
           coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@meta.data[rownames(coordinates[[sample]]), input$what_to_display_UMAP_choice]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
@@ -403,7 +403,7 @@ current_plot_spatial <- reactive({
         
       } else if (input$Plot_display_type == "gene") {
         
-        img = lapply(values$data@images,function(n){if("image" %in% slotNames(n)){return(n@image)}})
+        img = img_ggplot()
         
         coordinates = list()
         coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],GetAssayData(values$data, assay = values$data@active.assay)[input$what_to_display_UMAP_choice, rownames(coordinates[[sample]])]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
@@ -489,7 +489,7 @@ current_plot_spatial <- reactive({
           list[[sample]] = fig
         }
         
-        output = ggarrange(plotlist=list, 
+        output = ggarrange(plotlist = list, 
                            labels = input$Plot_image_spatial)
         
       }

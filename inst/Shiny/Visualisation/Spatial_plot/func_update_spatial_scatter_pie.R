@@ -370,7 +370,8 @@ current_plot_spatial_scatter_pie_ggplot <- reactive({
     ic_types$radius = (Radius(values$data@images[[input$Plot_image_spatial[1]]]@boundaries$centroids)*ic_types[,"sum_IC"]) * 100
   }
   
-  img = values$data@images[[input$Plot_image_spatial[1]]]@image
+  img = img_ggplot()
+  img = img[[input$Plot_image_spatial[1]]]
   
   ic_types$imagerow = -(ic_types$imagerow)
   

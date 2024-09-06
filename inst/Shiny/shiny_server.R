@@ -14,6 +14,7 @@ server <- function(input, output, session) {
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/associate_signal_with_IC.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/get_coordinates.R"), local = TRUE)
   source(paste0(Shiny.options[["shiny_root"]], "/Functions/remove_shiny_inputs.R"), local = TRUE)
+  source(paste0(Shiny.options[["shiny_root"]], "/Functions/get_image_ggplot.R"), local = TRUE)
 
 ##--------------------------------------------------------------------------##
 ## Tabs.

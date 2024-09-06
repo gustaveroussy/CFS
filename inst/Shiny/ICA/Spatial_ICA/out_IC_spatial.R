@@ -68,7 +68,7 @@ IC_spatial_output_react <- reactive({
   } else {
     list = list()
     
-    img = lapply(values$data@images,function(n){if("image" %in% slotNames(n)){return(n@image)}})
+    img = img_ggplot()
     
     coordinates = list()
     coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@reductions$ica@cell.embeddings[rownames(coordinates[[sample]]), IC_C]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})

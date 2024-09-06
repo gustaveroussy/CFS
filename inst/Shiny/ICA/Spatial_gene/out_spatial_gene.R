@@ -71,7 +71,7 @@ spatial_gene_react <- reactive({
     return(subplot(plotList, nrows = ceiling(length(input$gene_projection_gene_choice)/3)) %>% layout(showlegend = FALSE))
   } else {
     
-    img = lapply(values$data@images,function(n){if("image" %in% slotNames(n)){return(n@image)}})
+    img = img_ggplot()
     img = img[[input$Plot_image_spatial[1]]]
     
     
