@@ -77,7 +77,7 @@ fig_distance_boxplot <- reactive({
   
   if(nrow(df) > 0){
     
-    IC_vect = rownames(values$Annotation)
+    IC_vect = values$IC_names
     
     # filter ica
     if("ica" %in% names(df)){

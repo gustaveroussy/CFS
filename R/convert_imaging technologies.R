@@ -14,9 +14,9 @@
 #' @export
 Convert_imaging_seurat=function(table=NULL, pixel_format = 40, min.features = 5, technology = NULL){
   try(
-    if(technology = "CosMX"){
+    if(technology == "CosMX"){
       seurat.object = Create_CosMX_seurat(tx=table, pixel_format = pixel_format, min.features = min.features)
-    } else if (technology = "Merfish"){
+    } else if (technology == "Merfish"){
       seurat.object = Create_vizgen_seurat(spot_gene_expression=table, pixel_format = pixel_format, min.features = min.features)
     } else {
       stop('technology is not one of "Merfish" or "CosMX"')
