@@ -82,7 +82,7 @@ current_plot_graph_interactions <- eventReactive(input$interaction_plot_start, {
                 size = input$plot_interactions_size,
                 opacity = if(input$transparency_interactions_choice == 1){input$transparency_interactions_range}else{alpha_color_scale(values = datatable$value_1, slider_1 = min(datatable$value_1), slider_2 =max(datatable$value_1), alpha = input$transparency_interactions_range)}
               ),
-              showlegend = T,
+              showlegend = F,
               text = datatable$cell_name,
               customdata = datatable$value_1,
               hovertemplate = if(input$choose_distances_to_determine != "Genes"){"Cell : %{text}<br>IC : %{customdata}<extra></extra>"} else if (input$choose_distances_to_determine == "Genes"){"Cell : %{text}<br>Gene : %{customdata}<extra></extra>"}
@@ -97,9 +97,10 @@ current_plot_graph_interactions <- eventReactive(input$interaction_plot_start, {
                 color = datatable$local,
                 colorscale = colorscale_interactions(),
                 size = input$plot_interactions_size,
+                showscale = TRUE,
                 opacity = if(input$transparency_interactions_choice == 1){input$transparency_interactions_range}else{alpha_color_scale(values = datatable$local, slider_1 = min(datatable$local), slider_2 =max(datatable$local), alpha = input$transparency_interactions_range)}
               ),
-              showlegend = T,
+              showlegend = F,
               text = datatable$cell_name,
               customdata = datatable$local,
               hovertemplate = "Cell : %{text}<br>Interaction : %{customdata}<extra></extra>"
@@ -116,7 +117,7 @@ current_plot_graph_interactions <- eventReactive(input$interaction_plot_start, {
                 size = input$plot_interactions_size,
                 opacity = if(input$transparency_interactions_choice == 1){input$transparency_interactions_range}else{alpha_color_scale(values = datatable$value_2, slider_1 = min(datatable$value_2), slider_2 =max(datatable$value_2), alpha = input$transparency_interactions_range)}
               ),
-              showlegend = T,
+              showlegend = F,
               text = datatable$cell_name,
               customdata = datatable$value_2,
               hovertemplate = if(input$choose_distances_to_determine_2 != "Genes"){"Cell : %{text}<br>IC : %{customdata}<extra></extra>"} else if (input$choose_distances_to_determine_2 == "Genes"){"Cell : %{text}<br>Gene : %{customdata}<extra></extra>"}
@@ -125,7 +126,7 @@ current_plot_graph_interactions <- eventReactive(input$interaction_plot_start, {
   
   fig <- subplot(list(fig1, fig2, fig3),
                  nrows = 1
-                 ) %>% hide_legend()
+                 ) %>% layout(showlegend = FALSE)
   
   fig = fig %>% plotly::add_annotations(text = paste0("<i><b>", input$select_interaction_1, "</i></b>"),
                                         x = 0.15,
