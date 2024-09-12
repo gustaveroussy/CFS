@@ -296,8 +296,6 @@ observeEvent(input$start_distance_IC_batch,{
   }
 })
 
-
-
 fig_distance_graph_IC <- reactive({
   if(!is.null(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]])){
     tree_table = values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]]

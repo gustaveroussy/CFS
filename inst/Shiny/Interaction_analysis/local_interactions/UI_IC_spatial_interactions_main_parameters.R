@@ -22,6 +22,13 @@ output[["plot_interactions_from_graph_main_parameters_UI"]] <- renderUI({
     selectInput("select_color_interactions", label = "Select color", 
                 choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
                 selected = "D"),
+    numericInput("plot_interactions_n_rando", "Number of permutations", 500, min = 1, max = NA),
+    selectInput("select_correction_method_interactions", label = "Correction method", 
+                choices = c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none"), 
+                selected = "bonferroni"),
+    selectInput("select_alternative_interactions", label = "Statistic alternative", 
+                choices = list("Greater" = "greater", "Two sided" = "two.sided", "Lower" = "less"), 
+                selected = "Greater"),
     actionButton("interaction_plot_start", "Start")
   )
 })
