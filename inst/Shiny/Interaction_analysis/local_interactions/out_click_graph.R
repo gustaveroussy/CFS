@@ -48,6 +48,8 @@ current_plot_graph_interactions <- eventReactive(input$interaction_plot_start, {
   
   randomization = lee.mc(table_sample_1[,input$select_interaction_1], table_sample_2[,input$select_interaction_2], listw, input$plot_interactions_n_rando, zero.policy=NULL, alternative=input$select_alternative_interactions, na.action=na.fail, spChk=NULL, return_boot=FALSE)
   
+  
+  
   datatable <- data.frame("x" = as.vector(TissueCoordinates[,"imagecol"]),
                           "y" = as.vector(TissueCoordinates[,"imagerow"]),
                           "cell_name" = as.vector(rownames(meta.data)),

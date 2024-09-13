@@ -27,7 +27,7 @@ output[["plot_interactions_from_graph_main_parameters_UI"]] <- renderUI({
                 choices = c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none"), 
                 selected = "bonferroni"),
     selectInput("select_alternative_interactions", label = "Statistic alternative", 
-                choices = list("Greater" = "greater", "Two sided" = "two.sided", "Lower" = "less"), 
+                choices = list("Greater" = "greater", "Lower" = "less"), 
                 selected = "Greater"),
     actionButton("interaction_plot_start", "Start")
   )
