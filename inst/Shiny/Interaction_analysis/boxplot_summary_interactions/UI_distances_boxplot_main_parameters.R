@@ -28,7 +28,8 @@ output[["Boxplot_distance_main_parameters_UI"]] <- renderUI({
              size = NULL
            ),
            selectInput(inputId = "boxplot_interaction_boxploint_type", label = "Type of point display", choices = c("all","outliers","suspectedoutliers","FALSE")),
-           numericInput(inputId = "boxplot_interaction_z_score_filter",label = "Z-score filter",value = 3, min = 0)
+           numericInput(inputId = "boxplot_interaction_z_score_filter",label = "Z-score filter",value = 3, min = 0),
+           checkboxInput("boxplot_interaction_compare_with_randomized", label = "Compare with randomized", value = FALSE)
     )
   )
 })

@@ -23,17 +23,89 @@ fig_distance_boxplot <- reactive({
   
   samples <- names(values$data@images)
   
+  if(input$boxplot_interaction_compare_with_randomized){
+    # get values
+    if (input$choose_distances_to_determine == "Genes") {
+      
+      table_sample = raster::t(GetAssayData(values$data))
+      
+    } else if (input$choose_distances_to_determine != "Genes") {
+      
+      table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
+      
+      if(input$choose_distances_to_determine != "ica"){
+        colnames(table_sample) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]
+      }
+      
+      if(input$use_positive_values_for_distances){
+        table_sample[table_sample < 0] = 0
+      }
+      
+    }
+    
+    if (input$choose_distances_to_determine_2 == "Genes") {
+      
+      table_sample_2 = raster::t(GetAssayData(values$data))
+      
+    } else if (input$choose_distances_to_determine_2 != "Genes") {
+      
+      table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings
+      
+      if(input$choose_distances_to_determine_2 != "ica"){
+        colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]
+      }
+      
+      if(input$use_positive_values_for_distances){
+        table_sample_2[table_sample_2 < 0] = 0
+      }
+      
+    }
+    
+  }
+  
   df = lapply(samples,function(sample){table = values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[input$choose_method_for_distances]]; colnames(table) = c(input$choose_distances_to_determine,input$choose_distances_to_determine_2,"weight");return(table)})
-  df = lapply(df,function(d){d$scaled_weight = scale(d$weight);return(d)})
+  df = lapply(df,function(t){t$scaled_weight = scale(t$weight);return(t)})
+  
   names(df) = samples
   Annotation = as.data.frame(values$Annotation)
   
+  df = lapply(df,function(t){t$lr <- paste0(t[,1],"_",t[,2]);t[order(t$scaled_weight,decreasing = TRUE),]})
+  
+  combinations = unique(unlist(lapply(df,function(t){return(t[(t[,4] > 3),5])})))
+  
+  df = lapply(df,function(t){return(t[t[,5] %in% combinations,])})
+  
+  if(input$boxplot_interaction_compare_with_randomized){
+    random = lapply(names(df),function(sample){
+      # get distances
+      knn = knearneigh(GetTissueCoordinates(values$data, sample), k=6, longlat = NULL, use_kd_tree=TRUE);
+      neighbours = knn2nb(knn, row.names = NULL, sym = FALSE);
+      listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL);
+      
+      # get table to use
+      table_sample_use = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
+      table_sample_2_use = table_sample_2[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample_2)),]
+      
+      weight = c()
+      for(i in 1:nrow(df[[sample]])){
+        weight = c(weight,mean(lee.mc(as.double(table_sample_use[,df[[sample]][i,2]]), as.double(table_sample_use[,df[[sample]][i,2]]), listw, 100, zero.policy=NULL, alternative="greater", na.action=na.fail, spChk=NULL, return_boot=FALSE)[["res"]]))
+        
+      }
+      
+      # get randomized values
+      return(weight)
+    })
+    
+    i = 1
+    for(names in names(df)){
+      df[[names]] = cbind(df[[names]],random[i])
+      colnames(df[[names]])[5] = "lr"
+      colnames(df[[names]])[6] = "randomized_value"
+      i = i + 1
+    }
+  }
   
   df = dplyr::bind_rows(df, .id = "samples")
-  
-  df$lr <- paste0(df[,2],"_",df[,3])
-  
-  df = df[order(df$weight,decreasing = TRUE),]
   
   if(!is.null(input$boxplot_interaction_filter_1)){
       df = df[df[,2] %in% input$boxplot_interaction_filter_1,]
@@ -41,21 +113,6 @@ fig_distance_boxplot <- reactive({
   
   if(!is.null(input$boxplot_interaction_filter_2)){
     df = df[df[,3] %in% input$boxplot_interaction_filter_2,]
-  }
-  
-  if(nrow(df) > length(samples)){
-
-    # take the values that stand out the most
-      
-    agg_df <- aggregate(df$weight, by=list(df$lr), FUN=mean)
-    
-    agg_df$x = scale(as.double(agg_df$x))
-    
-    # take the values that stand out the most
-    agg_df = agg_df[agg_df$x > input$boxplot_interaction_z_score_filter,]
-    
-    df = df[df$lr %in% agg_df$Group.1,]
-    
   }
   
   if(nrow(df) > 0){
@@ -70,26 +127,26 @@ fig_distance_boxplot <- reactive({
       df = df[as.vector(df[,"ica_2"])[[1]] %in% IC_vect,]
     }
     
-
+    if(input$boxplot_interaction_compare_with_randomized){
+      
+      df = pivot_longer(df,c("weight","randomized_value"))
+      
+      fig <- plot_ly(df, x = ~lr, y = ~value, color = input$boxplot_interaction_compare_with_randomized~name, boxmean = TRUE, boxpoints = input$boxplot_interaction_boxploint_type,
+                     type = "box", text = ~samples)
+      
+      fig <- fig %>% layout(boxmode = "group")
+    } else {
       lvls <- df %>%
         group_by(lr) %>%
         summarise(m = median(weight)) %>%
         arrange(desc(m)) %>%
         pull(lr)
       
-    fig <- plot_ly(df, x = ~factor(lr,lvls), y = ~weight, boxmean = TRUE, boxpoints = input$boxplot_interaction_boxploint_type,
-                   type = "box", text = ~samples)
-    
-
-    #   df = df %>% group_by_at(c(input$choose_distances_to_determine, input$choose_distances_to_determine_2,"samples")) %>% summarise(n=n()) %>% mutate(freq = n/sum(n))
-    #   fig <- plot_ly(df, x = as.vector(df[,input$choose_distances_to_determine])[[1]], y = ~freq, color = as.vector(df[,input$choose_distances_to_determine_2])[[1]], boxmean = TRUE, boxpoints = input$boxplot_interaction_boxploint_type,
-    #                  type = "box", text = ~samples)
-    # 
-    # 
-    # fig <- fig %>% layout(boxmode = "group")
-    
-    return(fig)
-  } else {
-    return(NULL)
+      fig <- plot_ly(df, x = ~lr, y = ~weight, boxmean = TRUE, boxpoints = input$boxplot_interaction_boxploint_type,
+                     type = "box", text = ~samples)
+    }
+      
   }
+    
+  return(fig)
 })
