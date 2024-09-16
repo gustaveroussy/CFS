@@ -28,6 +28,10 @@ observeEvent(input$start_integration_button, {
                                      assay = "Spatial",
                                      slice = basename(i)
                                      )
+      cells = names(colSums(GetAssayData(list_of_data[[basename(i)]]))[colSums(GetAssayData(list_of_data[[basename(i)]])) != 0])
+      
+      list_of_data[[basename(i)]] = subset(list_of_data[[basename(i)]],cells = cells)
+      
     }
     
     # empty relevant values
