@@ -49,7 +49,7 @@ library(Seurat)
 
 launchCFS()
 ```
-Follow along our [Tutorials](Tutorial URL) for a step-by-step exploration of the CFS pipeline. Briefly, the analysis workflow consists of:
+Follow along our [Tutorial](https://github.com/gustaveroussy/CFS/blob/development/docs/CFS_Tuto_Visium.md) for a step-by-step exploration of the CFS pipeline. Briefly, the analysis workflow consists of:
 
 - Pre-processing
 - IC annotation*
