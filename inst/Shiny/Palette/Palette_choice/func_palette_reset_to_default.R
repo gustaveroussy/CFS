@@ -15,4 +15,6 @@ observeEvent(input[["reset_palette_default_values"]],{
 
   saveRDS(values$palette,paste0(Shiny.options[["shiny_root"]], "/../tmp_data/palette.RDS"))
   
+  update_palette()
+  
 })
