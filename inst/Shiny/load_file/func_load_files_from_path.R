@@ -1,6 +1,6 @@
-load_file_from_path <- function(filepath = NULL){
+load_file_from_path <- function(filepath = NULL, from_path = TRUE){
   
-  if (length(grep('.RDS',toupper(filepath))) != 0) {
+  if ((!from_path) || (from_path && (length(grep('.RDS',toupper(filepath))) != 0))) {
     
     withProgress(message = 'Loading RDS', value = 0, {
       
@@ -14,10 +14,15 @@ load_file_from_path <- function(filepath = NULL){
       values$low_image = NULL
       values$HD_image = NULL
       values$HD_image_2 = NULL
+      values$marker_gene = NULL
       
       incProgress(0.2, detail = "Reading RDS")
-    
-      values$data <- readRDS(filepath)
+      
+      if(from_path){
+        values$data <- readRDS(filepath)
+      } else {
+        values$data <- filepath
+      }
       
       incProgress(0.5, detail = "Preparing object")
       
