@@ -14,6 +14,12 @@ output[["load_image_UI"]] <- renderUI({
   fluidRow(
     column(12,
            titlePanel("Load high res image"),
+           selectInput(
+             "input_image_sample_choice",
+             label = "sample",
+             choices = images_names(),
+             width = '50%'
+           ),
            fileInput(
              inputId = "input_image",
              label = "Select image (.png/.jpg/.tif file)",
