@@ -74,20 +74,20 @@ spatial_gene_react <- reactive({
     img = img_ggplot()
     img = img[[input$Plot_image_spatial[1]]]
     
+    coordinates = TissueCoordinates_ggplot()
     
-    coordinates = list()
-    
-    if(length(input$gene_projection_gene_choice) > 1){
+    coordinates = lapply(coordinates, function(c){
+      if(length(input$gene_projection_gene_choice) > 1){
+        c = cbind(c,t(values$data@assays$SCT@data[input$gene_projection_gene_choice,rownames(c)]));
+      } else {
+        c = cbind(c,values$data@assays$SCT@data[input$gene_projection_gene_choice, rownames(c)]);
+        colnames(c)[length(colnames(c))] = c(input$gene_projection_gene_choice);
+      }
       
-      coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],t(values$data@assays$SCT@data[input$gene_projection_gene_choice,rownames(coordinates[[sample]])])); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");return(coordinates[[sample]])})
+      return(c)
+    })
     
-    } else {
-      
-      coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@assays$SCT@data[input$gene_projection_gene_choice, rownames(coordinates[[sample]])]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c(input$gene_projection_gene_choice);return(coordinates[[sample]])})
-      
-    }
-    
-    names(coordinates) = input$Plot_image_spatial
+    names(coordinates) = images_names()
     
     coordinates = coordinates[[input$Plot_image_spatial[1]]]
     
@@ -105,9 +105,15 @@ spatial_gene_react <- reactive({
           ggplot2::scale_color_gradientn(name = genes,
                                          colours = viridis_pal(option = if(input$select_color_gene_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_gene_projection}else{"D"})(ncol(values$data)), oob=squish) +
           guides(size = "none") +
-          theme_void() +
-          xlim(25,ncol(img)-25) +
-          ylim(-nrow(img)+25,-25)
+          theme_void()
+        
+        if(("image" %in% slotNames(values$data@images[[image]])) && as.logical(sum(dim(values$data@images[[image]]@image) > 1000))){
+          fig = fig + xlim((25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires),ncol(img)-(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires)) +
+            ylim(-nrow(img)+(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires),-(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires))
+        } else {
+          fig = fig + xlim(25,ncol(img)-25) +
+            ylim(-nrow(img)+25,-25)
+        }
         
       } else {
         

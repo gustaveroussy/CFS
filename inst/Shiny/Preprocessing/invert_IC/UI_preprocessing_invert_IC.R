@@ -3,6 +3,7 @@
 ##----------------------------------------------------------------------------##
 
 output[["preprocessing_invert_IC_UI"]] <- renderUI({
+  req(values$data)
   tagList(
     selectInput("preprocessing_select_inver_IC",
                    label = "IC to invert",

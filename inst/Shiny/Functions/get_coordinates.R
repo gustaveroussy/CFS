@@ -6,22 +6,18 @@ TissueCoordinates <- reactive({
   TC = list()
   
   for(image in names(values$data@images)){
-    c = GetTissueCoordinates(values$data, image = image)
+    c = values$data@images[[image]]@coordinates
     names(c)[names(c) == "x"] <- "imagerow"
     names(c)[names(c) == "y"] <- "imagecol"
     
-    if(is.null(values$HD_image)) {
-      if(class(values$data@images[[image]])[1] == "VisiumV2"){
-        c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$lowres
-        c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$lowres
-      }
+    if(("image" %in% slotNames(values$data@images[[image]])) && as.logical(sum(dim(values$data@images[[image]]@image) > 1000))){
+      c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$hires
+      c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$hires
     } else {
-      if(class(values$data@images[[image]])[1] == "VisiumV2" | class(values$data@images[[image]])[1] == "VisiumV1"){
-        c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$hires
-        c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$hires
-      }
+      c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$lowres
+      c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$lowres
     }
-    
+
     if(input$spatial_mirror_X){
       c$imagecol = c$imagecol * (-1)
     }
@@ -41,3 +37,21 @@ TissueCoordinates <- reactive({
   
   return(TC)
 })
+
+TissueCoordinates_ggplot <- function(){
+  coordinates = list()
+  
+  coordinates = lapply(images_names(), function(sample){
+    coordinates[[sample]] = values$data@images[[sample]]@coordinates;
+    if(("image" %in% slotNames(values$data@images[[sample]])) && as.logical(sum(dim(values$data@images[[sample]]@image) > 1000))){
+      coordinates[[sample]][,"imagerow"] <- coordinates[[sample]][,"imagerow"] * values$data@images[[sample]]@scale.factors$hires;
+      coordinates[[sample]][,"imagecol"] <- coordinates[[sample]][,"imagecol"] * values$data@images[[sample]]@scale.factors$hires
+    } else {
+      coordinates[[sample]][,"imagerow"] <- coordinates[[sample]][,"imagerow"] * values$data@images[[sample]]@scale.factors$lowres;
+      coordinates[[sample]][,"imagecol"] <- coordinates[[sample]][,"imagecol"] * values$data@images[[sample]]@scale.factors$lowres
+    };
+    return(coordinates[[sample]])})
+  
+  names(coordinates) = images_names()
+  return(coordinates)
+}
