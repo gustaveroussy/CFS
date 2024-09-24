@@ -24,12 +24,9 @@ IC_spatial_output_react <- reactive({
       
       fig <- plot_ly(source = "E")
       
-      if (!is.null(values$HD_image)) {
-        fig <- fig %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
-      } else {
-        if(length(values$low_image) != 0){
-          fig <- fig %>% add_trace(type="image", source = values$low_image[[sample]], hoverinfo = 'skip')
-        }
+
+      if(length(values$low_image) != 0){
+        fig <- fig %>% add_trace(type="image", source = values$low_image[[sample]], hoverinfo = 'skip')
       }
       
       #prepare trace
@@ -70,9 +67,14 @@ IC_spatial_output_react <- reactive({
     
     img = img_ggplot()
     
-    coordinates = list()
-    coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@reductions$ica@cell.embeddings[rownames(coordinates[[sample]]), IC_C]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
-    names(coordinates) = input$Plot_image_spatial
+    coordinates = TissueCoordinates_ggplot()
+    coordinates = lapply(coordinates, function(c){
+      c = cbind(c,values$data@reductions$ica@cell.embeddings[rownames(c), IC_C]);
+      colnames(c)[length(colnames(c))] = c("value");
+      return(c)
+    })
+    
+    names(coordinates) = images_names()
     
     for(sample in input$Plot_image_spatial){
       
@@ -84,9 +86,15 @@ IC_spatial_output_react <- reactive({
           ggplot2::scale_color_gradientn(name = IC_C,
                                          colours = viridis_pal(option = if(input$select_color_IC_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_IC_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_IC_spatial_range[1], input$slider_IC_spatial_range[2]), oob=squish) +
           guides(size = "none") +
-          theme_void() +
-          xlim(25,ncol(img[[sample]])-25) +
-          ylim(-nrow(img[[sample]])+25,-25)
+          theme_void()
+        
+        if(("image" %in% slotNames(values$data@images[[image]])) && as.logical(sum(dim(values$data@images[[image]]@image) > 1000))){
+          fig = fig + xlim((25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires),ncol(img[[sample]])-(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires)) +
+            ylim(-nrow(img[[sample]])+(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires),-(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires))
+        } else {
+          fig = fig + xlim(25,ncol(img[[sample]])-25) +
+            ylim(-nrow(img[[sample]])+25,-25)
+        }
         
       } else {
         
