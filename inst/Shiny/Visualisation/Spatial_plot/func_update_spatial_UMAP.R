@@ -293,11 +293,16 @@ current_plot_spatial <- reactive({
       if (input$Plot_display_type == "metadata"){
         if(input$what_to_display_UMAP_choice == "seurat_clusters"){
         
-        img = img_ggplot()
-        
-        coordinates = list()
-        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@meta.data[rownames(coordinates[[sample]]), "seurat_clusters"]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
-        names(coordinates) = input$Plot_image_spatial
+          img = img_ggplot()
+          
+          coordinates = TissueCoordinates_ggplot()
+          coordinates = lapply(coordinates, function(c){
+            c = cbind(c,values$data@meta.data[rownames(c), "seurat_clusters"]);
+            colnames(c)[length(colnames(c))] = c("value");
+            return(c)
+          })
+          
+          names(coordinates) = images_names()
         
         for(sample in input$Plot_image_spatial){
           
@@ -307,9 +312,16 @@ current_plot_spatial <- reactive({
               geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_scatter_size_spatial) +
               #scale_colour_manual(name = "value", values = palette()) +
               guides(size = "none") +
-              theme_void() +
-              xlim(25,ncol(img[[sample]])-25) +
-              ylim(-nrow(img[[sample]])+25,-25)
+              theme_void()
+            
+            if(("image" %in% slotNames(values$data@images[[sample]])) && as.logical(sum(dim(values$data@images[[sample]]@image) > 1000))){
+              fig = fig + xlim((25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),ncol(img[[sample]])-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires)) +
+                ylim(-nrow(img[[sample]])+(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires))
+            } else {
+              fig = fig + xlim(25,ncol(img[[sample]])-25) +
+                ylim(-nrow(img[[sample]])+25,-25)
+            }
+            
           } else {
             fig = ggplot(coordinates[[sample]][,c(1,2,ncol(coordinates[[sample]]))], aes(imagecol, -imagerow)) +
               geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_scatter_size_spatial) +
@@ -331,9 +343,14 @@ current_plot_spatial <- reactive({
           
           img = img_ggplot()
           
-          coordinates = list()
-          coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@meta.data[rownames(coordinates[[sample]]), input$what_to_display_UMAP_choice]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
-          names(coordinates) = input$Plot_image_spatial
+          coordinates = TissueCoordinates_ggplot()
+          coordinates = lapply(coordinates, function(c){
+            c = cbind(c,values$data@meta.data[rownames(c), input$what_to_display_UMAP_choice]);
+            colnames(c)[length(colnames(c))] = c("value");
+            return(c)
+          })
+          
+          names(coordinates) = images_names()
           
           for(sample in input$Plot_image_spatial){
             
@@ -344,9 +361,16 @@ current_plot_spatial <- reactive({
                 ggplot2::scale_color_gradientn(name = input$what_to_display_UMAP_choice,
                                                colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2]), oob=squish) +
                 guides(size = "none") +
-                theme_void() +
-                xlim(25,ncol(img[[sample]])-25) +
-                ylim(-nrow(img[[sample]])+25,-25)
+                theme_void()
+              
+              if(("image" %in% slotNames(values$data@images[[sample]])) && as.logical(sum(dim(values$data@images[[sample]]@image) > 1000))){
+                fig = fig + xlim((25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),ncol(img[[sample]])-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires)) +
+                  ylim(-nrow(img[[sample]])+(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires))
+              } else {
+                fig = fig + xlim(25,ncol(img[[sample]])-25) +
+                  ylim(-nrow(img[[sample]])+25,-25)
+              }
+              
             } else {
               fig = ggplot(coordinates[[sample]], aes(imagecol, -imagerow)) +
                 geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_scatter_size_spatial) +
@@ -366,9 +390,14 @@ current_plot_spatial <- reactive({
           
           img = img_ggplot()
           
-          coordinates = list()
-          coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@meta.data[rownames(coordinates[[sample]]), input$what_to_display_UMAP_choice]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
-          names(coordinates) = input$Plot_image_spatial
+          coordinates = TissueCoordinates_ggplot()
+          coordinates = lapply(coordinates, function(c){
+            c = cbind(c,values$data@meta.data[rownames(c), input$what_to_display_UMAP_choice]);
+            colnames(c)[length(colnames(c))] = c("value");
+            return(c)
+          })
+          
+          names(coordinates) = images_names()
           
           for(sample in input$Plot_image_spatial){
             
@@ -378,9 +407,15 @@ current_plot_spatial <- reactive({
                 background_image(img[[sample]]) +
                 geom_point(data = coordinates[[sample]], aes(color=value), size=input$Plot_scatter_size_spatial) +
                 guides(size = "none") +
-                theme_void() +
-                xlim(25,ncol(img[[sample]])-25) +
-                ylim(-nrow(img[[sample]])+25,-25)
+                theme_void()
+              
+              if(("image" %in% slotNames(values$data@images[[sample]])) && as.logical(sum(dim(values$data@images[[sample]]@image) > 1000))){
+                fig = fig + xlim((25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),ncol(img[[sample]])-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires)) +
+                  ylim(-nrow(img[[sample]])+(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires))
+              } else {
+                fig = fig + xlim(25,ncol(img[[sample]])-25) +
+                  ylim(-nrow(img[[sample]])+25,-25)
+              }
               
             } else {
               
@@ -405,9 +440,14 @@ current_plot_spatial <- reactive({
         
         img = img_ggplot()
         
-        coordinates = list()
-        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],GetAssayData(values$data, assay = values$data@active.assay)[input$what_to_display_UMAP_choice, rownames(coordinates[[sample]])]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
-        names(coordinates) = input$Plot_image_spatial
+        coordinates = TissueCoordinates_ggplot()
+        coordinates = lapply(coordinates, function(c){
+          c = cbind(c,GetAssayData(values$data, assay = values$data@active.assay)[input$what_to_display_UMAP_choice, rownames(c)]);
+          colnames(c)[length(colnames(c))] = c("value");
+          return(c)
+        })
+        
+        names(coordinates) = images_names()
         
         for(sample in input$Plot_image_spatial){
           
@@ -419,9 +459,15 @@ current_plot_spatial <- reactive({
               ggplot2::scale_color_gradientn(name = input$what_to_display_UMAP_choice,
                                              colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2]), oob=squish) +
               guides(size = "none") +
-              theme_void() +
-              xlim(25,ncol(img[[sample]])-25) +
-              ylim(-nrow(img[[sample]])+25,-25)
+              theme_void()
+            
+            if(("image" %in% slotNames(values$data@images[[sample]])) && as.logical(sum(dim(values$data@images[[sample]]@image) > 1000))){
+              fig = fig + xlim((25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),ncol(img[[sample]])-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires)) +
+                ylim(-nrow(img[[sample]])+(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires))
+            } else {
+              fig = fig + xlim(25,ncol(img[[sample]])-25) +
+                ylim(-nrow(img[[sample]])+25,-25)
+            }
             
           } else {
             
@@ -448,11 +494,16 @@ current_plot_spatial <- reactive({
           dimension_query = which(values$data@misc$reduction_names[[input$Plot_display_type]] == input$what_to_display_UMAP_choice)
         }
         
-        img = lapply(values$data@images,function(n){if("image" %in% slotNames(n)){return(n@image)}})
+        img = img_ggplot()
         
-        coordinates = list()
-        coordinates = lapply(input$Plot_image_spatial, function(sample){coordinates[[sample]] = GetTissueCoordinates(values$data,sample);coordinates[[sample]] = cbind(coordinates[[sample]],values$data@reductions[[input$Plot_display_type]]@cell.embeddings[rownames(coordinates[[sample]]), dimension_query]); colnames(coordinates[[sample]])[1:2] = c("imagerow","imagecol");colnames(coordinates[[sample]])[length(colnames(coordinates[[sample]]))] = c("value");return(coordinates[[sample]])})
-        names(coordinates) = input$Plot_image_spatial
+        coordinates = TissueCoordinates_ggplot()
+        coordinates = lapply(coordinates, function(c){
+          c = cbind(c,values$data@reductions[[input$Plot_display_type]]@cell.embeddings[rownames(c), dimension_query]);
+          colnames(c)[length(colnames(c))] = c("value");
+          return(c)
+        })
+        
+        names(coordinates) = images_names()
         
         limits = c(input$slider_visual_spatial_range[1], input$slider_visual_spatial_range[2])
         
@@ -471,9 +522,16 @@ current_plot_spatial <- reactive({
               ggplot2::scale_color_gradientn(name = input$what_to_display_UMAP_choice,
                                              colours = viridis_pal(option = if(input$select_color_visualisation_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_visualisation_projection}else{"D"})(ncol(values$data)), limits=c(limits[1], limits[2]), oob=squish) +
               guides(size = "none") +
-              theme_void() +
-              xlim(25,ncol(img[[sample]])-25) +
-              ylim(-nrow(img[[sample]])+25,-25) 
+              theme_void()
+            
+            
+            if(("image" %in% slotNames(values$data@images[[sample]])) && as.logical(sum(dim(values$data@images[[sample]]@image) > 1000))){
+              fig = fig + xlim((25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),ncol(img[[sample]])-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires)) +
+                ylim(-nrow(img[[sample]])+(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires))
+            } else {
+              fig = fig + xlim(25,ncol(img[[sample]])-25) +
+                ylim(-nrow(img[[sample]])+25,-25)
+            }
             
           } else {
             
