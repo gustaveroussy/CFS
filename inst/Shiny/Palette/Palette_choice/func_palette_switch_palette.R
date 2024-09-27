@@ -29,6 +29,8 @@ observeEvent(input[["type_of_palette_to_modify"]],{
       i = i + 1
     }
     
+    update_palette()
+    
   } else if(input[["type_of_palette_to_modify"]] == "Interaction analysis") {
     
     saveRDS(values$palette,paste0(Shiny.options[["shiny_root"]], "/../tmp_data/palette.RDS"))
@@ -52,6 +54,8 @@ observeEvent(input[["type_of_palette_to_modify"]],{
       removeUI(selector = paste0("#palette_colors_div_",i))
       i = i + 1
     }
+    
+    update_palette()
     
   }
   
