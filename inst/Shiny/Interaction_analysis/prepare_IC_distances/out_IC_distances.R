@@ -420,20 +420,29 @@ fig_distance_graph_IC <- reactive({
 
       # create vertices colors
       if(input$choose_distances_to_determine != "Genes" & input$choose_distances_to_determine_2 != "Genes"){
+        annotation = c()
+        annotation_2 = c()
         
-        # annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])} else if(!("IC" %in% str_split(x))){return(values$Annotation[rownames(values$Annotation)[values$Annotation[,toupper(colnames(values$Annotation)) %in% unlist(str_split(x,"_"))[1]] == unlist(str_split(x,"_"))[2]],input$choose_vertices_color_for_distances])} else {return("")}}))
-        annotation = unlist(lapply(names(V(G)), function(x){
+        for(i in names(V(G))){
+
+            if(i %in% rownames(values$Annotation)){
+              annotation = c(annotation,values$Annotation[i,input$choose_vertices_color_for_distances])
+              annotation_2 = c(annotation_2,values$Annotation[i,input$choose_vertices_annotation_for_distances])
+              
+            } else {
+              annotation = c(annotation,"")
+              annotation_2 = c(annotation_2,"")
+              
+            }
           
-        if(x %in% rownames(values$Annotation)){
-            return(values$Annotation[x,input$choose_vertices_color_for_distances])
-          } else {
-            return("")
-          }
-        }))
+        }
+        
+        annotation = paste0("Color: ", annotation,"<br>Annotation: ",annotation_2)
         
       } else if (input$choose_distances_to_determine == "Genes" | input$choose_distances_to_determine_2 == "Genes") {
         
         annotation = c()
+        annotation_2 = c()
         
         for(i in names(V(G))){
           if(i %in% rownames(values$data@assays$SCT@data)){
@@ -441,15 +450,23 @@ fig_distance_graph_IC <- reactive({
             ICs = names(ICs[ICs == TRUE])
             ICs = paste0(ICs, " : ", values$Annotation[rownames(values$Annotation) %in% ICs,"Type"] ," : ",values$Annotation[rownames(values$Annotation) %in% ICs,"Annotation"])
             annotation = c(annotation,paste(ICs,collapse = "<br>"))
+            annotation_2 = c(annotation_2,"")
           } else {
             if(i %in% rownames(values$Annotation)){
               annotation = c(annotation,values$Annotation[i,input$choose_vertices_color_for_distances])
+              annotation_2 = c(annotation_2,values$Annotation[i,input$choose_vertices_annotation_for_distances])
+              
             } else {
               annotation = c(annotation,"")
+              annotation_2 = c(annotation_2,"")
+              
+              
             }
           }
           
         }
+        
+        annotation = paste0("Color: ", annotation,"<br>Annotation: ",annotation_2)
         
       }
 
