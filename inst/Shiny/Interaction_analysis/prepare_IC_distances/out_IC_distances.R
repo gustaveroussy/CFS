@@ -437,7 +437,7 @@ fig_distance_graph_IC <- reactive({
           
         }
         
-        annotation = paste0("Color: ", annotation,"<br>Annotation: ",annotation_2)
+        annotation_3 = paste0("Color: ", annotation,"<br>Annotation: ",annotation_2)
         
       } else if (input$choose_distances_to_determine == "Genes" | input$choose_distances_to_determine_2 == "Genes") {
         
@@ -466,7 +466,7 @@ fig_distance_graph_IC <- reactive({
           
         }
         
-        annotation = paste0("Color: ", annotation,"<br>Annotation: ",annotation_2)
+        annotation_3 = paste0("Color: ", annotation,"<br>Annotation: ",annotation_2)
         
       }
 
@@ -481,7 +481,7 @@ fig_distance_graph_IC <- reactive({
                     ),
                     opacity = 1,
                     text = names(V(G)),
-                    customdata = annotation,
+                    customdata = annotation_3,
                     hovertemplate = paste0(input$choose_distances_to_determine, " : %{text}<br>",
                                            "Annotation :<br>%{customdata}",
                                            "<extra></extra>")
