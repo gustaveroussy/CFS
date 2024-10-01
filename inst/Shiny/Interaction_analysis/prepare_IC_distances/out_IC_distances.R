@@ -352,10 +352,8 @@ fig_distance_graph_IC <- reactive({
     ICs_to_keep = rownames(values$Annotation)[unlist(values$Annotation[,"Use"] == "TRUE")]
     ICs_to_keep = ICs_to_keep[ICs_to_keep %in% names(V(G))]
     
-    print(c(ICs_to_keep,genes_to_keep))
-    
     G = subgraph(G, c(ICs_to_keep,genes_to_keep))
-    print(G)
+
   }
   
   if(gsize(G) > 0){
