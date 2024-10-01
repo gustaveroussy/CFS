@@ -346,7 +346,18 @@ fig_distance_graph_IC <- reactive({
     
     G = subgraph(G, genes[genes %in% names(V(G))])
   }
-
+  
+  if(input$IC_distances_remove_IC_from_graph){
+    genes_to_keep = names(V(G))[!grepl("IC_",names(V(G)))]
+    ICs_to_keep = rownames(values$Annotation)[unlist(values$Annotation[,"Use"] == "TRUE")]
+    ICs_to_keep = ICs_to_keep[ICs_to_keep %in% names(V(G))]
+    
+    print(c(ICs_to_keep,genes_to_keep))
+    
+    G = subgraph(G, c(ICs_to_keep,genes_to_keep))
+    print(G)
+  }
+  
   if(gsize(G) > 0){
     
     edges_list = as.data.frame(as_edgelist(G))

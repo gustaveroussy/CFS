@@ -61,7 +61,12 @@ output[["IC_distances_UI"]] <- renderUI({
                  ),
                  shinyWidgets::dropdownButton(
                    tags$div(
-                     style = "color: black !important;"
+                     style = "color: black !important;",
+                     shinyWidgets::awesomeCheckbox(
+                       inputId = "IC_distances_remove_IC_from_graph",
+                       label = "Remove filtered ICs",
+                       value = TRUE
+                     )
                    ),
                    circle = FALSE,
                    icon = icon("cog"),
