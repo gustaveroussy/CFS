@@ -51,6 +51,7 @@ spatial_gene_react <- reactive({
                                                    marker = list(color = values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[input$Plot_image_spatial[[1]]]])],
                                                                  size = input$Plot_spatial_gene_size,
                                                                  colorscale = colorscale_gene_spatial(),
+                                                                 coloraxis="coloraxis",
                                                                  reversescale=input$invert_color_gene_projection),
                                                    opacity = input$transparency_gene_projection,
                                                    type = 'scatter', mode = "markers",
@@ -68,7 +69,7 @@ spatial_gene_react <- reactive({
       i = i+1
     }
     
-    return(subplot(plotList, nrows = ceiling(length(input$gene_projection_gene_choice)/3)) %>% layout(showlegend = FALSE))
+    return(subplot(plotList, nrows = ceiling(length(input$gene_projection_gene_choice)/3)) %>% layout(showlegend = FALSE, coloraxis=list(colorscale=colorscale_gene_spatial())))
   } else {
     
     img = img_ggplot()
