@@ -107,9 +107,9 @@ spatial_gene_react <- reactive({
           guides(size = "none") +
           theme_void()
         
-        if(("image" %in% slotNames(values$data@images[[image]])) && as.logical(sum(dim(values$data@images[[image]]@image) > 1000))){
-          fig = fig + xlim((25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires),ncol(img)-(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires)) +
-            ylim(-nrow(img)+(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires),-(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires))
+        if(("image" %in% slotNames(values$data@images[[input$Plot_image_spatial[1]]])) && as.logical(sum(dim(values$data@images[[input$Plot_image_spatial[1]]]@image) > 1000))){
+          fig = fig + xlim((25/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$lowres * values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$hires),ncol(img)-(25/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$lowres * values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$hires)) +
+            ylim(-nrow(img)+(25/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$lowres * values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$hires),-(25/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$lowres * values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$hires))
         } else {
           fig = fig + xlim(25,ncol(img)-25) +
             ylim(-nrow(img)+25,-25)

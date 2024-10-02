@@ -88,9 +88,9 @@ IC_spatial_output_react <- reactive({
           guides(size = "none") +
           theme_void()
         
-        if(("image" %in% slotNames(values$data@images[[image]])) && as.logical(sum(dim(values$data@images[[image]]@image) > 1000))){
-          fig = fig + xlim((25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires),ncol(img[[sample]])-(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires)) +
-            ylim(-nrow(img[[sample]])+(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires),-(25/values$data@images[[image]]@scale.factors$lowres * values$data@images[[image]]@scale.factors$hires))
+        if(("image" %in% slotNames(values$data@images[[sample]])) && as.logical(sum(dim(values$data@images[[sample]]@image) > 1000))){
+          fig = fig + xlim((25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),ncol(img[[sample]])-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires)) +
+            ylim(-nrow(img[[sample]])+(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires),-(25/values$data@images[[sample]]@scale.factors$lowres * values$data@images[[sample]]@scale.factors$hires))
         } else {
           fig = fig + xlim(25,ncol(img[[sample]])-25) +
             ylim(-nrow(img[[sample]])+25,-25)
