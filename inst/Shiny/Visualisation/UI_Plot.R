@@ -131,7 +131,8 @@ output[["Plot_UI"]] <- renderUI({
         height = NULL,
         collapsible = TRUE,
         collapsed = FALSE,
-        uiOutput("Plot_or_message")
+        uiOutput("Plot_or_message"),
+        textInput("name_of_region_UMAP", "Region name", value = "Region 1", width = NULL, placeholder = NULL)
       )
     )
   )

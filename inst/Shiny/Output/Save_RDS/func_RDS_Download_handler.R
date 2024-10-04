@@ -118,7 +118,7 @@ output$download_subcluster_RDS <- downloadHandler(
       
       saveRDS(data, file)
       
-    } else if (input$export_sub_IC == "Manual Selection"){
+    } else if (input$export_sub_IC == "Regions"){
       
       withProgress(message = 'Preparing RDS', value = 0, {
       
@@ -133,13 +133,18 @@ output$download_subcluster_RDS <- downloadHandler(
   
         data@misc$distances <- values$distances
         
-        table = values$cells_to_export
+        cells = NULL
+        for(i in input$region_to_export){
+          cells = c(cells,values$data@misc$Regions[[i]])
+        }
+        
+        cells = unique(cells)
         
         incProgress(0.25, detail = paste("subsetting"))
         
         data <- subset(
           x = data,
-          cells = table$customdata
+          cells = cells
         )
         
         incProgress(0.20, detail = paste("Saving RDS"))

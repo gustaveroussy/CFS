@@ -45,7 +45,8 @@ output[["Output_directory_UI"]] <- renderUI({
                collapsed = FALSE,
                uiOutput("Output_or_message_2"),
                column(width = 12, align="left", offset = 0, style = "padding: 0px;",
-                      downloadButton("download_subcluster_RDS", "Download subset RDS"))
+                      downloadButton("download_subcluster_RDS", "Download subset RDS")
+                      )
            )
     )
   )

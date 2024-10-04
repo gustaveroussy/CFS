@@ -10,9 +10,13 @@ selected_cell_UMAP_selected <- reactive({
 observeEvent(selected_cell_UMAP_selected(), {
   table = selected_cell_UMAP_selected()
   
-  shinyalert(html = TRUE, text = HTML("Cells saved for manual export"))
+  shinyalert(html = TRUE, text = HTML("Region saved"))
   
-  values$cells_to_export = table$customdata
+  if(!("Regions" %in% names(values$data@misc))){
+    values$data@misc$Regions = list()
+  }
+  
+  values$data@misc$Regions[[input$name_of_region_UMAP]] = table$customdata
 
 })
 
@@ -32,14 +36,20 @@ selected_cell_UMAP_spatial <- reactive({
 observeEvent(square_cell_UMAP_spatial(), {
   table = square_cell_UMAP_spatial()
   
-  shinyalert(html = TRUE, text = HTML(paste0("x: ", round(table$x[1],2), ", ", round(table$x[2],2), "<br>y: ", round(table$y[2],2), ", ", round(table$y[1],2), "<br>Cells saved for manual export")))
+  shinyalert(html = TRUE, text = HTML(paste0("x: ", round(table$x[1],2), ", ", round(table$x[2],2), "<br>y: ", round(table$y[2],2), ", ", round(table$y[1],2))))
   
 })
 
 observeEvent(selected_cell_UMAP_spatial(), {
   table = selected_cell_UMAP_spatial()
   
-  values$cells_to_export = table$customdata
+  shinyalert(html = TRUE, text = HTML("Region saved"))
+  
+  if(!("Regions" %in% names(values$data@misc))){
+    values$data@misc$Regions = list()
+  }
+  
+  values$data@misc$Regions[[input$name_of_region_spatial]] = table$customdata
   
 })
 

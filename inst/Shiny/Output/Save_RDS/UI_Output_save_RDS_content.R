@@ -33,9 +33,11 @@ output[["Output_or_message_2"]] <- renderUI({
 ## UI elements to choose de type of subclustering
 ##----------------------------------------------------------------------------##
 output$subclustering_type <- renderUI({
-  selectInput("export_sub_IC", label = "Choose type of subclustering", 
-              choices = list("Metadata", "IC annotation", "Manual Selection"), 
-              selected = "Metadata")
+  tagList(
+    selectInput("export_sub_IC", label = "Choose type of subclustering", 
+                choices = list("Metadata", "IC annotation", "Regions"), 
+                selected = "Metadata")
+  )
 })
   
   
@@ -51,6 +53,10 @@ output$subclustering_choice <- renderUI({
   } else if (input$export_sub_IC == "IC annotation"){
     selectInput("Annotation_type_subclustering_export_choose", label = "Choose Annotation type to use for extraction",
                    choices = colnames(values$Annotation), selected = NULL)
+  } else if (input$export_sub_IC == "Regions"){
+    selectizeInput("region_to_export", "Region to export", names(values$data@misc$Regions), selected = NULL,
+                   multiple = TRUE,
+                   options = NULL)
   }
 })
 

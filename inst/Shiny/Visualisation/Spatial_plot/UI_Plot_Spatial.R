@@ -45,7 +45,8 @@ output[["Plot_Spatial_UI"]] <- renderUI({
         height = NULL,
         collapsible = TRUE,
         collapsed = FALSE,
-        uiOutput("Plot_Spatial_or_message")
+        uiOutput("Plot_Spatial_or_message"),
+        textInput("name_of_region_spatial", "Region name", value = "Region 1", width = NULL, placeholder = NULL)
       )
     )
   )
