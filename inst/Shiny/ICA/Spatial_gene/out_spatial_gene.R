@@ -71,7 +71,6 @@ spatial_gene_react <- reactive({
   } else {
     
     img = img_ggplot()
-    img = img[[input$Plot_image_spatial[1]]]
     
     coordinates = TissueCoordinates_ggplot()
     
@@ -88,48 +87,50 @@ spatial_gene_react <- reactive({
     
     names(coordinates) = images_names()
     
-    coordinates = coordinates[[input$Plot_image_spatial[1]]]
-    
     plotList <- list()
     
-    for(genes in input$gene_projection_gene_choice){
-      
-      gene = enquo(genes)
-      
-      if(!is.null(img)){
+    for(k in input$Plot_image_spatial){
+      for(genes in input$gene_projection_gene_choice){
         
-        fig = ggplot(coordinates, aes(imagecol, -imagerow)) +
-          background_image(img) +
-          geom_point(data = coordinates, aes(color=coordinates[,!!gene]), size=input$Plot_spatial_gene_size) +
-          ggplot2::scale_color_gradientn(name = genes,
-                                         colours = viridis_pal(option = if(input$select_color_gene_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_gene_projection}else{"D"})(ncol(values$data)), oob=squish) +
-          guides(size = "none") +
-          theme_void()
+        print(img[[k]])
+        print(coordinates[[k]])
         
-        if(("image" %in% slotNames(values$data@images[[input$Plot_image_spatial[1]]])) && as.logical(sum(dim(values$data@images[[input$Plot_image_spatial[1]]]@image) > 1000))){
-          fig = fig + xlim((25/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$lowres * values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$hires),ncol(img)-(25/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$lowres * values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$hires)) +
-            ylim(-nrow(img)+(25/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$lowres * values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$hires),-(25/values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$lowres * values$data@images[[input$Plot_image_spatial[1]]]@scale.factors$hires))
+        gene = enquo(genes)
+        
+        if(!is.null(img[[k]])){
+          
+          plotList[[paste0(k,"_",genes)]] = ggplot(coordinates[[k]], aes(imagecol, -imagerow)) +
+            background_image(img[[k]]) +
+            geom_point(data = coordinates[[k]], aes(color=coordinates[[k]][,!!gene]), size=input$Plot_spatial_gene_size) +
+            ggplot2::scale_color_gradientn(name = genes,
+                                           colours = viridis_pal(option = if(input$select_color_gene_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_gene_projection}else{"D"})(ncol(values$data)), oob=squish) +
+            guides(size = "none") +
+            theme_void()
+          
+          if(("image" %in% slotNames(values$data@images[[k]])) && as.logical(sum(dim(values$data@images[[k]]@image) > 1000))){
+            plotList[[paste0(k,"_",genes)]] = plotList[[paste0(k,"_",genes)]] + xlim((25/values$data@images[[k]]@scale.factors$lowres * values$data@images[[k]]@scale.factors$hires),ncol(img[[k]])-(25/values$data@images[[k]]@scale.factors$lowres * values$data@images[[k]]@scale.factors$hires)) +
+              ylim(-nrow(img[[k]])+(25/values$data@images[[k]]@scale.factors$lowres * values$data@images[[k]]@scale.factors$hires),-(25/values$data@images[[k]]@scale.factors$lowres * values$data@images[[k]]@scale.factors$hires))
+          } else {
+            plotList[[paste0(k,"_",genes)]] = plotList[[paste0(k,"_",genes)]] + xlim(25,ncol(img[[k]])-25) +
+              ylim(-nrow(img[[k]])+25,-25)
+          }
+          
         } else {
-          fig = fig + xlim(25,ncol(img)-25) +
-            ylim(-nrow(img)+25,-25)
+          
+          plotList[[paste0(k,"_",genes)]] = ggplot(coordinates[[k]], aes(imagecol, -imagerow)) +
+            geom_point(data = coordinates[[k]], aes(color=coordinates[[k]][,!!gene]), size=input$Plot_spatial_gene_size) +
+            ggplot2::scale_color_gradientn(name = genes,
+                                           colours = viridis_pal(option = if(input$select_color_gene_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_gene_projection}else{"D"})(ncol(values$data)), oob=squish) +
+            guides(size = "none") +
+            theme_void()
+          
         }
-        
-      } else {
-        
-        fig = ggplot(coordinates, aes(imagecol, -imagerow)) +
-          geom_point(data = coordinates, aes(color=coordinates[,!!gene]), size=input$Plot_spatial_gene_size) +
-          ggplot2::scale_color_gradientn(name = genes,
-                                         colours = viridis_pal(option = if(input$select_color_gene_projection %in% c("A","B","C","D","E","F","G","H")){input$select_color_gene_projection}else{"D"})(ncol(values$data)), oob=squish) +
-          guides(size = "none") +
-          theme_void()
-        
       }
-      
-      plotList[[genes]] = fig
     }
     
     output = ggarrange(plotlist=plotList,
-                       labels = input$gene_projection_gene_choice)
+                       labels = rep(input$gene_projection_gene_choice,length(input$Plot_image_spatial))
+                       )
     
     return(output)
   }
