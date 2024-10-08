@@ -24,52 +24,50 @@ spatial_gene_react <- reactive({
   i = 1
   
   if(input$interactive_gene_projection){
-    for ( x in input$gene_projection_gene_choice ) {
-      plotList[[i]] <- plot_ly()
-      
-      # if (!is.null(values$HD_image_2)){
-      #   plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$HD_image_2, hoverinfo = 'skip')
-      # }
-      if (!is.null(values$HD_image)) {
-        plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$HD_image, hoverinfo = 'skip')
-      } else {
+    for(k in input$Plot_image_spatial){
+      for (x in input$gene_projection_gene_choice) {
+        plotList[[i]] <- plot_ly()
+        
         if(length(values$low_image) != 0){
-          plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$low_image[[1]], hoverinfo = 'skip')
+          plotList[[i]] <- plotList[[i]] %>% add_trace(type="image", source = values$low_image[[k]], hoverinfo = 'skip')
         }
-      }
-      
-      g = names(contrib_byIC_pos[contrib_byIC_pos %like% x])
-      
-      if(length(g) > 5){
-        numb = floor(length(g)/5)
-        for(nu in 1:numb){
-          g[5*nu] = paste0(g[5*nu],"<br>")
+        
+        g = names(contrib_byIC_pos[contrib_byIC_pos %like% x])
+        
+        if(length(g) > 5){
+          numb = floor(length(g)/5)
+          for(nu in 1:numb){
+            g[5*nu] = paste0(g[5*nu],"<br>")
+          }
         }
+        
+        print(names(values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[k]])]))
+        
+        plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[[k]][,"imagecol"], y = TissueCoordinates()[[k]][,"imagerow"],
+                                                     marker = list(color = values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[k]])],
+                                                                   size = input$Plot_spatial_gene_size,
+                                                                   colorscale = colorscale_gene_spatial(),
+                                                                   coloraxis="coloraxis",
+                                                                   reversescale=input$invert_color_gene_projection),
+                                                     opacity = input$transparency_gene_projection,
+                                                     type = 'scatter', mode = "markers",
+                                                     text = values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[k]])],
+                                                     customdata = names(values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[k]])]),
+                                                     hovertemplate = paste0("Cell : %{customdata}<br>",
+                                                                            "Expression: %{text}<br>",
+                                                                            "Associated IC:<br>",
+                                                                            paste0(g, collapse=","),
+                                                                            "<extra></extra>")
+        ) %>% layout(title = input$gene_projection_gene_choice, xaxis=list(showgrid = FALSE, showticklabels=FALSE),
+                     yaxis = list(showgrid = FALSE, showticklabels=FALSE))
+    
+        
+        i = i+1
+        
       }
-      
-      plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[[input$Plot_image_spatial[[1]]]][,"imagecol"], y = TissueCoordinates()[[input$Plot_image_spatial[[1]]]][,"imagerow"],
-                                                   marker = list(color = values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[input$Plot_image_spatial[[1]]]])],
-                                                                 size = input$Plot_spatial_gene_size,
-                                                                 colorscale = colorscale_gene_spatial(),
-                                                                 coloraxis="coloraxis",
-                                                                 reversescale=input$invert_color_gene_projection),
-                                                   opacity = input$transparency_gene_projection,
-                                                   type = 'scatter', mode = "markers",
-                                                   text = values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[input$Plot_image_spatial[[1]]]])],
-                                                   customdata = names(values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[input$Plot_image_spatial[[1]]]])]),
-                                                   hovertemplate = paste0("Cell : %{customdata}<br>",
-                                                                          "Expression: %{text}<br>",
-                                                                          "Associated IC:<br>",
-                                                                          paste0(g, collapse=","),
-                                                                          "<extra></extra>")
-      ) %>% layout(title = input$gene_projection_gene_choice, xaxis=list(showgrid = FALSE, showticklabels=FALSE),
-                   yaxis = list(showgrid = FALSE, showticklabels=FALSE))
-  
-      
-      i = i+1
     }
     
-    return(subplot(plotList, nrows = ceiling(length(input$gene_projection_gene_choice)/3)) %>% layout(showlegend = FALSE, coloraxis=list(colorscale=colorscale_gene_spatial())))
+    return(subplot(plotList, nrows = length(input$Plot_image_spatial)) %>% layout(showlegend = FALSE, coloraxis=list(colorscale=colorscale_gene_spatial())))
   } else {
     
     img = img_ggplot()
