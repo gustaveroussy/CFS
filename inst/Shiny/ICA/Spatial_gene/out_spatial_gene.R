@@ -41,8 +41,6 @@ spatial_gene_react <- reactive({
           }
         }
         
-        print(names(values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[k]])]))
-        
         plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[[k]][,"imagecol"], y = TissueCoordinates()[[k]][,"imagerow"],
                                                      marker = list(color = values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[k]])],
                                                                    size = input$Plot_spatial_gene_size,
@@ -91,9 +89,6 @@ spatial_gene_react <- reactive({
     
     for(k in input$Plot_image_spatial){
       for(genes in input$gene_projection_gene_choice){
-        
-        print(img[[k]])
-        print(coordinates[[k]])
         
         gene = enquo(genes)
         
