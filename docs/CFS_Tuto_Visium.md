@@ -29,13 +29,6 @@ devtools::install_github("/gustaveroussy/CFS"
                          ,ref="main")
 ```
 
-To install the development branch with additional (potentially unstable) features, use:
-
-``` r
-devtools::install_github("/gustaveroussy/CFS"
-                         ,ref="development")
-```
-
 CellsFromSpace has the following dependencies : 
 
 -   shiny 
@@ -96,11 +89,11 @@ saveRDS(data, file="mouse_brain.rds")
 
 Multiple Load options are offered through CFS' interactive Shiny interface. 
 
-![Load_Visium image](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Load_Visium.png)
+![Load_Visium image](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Load_Visium.png)
 
 - Unprocessed data generated through the SpaceRanger fastq processing pipeline can be loaded directly into CFS by pressing the `Select a folder` button under **Load Visium output folder** (Red ellipse in the screenshot above). **Note** that not all files are essential for object initiation. Only the *filtered_feature_bc_matrix.h5* file and *spatial* folder are necessary. The `outs` folder may also be renamed. Renaming of the `outs` folder (to reflect sample name) is necessary for multi-sample analysis.
 
-![Load_Visium_folder image](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Load_Visium_folder.png)
+![Load_Visium_folder image](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Load_Visium_folder.png)
 
 - Preprocessed spatial *Seurat* objects can also be imported to CFS by selecting the appropriate `.rds` file in the **Load processed data** section (Green ellipse in the screenshot above).
 
@@ -112,7 +105,7 @@ $~$
 
 The Pre-Processing tab allows the user to select the parameters used for ICA calculation, filtering and functional enrichment analysis. Default values will be sufficient for most samples. We recommend a **Number of ICs** value between 50-100 for most analyses to capture all potential biological sources. Overdecomposed or redundant ICs can subsequently be removed or collapsed, so the impact of overshooting is minimal. See the [Programmatic Preprocessing](#programmatic-preprocessing) section below for a more detailed explanation of preprocessing steps.
 
-![Preprocessing image](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Preprocessing.png)
+![Preprocessing image](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Preprocessing.png)
 
 $~$
 
@@ -205,7 +198,7 @@ $~$
 
 ICA is a blind source separation algorithm able to isolate independent signal sources (i.e. cell types) in mixed detectors (i.e. Visium spots)
 
-![ICA_in_ST.png](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_in_ST.png)
+![ICA_in_ST.png](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICA_in_ST.png)
 
 Once ICA calculation is done, the CFS interactive interface helps the user interpret and analyse the data with a guided workflow to identify the biological sources associated with individual ICs.
 
@@ -215,11 +208,11 @@ The central step of the CFS workflow if the annotation of individual ICs. To ass
 
 In this tab, ICs are visualized one at a time. To select the IC to analyze, use the dropdown menu at the top of the page 
 
-![ICA_Select_IC](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_Select_IC.png)
+![ICA_Select_IC](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICA_Select_IC.png)
 
 The interactive table below the selection menu allows the user to fill in annotations for the observed IC directly within this tab 
 
-![ICA_IC_anno](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_IC_anno.png)
+![ICA_IC_anno](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICA_IC_anno.png)
 
 The IC annotation contains 4 mandatory fields: 
 
@@ -234,32 +227,32 @@ $~$
 
 ### IC visualizations
 
-Multiple visualization options are rendered when an IC is selected. All visualizations are interactive with the ability to modify paramaters (in the left box), zoom in, hover for more information, save snapshot as .png, and more. See the [CellsFromSpace documentation](https://github.com/gustaveroussy/CFS/blob/development/docs/CFS.md) for detailed descriptions of all functions
+Multiple visualization options are rendered when an IC is selected. All visualizations are interactive with the ability to modify paramaters (in the left box), zoom in, hover for more information, save snapshot as .png, and more. See the [CellsFromSpace documentation](https://github.com/gustaveroussy/CFS/blob/main/docs/CFS.md) for detailed descriptions of all functions
 
 - **Global ICA heatmap**: Display the top contributor genes for each IC. In the cogwheel menu, user can select to cluster ICs based on feature weight profile. Values represent gene weights in each IC. *Note* this visualization is constant between ICs and may be collapsed to decrease render time between ICs.
 
-![ICA_Global_heatmap](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_Global_heatmap.png)
+![ICA_Global_heatmap](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICA_Global_heatmap.png)
 
 - **Plot IC weight**: Spatial projection of IC weights per spot. 
 
-![ICA_Spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_Spatial.png)
+![ICA_Spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICA_Spatial.png)
 
 - **Plot IC related Genes weight**: Spatial projection of user-defined genes. Any gene can be selected in the **Choose gene to plot** field and they are presented in order of contribution to the selected IC. Selecting multiple genes will display each of them separately in the window.
 
-![ICA_topGenes](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_topGenes.png)
+![ICA_topGenes](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICA_topGenes.png)
 
 - **IC-specific heatmap**: Display weights of selected IC's top contributory gene across all ICs. allows for rapid interpretation of gene list by expert and rapid identification of similar ICs. Underneath the heatmap, the number of total and positive contributor genes are displayed with buttons allowing the copy of the associated gene lists to clipboard.
 
-![ICA_ICWeight](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_ICWeight.png)
+![ICA_ICWeight](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICA_ICWeight.png)
 
 - **Functional enrichment**: Display the result of functional enrichment analysis. Select the database to display in the drop down menu in the left box. 
 
-![ICA_enrich](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_enrich.png)
+![ICA_enrich](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICA_enrich.png)
 
 
 - **IC-contributory genes per spot**: Heatmap of top contributor genes for the selected IC across all spots.
     
-![ICA_spotWeight](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICA_spotWeight.png)
+![ICA_spotWeight](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICA_spotWeight.png)
 
 
 $~$
@@ -268,7 +261,7 @@ $~$
 
 Allows the manual exploration of genes of interest across ICs
 
-![ICgeneWeight](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICgeneWeight.png)
+![ICgeneWeight](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICgeneWeight.png)
 
 $~$
 
@@ -277,7 +270,7 @@ $~$
 This tab displays the searchable, editable IC annotation table. An IC annotation table can be filled dynamically in the [**ICA**](#ica-annotation) tab, or imported using the **Choose CSV File** atop this tab. The annotation table can also be downloaded using the `Download table` button at the bottom of the table
 You can find an example of annotation table for the mouse brain visium sample [here](https://github.com/gustaveroussy/CFS/blob/main/docs/Tables/Annotation.csv), but exact IC ordering can vary slightly between runs, leading to downstream misinterpretation. Use with caution.
 
-![ICAtable](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/ICAtable.png)
+![ICAtable](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/ICAtable.png)
 
 $~$
 
@@ -287,13 +280,13 @@ Once IC annotation is complete, different visualization options are offered with
 
 First, spots can be clustered and a dimensionality reduction (DimRed) calculated using the ICA latent space. To do so, Select one or more IC *Type* to be used for calculation in the **Choose cell type to cluster/for reduction** fields of both the **Clustering parameters** and **Dimension reduction parameters** panes. In our mouse brain example, we can calculate clusters and DimRed choosing all of the annotated IC Types with default parameters and a clustering resolution of 3.8 as shown below. 
 
-![Vis_clust](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_clust.png)
-![Vis_dimred](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_dimred.png)
+![Vis_clust](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Vis_clust.png)
+![Vis_dimred](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Vis_dimred.png)
 
 With the selected clustering parameters, 37 clusters are obtained along with a UMAP projection showing distinctive cluster organization. Spatial projection of these clusters shows the ability of ICA to closely match the [mouse brain ontology](http://atlas.brain-map.org/atlas?atlas=1&plate=100960236#atlas=1&plate=100960236&resolution=11.97&x=5472.254464285715&y=4096.1328125&zoom=-3&structure=155&z=6)
 
-![Vis_UMAP](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_UMAP.png)
-![Vis_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_spatial.png)
+![Vis_UMAP](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Vis_UMAP.png)
+![Vis_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Vis_spatial.png)
 
 However, it is important to keep in mind that most spots in Visium samples are composed of cell mixtures and that clustering and DimRed calculations are driven mostly by the cellular composition rather than phenotype of cells found within. In highly organized tissues with relatively homogeneous subregions such as the mouse brain presented here, the resulting clusters and UMAP clearly carry biological insight, but for more disorganized or heterogeneous tissues such as tumors, clustering and DimRed projections are often of lower interest. In such cases, visualization and interpretation of the IC latent space directly is more relevant and informative.
 
@@ -301,17 +294,17 @@ CFS offers some solutions to visualize the IC latent space.
 
 - First, by selecting `IC` in the **Select what to color** field of **Display parameters**, user can select an IC of interest to project onto the Dimred and Spatial embeddings. Here, IC 44 corresponds to Oligodendrocytes scattered across the tissue, but still captured by ICA. ***Note*** *That individual genes can also be visualized this way by selecting* `gene` *in the* **Select what to color** *field.*
 
-![Vis_IC44_UMAP](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_IC44_UMAP.png)
-![Vis_IC44_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_IC44_spatial.png)
+![Vis_IC44_UMAP](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Vis_IC44_UMAP.png)
+![Vis_IC44_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Vis_IC44_spatial.png)
 
 - By selecting `Density` in the **Select method to use** field of **Display parameters**, user can visualize the signal density for an IC Type of interest. Here, the density of `Cortex` associated ICs is displayed. *Again, in a highly organized tissues like the brain, the relevance of this visualization is limited, but can be very useful in other contexts (ex. Immune infiltration of tumors, Identification of cancer cells in a sample, etc.)*
 
-![Vis_Cortex_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_Cortex_spatial.png)
+![Vis_Cortex_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Vis_Cortex_spatial.png)
 
 - By selecting `Scatter pie` in the **Select method to use** field of **Display parameters**, user can visualize the IC composition of each spot for one or more IC Types. Here, relative IC weights associated to `Cortex` are displayed for each spot on both the UMAP and spatial projections, with spot size representing the overall Cortex signal abundance.
 
-![Vis_scatter_UMAP](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_scatter_UMAP.png)
-![Vis_scatter_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Vis_scatter_spatial.png)
+![Vis_scatter_UMAP](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Vis_scatter_UMAP.png)
+![Vis_scatter_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Vis_scatter_spatial.png)
 
 $~$
 
@@ -321,11 +314,11 @@ Upon cluster calculation in the [**Visualization** Tab](#visualization) (or any 
 
 - Differentially expressed genes between CA1-2 pyramidal (cluster 30) and CA3 pyramidal layer (cluster 22) 
 
-![Marker_CA](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Marker_CA.png)
+![Marker_CA](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Marker_CA.png)
 
 - Transcriptional markers of the hypothalamus (cluster 2)
 
-![Marker_HY](https://github.com/gustaveroussy/CFS/blob/development/docs/Tutorial_images/Marker_HY.png)
+![Marker_HY](https://github.com/gustaveroussy/CFS/blob/main/docs/Tutorial_images/Marker_HY.png)
 
 For each comparison, a detailed **Marker table** is found below the volcano plot
 
@@ -335,7 +328,7 @@ $~$
 
 At any point during the analysis, a `.rds` file can be exported containing all the complementary analyses. As the Shiny interface cannot automatically save progress, we recommend users manually export the object after major processing and analysis steps. Such exported processed objects can be [reloaded into CFS](#interactive-preprocessing) via the **Load processed data** method in the **Load** tab. 
 
-![Output_img](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/Output_img.png)
+![Output_img](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/Output_img.png)
 
 $~$
 
@@ -345,25 +338,25 @@ Due to the independent nature of ICs, it is possible to isolate and analyse spot
 
 For the mouse brain sample, Cortex-related signal can be isolated by manual selection of all clusters associated to the region in the [initial clustering](#visualization) (clusters 1, 4, 5, 9, 11, 12, 13, 14, 17, 18, 19, 23, 24, 25, 26, 31, 34)
 
-![subset_allClust](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/subset_allClust.png)
+![subset_allClust](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/subset_allClust.png)
 
 Alternatively, a new low resolution (ex. 0.5 resolution) Cortex-specific clustering may be calculated for easier subsetting. Here all clusters except 0 can then be subsetted and exported into a new `.rds` file.
 
-![subset_CortexClust_UMAP](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/subset_CortexClust_UMAP.png)
+![subset_CortexClust_UMAP](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/subset_CortexClust_UMAP.png)
 
-![subset_CortexClust_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/subset_CortexClust_spatial.png)
+![subset_CortexClust_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/subset_CortexClust_spatial.png)
 
-![subset_CortexClust](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/subset_CortexClust.png)
+![subset_CortexClust](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/subset_CortexClust.png)
 
 Once the `.rds` file is saved, it can then be reimported into CFS in the **Load** tab and either be reprocessed (processing, IC annotation, etc.) or more finely reanalyzed (clustering + DimRed) using only the the Cortex-associated ICs with higher resolution. By clustering the mouse brain cortex with a resolution of 5 
 
-![subset_Ctx_clust5](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/subset_Ctx_clust5.png)
+![subset_Ctx_clust5](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/subset_Ctx_clust5.png)
 
-![subset_Ctx_clust5_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/Tutorial_images/subset_Ctx_clust5_spatial.png)
+![subset_Ctx_clust5_spatial](https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/Tutorial_images/subset_Ctx_clust5_spatial.png)
 
 DGE analysis can then be performed on clusters of interest in the **Marker Table** tab, for example to identify marker genes between the Lateral versus Basolateral amygdalar nuclei (clusters 20 & 10 respectively) which were not distinguished in the original analysis.
 
-![subset_Ctx_DGE](https://github.com/gustaveroussy/CFS/blob/development/docs/Tutorial_images/subset_Ctx_DGE.png)
+![subset_Ctx_DGE](https://github.com/gustaveroussy/CFS/blob/main/docs/Tutorial_images/subset_Ctx_DGE.png)
 
 
 $~$
