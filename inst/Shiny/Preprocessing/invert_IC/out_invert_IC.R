@@ -3,6 +3,8 @@
 ##----------------------------------------------------------------------------##
 
 observeEvent(input$preprocessing_invert_IC_action_button,{
+  req(values$data@reductions)
+  
   cell = values$data@reductions$ica@cell.embeddings
   cell[,input$preprocessing_select_inver_IC] = -(cell[,input$preprocessing_select_inver_IC])
   values$data@reductions$ica@cell.embeddings = cell
