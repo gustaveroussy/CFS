@@ -13,7 +13,7 @@ TissueCoordinates <- reactive({
     if(("image" %in% slotNames(values$data@images[[image]])) && as.logical(sum(dim(values$data@images[[image]]@image) > 1000))){
       c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$hires
       c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$hires
-    } else {
+    } else if (("image" %in% slotNames(values$data@images[[image]]))) {
       c[,"imagerow"] <- c[,"imagerow"] * values$data@images[[image]]@scale.factors$lowres
       c[,"imagecol"] <- c[,"imagecol"] * values$data@images[[image]]@scale.factors$lowres
     }
@@ -46,9 +46,12 @@ TissueCoordinates_ggplot <- function(){
     if(("image" %in% slotNames(values$data@images[[sample]])) && as.logical(sum(dim(values$data@images[[sample]]@image) > 1000))){
       coordinates[[sample]][,"imagerow"] <- coordinates[[sample]][,"imagerow"] * values$data@images[[sample]]@scale.factors$hires;
       coordinates[[sample]][,"imagecol"] <- coordinates[[sample]][,"imagecol"] * values$data@images[[sample]]@scale.factors$hires
-    } else {
+    } else if (("image" %in% slotNames(values$data@images[[image]]))) {
       coordinates[[sample]][,"imagerow"] <- coordinates[[sample]][,"imagerow"] * values$data@images[[sample]]@scale.factors$lowres;
       coordinates[[sample]][,"imagecol"] <- coordinates[[sample]][,"imagecol"] * values$data@images[[sample]]@scale.factors$lowres
+    } else {
+      colnames(coordinates[[sample]])[colnames(coordinates[[sample]]) == "x"] = "imagerow"
+      colnames(coordinates[[sample]])[colnames(coordinates[[sample]]) == "y"] = "imagecol"
     };
     return(coordinates[[sample]])})
   
