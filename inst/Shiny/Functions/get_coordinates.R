@@ -39,21 +39,20 @@ TissueCoordinates <- reactive({
 })
 
 TissueCoordinates_ggplot <- function(){
-  coordinates = list()
   
   coordinates = lapply(images_names(), function(sample){
-    coordinates[[sample]] = values$data@images[[sample]]@coordinates;
+    coordinates = values$data@images[[sample]]@coordinates;
     if(("image" %in% slotNames(values$data@images[[sample]])) && as.logical(sum(dim(values$data@images[[sample]]@image) > 1000))){
-      coordinates[[sample]][,"imagerow"] <- coordinates[[sample]][,"imagerow"] * values$data@images[[sample]]@scale.factors$hires;
-      coordinates[[sample]][,"imagecol"] <- coordinates[[sample]][,"imagecol"] * values$data@images[[sample]]@scale.factors$hires
-    } else if (("image" %in% slotNames(values$data@images[[image]]))) {
-      coordinates[[sample]][,"imagerow"] <- coordinates[[sample]][,"imagerow"] * values$data@images[[sample]]@scale.factors$lowres;
-      coordinates[[sample]][,"imagecol"] <- coordinates[[sample]][,"imagecol"] * values$data@images[[sample]]@scale.factors$lowres
+      coordinates[,"imagerow"] <- coordinates[,"imagerow"] * values$data@images[[sample]]@scale.factors$hires;
+      coordinates[,"imagecol"] <- coordinates[,"imagecol"] * values$data@images[[sample]]@scale.factors$hires
+    } else if (("image" %in% slotNames(values$data@images[[sample]]))) {
+      coordinates[,"imagerow"] <- coordinates[,"imagerow"] * values$data@images[[sample]]@scale.factors$lowres;
+      coordinates[,"imagecol"] <- coordinates[,"imagecol"] * values$data@images[[sample]]@scale.factors$lowres
     } else {
-      colnames(coordinates[[sample]])[colnames(coordinates[[sample]]) == "x"] = "imagerow"
-      colnames(coordinates[[sample]])[colnames(coordinates[[sample]]) == "y"] = "imagecol"
+      colnames(coordinates)[colnames(coordinates) == "x"] = "imagerow"
+      colnames(coordinates)[colnames(coordinates) == "y"] = "imagecol"
     };
-    return(coordinates[[sample]])})
+    return(coordinates)})
   
   names(coordinates) = images_names()
   return(coordinates)
