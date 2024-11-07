@@ -2,7 +2,7 @@
 ## functions to create plotly object for graph
 ##----------------------------------------------------------------------------##
 
-create_distance_graph = function(G = NULL, layout = "kk", n_dim = 2,edges_list = NULL, weights = NULL){
+create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges_list = NULL, weights = NULL){
   ##### create edgelist #####
   
   if(input$choose_distances_to_determine == input$choose_distances_to_determine_2){

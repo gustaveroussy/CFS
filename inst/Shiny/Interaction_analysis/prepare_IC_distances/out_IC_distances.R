@@ -354,71 +354,14 @@ observeEvent(input$start_distance_IC_batch,{
 })
 
 fig_distance_graph_IC <- reactive({
-  if(!is.null(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]])){
-    tree_table = values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]]
-  } else if (!is.null(values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]])){
-    tree_table = values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]][[input$choose_sample_for_distances]][[input$choose_method_for_distances]]
-  } else {
-    tree_table = NULL
-  }
+  l = create_distance_graph(sample = input$choose_sample_for_distances)
   
-  req(tree_table)
-  req(input$choose_n_dim_for_distances)
-  
-  if(input$choose_distances_to_determine == input$choose_distances_to_determine_2){
-    colnames(tree_table) = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2,"_2"),"weight")
-  } else {
-    colnames(tree_table) = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2),"weight")
-  }
-  
-  tree_table = tree_table[(as.double(tree_table[,"weight"]) > 0),]
-  
-  tree_table = tree_table[as.double(scale(tree_table[,"weight"])) > input$Z_score_for_distances,]
-
-  G = graph_from_data_frame(tree_table, directed = FALSE)
-
-  if(input$choose_distances_to_determine == "Genes" & input$choose_distances_to_determine_2 == "Genes" & !is.null(input$choose_ic_for_genes_filter_for_distances_ligand) | !is.null(input$choose_ic_for_genes_filter_for_distances_receptor)){
-    l = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$ligand_gene_symbol
-    r = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$receptor_gene_symbol
+  if(gsize(l[["G"]]) > 0){
+    edges_list = as.data.frame(as_edgelist(l[["G"]]))
     
-    if(!is.null(input$choose_ic_for_genes_filter_for_distances_ligand)){
-      genes_ICs = lapply(input$choose_ic_for_genes_filter_for_distances_ligand,function(n){return(values$data@misc$GeneAndStat$Contrib_gene[[n]])})
-      genes_ICs = bind_rows(genes_ICs)
-      genes_ICs = genes_ICs %>%
-        arrange(desc(Sig)) %>%
-        filter(Sig>=0)
-      l = l[l %in% unique(genes_ICs$gene)]
-    }
+    weights = l[["tree_table"]][(paste0(l[["tree_table"]][,1],"_",l[["tree_table"]][,2]) %in% paste0(edges_list[,1],"_",edges_list[,2]) | paste0(l[["tree_table"]][,2],"_",l[["tree_table"]][,1]) %in% paste0(edges_list[,1],"_",edges_list[,2])) ,"weight"]
     
-    if(!is.null(input$choose_ic_for_genes_filter_for_distances_receptor)){
-      genes_ICs = lapply(input$choose_ic_for_genes_filter_for_distances_receptor,function(n){return(values$data@misc$GeneAndStat$Contrib_gene[[n]])})
-      genes_ICs = bind_rows(genes_ICs)
-      genes_ICs = genes_ICs %>%
-        arrange(desc(Sig)) %>%
-        filter(Sig>=0)
-      r = r[r %in% unique(genes_ICs$gene)]
-    }
-    
-    genes = c(l,r)
-    
-    G = subgraph(G, genes[genes %in% names(V(G))])
-  }
-  
-  if(input$IC_distances_remove_IC_from_graph){
-    genes_to_keep = names(V(G))[!grepl("IC_",names(V(G)))]
-    ICs_to_keep = rownames(values$Annotation)[unlist(values$Annotation[,"Use"] == "TRUE")]
-    ICs_to_keep = ICs_to_keep[ICs_to_keep %in% names(V(G))]
-    
-    G = subgraph(G, c(ICs_to_keep,genes_to_keep))
-
-  }
-  
-  if(gsize(G) > 0){
-    edges_list = as.data.frame(as_edgelist(G))
-    
-    weights = tree_table[(paste0(tree_table[,1],"_",tree_table[,2]) %in% paste0(edges_list[,1],"_",edges_list[,2]) | paste0(tree_table[,2],"_",tree_table[,1]) %in% paste0(edges_list[,1],"_",edges_list[,2])) ,"weight"]
-    
-    fig = create_distance_graph(G = G, layout = input$choose_layout_for_distances, n_dim = input$choose_n_dim_for_distances, edges_list = edges_list, weights = weights)
+    fig = create_distance_graph_plotly(G = l[["G"]], layout = input$choose_layout_for_distances, n_dim = input$choose_n_dim_for_distances, edges_list = edges_list, weights = weights)
     
     return(fig)
   } else {
