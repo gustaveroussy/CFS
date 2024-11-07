@@ -69,7 +69,7 @@ output[["IC_distances_UI"]] <- renderUI({
                      ),
                      shinyWidgets::awesomeCheckbox(
                        inputId = "distances_use_log_for_graph",
-                       label = "use log values",
+                       label = "use log for colors",
                        value = TRUE
                      )
                    ),

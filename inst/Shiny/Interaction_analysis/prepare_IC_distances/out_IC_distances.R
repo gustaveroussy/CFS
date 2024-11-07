@@ -414,7 +414,7 @@ fig_distance_graph_IC <- reactive({
   }
   
   if(gsize(G) > 0){
-    print("1")
+    
     edges_list = as.data.frame(as_edgelist(G))
     
     if(input$choose_distances_to_determine == input$choose_distances_to_determine_2){
@@ -422,7 +422,6 @@ fig_distance_graph_IC <- reactive({
     } else {
       colnames(edges_list) = c(input$choose_distances_to_determine,input$choose_distances_to_determine_2)
     }
-    print("2")
     
     if(input$choose_layout_for_distances %in% c("fr","kk","mds")){
       layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G, dim = input$choose_n_dim_for_distances))
@@ -431,7 +430,7 @@ fig_distance_graph_IC <- reactive({
     } else {
       layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G))
     }
-    print("3")
+    
     if(input$choose_n_dim_for_distances == 2){
       
       Xn <- layout[,1]
@@ -441,9 +440,9 @@ fig_distance_graph_IC <- reactive({
       axis <- list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE)
       
       fig = plot_ly(source = "S")
-      print("4")
-      rownames(layout) = names(V(G))
 
+      rownames(layout) = names(V(G))
+      
       # create edges
       edges_list[,"x_start"] = as.double(layout[edges_list[,1],1])
       edges_list[,"x_end"] = as.double(layout[edges_list[,2],1])
@@ -452,14 +451,19 @@ fig_distance_graph_IC <- reactive({
       edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
       edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
       edges_list[,"weight"] = tree_table[(paste0(tree_table[,1],"_",tree_table[,2]) %in% paste0(edges_list[,1],"_",edges_list[,2]) | paste0(tree_table[,2],"_",tree_table[,1]) %in% paste0(edges_list[,1],"_",edges_list[,2])) ,"weight"]
-      print("5")
-      limits=range(edges_list[,"weight"])
-      pal = viridis::viridis(100)
 
-      edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
-      edges_list[,"text"] = paste0(edges_list[,1]," <-> ",edges_list[,2],"<br>Value : ",edges_list$weight)
+      if(input$distances_use_log_for_graph){
+        w = log(edges_list[,"weight"] + 1)
+        limits=range(w)
+        pal = viridis::viridis(100)
+        edges_list[,"colors"] = pal[findInterval(w,seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
+      } else {
+        limits=range(edges_list[,"weight"])
+        pal = viridis::viridis(100)
+        edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
+      }
       
-      print("6")
+      edges_list[,"text"] = paste0(edges_list[,1]," <-> ",edges_list[,2],"<br>Value : ",edges_list$weight)
       
       for(i in 1:nrow(edges_list)){
         fig = fig %>% add_segments(data = edges_list[i,],
@@ -485,8 +489,6 @@ fig_distance_graph_IC <- reactive({
                                                           "<extra></extra>")
         )
       }
-      
-      print("7")
       
       # create vertices colors
       if(input$choose_distances_to_determine != "Genes" & input$choose_distances_to_determine_2 != "Genes"){
@@ -540,8 +542,6 @@ fig_distance_graph_IC <- reactive({
         
       }
       
-      print("8")
-      
       colors = rep(values$palette,ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
 
       #create vertices
@@ -555,7 +555,7 @@ fig_distance_graph_IC <- reactive({
                     text = names(V(G)),
                     customdata = annotation_3,
                     hovertemplate = paste0(input$choose_distances_to_determine, " : %{text}<br>",
-                                           "Annotation :<br>%{customdata}",
+                                           "%{customdata}",
                                            "<extra></extra>")
         ) %>% layout(
         title = 'Distance graph',
@@ -565,10 +565,6 @@ fig_distance_graph_IC <- reactive({
       ) %>%
       add_text(x = ~Xn, y = ~Yn, text = names(V(G)), textposition = "center") %>%
       hide_legend()
-      
-      print("9")
-      
-      
       
     } else if (input$choose_n_dim_for_distances == 3){
       
@@ -593,13 +589,20 @@ fig_distance_graph_IC <- reactive({
       edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
       edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
       edges_list[,"z_median"] = (edges_list[,"z_start"] + edges_list[,"z_end"])/2
-      edges_list[,"weight"] = tree_table[(paste0(tree_table$l,"_",tree_table$r) %in% paste0(edges_list[,input$choose_distances_to_determine],"_",edges_list[,input$choose_distances_to_determine_2])) ,"weight"]
+      edges_list[,"weight"] = tree_table[(paste0(tree_table[,1],"_",tree_table[,2]) %in% paste0(edges_list[,1],"_",edges_list[,2]) | paste0(tree_table[,2],"_",tree_table[,1]) %in% paste0(edges_list[,1],"_",edges_list[,2])) ,"weight"]
       
-      limits=range(edges_list[,"weight"])
-      pal = viridis::viridis(100)
+      if(input$distances_use_log_for_graph){
+        w = log(edges_list[,"weight"] + 1)
+        limits=range(w)
+        pal = viridis::viridis(100)
+        edges_list[,"colors"] = pal[findInterval(w,seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
+      } else {
+        limits=range(edges_list[,"weight"])
+        pal = viridis::viridis(100)
+        edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
+      }
       
-      edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
-      edges_list[,"text"] = paste0(edges_list[,input$choose_distances_to_determine]," <-> ",edges_list[,input$choose_distances_to_determine_2],"<br>Value : ",edges_list$weight)
+      edges_list[,"text"] = paste0(edges_list[,1]," <-> ",edges_list[,2],"<br>Value : ",edges_list$weight)
       
       for(i in 1:nrow(edges_list)){
         fig = fig %>% add_trace(x=c(as.double(edges_list[i,"x_start"]), as.double(edges_list[i,"x_median"])), y=c(as.double(edges_list[i,"y_start"]), as.double(edges_list[i,"y_median"])), z=c(as.double(edges_list[i,"z_start"]), as.double(edges_list[i,"z_median"])),
@@ -625,25 +628,60 @@ fig_distance_graph_IC <- reactive({
       }
       
       # create vertices colors
-      if(input$choose_distances_to_determine == "IC"){
-        
-        annotation = unlist(lapply(names(V(G)), function(x){if(x %in% rownames(values$Annotation)){return(values$Annotation[x,input$choose_vertices_color_for_distances])}else{return("")}}))
-        
-      } else if (input$choose_distances_to_determine == "Genes") {
+      if(input$choose_distances_to_determine != "Genes" & input$choose_distances_to_determine_2 != "Genes"){
         annotation = c()
+        annotation_2 = c()
         
         for(i in names(V(G))){
-          ICs = lapply(values$data@misc$GeneAndStat$Contrib_gene,function(x){x = x[x$Sig > 0,];return(i %in% x$gene)})
-          ICs = names(ICs[ICs == TRUE])
-          ICs = paste0(ICs, " : ", values$Annotation[rownames(values$Annotation) %in% ICs,"Type"] ," : ",values$Annotation[rownames(values$Annotation) %in% ICs,"Annotation"])
-          annotation = c(annotation,paste(ICs,collapse = "<br>"))
+          
+          if(i %in% rownames(values$Annotation)){
+            annotation = c(annotation,values$Annotation[i,input$choose_vertices_color_for_distances])
+            annotation_2 = c(annotation_2,values$Annotation[i,input$choose_vertices_annotation_for_distances])
+            
+          } else {
+            annotation = c(annotation,"")
+            annotation_2 = c(annotation_2,"")
+            
+          }
+          
         }
+        
+        annotation_3 = paste0("Color: ", annotation,"<br>Annotation: ",annotation_2)
+        
+      } else if (input$choose_distances_to_determine == "Genes" | input$choose_distances_to_determine_2 == "Genes") {
+        
+        annotation = c()
+        annotation_2 = c()
+        
+        for(i in names(V(G))){
+          if(i %in% rownames(values$data@assays$SCT@data)){
+            ICs = lapply(values$data@misc$GeneAndStat$Contrib_gene,function(x){x = x[x$Sig > 0,];return(i %in% x$gene)})
+            ICs = names(ICs[ICs == TRUE])
+            ICs = paste0(ICs, " : ", values$Annotation[rownames(values$Annotation) %in% ICs,"Type"] ," : ",values$Annotation[rownames(values$Annotation) %in% ICs,"Annotation"])
+            annotation = c(annotation,paste(ICs,collapse = "<br>"))
+            annotation_2 = c(annotation_2,"")
+          } else {
+            if(i %in% rownames(values$Annotation)){
+              annotation = c(annotation,values$Annotation[i,input$choose_vertices_color_for_distances])
+              annotation_2 = c(annotation_2,values$Annotation[i,input$choose_vertices_annotation_for_distances])
+              
+            } else {
+              annotation = c(annotation,"")
+              annotation_2 = c(annotation_2,"")
+              
+              
+            }
+          }
+          
+        }
+        
+        annotation_3 = paste0("Color: ", annotation,"<br>Annotation: ",annotation_2)
         
       }
       
       colors = rep(values$palette,ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
       
-      #create edges
+      #create vertices
       fig = fig %>%
         add_markers(x = ~Xn, y = ~Yn, z = ~Zn,
                     marker = list(
@@ -652,9 +690,9 @@ fig_distance_graph_IC <- reactive({
                     ),
                     opacity = 1,
                     text = names(V(G)),
-                    customdata = annotation,
+                    customdata = annotation_3,
                     hovertemplate = paste0(input$choose_distances_to_determine, " : %{text}<br>",
-                                           "Annotation :<br>%{customdata}",
+                                           "%{customdata}",
                                            "<extra></extra>")
         ) %>% layout(
           title = 'Distance graph',
