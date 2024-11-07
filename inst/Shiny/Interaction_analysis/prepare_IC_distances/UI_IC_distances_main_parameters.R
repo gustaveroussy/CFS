@@ -30,7 +30,7 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
     column(width = 12,
       selectInput("choose_method_for_distances",
        "Choose method",
-       c("Lee"),
+       c("Lee","Dotproduct"),
        selected = "Lee",
        multiple = FALSE,
        selectize = TRUE,

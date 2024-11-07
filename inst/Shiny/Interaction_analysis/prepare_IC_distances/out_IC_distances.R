@@ -23,53 +23,53 @@ observeEvent(input$start_distance_IC,{
   method = input$choose_method_for_distances
   sample = input$choose_sample_for_distances
   
-  if(is.null(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]]) & is.null(values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]])){
+  if(is.null(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[method]]) & is.null(values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]][[method]])){
     withProgress(message = 'Calculating distances', value = 0, {
     
+      if (input$choose_distances_to_determine == "Genes") {
+        
+        table_sample = raster::t(GetAssayData(values$data))
+        
+      } else if (input$choose_distances_to_determine != "Genes") {
+        
+        table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
+        
+        if(input$choose_distances_to_determine != "ica"){
+          colnames(table_sample) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]
+        }
+        
+        if(input$use_positive_values_for_distances){
+          table_sample[table_sample < 0] = 0
+        }
+        
+      }
+      
+      if (input$choose_distances_to_determine_2 == "Genes") {
+        
+        table_sample_2 = raster::t(GetAssayData(values$data))
+        
+      } else if (input$choose_distances_to_determine_2 != "Genes") {
+        
+        table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings
+        
+        if(input$choose_distances_to_determine_2 != "ica"){
+          colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]
+        }
+        
+        if(input$use_positive_values_for_distances){
+          table_sample_2[table_sample_2 < 0] = 0
+        }
+        
+      }
+      
+      if(length(values$data@images) > 1){
+        table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
+        table_sample_2 = table_sample_2[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample_2)),]
+      }
+      
+      incProgress(0.1, detail = "Finding neighbors")
+      
       if(method == "Lee"){
-        
-        if (input$choose_distances_to_determine == "Genes") {
-          
-          table_sample = raster::t(GetAssayData(values$data))
-          
-        } else if (input$choose_distances_to_determine != "Genes") {
-          
-          table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
-          
-          if(input$choose_distances_to_determine != "ica"){
-            colnames(table_sample) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]
-          }
-          
-          if(input$use_positive_values_for_distances){
-            table_sample[table_sample < 0] = 0
-          }
-          
-        }
-        
-        if (input$choose_distances_to_determine_2 == "Genes") {
-          
-          table_sample_2 = raster::t(GetAssayData(values$data))
-          
-        } else if (input$choose_distances_to_determine_2 != "Genes") {
-          
-          table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings
-          
-          if(input$choose_distances_to_determine_2 != "ica"){
-            colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]
-          }
-          
-          if(input$use_positive_values_for_distances){
-            table_sample_2[table_sample_2 < 0] = 0
-          }
-          
-        }
-        
-        if(length(values$data@images) > 1){
-          table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
-          table_sample_2 = table_sample_2[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample_2)),]
-        }
-        
-        incProgress(0.1, detail = "Finding neighbors")
         
         knn = knearneigh(GetTissueCoordinates(values$data, sample), k=6, longlat = NULL, use_kd_tree=TRUE)
         neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
@@ -147,9 +147,37 @@ observeEvent(input$start_distance_IC,{
           shinyalert("Oops!", "No LR interaction found within selected sample", type = "error")
         }
         
+      } else if (method == "Dotproduct"){
+        
+        if (input$choose_distances_to_determine == input$choose_distances_to_determine_2){
+          
+          if (input$choose_distances_to_determine == "Genes"){
+            lr = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$lr_pair
+            
+            df <- data.frame(lr=lr)
+            df <- df %>% separate(lr, into = c(input$choose_distances_to_determine, paste0(input$choose_distances_to_determine_2,"_2")), sep = "_")
+            
+            table_sample = table_sample[,colnames(table_sample) %in% unique(c(df[,1],df[,2]))]
+            table_sample_2 = table_sample_2[,colnames(table_sample_2) %in% unique(c(df[,1],df[,2]))]
+            
+          }
+          
+          dot_product = t(table_sample) %*% table_sample_2
+          dot_product = as.data.frame(as.table(as.matrix(dot_product)))
+          
+          if (input$choose_distances_to_determine == "Genes"){
+            df = merge(df, dot_product, by=c(1,2))
+          } else {
+            combinations = t(combn(colnames(table_sample), 2))
+            df = merge(combinations, dot_product, by=c(1,2))
+          }
+          
+          values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]] = df
+        
+        }
+        
       }
   
-      
     })
   } else {
     shinyalert("Info", "Already calculated", type = "info")
@@ -165,51 +193,51 @@ observeEvent(input$start_distance_IC_batch,{
   sample_all = names(values$data@images)
   
   for(sample in sample_all){
-    if(is.null(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]]) & is.null(values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]][[sample]])){
+    if(is.null(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]]) & is.null(values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]][[sample]][[method]])){
       withProgress(message = paste0('Calculating ',sample), value = 0, {
         
+        if (input$choose_distances_to_determine == "Genes") {
+          
+          table_sample = raster::t(GetAssayData(values$data))
+          
+        } else if (input$choose_distances_to_determine != "Genes") {
+          
+          table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
+          
+          if(input$choose_distances_to_determine != "ica"){
+            colnames(table_sample) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]
+          }
+          
+          if(input$use_positive_values_for_distances){
+            table_sample[table_sample < 0] = 0
+          }
+          
+        }
+        
+        if (input$choose_distances_to_determine_2 == "Genes") {
+          
+          table_sample_2 = raster::t(GetAssayData(values$data))
+          
+        } else if (input$choose_distances_to_determine_2 != "Genes") {
+          
+          table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings
+          
+          if(input$choose_distances_to_determine_2 != "ica"){
+            colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]
+          }
+          
+          if(input$use_positive_values_for_distances){
+            table_sample_2[table_sample_2 < 0] = 0
+          }
+          
+        }
+        
+        if(length(values$data@images) > 1){
+          table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
+          table_sample_2 = table_sample_2[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample_2)),]
+        }
+        
         if(method == "Lee"){
-          
-          if (input$choose_distances_to_determine == "Genes") {
-            
-            table_sample = raster::t(GetAssayData(values$data))
-            
-          } else if (input$choose_distances_to_determine != "Genes") {
-            
-            table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
-            
-            if(input$choose_distances_to_determine != "ica"){
-              colnames(table_sample) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]
-            }
-            
-            if(input$use_positive_values_for_distances){
-              table_sample[table_sample < 0] = 0
-            }
-            
-          }
-          
-          if (input$choose_distances_to_determine_2 == "Genes") {
-            
-            table_sample_2 = raster::t(GetAssayData(values$data))
-            
-          } else if (input$choose_distances_to_determine_2 != "Genes") {
-            
-            table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings
-            
-            if(input$choose_distances_to_determine_2 != "ica"){
-              colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]
-            }
-            
-            if(input$use_positive_values_for_distances){
-              table_sample_2[table_sample_2 < 0] = 0
-            }
-            
-          }
-          
-          if(length(values$data@images) > 1){
-            table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
-            table_sample_2 = table_sample_2[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample_2)),]
-          }
           
           incProgress(0.1, detail = "Finding neighbors")
           
@@ -289,6 +317,35 @@ observeEvent(input$start_distance_IC_batch,{
             shinyalert("Oops!", "No LR interaction found within selected sample", type = "error")
           }
           
+        }  else if (method == "Dotproduct"){
+          
+          if (input$choose_distances_to_determine == input$choose_distances_to_determine_2){
+            
+            if (input$choose_distances_to_determine == "Genes"){
+              lr = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$lr_pair
+              
+              df <- data.frame(lr=lr)
+              df <- df %>% separate(lr, into = c(input$choose_distances_to_determine, paste0(input$choose_distances_to_determine_2,"_2")), sep = "_")
+              
+              table_sample = table_sample[,colnames(table_sample) %in% unique(c(df[,1],df[,2]))]
+              table_sample_2 = table_sample_2[,colnames(table_sample_2) %in% unique(c(df[,1],df[,2]))]
+              
+            }
+            
+            dot_product = t(table_sample) %*% table_sample_2
+            dot_product = as.data.frame(as.table(as.matrix(dot_product)))
+            
+            if (input$choose_distances_to_determine == "Genes"){
+              df = merge(df, dot_product, by=c(1,2))
+            } else {
+              combinations = t(combn(colnames(table_sample), 2))
+              df = merge(combinations, dot_product, by=c(1,2))
+            }
+            
+            values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]] = df
+            
+          }
+          
         }
         
       })
@@ -357,7 +414,7 @@ fig_distance_graph_IC <- reactive({
   }
   
   if(gsize(G) > 0){
-    
+    print("1")
     edges_list = as.data.frame(as_edgelist(G))
     
     if(input$choose_distances_to_determine == input$choose_distances_to_determine_2){
@@ -365,7 +422,7 @@ fig_distance_graph_IC <- reactive({
     } else {
       colnames(edges_list) = c(input$choose_distances_to_determine,input$choose_distances_to_determine_2)
     }
-    
+    print("2")
     
     if(input$choose_layout_for_distances %in% c("fr","kk","mds")){
       layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G, dim = input$choose_n_dim_for_distances))
@@ -374,7 +431,7 @@ fig_distance_graph_IC <- reactive({
     } else {
       layout <- do.call(paste0("layout_with_",input$choose_layout_for_distances),list(graph = G))
     }
-    
+    print("3")
     if(input$choose_n_dim_for_distances == 2){
       
       Xn <- layout[,1]
@@ -384,7 +441,7 @@ fig_distance_graph_IC <- reactive({
       axis <- list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE)
       
       fig = plot_ly(source = "S")
-      
+      print("4")
       rownames(layout) = names(V(G))
 
       # create edges
@@ -394,14 +451,16 @@ fig_distance_graph_IC <- reactive({
       edges_list[,"y_end"] = as.double(layout[edges_list[,2],2])
       edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
       edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
-      edges_list[,"weight"] = tree_table[(paste0(tree_table[,1],"_",tree_table[,2]) %in% paste0(edges_list[,1],"_",edges_list[,2])) ,"weight"]
-      
+      edges_list[,"weight"] = tree_table[(paste0(tree_table[,1],"_",tree_table[,2]) %in% paste0(edges_list[,1],"_",edges_list[,2]) | paste0(tree_table[,2],"_",tree_table[,1]) %in% paste0(edges_list[,1],"_",edges_list[,2])) ,"weight"]
+      print("5")
       limits=range(edges_list[,"weight"])
       pal = viridis::viridis(100)
 
       edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
       edges_list[,"text"] = paste0(edges_list[,1]," <-> ",edges_list[,2],"<br>Value : ",edges_list$weight)
-
+      
+      print("6")
+      
       for(i in 1:nrow(edges_list)){
         fig = fig %>% add_segments(data = edges_list[i,],
                                    x = ~x_start,
@@ -426,7 +485,9 @@ fig_distance_graph_IC <- reactive({
                                                           "<extra></extra>")
         )
       }
-
+      
+      print("7")
+      
       # create vertices colors
       if(input$choose_distances_to_determine != "Genes" & input$choose_distances_to_determine_2 != "Genes"){
         annotation = c()
@@ -478,7 +539,9 @@ fig_distance_graph_IC <- reactive({
         annotation_3 = paste0("Color: ", annotation,"<br>Annotation: ",annotation_2)
         
       }
-
+      
+      print("8")
+      
       colors = rep(values$palette,ceiling(length(unique(annotation))/length(palette())))[as.numeric(as.factor(annotation))]
 
       #create vertices
@@ -503,6 +566,7 @@ fig_distance_graph_IC <- reactive({
       add_text(x = ~Xn, y = ~Yn, text = names(V(G)), textposition = "center") %>%
       hide_legend()
       
+      print("9")
       
       
       

@@ -66,6 +66,11 @@ output[["IC_distances_UI"]] <- renderUI({
                        inputId = "IC_distances_remove_IC_from_graph",
                        label = "Remove filtered ICs",
                        value = TRUE
+                     ),
+                     shinyWidgets::awesomeCheckbox(
+                       inputId = "distances_use_log_for_graph",
+                       label = "use log values",
+                       value = TRUE
                      )
                    ),
                    circle = FALSE,
