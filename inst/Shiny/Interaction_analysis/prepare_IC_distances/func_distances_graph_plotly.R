@@ -2,7 +2,7 @@
 ## functions to create plotly object for graph
 ##----------------------------------------------------------------------------##
 
-create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges_list = NULL, weights = NULL){
+create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges_list = NULL, tree_table = NULL){
   ##### create edgelist #####
   
   if(input$choose_distances_to_determine == input$choose_distances_to_determine_2){
@@ -35,7 +35,11 @@ create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges
   edges_list[,"y_end"] = as.double(layout[edges_list[,2],2])
   edges_list[,"x_median"] = (edges_list[,"x_start"] + edges_list[,"x_end"])/2
   edges_list[,"y_median"] = (edges_list[,"y_start"] + edges_list[,"y_end"])/2
-  edges_list[,"weight"] = weights
+  edges_list[,"weight"] = tree_table[(paste0(tree_table[,1],"_",tree_table[,2]) %in% paste0(edges_list[,1],"_",edges_list[,2]) | paste0(tree_table[,2],"_",tree_table[,1]) %in% paste0(edges_list[,1],"_",edges_list[,2])) ,"weight"]
+  
+  if (input$choose_sample_for_distances == "All"){
+    edges_list[,"N"] = tree_table[(paste0(tree_table[,1],"_",tree_table[,2]) %in% paste0(edges_list[,1],"_",edges_list[,2]) | paste0(tree_table[,2],"_",tree_table[,1]) %in% paste0(edges_list[,1],"_",edges_list[,2])) ,"N"]
+  }
   
   if(n_dim == 3){
     edges_list[,"z_start"] = as.double(layout[edges_list[,1],3])
@@ -65,7 +69,7 @@ create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges
                                  y = ~y_start,
                                  yend = ~y_median,
                                  line=list(color = ~colors,
-                                           width = input$choose_edges_size_for_distances
+                                           width = if(input$choose_sample_for_distances == "All"){input$choose_edges_size_for_distances * edges_list[i,"N"]}else{input$choose_edges_size_for_distances}
                                  )
       )
       
@@ -75,7 +79,7 @@ create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges
                                  y = ~y_median,
                                  yend = ~y_end,
                                  line=list(color=~colors,
-                                           width = input$choose_edges_size_for_distances
+                                           width = if(input$choose_sample_for_distances == "All"){input$choose_edges_size_for_distances * edges_list[i,"N"]}else{input$choose_edges_size_for_distances}
                                  ),
                                  customdata = ~text,
                                  hovertemplate = paste0("%{customdata}",
@@ -87,7 +91,7 @@ create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges
       fig = fig %>% add_trace(x=c(as.double(edges_list[i,"x_start"]), as.double(edges_list[i,"x_median"])), y=c(as.double(edges_list[i,"y_start"]), as.double(edges_list[i,"y_median"])), z=c(as.double(edges_list[i,"z_start"]), as.double(edges_list[i,"z_median"])),
                               type="scatter3d", mode="lines",
                               line=list(color=edges_list[i,"colors"],
-                                        width = input$choose_edges_size_for_distances
+                                        width = if(input$choose_sample_for_distances == "All"){input$choose_edges_size_for_distances * edges_list[i,"N"]}else{input$choose_edges_size_for_distances}
                               ),
                               customdata = edges_list[i,"text"],
                               hovertemplate = paste0("%{customdata}",
@@ -97,7 +101,7 @@ create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges
       fig = fig %>% add_trace(x=c(as.double(edges_list[i,"x_median"]), as.double(edges_list[i,"x_end"])), y=c(as.double(edges_list[i,"y_median"]), as.double(edges_list[i,"y_end"])), z=c(as.double(edges_list[i,"z_median"]), as.double(edges_list[i,"z_end"])),
                               type="scatter3d", mode="lines",
                               line=list(color=edges_list[i,"colors"],
-                                        width = input$choose_edges_size_for_distances
+                                        width = if(input$choose_sample_for_distances == "All"){input$choose_edges_size_for_distances * edges_list[i,"N"]}else{input$choose_edges_size_for_distances}
                               ),
                               customdata = edges_list[i,"text"],
                               hovertemplate = paste0("%{customdata}",

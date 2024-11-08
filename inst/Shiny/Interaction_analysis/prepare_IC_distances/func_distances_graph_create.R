@@ -3,35 +3,64 @@
 ##----------------------------------------------------------------------------##
 
 create_distance_graph = function(sample = "All"){
+  
+  tree_table = list()
 
   if (sample == "All"){
-    
+    tree_table = lapply(images_names(),
+                        function(sample){
+                          return(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[input$choose_method_for_distances]])
+                        })
+    names(tree_table) = images_names()
+
   } else {
     if(!is.null(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]])){
-      tree_table = values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[input$choose_method_for_distances]]
+      tree_table[[sample]] = values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[input$choose_method_for_distances]]
     } else if (!is.null(values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]])){
-      tree_table = values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]][[sample]][[input$choose_method_for_distances]]
+      tree_table[[sample]] = values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]][[sample]][[input$choose_method_for_distances]]
     } else {
-      tree_table = NULL
+      tree_table[[sample]] = NULL
     }
   }
   
   req(tree_table)
   req(input$choose_n_dim_for_distances)
   
-  if(input$choose_distances_to_determine == input$choose_distances_to_determine_2){
-    colnames(tree_table) = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2,"_2"),"weight")
-  } else {
-    colnames(tree_table) = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2),"weight")
+  for(samples in names(tree_table)){
+    if(input$choose_distances_to_determine == input$choose_distances_to_determine_2){
+      colnames(tree_table[[samples]]) = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2,"_2"),"weight")
+    } else {
+      colnames(tree_table[[samples]]) = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2),"weight")
+    }
+    
+    tree_table[[samples]] = tree_table[[samples]][(as.double(tree_table[[samples]][,"weight"]) > 0),]
+    
+    tree_table[[samples]] = tree_table[[samples]][as.double(scale(tree_table[[samples]][,"weight"])) > input$Z_score_for_distances,]
+    
   }
   
-  tree_table = tree_table[(as.double(tree_table[,"weight"]) > 0),]
+  if (sample == "All"){
+    
+    t = rbindlist(tree_table)
+    
+    count = t[, .N, by = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2,"_2"))]
+    t = t %>%
+      group_by(ica,ica_2) %>%
+      summarise_all(mean)
+    
+    df <- t %>% inner_join(count)
+    
+    df = as.data.frame(df)
+
+  } else {
+    
+    df = tree_table[[sample]]
+
+  }
   
-  tree_table = tree_table[as.double(scale(tree_table[,"weight"])) > input$Z_score_for_distances,]
+  G = graph_from_data_frame(df, directed = FALSE)
   
-  G = graph_from_data_frame(tree_table, directed = FALSE)
-  
-  if(input$choose_distances_to_determine == "Genes" & input$choose_distances_to_determine_2 == "Genes" & !is.null(input$choose_ic_for_genes_filter_for_distances_ligand) | !is.null(input$choose_ic_for_genes_filter_for_distances_receptor)){
+  if(input$choose_distances_to_determine == "Genes" & input$choose_distances_to_determine_2 == "Genes" & (!is.null(input$choose_ic_for_genes_filter_for_distances_ligand) | !is.null(input$choose_ic_for_genes_filter_for_distances_receptor))){
     l = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$ligand_gene_symbol
     r = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$receptor_gene_symbol
     
@@ -66,7 +95,7 @@ create_distance_graph = function(sample = "All"){
     G = subgraph(G, c(ICs_to_keep,genes_to_keep))
     
   }
-  
-  return(list(G = G, tree_table = tree_table))
+
+  return(list(G = G, tree_table = df))
   
 }

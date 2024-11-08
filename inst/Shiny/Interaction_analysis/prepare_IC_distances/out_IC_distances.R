@@ -359,9 +359,7 @@ fig_distance_graph_IC <- reactive({
   if(gsize(l[["G"]]) > 0){
     edges_list = as.data.frame(as_edgelist(l[["G"]]))
     
-    weights = l[["tree_table"]][(paste0(l[["tree_table"]][,1],"_",l[["tree_table"]][,2]) %in% paste0(edges_list[,1],"_",edges_list[,2]) | paste0(l[["tree_table"]][,2],"_",l[["tree_table"]][,1]) %in% paste0(edges_list[,1],"_",edges_list[,2])) ,"weight"]
-    
-    fig = create_distance_graph_plotly(G = l[["G"]], layout = input$choose_layout_for_distances, n_dim = input$choose_n_dim_for_distances, edges_list = edges_list, weights = weights)
+    fig = create_distance_graph_plotly(G = l[["G"]], layout = input$choose_layout_for_distances, n_dim = input$choose_n_dim_for_distances, edges_list = edges_list, tree_table = l[["tree_table"]])
     
     return(fig)
   } else {
