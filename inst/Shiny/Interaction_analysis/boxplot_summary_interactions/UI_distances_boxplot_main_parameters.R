@@ -7,6 +7,9 @@ output[["Boxplot_distance_main_parameters_UI"]] <- renderUI({
   req(values$data)
   fluidRow(
     column(width = 12,
+           selectInput(inputId = "boxplot_interaction_boxplot",
+                       label = "Type of display",
+                       choices = c("All values","Niche analysis")),
            selectInput(
              "boxplot_interaction_filter_1",
              "Filter by",
