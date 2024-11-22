@@ -10,30 +10,63 @@ output[["Boxplot_distance_main_parameters_UI"]] <- renderUI({
            selectInput(inputId = "boxplot_interaction_boxplot",
                        label = "Type of display",
                        choices = c("All values","Niche analysis")),
-           selectInput(
-             "boxplot_interaction_filter_1",
-             "Filter by",
-             NULL,
-             selected = NULL,
-             multiple = TRUE,
-             selectize = TRUE,
-             width = NULL,
-             size = NULL
-           ),
-           selectInput(
-             "boxplot_interaction_filter_2",
-             "Filter by",
-             NULL,
-             selected = NULL,
-             multiple = TRUE,
-             selectize = TRUE,
-             width = NULL,
-             size = NULL
-           ),
            selectInput(inputId = "boxplot_interaction_boxploint_type", label = "Type of point display", choices = c("all","outliers","suspectedoutliers","FALSE")),
            numericInput(inputId = "boxplot_interaction_z_score_filter",label = "Z-score filter",value = 3, min = 0),
            checkboxInput("boxplot_interaction_compare_with_randomized", label = "Compare with randomized", value = FALSE)
     )
+  )
+})
+
+output[["Boxplot_distance_main_parameters_UI_2"]] <- renderUI({
+  req(values$data)
+  fluidRow(
+    if(input$boxplot_interaction_boxplot == "All values"){
+      column(width = 12,
+             selectInput(
+               "boxplot_interaction_filter_1",
+               "Filter by",
+               NULL,
+               selected = NULL,
+               multiple = TRUE,
+               selectize = TRUE,
+               width = NULL,
+               size = NULL
+             ),
+             selectInput(
+               "boxplot_interaction_filter_2",
+               "Filter by",
+               NULL,
+               selected = NULL,
+               multiple = TRUE,
+               selectize = TRUE,
+               width = NULL,
+               size = NULL
+             )
+      )
+    } else if (input$boxplot_interaction_boxplot == "Niche analysis") {
+      column(width = 12,
+             selectInput(
+               "boxplot_interaction_niche_search_with",
+               "Seach with",
+               colnames(values$data@reductions$ica@cell.embeddings),
+               selected = NULL,
+               multiple = TRUE,
+               selectize = TRUE,
+               width = NULL,
+               size = NULL
+             ),
+             selectInput(
+               "boxplot_interaction_niche_comparison",
+               "Distance with",
+               names(values$data@misc$reduction_names),
+               selected = NULL,
+               multiple = TRUE,
+               selectize = TRUE,
+               width = NULL,
+               size = NULL
+             )
+      )
+    }
   )
 })
 

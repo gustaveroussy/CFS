@@ -7,7 +7,7 @@ fig_distance_boxplot_for_each_samples <- function(){
   req(values$distances)
   req(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]])
   
-  samples <- names(values$data@images)
+  samples <- images_names()
   
   if(input$boxplot_interaction_compare_with_randomized){
     # get values

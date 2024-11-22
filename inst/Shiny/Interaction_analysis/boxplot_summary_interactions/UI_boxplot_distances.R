@@ -19,7 +19,10 @@ output[["Boxplot_distances_UI"]] <- renderUI({
                height = NULL,
                collapsible = FALSE,
                collapsed = FALSE,
-               uiOutput("Boxplot_distance_main_parameters_UI")
+               tags$div(
+                 uiOutput("Boxplot_distance_main_parameters_UI"),
+                 uiOutput("Boxplot_distance_main_parameters_UI_2")
+               )
            )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",
