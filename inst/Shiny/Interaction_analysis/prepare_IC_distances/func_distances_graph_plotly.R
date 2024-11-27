@@ -39,6 +39,8 @@ create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges
   
   if (input$choose_sample_for_distances == "All"){
     edges_list[,"N"] = tree_table[(paste0(tree_table[,1],"_",tree_table[,2]) %in% paste0(edges_list[,1],"_",edges_list[,2]) | paste0(tree_table[,2],"_",tree_table[,1]) %in% paste0(edges_list[,1],"_",edges_list[,2])) ,"N"]
+    edges_list = edges_list[edges_list$N >= input$distances_filter_for_n_samples,]
+    # layout = layout[edges_list$N >= input$distances_filter_for_n_samples,]
   }
   
   if(n_dim == 3){
@@ -58,7 +60,11 @@ create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges
     edges_list[,"colors"] = pal[findInterval(edges_list[,"weight"],seq(limits[1],limits[2],length.out=length(pal)+1), all.inside=TRUE)]
   }
   
-  edges_list[,"text"] = paste0(edges_list[,1]," <-> ",edges_list[,2],"<br>Value : ",edges_list$weight)
+  if(input$choose_sample_for_distances != "All"){
+    edges_list[,"text"] = paste0(edges_list[,1]," <-> ",edges_list[,2],"<br>Value : ",edges_list$weight)
+  } else {
+    edges_list[,"text"] = paste0(edges_list[,1]," <-> ",edges_list[,2],"<br>Value : ",edges_list$weight, "<br>Samples : ", edges_list[,"N"])
+  }
   
   ##### create edges #####
   if(n_dim == 2){

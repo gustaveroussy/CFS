@@ -74,6 +74,13 @@ output[["IC_distances_UI"]] <- renderUI({
                        inputId = "distances_use_log_for_graph",
                        label = "use log for colors",
                        value = TRUE
+                     ),
+                     numericInput(
+                       "distances_filter_for_n_samples",
+                       "Filter values link in less than n samples",
+                       3,
+                       min = 0,
+                       step = 1
                      )
                    ),
                    circle = FALSE,
