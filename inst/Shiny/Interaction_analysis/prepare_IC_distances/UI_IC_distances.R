@@ -19,7 +19,10 @@ output[["IC_distances_UI"]] <- renderUI({
                height = NULL,
                collapsible = FALSE,
                collapsed = FALSE,
-               uiOutput("IC_distance_main_parameters_UI")
+               div(
+                 uiOutput("IC_distance_main_parameters_UI_1"),
+                 uiOutput("IC_distance_main_parameters_UI_2")
+               )
            ),
            box(id = "IC_distances_parameters_2_container",
                title = tagList(
@@ -31,7 +34,7 @@ output[["IC_distances_UI"]] <- renderUI({
                height = NULL,
                collapsible = FALSE,
                collapsed = FALSE,
-               uiOutput("IC_distance_main_parameters_UI_2")
+               uiOutput("IC_distance_main_parameters_UI_3")
            )
     ),
     column(width = 9, offset = 0, style = "padding: 0px;",

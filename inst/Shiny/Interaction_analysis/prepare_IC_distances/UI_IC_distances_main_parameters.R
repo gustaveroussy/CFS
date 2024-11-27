@@ -3,7 +3,19 @@
 ## available.
 ##----------------------------------------------------------------------------##
 
-output[["IC_distance_main_parameters_UI"]] <- renderUI({
+output[["IC_distance_main_parameters_UI_1"]] <- renderUI({
+  selectInput("choose_method_for_distances",
+              "Choose method",
+              c("Lee","Dotproduct","Dotproduct Genes"),
+              selected = "Lee",
+              multiple = FALSE,
+              selectize = TRUE,
+              width = NULL,
+              size = NULL
+  )
+})
+
+output[["IC_distance_main_parameters_UI_2"]] <- renderUI({
   req(values$data)
   fluidRow(
            column(width = 6,
@@ -61,7 +73,7 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
   )
 })
 
-output[["IC_distance_main_parameters_UI_2"]] <- renderUI({
+output[["IC_distance_main_parameters_UI_3"]] <- renderUI({
   req(values$data)
   fluidRow(
     column(width = 12,

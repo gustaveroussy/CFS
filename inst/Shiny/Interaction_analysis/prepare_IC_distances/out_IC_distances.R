@@ -176,6 +176,18 @@ observeEvent(input$start_distance_IC,{
         
         }
         
+      } else if (method == "Dotproduct Genes"){
+        
+        dot_product = t(values$data@reductions$ica@feature.loadings) %*% values$data@reductions$ica@feature.loadings
+        dot_product = as.data.frame(as.table(as.matrix(dot_product)))
+        
+        combinations = t(combn(colnames(values$data@reductions$ica@feature.loadings), 2))
+        df = merge(combinations, dot_product, by=c(1,2))
+        
+        print(df)
+        
+        values$distances[["ica_ica"]][[sample]][[method]] = df
+        
       }
   
     })
@@ -345,6 +357,16 @@ observeEvent(input$start_distance_IC_batch,{
             values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]] = df
             
           }
+          
+        } else if (method == "Dotproduct Genes"){
+          
+          dot_product = t(values$data@reductions$ica@feature.loadings) %*% values$data@reductions$ica@feature.loadings
+          dot_product = as.data.frame(as.table(as.matrix(dot_product)))
+          
+          combinations = t(combn(colnames(values$data@reductions$ica@feature.loadings), 2))
+          df = merge(combinations, dot_product, by=c(1,2))
+          
+          values$distances[["ica_ica"]][[sample]][[method]] = df
           
         }
         
