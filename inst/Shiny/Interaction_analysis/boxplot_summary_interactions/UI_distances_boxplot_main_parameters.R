@@ -9,7 +9,7 @@ output[["Boxplot_distance_main_parameters_UI"]] <- renderUI({
     column(width = 12,
            selectInput(inputId = "boxplot_interaction_boxplot",
                        label = "Type of display",
-                       choices = c("All values","Niche analysis")),
+                       choices = c("All values", "Interaction analysis","Niche analysis")),
            selectInput(inputId = "boxplot_interaction_boxploint_type", label = "Type of point display", choices = c("all","outliers","suspectedoutliers","FALSE")),
            numericInput(inputId = "boxplot_interaction_z_score_filter",label = "Z-score filter",value = 3, min = 0),
            checkboxInput("boxplot_interaction_compare_with_randomized", label = "Compare with randomized", value = FALSE)
@@ -43,32 +43,72 @@ output[["Boxplot_distance_main_parameters_UI_2"]] <- renderUI({
                size = NULL
              )
       )
-    } else if (input$boxplot_interaction_boxplot == "Niche analysis") {
+    } else if (input$boxplot_interaction_boxplot == "Interaction analysis") {
       column(width = 12,
              selectInput(
-               "boxplot_interaction_niche_search_with",
-               "Seach with",
-               colnames(values$data@reductions$ica@cell.embeddings),
+               "boxplot_interaction_selection_value",
+               "Value",
+               c("sumLee","meanLee"),
                selected = NULL,
-               multiple = TRUE,
-               selectize = TRUE,
-               width = NULL,
-               size = NULL
+               multiple = FALSE
              ),
              selectInput(
-               "boxplot_interaction_niche_comparison",
-               "Distance with",
-               names(values$data@misc$reduction_names),
+               "boxplot_interaction_selection_1",
+               "Reduction choice 1",
+               names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","tsne"))],
                selected = NULL,
-               multiple = TRUE,
-               selectize = TRUE,
-               width = NULL,
-               size = NULL
+               multiple = FALSE
+             ),
+             selectInput(
+               "boxplot_interaction_1",
+               "Seach with",
+               NULL,
+               selected = NULL,
+               multiple = TRUE
+             ),
+             selectInput(
+               "boxplot_interaction_selection_2",
+               "Reduction choice 2",
+               names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","tsne"))],
+               selected = NULL,
+               multiple = FALSE
+             ),
+             selectInput(
+               "boxplot_interaction_2",
+               "Distance with",
+               NULL,
+               selected = NULL,
+               multiple = TRUE
              )
       )
+    } else if (input$boxplot_interaction_boxplot == "Niche analysis") {
+      
     }
   )
 })
+
+##----------------------------------------------------------------------------##
+## update reduction selection
+##----------------------------------------------------------------------------##
+
+observeEvent(input$boxplot_interaction_selection_1,{
+  updateSelectInput(session, "boxplot_interaction_1", choices = if(input$boxplot_interaction_selection_1 == "ica"){
+      colnames(values$data@reductions[[input$boxplot_interaction_selection_1]]@cell.embeddings)
+    } else {
+      values$data@misc$reduction_names[[input$boxplot_interaction_selection_1]]
+    }
+  )
+})
+
+observeEvent(input$boxplot_interaction_selection_2,{
+  updateSelectInput(session, "boxplot_interaction_2", choices = if(input$boxplot_interaction_selection_2 == "ica"){
+    colnames(values$data@reductions[[input$boxplot_interaction_selection_2]]@cell.embeddings)
+  } else {
+    values$data@misc$reduction_names[[input$boxplot_interaction_selection_2]]
+  }
+  )
+})
+
 
 ##----------------------------------------------------------------------------##
 ## update filter selection

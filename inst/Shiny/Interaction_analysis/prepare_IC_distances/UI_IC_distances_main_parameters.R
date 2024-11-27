@@ -28,15 +28,6 @@ output[["IC_distance_main_parameters_UI"]] <- renderUI({
              )
           ),
     column(width = 12,
-      selectInput("choose_method_for_distances",
-       "Choose method",
-       c("Lee","Dotproduct"),
-       selected = "Lee",
-       multiple = FALSE,
-       selectize = TRUE,
-       width = NULL,
-       size = NULL
-      ),
       selectInput("choose_sample_for_distances",
                   "Choose sample",
                   c(names(values$data@images),"All"),
