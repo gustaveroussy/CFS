@@ -93,7 +93,7 @@ output[["Boxplot_distance_main_parameters_UI_2"]] <- renderUI({
              selectInput(
                "boxplot_niche_interaction_selection_2",
                "Reduction choice 2",
-               names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","tsne"))],
+               names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","ica","pca","tsne"))],
                selected = NULL,
                multiple = FALSE
              ),
