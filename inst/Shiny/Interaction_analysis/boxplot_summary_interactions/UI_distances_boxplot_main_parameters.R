@@ -82,7 +82,29 @@ output[["Boxplot_distance_main_parameters_UI_2"]] <- renderUI({
              )
       )
     } else if (input$boxplot_interaction_boxplot == "Niche analysis") {
-      
+      column(width = 12,
+             selectInput(
+               "boxplot_niche_interaction_selection_1",
+               "Seach with",
+               colnames(values$data@reductions$ica@cell.embeddings),
+               selected = colnames(values$data@reductions$ica@cell.embeddings)[1],
+               multiple = FALSE
+             ),
+             selectInput(
+               "boxplot_niche_interaction_selection_2",
+               "Reduction choice 2",
+               names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","tsne"))],
+               selected = NULL,
+               multiple = FALSE
+             ),
+             selectInput(
+               "boxplot_niche_interaction_2",
+               "Distance with",
+               NULL,
+               selected = NULL,
+               multiple = TRUE
+             )
+      )
     }
   )
 })
@@ -109,6 +131,10 @@ observeEvent(input$boxplot_interaction_selection_2,{
   )
 })
 
+observeEvent(input$boxplot_niche_interaction_selection_2,{
+  updateSelectInput(session, "boxplot_niche_interaction_2", choices = values$data@misc$reduction_names[[input$boxplot_niche_interaction_selection_2]]
+  )
+})
 
 ##----------------------------------------------------------------------------##
 ## update filter selection
