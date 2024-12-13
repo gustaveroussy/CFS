@@ -87,12 +87,15 @@ load_file_from_path <- function(filepath = NULL, from_path = TRUE){
 
 }
 
+#reactiveVal(value = NULL)
+
 # get samples image names
 images_names <- reactive({
   if(is.null(values$data)){
     return(NULL)
   } else {
-    return(names(values$data@images))
+    names = names(values$data@images)
+    return(names)
   }
 })
 
