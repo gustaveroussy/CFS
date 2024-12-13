@@ -21,7 +21,8 @@ output[["Boxplot_distances_UI"]] <- renderUI({
                collapsed = FALSE,
                tags$div(
                  uiOutput("Boxplot_distance_main_parameters_UI"),
-                 uiOutput("Boxplot_distance_main_parameters_UI_2")
+                 uiOutput("Boxplot_distance_main_parameters_UI_2"),
+                 uiOutput("Boxplot_distance_main_parameters_UI_3")
                )
            )
     ),

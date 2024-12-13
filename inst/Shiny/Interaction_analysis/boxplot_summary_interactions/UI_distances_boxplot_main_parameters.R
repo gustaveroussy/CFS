@@ -109,6 +109,10 @@ output[["Boxplot_distance_main_parameters_UI_2"]] <- renderUI({
   )
 })
 
+output[["Boxplot_distance_main_parameters_UI_3"]] <- renderUI({
+  actionButton("start_distance_boxplot", "Start")
+})
+
 ##----------------------------------------------------------------------------##
 ## update reduction selection
 ##----------------------------------------------------------------------------##

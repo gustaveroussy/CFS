@@ -2,10 +2,12 @@
 ## top IC heatmap
 ##----------------------------------------------------------------------------##
 
+distances_plots <- reactiveValues(boxplot = NULL)
+
 output[["Boxplot_distances_plot"]] <- plotly::renderPlotly({
-  req(fig_distance_boxplot())
+  req(distances_plots$boxplot)
   
-  return(fig_distance_boxplot())
+  return(distances_plots$boxplot)
 })
 
 output[["Boxplot_distances_plot_or_message"]] <- renderUI({
@@ -16,16 +18,20 @@ output[["Boxplot_distances_plot_or_message"]] <- renderUI({
   )
 })
 
-fig_distance_boxplot <- reactive({
+observeEvent(input$start_distance_boxplot, {
   
   if(input$boxplot_interaction_boxplot == "All values"){
-    fig = fig_distance_boxplot_for_each_samples()
+    distances_plots$boxplot = fig_distance_boxplot_for_each_samples()
   } else if (input$boxplot_interaction_boxplot == "Interaction analysis"){
-    fig = fig_distance_boxplot_analysis()
+    distances_plots$boxplot = fig_distance_boxplot_analysis()
   } else if (input$boxplot_interaction_boxplot == "Niche analysis"){
-    fig = fig_distance_boxplot_niche_analysis()
+    distances_plots$boxplot = fig_distance_boxplot_niche_analysis()
   }
   
-    
-  return(fig)
 })
+
+
+
+
+
+
