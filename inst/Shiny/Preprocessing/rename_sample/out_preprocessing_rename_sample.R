@@ -44,4 +44,7 @@ observeEvent(input$preprocessing_rename_sample_action_button,{
     }
   }
   
+  # warning
+  shinyalert("Success!", paste0(sample," has been renamed to ", rename), type = "success")
+  
 })
