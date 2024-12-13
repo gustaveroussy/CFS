@@ -49,6 +49,16 @@ server <- function(input, output, session) {
 # observe sample button
 ########################################
   
+  observeEvent(input$preprocessing_rename_sample_action_button, {
+    req(values$data)
+    updateSelectizeInput(
+      session = getDefaultReactiveDomain(),
+      "Plot_image_spatial",
+      selected = images_names()[1],
+      choices = images_names()
+    )
+  })
+  
   observeEvent(input$select_all_samples_image_spatial, {
     req(values$data)
     updateSelectizeInput(
