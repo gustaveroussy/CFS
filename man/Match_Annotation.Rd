@@ -4,12 +4,18 @@
 \alias{Match_Annotation}
 \title{Match_Annotation}
 \usage{
-Match_Annotation(data_to_annotate = NULL, annotated_data = NULL)
+Match_Annotation(
+  data_to_annotate = NULL,
+  annotated_data = NULL,
+  cortype = c("features", "cells")
+)
 }
 \arguments{
 \item{data_to_annotate}{Seurat object containing a non annotated ICA reduction}
 
 \item{annotated_data}{Seurat object containing an annotated ICA reduction}
+
+\item{cortype}{What to correlate between both samples to annotate ICs: "features" or "cell". "cell" assumes both Seurat object are from the same sample}
 }
 \value{
 Seurat object data_to_annotate with annotation table
