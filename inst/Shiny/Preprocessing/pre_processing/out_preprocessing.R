@@ -52,9 +52,9 @@ observeEvent(input$preprocessing_reduction_action_button, {
     incProgress(0.3, detail = "Preparing table")
     
     
-    values$data@misc$annotation = matrix(data = "", nrow = length(colnames(values$data@reductions$ica@cell.embeddings)), ncol = 3)
+    values$data@misc$annotation = matrix(data = "", nrow = length(colnames(values$data@reductions$ica@cell.embeddings)), ncol = 4)
     rownames(values$data@misc$annotation) = colnames(values$data@reductions$ica@cell.embeddings)
-    colnames(values$data@misc$annotation) = c('Use','Type','Annotation')
+    colnames(values$data@misc$annotation) = c('Use','Type','Broad','Annotation')
     values$data@misc$annotation[,'Use'] = as.character(values$data@misc$GeneAndStat$Kurtosis_ICs > input$preprocessing_kurtosis)
     
     values$IC_names = names(values$data@misc$GeneAndStat$Kurtosis_ICs)[as.logical(values$data@misc$GeneAndStat$Kurtosis_ICs > 3)]

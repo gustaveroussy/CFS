@@ -34,9 +34,9 @@ load_file_from_path <- function(filepath = NULL, from_path = TRUE){
       
       if (is.null(values$data@misc$annotation)){
         row_names = values$IC_names
-        values$data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 3)
+        values$data@misc$annotation = matrix(data = "", nrow = length(row_names), ncol = 4)
         rownames(values$data@misc$annotation) = row_names
-        colnames(values$data@misc$annotation) = c('Use','Type','Annotation')
+        colnames(values$data@misc$annotation) = c('Use','Type','Broad','Annotation')
         values$data@misc$annotation[,'Use'] = TRUE
       }
       
