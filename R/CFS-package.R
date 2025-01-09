@@ -22,6 +22,8 @@
 #' @import spdep
 #' @import hdf5r
 #' @import paletteer
+#' @import proxy
+#' @import registry
 #' @importFrom ggplot2 ggplot geom_point scale_color_gradientn guides theme_void lims xlim ylim geom_tile scale_fill_gradientn geom_col aes coord_flip labs xlab ylab ggtitle annotation_raster geom_contour geom_contour_filled coord_equal
 #' @importFrom colourpicker colourPicker colourWidget colourInput
 #' @importFrom data.table as.data.table data.table tables
