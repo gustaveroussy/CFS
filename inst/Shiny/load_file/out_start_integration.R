@@ -36,7 +36,7 @@ observeEvent(input$start_integration_button, {
     load_file_from_path(filepath = merge(x = list_of_data[[names(list_of_data)[1]]], y = list_of_data[2:length(list_of_data)], add.cell.ids = names(list_of_data)), from_path = FALSE)
     
     # adding sample to metadata
-    values$data@meta.data$sample = sapply(strsplit(rownames(values$data@meta.data),"_"),"[[",1)
+    values$data@meta.data$sample = sapply(rownames(values$data@meta.data),function(l){for(i in values$integration_folders){if(grepl(basename(i),l)){return(basename(i))}}})
     
     list_of_data = NULL
     gc()
