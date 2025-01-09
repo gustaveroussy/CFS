@@ -352,8 +352,6 @@ current_plot_umap <- reactive({
         
         fig <- fig %>% layout(showlegend = F)
         
-      } else {
-        
       }
       
       fig <- fig %>% layout(xaxis = list(showgrid = input$show_grid_scatter_pie, zeroline=input$show_grid_scatter_pie,
@@ -436,4 +434,7 @@ current_plot_umap <- reactive({
     
         
   }
+  
+  return(fig)
+  
 })

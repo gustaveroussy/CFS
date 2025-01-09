@@ -171,7 +171,7 @@ output[["Plot_type_display_UI_3"]] <- renderUI({
 
 output[["start_display_UI"]] <- renderUI({
   tagList(
-    actionButton("start_display_UMAP", "Display UMAP"),
+    actionButton("start_display_UMAP", "Display Reduction"),
     actionButton("start_display_Spatial", "Display Spatial")
   )
 })
