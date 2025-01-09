@@ -13,7 +13,6 @@
 #' @import interp
 #' @import stringr
 #' @import scales
-#' @import ggplot2
 #' @import ggpubr
 #' @import enrichR
 #' @import reticulate
@@ -21,10 +20,11 @@
 #' @import clustree
 #' @import ggdendro
 #' @import spdep
-#' @import colourpicker
 #' @import hdf5r
 #' @import paletteer
-#' @importFrom data.table as.matrix
+#' @importFrom ggplot2 ggplot geom_point scale_color_gradientn guides theme_void lims xlim ylim geom_tile scale_fill_gradientn geom_col aes coord_flip labs xlab ylab ggtitle annotation_raster geom_contour geom_contour_filled coord_equal
+#' @importFrom colourpicker colourPicker colourWidget colourInput
+#' @importFrom data.table as.data.table data.table tables
 #' @importFrom igraph graph_from_data_frame subgraph layout_with_fr layout_with_sugiyama layout_with_mds layout_with_kk layout_with_graphopt layout_with_dh as_edgelist V gsize
 #' @importFrom viridis viridis
 #' @importFrom png readPNG

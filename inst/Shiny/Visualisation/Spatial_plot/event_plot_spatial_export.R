@@ -36,11 +36,7 @@ observeEvent(input[["plot_spatial_export"]], {
 
   if (input$Plot_analysis_display_type == "Dimentional reduction"){
     req(input$Visualisation_selected_dimred_to_display)
-    if (values$data@reductions[[input$Visualisation_selected_dimred_to_display]]@key == "umap_"){
-      plot = current_plot_spatial()
-    } else if (values$data@reductions[[input$Visualisation_selected_dimred_to_display]]@key == "tsne_") {
-      plot = current_plot_spatial()
-    }
+    plot = current_plot_spatial()
   }
   
   if (input$Plot_analysis_display_type == "Density") {
