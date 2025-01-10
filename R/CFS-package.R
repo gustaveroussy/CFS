@@ -22,7 +22,7 @@
 #' @import spdep
 #' @import hdf5r
 #' @importFrom paletteer paletteer_d
-#' @importFrom ggplot2 ggplot geom_point scale_color_gradientn guides theme_void lims xlim ylim geom_tile scale_fill_gradientn geom_col aes coord_flip labs xlab ylab ggtitle annotation_raster geom_contour geom_contour_filled coord_equal
+#' @importFrom ggplot2 ggplot geom_point scale_color_gradientn guides theme_void lims xlim ylim geom_tile scale_fill_gradientn geom_col aes coord_flip labs xlab ylab ggtitle annotation_raster geom_contour geom_contour_filled coord_equal scale_x_discrete scale_y_discrete scale_size_area guide_colorbar theme_bw theme element_text
 #' @importFrom colourpicker colourPicker colourWidget colourInput updateColourInput
 #' @importFrom data.table as.data.table data.table tables
 #' @importFrom igraph graph_from_data_frame subgraph layout_with_fr layout_with_sugiyama layout_with_mds layout_with_kk layout_with_graphopt layout_with_dh as_edgelist V gsize
