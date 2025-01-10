@@ -11,3 +11,10 @@ files_to_load <- list.files(
 for ( i in files_to_load ) {
   source(i, local = TRUE)
 }
+
+observe({
+  output$CFSimage <- renderImage({
+    list(src = paste0(Shiny.options[["shiny_root"]], "/../../docs/README_images/CFS_Logo.png"), contentType = 'image/png',width = 400, height = 200,
+         alt = "CFS")
+  }, deleteFile = FALSE)
+})

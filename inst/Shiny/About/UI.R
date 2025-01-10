@@ -2,5 +2,6 @@
 ## Tab: ICA
 ##----------------------------------------------------------------------------##
 tab_about <- tabItem(
-  tabName = "About"
+  tabName = "About",
+  imageOutput("CFSimage")
 )
