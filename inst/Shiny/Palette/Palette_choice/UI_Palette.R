@@ -3,6 +3,7 @@ output[["Select_palette_UI"]] <- renderUI({
 })
 
 output[["Palette_UI"]] <- renderUI({
+  data(palettes_d_names, package = "paletteer")
   fluidRow(
     column(width = 12, offset = 0, style = "padding: 0px;",
            box(id = "Boxplot_distances_container",
