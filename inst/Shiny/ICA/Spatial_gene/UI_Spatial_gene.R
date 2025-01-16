@@ -11,12 +11,6 @@ output[["Spatial_gene_UI"]] <- renderUI({
               class = "btn-xs",
               title = "Show additional information for this panel.",
               style = "margin-right: 3px"
-            ),
-            shinyWidgets::dropdownButton(
-              circle = FALSE,
-              icon = icon("cog"),
-              inline = TRUE,
-              size = "xs"
             )
           ),
           status = "primary",

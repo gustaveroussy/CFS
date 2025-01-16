@@ -5,7 +5,7 @@
 output[["Plot_main_parameters_cluster_UI"]] <- renderUI({
   req(values$annotation_for_output)
   tagList(
-    selectInput("Plot_cluster_reduction_to_use", label = "Select reduction to use", 
+    selectInput("Plot_cluster_reduction_to_use", label = "Select reduction", 
                 choices = names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","tsne"))],
                 selected = "ica")
   )
@@ -14,7 +14,7 @@ output[["Plot_main_parameters_cluster_UI"]] <- renderUI({
 output[["start_cluster_UI"]] <- renderUI({
   tagList(
     if(input$Plot_cluster_reduction_to_use == "ica"){
-    selectizeInput("Plot_cluster_type_UMAP_choice", label = "Choose cell type to cluster",
+    selectizeInput("Plot_cluster_type_UMAP_choice", label = "Choose annotation to cluster",
                    choices = unique(names(values$annotation_for_output[["Type"]])),
                    selected = NULL,
                    multiple = TRUE,
@@ -32,7 +32,7 @@ output[["start_cluster_UI"]] <- renderUI({
                  min = 0.1, max = 10, step = 0.1
     ),
     textInput("cluster_named_by_user", "Clustering name", value = "clustering_1"),
-    actionButton("Select_all_ICs_cluster", "Select all ICs"),
+    actionButton("Select_all_ICs_cluster", "Select all"),
     actionButton("start_cluster_plot", "Start Cluster")
   )
 })
@@ -59,8 +59,8 @@ Plot_main_parameters_cluster_info <- list(
   text = HTML("
     The elements in this panel allow you to clusterise samples.
     <ul>
-      <li><b>Choose cell type to cluster:</b> Select ICs associated to the selected cell type for the clusterisation.</li>
-      <li><b>Choose IC to cluster:</b> Select specific ICs for the clusterisation.</li>
+      <li><b>Choose annotation to cluster:</b> Select ICs associated to the selected annotation for the clusterisation.</li>
+      <li><b>Choose value to cluster:</b> Select specific ICs for the clusterisation.</li>
       <li><b>Select algorithm:</b> Select the clustering algorithm.</li>
       <li><b>Clustering resolution:</b> Select the resolution of the clustering.</li>
       <li><b>Clustering name:</b> Name the clustering being carried out in order to be selected in display parameters.</li>

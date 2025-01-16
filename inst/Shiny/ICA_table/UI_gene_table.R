@@ -68,6 +68,18 @@ observeEvent(input[["table_gene_info"]], {
   )
 })
 
+observeEvent(input[["gene_contribution_info"]], {
+  showModal(
+    modalDialog(
+      gene_contribution_info[["text"]],
+      title = gene_contribution_info[["title"]],
+      easyClose = TRUE,
+      footer = NULL,
+      size = "l"
+    )
+  )
+})
+
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
@@ -75,6 +87,14 @@ table_gene_info <- list(
   title = "ICA/Gene table",
   text = HTML("
     Table displaying IC signals and their associated genes.
+    "
+  )
+)
+
+gene_contribution_info <- list(
+  title = "ICA/Gene table",
+  text = HTML("
+    Table displaying genes and their associated IC signals.
     "
   )
 )

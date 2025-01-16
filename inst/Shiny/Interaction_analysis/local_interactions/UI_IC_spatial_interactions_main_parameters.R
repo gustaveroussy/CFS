@@ -44,7 +44,25 @@ output[["plot_interactions_from_graph_main_parameters_UI"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 interactions_from_graph_main_parameters_info <- list(
   title = "Main parameters for interactions",
-  text = p("Options for the main parameters of interactions")
+  text = HTML("
+    Options for the main parameters of interactions
+    <ul>
+    <li><b>Interaction 1/2:</b> Choose the values to plot the interaction of</li>
+    <li><b>Alpha type:</b>
+      <ul>
+        <li><b>Constant:</b> Alpha uniform through the sample</li>
+        <li><b>Scaling:</b> Alpha scaled with signal intensity</li>
+      </ul>
+    </li>
+    <li><b>Alpha:</b> Change scale of the transparency</li>
+    <li><b>Spot size:</b> Change the size of spots</li>
+    <li><b>Number of dimensions:</b> Choose the number of dimensions for the graph</li>
+    <li><b>Vertices size:</b> Choose vertices size</li>
+    <li><b>Number of permutations:</b> Number of permutations for the randomization test</li>
+    <li><b>Correction method:</b> p-value correction method</li>
+    <li><b>Statistic alternative:</b> Alternative of the test, greater: values significantly associated, Lower: values significantly dissociated</li>
+    </ul>
+    ")
 )
 
 ##----------------------------------------------------------------------------##

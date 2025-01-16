@@ -5,7 +5,7 @@ output[["IC_distances_UI"]] <- renderUI({
                title = tagList(
                  "Main parameters",
                  actionButton(
-                   inputId = "IC_distance_main_parameters_info",
+                   inputId = "interactions_from_graph_main_parameters_info",
                    label = "info",
                    icon = NULL,
                    class = "btn-xs",
@@ -26,7 +26,15 @@ output[["IC_distances_UI"]] <- renderUI({
            ),
            box(id = "IC_distances_parameters_2_container",
                title = tagList(
-                 "Display parameters"
+                 "Display parameters",
+                 actionButton(
+                   inputId = "interactions_from_graph_display_info",
+                   label = "info",
+                   icon = NULL,
+                   class = "btn-xs",
+                   title = "Show additional information for this panel.",
+                   style = "margin-right: 3px"
+                 ),
                ),
                status = "primary",
                solidHeader = TRUE,

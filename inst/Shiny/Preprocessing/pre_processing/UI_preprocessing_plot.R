@@ -5,18 +5,12 @@ output[["preprocessing_UI"]] <- renderUI({
           title = tagList(
             "Normalization",
             actionButton(
-              inputId = "preprocessing_main_parameters_info",
+              inputId = "preprocessing_main_parameters_normalization_info",
               label = "info",
               icon = NULL,
               class = "btn-xs",
               title = "Show additional information for this panel.",
               style = "margin-right: 3px"
-            ),
-            shinyWidgets::dropdownButton(
-              circle = FALSE,
-              icon = icon("cog"),
-              inline = TRUE,
-              size = "xs"
             )
           ),
           status = "primary",
@@ -31,18 +25,12 @@ output[["preprocessing_UI"]] <- renderUI({
           title = tagList(
             "Reduction",
             actionButton(
-              inputId = "preprocessing_main_parameters_info",
+              inputId = "preprocessing_main_parameters_reduction_info",
               label = "info",
               icon = NULL,
               class = "btn-xs",
               title = "Show additional information for this panel.",
               style = "margin-right: 3px"
-            ),
-            shinyWidgets::dropdownButton(
-              circle = FALSE,
-              icon = icon("cog"),
-              inline = TRUE,
-              size = "xs"
             )
           ),
           status = "primary",
@@ -57,18 +45,12 @@ output[["preprocessing_UI"]] <- renderUI({
           title = tagList(
             "Enrichment",
             actionButton(
-              inputId = "preprocessing_main_parameters_info",
+              inputId = "preprocessing_main_parameters_enrichment_info",
               label = "info",
               icon = NULL,
               class = "btn-xs",
               title = "Show additional information for this panel.",
               style = "margin-right: 3px"
-            ),
-            shinyWidgets::dropdownButton(
-              circle = FALSE,
-              icon = icon("cog"),
-              inline = TRUE,
-              size = "xs"
             )
           ),
           status = "primary",
@@ -91,12 +73,6 @@ output[["preprocessing_UI"]] <- renderUI({
             class = "btn-xs",
             title = "Show additional information for this panel.",
             style = "margin-right: 3px"
-          ),
-          shinyWidgets::dropdownButton(
-            circle = FALSE,
-            icon = icon("cog"),
-            inline = TRUE,
-            size = "xs"
           )
         ),
         status = "primary",
@@ -117,12 +93,6 @@ output[["preprocessing_UI"]] <- renderUI({
               class = "btn-xs",
               title = "Show additional information for this panel.",
               style = "margin-right: 3px"
-            ),
-            shinyWidgets::dropdownButton(
-              circle = FALSE,
-              icon = icon("cog"),
-              inline = TRUE,
-              size = "xs"
             )
           ),
           status = "primary",
@@ -143,12 +113,6 @@ output[["preprocessing_UI"]] <- renderUI({
               class = "btn-xs",
               title = "Show additional information for this panel.",
               style = "margin-right: 3px"
-            ),
-            shinyWidgets::dropdownButton(
-              circle = FALSE,
-              icon = icon("cog"),
-              inline = TRUE,
-              size = "xs"
             )
           ),
           status = "primary",
@@ -188,5 +152,5 @@ observeEvent(input[["preprocessing_info"]], {
 ##----------------------------------------------------------------------------##
 preprocessing_info <- list(
   title = "Pre-processing",
-  text = HTML("Window for pre-processing data from Visium output")
+  text = HTML("Informations about the number of spots and features found in the sample. If normalization has been realized, display the numbers in the normalized sample")
 )

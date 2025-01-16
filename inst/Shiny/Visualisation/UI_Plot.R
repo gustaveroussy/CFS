@@ -12,12 +12,6 @@ output[["Plot_UI"]] <- renderUI({
                    title = "Show additional information for this panel.",
                    style = "margin-right: 3px"
                  ),
-                 shinyWidgets::dropdownButton(
-                   circle = FALSE,
-                   icon = icon("cog"),
-                   inline = TRUE,
-                   size = "xs"
-                 )
                ),
                status = "primary",
                solidHeader = TRUE,
@@ -38,12 +32,6 @@ output[["Plot_UI"]] <- renderUI({
                    class = "btn-xs",
                    title = "Show additional information for this panel.",
                    style = "margin-right: 3px"
-                 ),
-                 shinyWidgets::dropdownButton(
-                   circle = FALSE,
-                   icon = icon("cog"),
-                   inline = TRUE,
-                   size = "xs"
                  )
                ),
                status = "primary",
@@ -60,18 +48,12 @@ output[["Plot_UI"]] <- renderUI({
                title = tagList(
                  "Display parameters",
                  actionButton(
-                   inputId = "Plot_main_parameters_info",
+                   inputId = "Plot_main_parameters_display_info",
                    label = "info",
                    icon = NULL,
                    class = "btn-xs",
                    title = "Show additional information for this panel.",
                    style = "margin-right: 3px"
-                 ),
-                 shinyWidgets::dropdownButton(
-                   circle = FALSE,
-                   icon = icon("cog"),
-                   inline = TRUE,
-                   size = "xs"
                  )
                ),
                status = "primary",

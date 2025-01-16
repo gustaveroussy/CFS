@@ -50,15 +50,6 @@ output[["Boxplot_distances_UI"]] <- renderUI({
                    icon = icon("download"),
                    inline = TRUE,
                    size = "xs"
-                 ),
-                 shinyWidgets::dropdownButton(
-                   tags$div(
-                     style = "color: black !important;"
-                   ),
-                   circle = FALSE,
-                   icon = icon("cog"),
-                   inline = TRUE,
-                   size = "xs"
                  )
                ),
                status = "primary",

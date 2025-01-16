@@ -62,11 +62,35 @@ output[["preprocessing_main_parameters_UI_3"]] <- renderUI({
 ##----------------------------------------------------------------------------##
 ## Info box that gets shown when pressing the "info" button.
 ##----------------------------------------------------------------------------##
-observeEvent(input[["preprocessing_main_parameters_info"]], {
+observeEvent(input[["preprocessing_main_parameters_normalization_info"]], {
   showModal(
     modalDialog(
-      preprocessing_main_parameters_info[["text"]],
-      title = preprocessing_main_parameters_info[["title"]],
+      preprocessing_main_parameters_normalization_info[["text"]],
+      title = preprocessing_main_parameters_normalization_info[["title"]],
+      easyClose = TRUE,
+      footer = NULL,
+      size = "l"
+    )
+  )
+})
+
+observeEvent(input[["preprocessing_main_parameters_reduction_info"]], {
+  showModal(
+    modalDialog(
+      preprocessing_main_parameters_reduction_info[["text"]],
+      title = preprocessing_main_parameters_reduction_info[["title"]],
+      easyClose = TRUE,
+      footer = NULL,
+      size = "l"
+    )
+  )
+})
+
+observeEvent(input[["preprocessing_main_parameters_enrichment_info"]], {
+  showModal(
+    modalDialog(
+      preprocessing_main_parameters_enrichment_info[["text"]],
+      title = preprocessing_main_parameters_enrichment_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
@@ -77,15 +101,22 @@ observeEvent(input[["preprocessing_main_parameters_info"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-preprocessing_main_parameters_info <- list(
-  title = "Main parameters for Pre-processing",
+preprocessing_main_parameters_normalization_info <- list(
+  title = "Main parameters for Normalization",
   text = HTML("
-    Pre-Processing tab.<br>
     <b>Normalisation process :</b>
     <ul>
     <li><b>Select organism:</b> Organism for which the sample originate from</li>
     <li><b>Variable Features:</b> Number of features to pick for SCTransform</li>
+    <li><b>Minimum gene presence (in spots):</b> How many spots should a gene be present in to be kept for downstream analysis</li>
     </ul>
+    "
+  )
+)
+
+preprocessing_main_parameters_reduction_info <- list(
+  title = "Main parameters for Reduction",
+  text = HTML("
     <b>ICA process :</b>
     <ul>
     <li><b>Number of ICs:</b> Number of ICs to extract from the sample</li>
@@ -94,6 +125,13 @@ preprocessing_main_parameters_info <- list(
     <li><b>Kurtosis filter:</b> Kurtosis filter to apply at the end of the analysis over ICs</li>
     <li><b>Genes standard deviation:</b> Keep genes expressed more or less the number of standard deviation away from the value selected.</li>
     </ul>
+    "
+  )
+)
+
+preprocessing_main_parameters_enrichment_info <- list(
+  title = "Main parameters for Enrichment",
+  text = HTML("
     <b>Enrichment process :</b>
     <ul>
     <li><b>Enrichment database:</b> Database to use for enrichment analysis</li>

@@ -43,7 +43,7 @@ observeEvent(input[["ouput_cell"]], {
 ##----------------------------------------------------------------------------##
 ## Text in info box.
 ##----------------------------------------------------------------------------##
-ouput_graph_cell <- list(
+ouput_cell <- list(
   title = "Create cell annotation",
-  text = p("Create a reduction for a specific annotation")
+  text = p("Create a reduction for a specific annotation column using ICA")
 )

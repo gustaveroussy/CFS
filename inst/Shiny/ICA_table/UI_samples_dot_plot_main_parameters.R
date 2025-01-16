@@ -35,6 +35,7 @@ sample_based_dotplot_main_parameters_info <- list(
     The elements in this panel allow you to compare what and how results are displayed across the whole tab.
     <ul>
     <li><b>Select color:</b> Choose the color scale for the intensity of the signal</li>
+    <li><b>Percentil cutout:</b> Cutout to detect the number of cells above the nth percentile in all samples</li>
     </ul>
     "
   )

@@ -46,6 +46,14 @@ observeEvent(input[["ouput_graph_cell"]], {
 ##----------------------------------------------------------------------------##
 ouput_graph_cell <- list(
   title = "Create cell annotation",
-  text = p("Create a reduction for a specific annotation")
+  text = HTML("
+	Create a reduction for a specific annotation
+	<ul>
+    <li><b>Add annotation:</b> Adds a new annotation column in the annotation table with the selected settings</li>
+    <li><b>Use Enrichment names:</b> Automatically name annotations using the database</li>
+    <li><b>Choose database:</b> Choose the database for the automatic annotation</li>
+    <li><b>Name:</b> Choose the new name for the column in the annotation table</li>
+    </ul>
+  ")
 )
 

@@ -35,9 +35,10 @@ output[["ICA_table_UI"]] <- renderUI({
                height = NULL,
                collapsible = FALSE,
                collapsed = FALSE,
-               DTOutput("Table_or_message"),
                column(width = 12, align="left", offset = 0, style = "padding: 0px;",
-                      downloadButton("download_table", "Download Table"))
+                      downloadButton("download_table", "Download Table")),
+               DTOutput("Table_or_message")
+               
            )
     )
   )

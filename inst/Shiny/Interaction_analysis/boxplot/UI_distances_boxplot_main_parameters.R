@@ -189,7 +189,43 @@ observe({
 ##----------------------------------------------------------------------------##
 Boxplot_distance_main_parameters_info <- list(
   title = "Main parameters for interaction boxplot",
-  text = p("Options for the main parameters of interaction boxplot")
+  text = HTML("
+	Options for the main parameters of Boxplot distances, used to compare samples between them
+		
+	<li><b>Type of point display:</b>
+		<ul>
+			<li><b>all:</b> Display all points next to the blox plot</li>
+			<li><b>outliers/suspected outliers:</b> Display boxplot outliers</li>
+			<li><b>FALSE:</b> Does not display outiliers, boxplot will cover all points</li>
+		</ul>
+	</li>
+
+	<li><b>Z-score filter:</b> Filter out all boxplot below the given Z-score</li>
+
+	<li><b>Type of display:</b>
+	  <ul>
+		<li><b>All values:</b> </li>
+
+
+		<li><b>Interaction analysis:</b> 
+		  <ul>
+			<li><b>Value:</b> interaction value to compare between samples</li>
+			<li><b>Reduction choice 1/2:</b> Which reduction to compare between samples</li>
+			<li><b>Search/Distance with:</b> Which reduction values to compare between samples</li>
+		  </ul>
+		</li>
+		
+		<li><b>Niche analysis:</b> 
+		  <ul>
+			<li><b>Reduction choice 2:</b> Which reduction to compare between samples</li>
+			<li><b>Search/Distance with:</b> Which reduction values to compare between samples</li>
+		  </ul>
+		</li>
+		  
+		  
+	  </ul>
+	</li>
+    ")
 )
 
 ##----------------------------------------------------------------------------##

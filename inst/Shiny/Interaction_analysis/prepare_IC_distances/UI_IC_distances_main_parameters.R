@@ -113,7 +113,7 @@ output[["IC_distance_main_parameters_UI_3"]] <- renderUI({
                        size = NULL
            ),
            selectInput("choose_n_dim_for_distances",
-                       "number of dimensions",
+                       "Number of dimensions",
                        choices = list("2d" = 2,"3d" = 3)
            ),
            numericInput("choose_vertices_size_for_distances",
@@ -136,8 +136,32 @@ output[["IC_distance_main_parameters_UI_3"]] <- renderUI({
 ## Text in info box.
 ##----------------------------------------------------------------------------##
 interactions_from_graph_main_parameters_info <- list(
-  title = "Main parameters for interactions",
-  text = p("Options for the main parameters of interactions")
+  title = "Main parameters for graph",
+  text = HTML("
+    Main parameters for the IC distances tab.
+    <ul>
+    <li><b>Choose method:</b> Method to determine the distances between values</li>
+    <li><b>Choose value 1/2:</b> Choose wich reduction to compare between one another</li>
+    <li><b>Choose sample:</b> Choose which sample sans create the distance graph</li>
+    <li><b>Use positive values:</b> Set negative values from the reduction table to 0</li>
+    </ul>
+    ")
+)
+
+interactions_from_graph_display_info <- list(
+  title = "Display parameters for graph",
+  text = HTML("
+    Display parameters for the IC distances tab.
+    <ul>
+    <li><b>Z-score filter:</b> Filter edges by keeping every value above the given Z-score</li>
+    <li><b>Layout:</b> Choose the layout of the graph</li>
+    <li><b>Vertices Color:</b> Color vertices based on the chosen annotation</li>
+    <li><b>Vertices Annotation:</b> Annotation to display upon hovering over vestices</li>
+    <li><b>Number of dimensions:</b> Choose the number of dimensions for the graph</li>
+    <li><b>Vertices size:</b> Choose vertices size</li>
+    <li><b>Edges size:</b> Choose edges thickness</li>
+    </ul>
+    ")
 )
 
 ##----------------------------------------------------------------------------##
@@ -148,6 +172,18 @@ observeEvent(input[["interactions_from_graph_main_parameters_info"]], {
     modalDialog(
       interactions_from_graph_main_parameters_info[["text"]],
       title = interactions_from_graph_main_parameters_info[["title"]],
+      easyClose = TRUE,
+      footer = NULL,
+      size = "l"
+    )
+  )
+})
+
+observeEvent(input[["interactions_from_graph_display_info"]], {
+  showModal(
+    modalDialog(
+      interactions_from_graph_display_info[["text"]],
+      title = interactions_from_graph_display_info[["title"]],
       easyClose = TRUE,
       footer = NULL,
       size = "l"
