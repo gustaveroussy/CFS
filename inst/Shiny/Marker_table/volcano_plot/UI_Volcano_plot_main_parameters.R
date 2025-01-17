@@ -3,8 +3,8 @@
 ##----------------------------------------------------------------------------##
 
 output[["Volcano_plot_main_parameters_1_UI"]] <- renderUI({
-  req(values$marker_gene)
-  if(!is.null(values$marker_gene)){
+	req(values$data)
+	req(values$marker_gene)
     tagList(
       sliderInput("Volcano_plot_log_fold_change", "Log2 fold change",
                   min = 0, max = round(max(c(abs(min(values$marker_gene[[input$marker_cluster_choice]]$avg_log2FC)),
@@ -12,11 +12,11 @@ output[["Volcano_plot_main_parameters_1_UI"]] <- renderUI({
                                        digit = 2),
                   value = 0.6, step = 0.01)
     )
-  }
 })
 
 output[["Volcano_plot_main_parameters_2_UI"]] <- renderUI({
-  if(!is.null(values$data)){
+	req(values$data)
+	req(input$volcano_plot_clusters_list_to_compare)
     tagList(
             selectizeInput('volcano_plot_clusters_to_compare', "Clusters to compare",
                      unique(values$data@meta.data[,input$volcano_plot_clusters_list_to_compare])[order(unique(values$data@meta.data[,input$volcano_plot_clusters_list_to_compare]))], selected = NULL, multiple = TRUE,
@@ -39,18 +39,18 @@ output[["Volcano_plot_main_parameters_2_UI"]] <- renderUI({
                   value = 1, step = 0.01),
       actionButton("start_marker", "Start")
     )
-  }
 })
 
 output[["Volcano_plot_main_parameters_3_UI"]] <- renderUI({
-  tagList(
-    selectInput('volcano_plot_clusters_list_to_compare', "Markers to display",
-                names(Filter(is.factor, values$data@meta.data)),
-                selected = names(Filter(is.factor, values$data@meta.data))[1], multiple = FALSE),
-    selectInput('clustering_method_volcano_plot', "Analysis method",
-                c("wilcox", "wilcox_limma", "bimod","roc","t", "negbinom", "poisson", "LR", "MAST", "DESeq2"),
-                selected = "wilcox", multiple = FALSE)
-  )
+	req(values$data)
+	tagList(
+	selectInput('volcano_plot_clusters_list_to_compare', "Markers to display",
+				names(Filter(is.factor, values$data@meta.data)),
+				selected = names(Filter(is.factor, values$data@meta.data))[1], multiple = FALSE),
+	selectInput('clustering_method_volcano_plot', "Analysis method",
+				c("wilcox", "wilcox_limma", "bimod","roc","t", "negbinom", "poisson", "LR", "MAST", "DESeq2"),
+				selected = "wilcox", multiple = FALSE)
+	)
 })
 
 ##----------------------------------------------------------------------------##
