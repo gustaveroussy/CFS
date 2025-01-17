@@ -60,7 +60,7 @@ output[["Plot_type_display_UI_2"]] <- renderUI({
       selectInput("select_color_visualisation_projection_density", label = "Select color", 
                   choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"), 
                   selected = "D"),
-      selectizeInput("Plot_display_type_choice", label = "Choose cell type for density",
+      selectizeInput("Plot_display_type_choice", label = "Choose annotation for density",
                      choices = unique(names(values$annotation_for_output[["Type"]])),
                      selected = NULL,
                      multiple = TRUE,
@@ -142,7 +142,7 @@ output[["Plot_type_display_UI_3"]] <- renderUI({
   } else if(input$Plot_analysis_display_type == "Scatter pie"){
     if(input$Scatter_pie_values_selected == "ica"){
       div(
-        selectizeInput("Scatter_pie_cell_type", label = "choose cell type",
+        selectizeInput("Scatter_pie_cell_type", label = "choose annotation",
                        choices = unique(names(values$annotation_for_output[["Type"]])),
                        selected = NULL, multiple = TRUE, options = NULL),
         selectizeInput("Scatter_pie_IC_chosen_projection", label = "Choose IC to plot", choices = values$IC_names,
@@ -202,26 +202,34 @@ Plot_main_parameters_display_info <- list(
       <li><b>Dimentional Reduction:</b></li>
       <ul>
         <li><b>Reduction to Display:</b> Select which reduction to use for the scatter plot to display.</li>
-        <li><b>Select what to color:</b> Select here which metadata to observe.</li>
-        <li><b>Select color:</b> Select which colorscale to use for display.</li>
+        <li><b>Select what to color:</b> Select here which type of value to observe.</li>
+        <li><b>Choose:</b> Choose the value to observe.</li>
+      	<li><b>Select color:</b> Type of color scale of the plot</li>
+				<li><b>Color range:</b> Color range of the plot</li>
+				<li><b>Alpha type:</b>
+					<ul>
+						<li><b>Constant:</b> Alpha uniform through the sample</li>
+						<li><b>Scaling:</b> Alpha scaled with signal intensity</li>
+					</ul>
+			  </li>
+				<li><b>Alpha:</b> Change scale of the transparency</li>
       </ul>
       <li><b>Density:</b></li>
       <ul>
-        <li><b>Reduction to Display:</b> Select which reduction to use for the scatter plot to display.</li>
-        <li><b>Select what to color:</b> Select here which metadata to observe.</li>
+        <li><b>Reduction to Display:</b> Select which reduction to use for the density plot to display.</li>
+        <li><b>Select what to color:</b> Select here which type of value to observe.</li>
+        <li><b>Choose:</b> Choose the value to observe.</li>
         <li><b>Select color:</b> Select which colorscale to use for display.</li>
-        <li><b>Choose cell type for density:</b> Select which cell type density to display.</li>
-        <li><b>threshold:</b> Select the threshold for which a density isn't considered as part of the selected cell type anymore.</li>
-        <li><b>Alpha:</b> select how see-through spot are represented as.</li>
+        <li><b>Choose annotation for density:</b> Select which annotation density to display.</li>
+        <li><b>threshold:</b> Select the threshold for which a density isn't considered as part of the selected annotation anymore.</li>
+        <li><b>Alpha:</b> select how see-through spot are represented as in the spatial reprensetation.</li>
       </ul>
       <li><b>Scatter pie:</b></li>
       <ul>
         <li><b>Reduction to Display:</b> Select which reduction to use for the scatter plot to display.</li>
         <li><b>Values for Scatterpie:</b> Select what values the scatterpie should represent.</li>
         <li><b>Pie chart sized by signal intensity:</b> Change the size of pie charts based on signal intensity.</li>
-        <li><b>Reduction to Display:</b> Select which reduction to use for scatter plot display.</li>
-        <li><b>choose cell type:</b> Select which ICs signal related to a specific cell type will be used for the scatterpies.</li>
-        <li><b>Choose IC to plot:</b> Select specific ICs to represent in the scatterpies.</li>
+        <li><b>Choose:</b> Select which values to represent in the scatter plot display.</li>
       </ul>
     </ul>
     "

@@ -59,8 +59,9 @@ Plot_main_parameters_cluster_info <- list(
   text = HTML("
     The elements in this panel allow you to clusterise samples.
     <ul>
+	  <li><b>Select reduction:</b> Select reduction to clusterise with.</li>
       <li><b>Choose annotation to cluster:</b> Select ICs associated to the selected annotation for the clusterisation.</li>
-      <li><b>Choose value to cluster:</b> Select specific ICs for the clusterisation.</li>
+      <li><b>Choose value to cluster:</b> Select specific reduction values for the clusterisation.</li>
       <li><b>Select algorithm:</b> Select the clustering algorithm.</li>
       <li><b>Clustering resolution:</b> Select the resolution of the clustering.</li>
       <li><b>Clustering name:</b> Name the clustering being carried out in order to be selected in display parameters.</li>

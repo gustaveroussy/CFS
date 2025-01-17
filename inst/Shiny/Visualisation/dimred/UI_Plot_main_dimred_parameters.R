@@ -15,7 +15,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     req(values$annotation_for_output)
     tagList(
       textInput("reddim_named_by_user", "Dimred name", value = "umap"),
-      selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
+      selectizeInput("Plot_display_type_UMAP_choice", label = "Choose annotation for reduction",
                      choices = unique(names(values$annotation_for_output[["Type"]])),
                      selected = NULL,
                      multiple = TRUE,
@@ -39,7 +39,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     req(values$annotation_for_output)
     tagList(
       textInput("reddim_named_by_user", "Reduction name", value = "umap"),
-      selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
+      selectizeInput("Plot_display_type_UMAP_choice", label = "Choose annotation for reduction",
                      choices = unique(names(values$annotation_for_output[["Type"]])),
                      selected = NULL,
                      multiple = TRUE,
@@ -63,7 +63,7 @@ output[["Plot_main_parameters_UI"]] <- renderUI({
     req(values$annotation_for_output)
     tagList(
       textInput("reddim_named_by_user", "Reduction name", value = "tsne"),
-      selectizeInput("Plot_display_type_UMAP_choice", label = "Choose cell type for reduction",
+      selectizeInput("Plot_display_type_UMAP_choice", label = "Choose annotation for reduction",
                      choices = unique(names(values$annotation_for_output[["Type"]])),
                      selected = NULL,
                      multiple = TRUE,
@@ -110,9 +110,9 @@ Plot_main_parameters_info <- list(
     The elements in this panel allow you to control what and how results are displayed across the whole tab.
     <ul>
       <li><b>Select method to use:</b> Select which reduction you want to create from the data.</li>
-      <li><b>Reduction name:</b> Name the reduction being generated to display in the visual options.</li>
-      <li><b>Choose cell type to cluster:</b> Select ICs associated to the selected cell type for the reduction.</li>
-      <li><b>Choose IC to cluster:</b> Select specific ICs for the reduction.</li>
+      <li><b>Dimred name:</b> Name the reduction being generated to display in the visual options.</li>
+      <li><b>Choose annotation for reduction:</b> Select ICs associated to the selected annotation for the reduction.</li>
+      <li><b>Choose IC for reduction:</b> Select specific ICs for the reduction.</li>
       <li><b>UMAP/3D UMAP:</b></li>
       <ul>
         <li><b>n.neighbors:</b> Number of neighbor for graph construction</li>
