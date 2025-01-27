@@ -7,7 +7,8 @@
 Match_Annotation(
   data_to_annotate = NULL,
   annotated_data = NULL,
-  cortype = c("features", "cells")
+  cortype = c("features", "cells"),
+  method = c("cor", "dotproduct")
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ Match_Annotation(
 \item{annotated_data}{Seurat object containing an annotated ICA reduction}
 
 \item{cortype}{What to correlate between both samples to annotate ICs: "features" or "cell". "cell" assumes both Seurat object are from the same sample}
+
+\item{method}{Use dotproduct or correlation for annotation}
 }
 \value{
 Seurat object data_to_annotate with annotation table
