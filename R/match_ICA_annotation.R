@@ -4,6 +4,7 @@
 #' @param data_to_annotate Seurat object containing a non annotated ICA reduction
 #' @param annotated_data Seurat object containing an annotated ICA reduction
 #' @param cortype What to correlate between both samples to annotate ICs: "features" or "cell". "cell" assumes both Seurat object are from the same sample
+#' @param method Use dotproduct or correlation for annotation
 #' 
 #' @return Seurat object data_to_annotate with annotation table
 #' 
@@ -11,7 +12,7 @@
 #' data_1 <- Match_Annotation=function(data_to_annotate=data_1, annotated_data = data_2)
 #' 
 #' @export
-Match_Annotation=function(data_to_annotate=NULL, annotated_data = NULL, cortype = c("features","cells")){
+Match_Annotation=function(data_to_annotate=NULL, annotated_data = NULL, cortype = c("features","cells"), method = c("cor","dotproduct")){
 
   if(cortype == "features"){
     loadings_non_annotated <- data_to_annotate@reductions$ica@feature.loadings
@@ -28,7 +29,12 @@ Match_Annotation=function(data_to_annotate=NULL, annotated_data = NULL, cortype 
     stop(paste0("No ", cortype, " in common between samples"))
   }
   
-  cor <- cor(x = loadings_annotated, y = loadings_non_annotated)
+  if(method == "cor"){
+    cor <- cor(x = loadings_annotated, y = loadings_non_annotated)
+  } else {
+    cor <- t(loadings_annotated) %*% loadings_non_annotated
+  }
+  
   
   annotation_data = annotated_data@misc$annotation
   
