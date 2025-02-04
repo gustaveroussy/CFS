@@ -15,20 +15,20 @@
 #' @export
 Run_distances <- function(data = NULL, images = NULL, method = c("Lee"), value1 = c("ica"), value2 = c("ica"), keep_positive_values = T){
   # get values
-  table_sample = values$data@reductions[[value1]]@cell.embeddings
+  table_sample = data@reductions[[value1]]@cell.embeddings
   
   if(value1 != "ica"){
-    colnames(table_sample) = values$data@misc$reduction_names[[value1]]
+    colnames(table_sample) = data@misc$reduction_names[[value1]]
   }
   
   if(keep_positive_values){
     table_sample[table_sample < 0] = 0
   }
   
-  table_sample_2 = values$data@reductions[[value2]]@cell.embeddings
+  table_sample_2 = data@reductions[[value2]]@cell.embeddings
   
   if(value2 != "ica"){
-    colnames(table_sample_2) = values$data@misc$reduction_names[[value2]]
+    colnames(table_sample_2) = data@misc$reduction_names[[value2]]
   }
   
   if(keep_positive_values){
@@ -36,7 +36,7 @@ Run_distances <- function(data = NULL, images = NULL, method = c("Lee"), value1 
   }
   
   
-  if(length(values$data@images) > 1){
+  if(length(data@images) > 1){
     table_sample = table_sample[grepl(paste0(images,"_[ACGT]+"), rownames(table_sample)),]
     table_sample_2 = table_sample_2[grepl(paste0(images,"_[ACGT]+"), rownames(table_sample_2)),]
   }
