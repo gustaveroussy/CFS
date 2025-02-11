@@ -21,7 +21,17 @@ output[["Output_directory_UI"]] <- renderUI({
                collapsed = FALSE,
                uiOutput("Output_or_message"),
                column(width = 12, align="left", offset = 0, style = "padding: 0px;",
-                      downloadButton("download_RDS", "Download RDS"))
+                      downloadButton("download_RDS", "Download RDS"),
+                      shinyFiles::shinySaveButton(
+                        "download_RDS_export",
+                        label = HTML("Export locally"),
+                        title = "RDS",
+                        filetype = c("RDS"),
+                        viewtype = "icon",
+                        class = "btn-xs",
+                        style = "margin-right: 3px"
+                      )
+                      )
            )
     ),
     column(width = 12, offset = 0, style = "padding: 0px;",
