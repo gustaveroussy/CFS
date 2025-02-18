@@ -18,7 +18,12 @@ current_plot_spatial <- reactive({
         
       TissueCoordinates = TissueCoordinates()[[sample]]
       meta.data = values$data@meta.data[(rownames(values$data@meta.data) %in% rownames(TissueCoordinates)),]
-      cell.embeddings <- values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),]
+      
+      if(!is.null(values$data@reductions$ica)){
+        cell.embeddings <- values$data@reductions$ica@cell.embeddings[(rownames(values$data@reductions$ica@cell.embeddings) %in% rownames(TissueCoordinates)),]
+      }
+      
+      
       annotation = values$Annotation
       
       # keep cells based on UMAP
