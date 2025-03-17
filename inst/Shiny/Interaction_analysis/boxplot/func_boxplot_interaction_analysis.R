@@ -12,7 +12,7 @@ fig_distance_boxplot_analysis <- function(){
   samples <- images_names()
   
   df = lapply(samples,function(sample){
-    coordinates = GetTissueCoordinates(values$data, sample);
+    coordinates = TissueCoordinates()[[sample]];
     cell_names = rownames(coordinates);
     knn = knearneigh(coordinates, k=6, longlat = NULL, use_kd_tree=TRUE);
     neighbours = knn2nb(knn, row.names = NULL, sym = FALSE);

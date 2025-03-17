@@ -40,7 +40,7 @@ current_plot_graph_interactions <- eventReactive(input$interaction_plot_start, {
     table_sample_2 = table_sample_2[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample_2)),]
   }
 
-  knn = knearneigh(GetTissueCoordinates(values$data, sample), k=6, longlat = NULL, use_kd_tree=TRUE)
+  knn = knearneigh(TissueCoordinates()[[sample]], k=6, longlat = NULL, use_kd_tree=TRUE)
   neighbours = knn2nb(knn, row.names = NULL, sym = FALSE)
   listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL)
 

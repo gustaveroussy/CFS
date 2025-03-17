@@ -64,7 +64,7 @@ fig_distance_boxplot_for_each_samples <- function(){
   if(input$boxplot_interaction_compare_with_randomized){
     random = lapply(names(df),function(sample){
       # get distances
-      knn = knearneigh(GetTissueCoordinates(values$data, sample), k=6, longlat = NULL, use_kd_tree=TRUE);
+      knn = knearneigh(TissueCoordinates()[[sample]], k=6, longlat = NULL, use_kd_tree=TRUE);
       neighbours = knn2nb(knn, row.names = NULL, sym = FALSE);
       listw = nb2listw(neighbours, glist=NULL, style="W", zero.policy=NULL);
       
