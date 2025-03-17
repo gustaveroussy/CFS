@@ -78,7 +78,7 @@ output$download_subcluster_RDS <- downloadHandler(
         ic_types<-apply(ic_types,2,function(x){x=ifelse(x<=0,0,x); return(x)})
         sum_IC<-apply(ic_types,2,function(x){x=x/sum(x); return(x)})
         sum_IC=sqrt((rowSums(sum_IC)/max(rowSums(sum_IC))))
-        sum_IC = GetTissueCoordinates(data) %>%  cbind(.,sum_IC)
+        sum_IC = TissueCoordinates() %>%  cbind(.,sum_IC)
         identity = rownames(sum_IC)[which(sum_IC[,'sum_IC'] >= mean(sum_IC[,'sum_IC']) + sd(sum_IC[,'sum_IC'])*input$Cell_type_subclustering_density_export_choose)]
       } else {
         identity = rownames(data@reductions$ica@cell.embeddings)[which(data@reductions$ica@cell.embeddings[,type] >= mean(data@reductions$ica@cell.embeddings[,type]) + sd(data@reductions$ica@cell.embeddings[,type])*input$Cell_type_subclustering_density_export_choose)]
