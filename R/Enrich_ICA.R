@@ -21,7 +21,7 @@ Enrich_ICA=function(data=NULL, dbs=c("PanglaoDB_Augmented_2021",
                                 "GO_Cellular_Component_2023",
                                 "MSigDB_Hallmark_2020",
                                 "Reactome_2022",
-                                "KEGG_2021_Human"), kurtosis = 3, overwrite = TRUE, enrich_positive_genes = TRUE){
+                                "KEGG_2021_Human"), kurtosis = 3, overwrite = TRUE, enrich_positive_genes = FALSE){
   
   #check if online
   websiteLive <- getOption("enrichR.live")
