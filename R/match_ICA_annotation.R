@@ -13,7 +13,15 @@
 #' 
 #' @export
 Match_Annotation=function(data_to_annotate=NULL, annotated_data = NULL, cortype = c("features","cells"), method = c("cor","dotproduct")){
-
+  
+  if(length(cortype) > 1){
+    cortype = cortype[1]
+  }
+  
+  if(length(method) > 1){
+    method = method[1]
+  }
+  
   if(cortype == "features"){
     loadings_non_annotated <- data_to_annotate@reductions$ica@feature.loadings
     loadings_annotated <- annotated_data@reductions$ica@feature.loadings
