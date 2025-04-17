@@ -23,6 +23,8 @@ spatial_gene_react <- reactive({
   plotList <- list()
   i = 1
   
+  transcript_table = GetAssayData(values$data, slot = "data", assay = "spatial")
+  
   if(input$interactive_gene_projection){
     for(k in input$Plot_image_spatial){
       for (x in input$gene_projection_gene_choice) {
@@ -42,15 +44,15 @@ spatial_gene_react <- reactive({
         }
         
         plotList[[i]] <- plotList[[i]] %>% add_trace(x = TissueCoordinates()[[k]][,"imagecol"], y = TissueCoordinates()[[k]][,"imagerow"],
-                                                     marker = list(color = values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[k]])],
+                                                     marker = list(color = transcript_table[x,][rownames(TissueCoordinates()[[k]])],
                                                                    size = input$Plot_spatial_gene_size,
                                                                    colorscale = colorscale_gene_spatial(),
                                                                    coloraxis="coloraxis",
                                                                    reversescale=input$invert_color_gene_projection),
                                                      opacity = input$transparency_gene_projection,
                                                      type = 'scatter', mode = "markers",
-                                                     text = values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[k]])],
-                                                     customdata = names(values$data@assays$SCT@data[x,][rownames(TissueCoordinates()[[k]])]),
+                                                     text = transcript_table[x,][rownames(TissueCoordinates()[[k]])],
+                                                     customdata = names(transcript_table[x,][rownames(TissueCoordinates()[[k]])]),
                                                      hovertemplate = paste0("Cell : %{customdata}<br>",
                                                                             "Expression: %{text}<br>",
                                                                             "Associated IC:<br>",
@@ -74,9 +76,9 @@ spatial_gene_react <- reactive({
     
     coordinates = lapply(coordinates, function(c){
       if(length(input$gene_projection_gene_choice) > 1){
-        c = cbind(c,t(values$data@assays$SCT@data[input$gene_projection_gene_choice,rownames(c)]));
+        c = cbind(c,t(transcript_table[input$gene_projection_gene_choice,rownames(c)]));
       } else {
-        c = cbind(c,values$data@assays$SCT@data[input$gene_projection_gene_choice, rownames(c)]);
+        c = cbind(c,transcript_table[input$gene_projection_gene_choice, rownames(c)]);
         colnames(c)[length(colnames(c))] = c(input$gene_projection_gene_choice);
       }
       
