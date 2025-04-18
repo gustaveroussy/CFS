@@ -54,7 +54,8 @@ output[["IC_enrichment_UI"]] <- renderUI({
             tags$div(
               style = "color: black !important;",
               uiOutput("IC_enrichment_interactive_display_UI"),
-              uiOutput("invert_color_enrichment_projection_UI")
+              uiOutput("invert_color_enrichment_projection_UI"),
+              uiOutput("text_size_enrichment_projection_UI")
             ),
             circle = FALSE,
             icon = icon("cog"),
@@ -89,6 +90,24 @@ output[["invert_color_enrichment_projection_UI"]] <- renderUI({
 outputOptions(
   output,
   "invert_color_enrichment_projection_UI",
+  suspendWhenHidden = FALSE
+)
+
+##----------------------------------------------------------------------------##
+## invert color scale
+##----------------------------------------------------------------------------##
+output[["text_size_enrichment_projection_UI"]] <- renderUI({
+  numericInput(
+    inputId = "text_size_enrichment_projection",
+    label = "Text size",
+    value = 7
+  )
+})
+
+## make sure elements are loaded even though the box is collapsed
+outputOptions(
+  output,
+  "text_size_enrichment_projection_UI",
   suspendWhenHidden = FALSE
 )
 

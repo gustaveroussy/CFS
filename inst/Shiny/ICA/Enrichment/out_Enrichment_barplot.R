@@ -69,8 +69,8 @@ enrichment_barplot_react <- reactive({
                     colorbar = list(title = "P-value", exponentformat = "power"), showscale = TRUE, reversescale=input$invert_color_enrichment_projection)
     )
     
-    fig <- fig %>% layout(yaxis = list(autorange = "reversed", title = 'Enrichment', tickfont = list(size = 7)),
-                          xaxis = list(title = 'Nb genes', tickfont = list(size = 10))
+    fig <- fig %>% layout(yaxis = list(autorange = "reversed", title = 'Enrichment', tickfont = list(size = input$text_size_enrichment_projection)),
+                          xaxis = list(title = 'Nb genes', tickfont = list(size = input$text_size_enrichment_projection))
     )
     return(fig)
   } else {

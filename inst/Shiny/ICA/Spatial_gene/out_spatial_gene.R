@@ -23,7 +23,7 @@ spatial_gene_react <- reactive({
   plotList <- list()
   i = 1
   
-  transcript_table = GetAssayData(values$data, slot = "data", assay = "spatial")
+  transcript_table = GetAssayData(values$data, slot = "data", assay = "SCT")
   
   if(input$interactive_gene_projection){
     for(k in input$Plot_image_spatial){
