@@ -67,7 +67,7 @@ TissueCoordinates_ggplot <- function(){
       coordinates = values$data@images[[sample]]@boundaries$centroids@coords
       rownames(coordinates) = values$data@images[[sample]]@boundaries$centroids@cells
       
-    } else if (grepl("SlideSeq",class(values$data@images[[image]]))){
+    } else if (grepl("SlideSeq",class(values$data@images[[sample]]))){
       
       coordinates = values$data@images[[sample]]@coordinates
       
