@@ -6,7 +6,6 @@ TissueCoordinates <- reactive({
   TC = list()
   
   for(image in names(values$data@images)){
-
       if(class(values$data@images[[image]]) == "VisiumV1"){
       
         c = values$data@images[[image]]@coordinates
@@ -15,6 +14,10 @@ TissueCoordinates <- reactive({
         
         c = values$data@images[[image]]@boundaries$centroids@coords
         rownames(c) = values$data@images[[image]]@boundaries$centroids@cells
+        
+      } else if (grepl("SlideSeq",class(values$data@images[[image]]))){
+        
+        c = values$data@images[[image]]@coordinates
         
       }
 
@@ -63,6 +66,10 @@ TissueCoordinates_ggplot <- function(){
       
       coordinates = values$data@images[[sample]]@boundaries$centroids@coords
       rownames(coordinates) = values$data@images[[sample]]@boundaries$centroids@cells
+      
+    } else if (grepl("SlideSeq",class(values$data@images[[image]]))){
+      
+      coordinates = values$data@images[[sample]]@coordinates
       
     }
     
