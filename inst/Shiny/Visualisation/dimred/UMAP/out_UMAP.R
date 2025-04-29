@@ -37,8 +37,16 @@ observeEvent(input$start_UMAP, {
                              n.components = if(input$Plot_analysis_type == "UMAP"){2L}else{3L})
       } else {
         incProgress(0.1, detail = "Running UMAP")
-        values$data=RunUMAP(values$data, reduction = "ica",dims = as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)), min.dist = input$Plot_min.dist, n.neighbors = input$Plot_n.neighbors, spread = input$Plot_spread, reduction.name = input$reddim_named_by_user,
+        
+        if(input$Plot_umap_reduction_to_use == "ica"){
+          values_test = as.integer(gsub('[IC_]','',input$Plot_display_IC_choice))
+        } else {
+          values_test = which(values$data@misc$reduction_names[[input$Plot_umap_reduction_to_use]] %in% input$Plot_display_IC_choice)
+        }
+        
+        values$data=RunUMAP(values$data, reduction = input$Plot_umap_reduction_to_use, dims = values_test, min.dist = input$Plot_min.dist, n.neighbors = input$Plot_n.neighbors, spread = input$Plot_spread, reduction.name = input$reddim_named_by_user,
                             n.components = if(input$Plot_analysis_type == "UMAP"){2L}else{3L})
+        
       }
     } else if (!is.null(input$Plot_display_type_UMAP_choice)){
       if(length(input$Plot_display_type_UMAP_choice) != 1){

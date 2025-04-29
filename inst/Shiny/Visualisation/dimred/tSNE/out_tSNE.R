@@ -32,7 +32,15 @@ observeEvent(input$start_UMAP, {
       } else {
         incProgress(0.1, detail = "Running TSNE")
         
-        values$data= RunTSNE(values$data, reduction = "ica", dims = as.integer(gsub('[IC_]','',input$Plot_display_IC_choice)), perplexity = input$Plot_perplexity, reduction.name = input$reddim_named_by_user)
+        if(input$Plot_umap_reduction_to_use == "ica"){
+          values_test = as.integer(gsub('[IC_]','',input$Plot_display_IC_choice))
+        } else {
+          values_test = which(values$data@misc$reduction_names[[input$Plot_umap_reduction_to_use]] %in% input$Plot_display_IC_choice)
+        }
+        
+        values$data= RunTSNE(values$data, reduction = "ica", dims = values_test, perplexity = input$Plot_perplexity, reduction.name = input$reddim_named_by_user)
+
+
       }
     } else if (!is.null(input$Plot_display_type_UMAP_choice)){
       if(length(input$Plot_display_type_UMAP_choice) != 1){

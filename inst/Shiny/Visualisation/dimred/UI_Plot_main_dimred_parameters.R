@@ -3,6 +3,9 @@
 ##----------------------------------------------------------------------------##
 output[["Plot_type_UI"]] <- renderUI({
   tagList(
+    selectInput("Plot_umap_reduction_to_use", label = "Select reduction", 
+                choices = names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","tsne"))],
+                selected = "ica"),
     selectInput("Plot_analysis_type", label = "Select method to use", 
                 choices = list("UMAP", "3D UMAP","tSNE"),
                 selected = "UMAP")
@@ -10,79 +13,46 @@ output[["Plot_type_UI"]] <- renderUI({
 })
 
 output[["Plot_main_parameters_UI"]] <- renderUI({
-  req(input$Plot_analysis_type)
-  if (input$Plot_analysis_type == "UMAP"){
+    req(input$Plot_analysis_type)
     req(values$annotation_for_output)
     tagList(
       textInput("reddim_named_by_user", "Dimred name", value = "umap"),
-      selectizeInput("Plot_display_type_UMAP_choice", label = "Choose annotation for reduction",
-                     choices = unique(names(values$annotation_for_output[["Type"]])),
-                     selected = NULL,
+      if(input$Plot_umap_reduction_to_use == "ica"){
+        selectizeInput("Plot_display_type_UMAP_choice", label = "Choose annotation for reduction",
+                       choices = unique(names(values$annotation_for_output[["Type"]])),
+                       selected = NULL,
+                       multiple = TRUE,
+                       options = NULL)
+      },
+      selectizeInput("Plot_display_IC_choice", label = "Choose values for reduction",
+                     choices = if(input$Plot_umap_reduction_to_use == "ica"){values$IC_names} else {values$data@misc$reduction_names[[input$Plot_umap_reduction_to_use]]},
+                     selected = if(input$Plot_umap_reduction_to_use == "ica"){input$Ic_list} else {NULL},
                      multiple = TRUE,
                      options = NULL),
-      selectizeInput("Plot_display_IC_choice", label = "Choose IC for reduction",
-                     choices = values$IC_names,
-                     selected = input$Ic_list,
-                     multiple = TRUE,
-                     options = NULL),
-      numericInput("Plot_n.neighbors", "n.neighbors", 20,
-                   min = 1, max = Inf, step = 1
-      ),
-      numericInput("Plot_min.dist", "min.dist", 0.1,
-                   min = 0, max = Inf, step = 0.01
-      ),
-      numericInput("Plot_spread", "Spread", 3,
-                   min = 0.1, step = 0.1
-      )
+      if (input$Plot_analysis_type == "UMAP" | input$Plot_analysis_type == "3D UMAP"){
+        numericInput("Plot_n.neighbors", "n.neighbors", 20,
+                     min = 1, max = Inf, step = 1
+      )},
+      if (input$Plot_analysis_type == "UMAP" | input$Plot_analysis_type == "3D UMAP"){
+        numericInput("Plot_min.dist", "min.dist", 0.1,
+                     min = 0, max = Inf, step = 0.01
+      )},
+      if (input$Plot_analysis_type == "UMAP" | input$Plot_analysis_type == "3D UMAP"){
+        numericInput("Plot_spread", "Spread", 3,
+                     min = 0.1, step = 0.1
+      )},
+      if (input$Plot_analysis_type == "tSNE") {
+        numericInput("Plot_perplexity", "Perplexity", 30,
+                     min = 1, max = Inf, step = 1
+        )
+      }
+      
     )
-  } else if (input$Plot_analysis_type == "3D UMAP"){
-    req(values$annotation_for_output)
-    tagList(
-      textInput("reddim_named_by_user", "Reduction name", value = "umap"),
-      selectizeInput("Plot_display_type_UMAP_choice", label = "Choose annotation for reduction",
-                     choices = unique(names(values$annotation_for_output[["Type"]])),
-                     selected = NULL,
-                     multiple = TRUE,
-                     options = NULL),
-      selectizeInput("Plot_display_IC_choice", label = "Choose IC for reduction",
-                     choices = values$IC_names,
-                     selected = input$Ic_list,
-                     multiple = TRUE,
-                     options = NULL),
-      numericInput("Plot_n.neighbors", "n.neighbors", 20,
-                   min = 1, max = Inf, step = 1
-      ),
-      numericInput("Plot_min.dist", "min.dist", 0.1,
-                   min = 0, max = Inf, step = 0.01
-      ),
-      numericInput("Plot_spread", "Spread", 3,
-                   min = 0.1, step = 0.1
-      )
-    )
-  } else if (input$Plot_analysis_type == "tSNE") {
-    req(values$annotation_for_output)
-    tagList(
-      textInput("reddim_named_by_user", "Reduction name", value = "tsne"),
-      selectizeInput("Plot_display_type_UMAP_choice", label = "Choose annotation for reduction",
-                     choices = unique(names(values$annotation_for_output[["Type"]])),
-                     selected = NULL,
-                     multiple = TRUE,
-                     options = NULL),
-      selectizeInput("Plot_display_IC_choice", label = "Choose IC for reduction",
-                     choices = values$IC_names,
-                     selected = input$Ic_list,
-                     multiple = TRUE,
-                     options = NULL),
-      numericInput("Plot_perplexity", "Perplexity", 30,
-                   min = 1, max = Inf, step = 1
-      )
-    )
-  }
 })
 
 output[["start_plot_UI"]] <- renderUI({
   tagList(
-    actionButton("Select_all_ICs_visualisation", "Select all ICs"),
+    actionButton("Select_all_ICs_visualisation", "Select all"),
     actionButton("start_UMAP", "Calculate DimRed")
   )
 })
