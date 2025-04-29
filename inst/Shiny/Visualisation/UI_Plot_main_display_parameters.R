@@ -2,31 +2,21 @@
 ## UI elements to set main parameters for the projection.
 ##----------------------------------------------------------------------------##
 
-check_visual_tab = reactiveValues(slider_visual_spatial_range_ui_check = F,
-                                  select_color_visualisation_projection_ui_check = F,
-                                  Scatter_pie_metadata_select_ui_check = F,
-                                  Scatter_pie_cell_type_ui_check = F,
-                                  Scatter_pie_other_type_ui_check = F,
-                                  Plot_display_type_choice_ui_check = F
-)
-
 output[["Plot_type_display_UI"]] <- renderUI({
   req(values$data)
-  div(id = "plot_type_display_ui_type",
-    tagList(
-      selectInput("Plot_analysis_display_type", label = "Select method to use", 
-                  choices = c("Dimentional reduction","Density","Scatter pie"),
-                  selected = "Dimentional reduction"),
-      selectInput(
-        "Visualisation_selected_dimred_to_display",
-        "Reduction to Display",
-        names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca",names(values$data@misc$reduction_names)))],
-        selected = names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca",names(values$data@misc$reduction_names)))][1],
-        multiple = FALSE,
-        selectize = TRUE,
-        width = NULL,
-        size = NULL
-      )
+  tagList(
+    selectInput("Plot_analysis_display_type", label = "Select method to use", 
+                choices = c("Dimentional reduction","Density","Scatter pie"),
+                selected = "Dimentional reduction"),
+    selectInput(
+      "Visualisation_selected_dimred_to_display",
+      "Reduction to Display",
+      names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca",names(values$data@misc$reduction_names)))],
+      selected = names(values$data@reductions)[!(names(values$data@reductions) %in% c("ica","pca",names(values$data@misc$reduction_names)))][1],
+      multiple = FALSE,
+      selectize = TRUE,
+      width = NULL,
+      size = NULL
     )
   )
 })
@@ -42,7 +32,7 @@ output[["Plot_type_display_UI_1"]] <- renderUI({
 output[["Plot_type_display_UI_2"]] <- renderUI({
   req(values$data)
   if(input$Plot_analysis_display_type == "Dimentional reduction"){
-    div(
+    tagList(
       selectizeInput("what_to_display_UMAP_choice", label = paste0("Choose ",input$Plot_display_type),
                      choices = NULL,
                      selected = NULL,
@@ -51,7 +41,7 @@ output[["Plot_type_display_UI_2"]] <- renderUI({
     )
   } else if (input$Plot_analysis_display_type == "Density"){
     req(values$annotation_for_output)
-    div(
+    tagList(
       selectizeInput("what_to_display_UMAP_choice", label = paste0("Choose ",input$Plot_display_type),
                      choices = NULL,
                      selected = NULL,
@@ -70,7 +60,7 @@ output[["Plot_type_display_UI_2"]] <- renderUI({
 
     )
   } else if (input$Plot_analysis_display_type == "Scatter pie"){
-    div(
+    tagList(
       selectInput("Scatter_pie_values_selected",
                   "Values for Scatterpie",
                   c("Metadata", names(values$data@reductions)[!(names(values$data@reductions) %in% c("umap","tsne"))])
@@ -118,7 +108,7 @@ output[["Plot_type_display_UI_3"]] <- renderUI({
     
     }
     
-      div(
+    tagList(
         if(!(input$Plot_display_type == "metadata" && !is.numeric(values$data@meta.data[, input$what_to_display_UMAP_choice]))){
           selectInput("select_color_visualisation_projection", label = "Select color",
                       choices = list("Magma" = "A", "Inferno" = "B", "Plasma" = "C", "Viridis" = "D", "Cividis" = "E", "Rocket" = "F", "Mako" = "G", "Turbo" = "H", "Blues", "Reds","YlGnBu","YlOrRd"),
@@ -141,7 +131,7 @@ output[["Plot_type_display_UI_3"]] <- renderUI({
 
   } else if(input$Plot_analysis_display_type == "Scatter pie"){
     if(input$Scatter_pie_values_selected == "ica"){
-      div(
+      tagList(
         selectizeInput("Scatter_pie_cell_type", label = "choose annotation",
                        choices = unique(names(values$annotation_for_output[["Type"]])),
                        selected = NULL, multiple = TRUE, options = NULL),
