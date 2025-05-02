@@ -177,7 +177,7 @@ output[["ggplot_scatter_pie_UI"]] <- renderUI({
       inputId = "full_annotation_UMAP",
       label = "Select annotation",
       choices = c("None","IC", "Mean IC","Full annotation","Mean full annotation"),
-      selected = "Full annotation",
+      selected = "Mean full annotation",
       multiple = FALSE,
       selectize = TRUE,
       width = NULL,

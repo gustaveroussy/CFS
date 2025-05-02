@@ -53,7 +53,7 @@ current_plot_spatial <- reactive({
       
       if (input$Plot_analysis_display_type == "Dimentional reduction"){
         if (input$Plot_display_type == "metadata"){
-          if(input$what_to_display_UMAP_choice == "seurat_clusters"){
+          if(typeof(meta.data[[input$what_to_display_UMAP_choice]]) == "factor"){
             
             ##### palette
             palette = values$palette
