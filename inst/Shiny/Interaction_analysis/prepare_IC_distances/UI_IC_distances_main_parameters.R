@@ -58,6 +58,11 @@ output[["IC_distance_main_parameters_UI_2"]] <- renderUI({
         )
       ),
       conditionalPanel(
+        condition = "input.choose_distances_to_determine == 'Genes' | input.choose_distances_to_determine_2 == 'Genes'",
+        fileInput("import_genes_table_distances", "Filter genes with gene table (.csv)"
+        )
+      ),
+      conditionalPanel(
         condition = "input.choose_distances_to_determine != 'Genes' | input.choose_distances_to_determine_2 != 'Genes'",
           shinyWidgets::awesomeCheckbox(
             inputId = "use_positive_values_for_distances",
