@@ -8,10 +8,18 @@ Calculate_distances <- function(method = NULL, sample = NULL) {
       
     } else if (input$choose_distances_to_determine != "Genes") {
       
-      table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
-      
-      if(input$choose_distances_to_determine != "ica"){
-        colnames(table_sample) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]
+      if (input$choose_distances_to_determine == "Metadata") {
+        
+        table_sample = values$data@meta.data[,sapply(values$data@meta.data, is.numeric)]
+        table_sample = table_sample[,!sapply(colnames(table_sample), function(x){return(all(table_sample[,x] == 0))})]
+        
+      } else {
+        table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
+        
+        if(input$choose_distances_to_determine != "ica"){
+          colnames(table_sample) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]
+        }
+        
       }
       
       if(input$use_positive_values_for_distances){
@@ -25,11 +33,19 @@ Calculate_distances <- function(method = NULL, sample = NULL) {
       table_sample_2 = raster::t(GetAssayData(values$data))
       
     } else if (input$choose_distances_to_determine_2 != "Genes") {
-      
-      table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings
-      
-      if(input$choose_distances_to_determine_2 != "ica"){
-        colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]
+      if (input$choose_distances_to_determine_2 == "Metadata") {
+        
+        table_sample_2 = values$data@meta.data[,sapply(values$data@meta.data, is.numeric)]
+        table_sample_2 = table_sample_2[,!sapply(colnames(table_sample_2), function(x){return(all(table_sample_2[,x] == 0))})]
+        
+        
+      } else {
+        
+        table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings
+        
+        if(input$choose_distances_to_determine_2 != "ica"){
+          colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]
+        }
       }
       
       if(input$use_positive_values_for_distances){
@@ -128,8 +144,10 @@ Calculate_distances <- function(method = NULL, sample = NULL) {
         x = apply(df,1,function(x){n = lee(table_sample[,x[1]], table_sample_2[,x[2]], listw, nrow(table_sample), zero.policy=attr(listw, "zero.policy"));return(n)})
         
         incProgress(0.7, detail = "Finished")
-        
+
         df[,"weight"] = unlist(lapply(x,function(n){return(n$L)}))
+
+        df = df[!is.na(df[,"weight"]),]
         
         values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]] = df
       } else {

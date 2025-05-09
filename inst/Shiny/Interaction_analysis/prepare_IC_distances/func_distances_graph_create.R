@@ -5,7 +5,7 @@
 create_distance_graph = function(sample = "All"){
   
   tree_table = list()
-
+  
   if (sample == "All"){
     tree_table = lapply(images_names(),
                         function(sample){
@@ -22,7 +22,7 @@ create_distance_graph = function(sample = "All"){
       tree_table[[sample]] = NULL
     }
   }
-  
+
   req(tree_table)
   req(input$choose_n_dim_for_distances)
   
@@ -38,7 +38,7 @@ create_distance_graph = function(sample = "All"){
     tree_table[[samples]] = tree_table[[samples]][as.double(scale(tree_table[[samples]][,"weight"])) > input$Z_score_for_distances,]
     
   }
-  
+
   if (sample == "All"){
     
     t = rbindlist(tree_table)
@@ -59,7 +59,7 @@ create_distance_graph = function(sample = "All"){
   }
   
   G = graph_from_data_frame(df, directed = FALSE)
-  
+
   if(input$choose_distances_to_determine == "Genes" & input$choose_distances_to_determine_2 == "Genes" & (!is.null(input$choose_ic_for_genes_filter_for_distances_ligand) | !is.null(input$choose_ic_for_genes_filter_for_distances_receptor))){
     l = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$ligand_gene_symbol
     r = read.delim(paste0(Shiny.options[["shiny_root"]], "/../tmp_data/human_lr_pair.csv"))$receptor_gene_symbol
@@ -86,7 +86,7 @@ create_distance_graph = function(sample = "All"){
     
     G = subgraph(G, genes[genes %in% names(V(G))])
   }
-  
+
   if(input$IC_distances_remove_IC_from_graph){
     genes_to_keep = names(V(G))[!grepl("IC_",names(V(G)))]
     ICs_to_keep = rownames(values$Annotation)[unlist(values$Annotation[,"Use"] == "TRUE")]
