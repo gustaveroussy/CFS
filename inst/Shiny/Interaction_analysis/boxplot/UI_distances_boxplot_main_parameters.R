@@ -161,6 +161,8 @@ observe({
     } else if (input$choose_distances_to_determine != "Genes"){
       if(input$choose_distances_to_determine == "ica"){
         filter_value_1 = colnames(values$data@reductions$ica@cell.embeddings)
+      } else if (input$choose_distances_to_determine == "Metadata"){
+        filter_value_1 = colnames(values$data@meta.data)
       } else {
         filter_value_1 = unique(values$Annotation[,input$choose_distances_to_determine])
       }
@@ -171,6 +173,8 @@ observe({
     } else if (input$choose_distances_to_determine_2 != "Genes"){
       if(input$choose_distances_to_determine_2 == "ica"){
         filter_value_2 = colnames(values$data@reductions$ica@cell.embeddings)
+      } else if (input$choose_distances_to_determine_2 == "Metadata"){
+        filter_value_2 = colnames(values$data@meta.data)
       } else {
         filter_value_2 = unique(values$Annotation[,input$choose_distances_to_determine_2])
       }
