@@ -75,7 +75,8 @@ output[["IC_distance_main_parameters_UI_2"]] <- renderUI({
         selectizeInput(
           inputId = "metadata_filter_for_distances",
           label = "Metadata to use",
-          choices = colnames(values$data@meta.data[,sapply(values$data@meta.data, is.numeric)])
+          choices = colnames(values$data@meta.data[,sapply(values$data@meta.data, is.numeric)]),
+          multiple = TRUE
         )
       ),
       actionButton("start_distance_IC", "Start"),
