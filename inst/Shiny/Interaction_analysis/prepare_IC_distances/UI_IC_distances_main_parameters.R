@@ -70,6 +70,14 @@ output[["IC_distance_main_parameters_UI_2"]] <- renderUI({
             value = TRUE
           )
       ),
+      conditionalPanel(
+        condition = "input.choose_distances_to_determine == 'Metadata' | input.choose_distances_to_determine_2 == 'Metadata'",
+        selectizeInput(
+          inputId = "metadata_filter_for_distances",
+          label = "Metadata to use",
+          choices = colnames(values$data@meta.data[,sapply(values$data@meta.data, is.numeric)])
+        )
+      ),
       actionButton("start_distance_IC", "Start"),
       actionButton("start_distance_IC_batch", "Batch process"),
       downloadButton("download_distance_tables", "Download graph table"),

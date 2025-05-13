@@ -19,7 +19,7 @@ Calculate_distances <- function(method = NULL, sample = NULL) {
       if (input$choose_distances_to_determine == "Metadata") {
         
         table_sample = values$data@meta.data[,sapply(values$data@meta.data, is.numeric)]
-        table_sample = table_sample[,!sapply(colnames(table_sample), function(x){return(all(table_sample[,x] == 0))})]
+        table_sample = table_sample[,input$metadata_filter_for_distances]
         
       } else {
         table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
@@ -53,7 +53,7 @@ Calculate_distances <- function(method = NULL, sample = NULL) {
       if (input$choose_distances_to_determine_2 == "Metadata") {
         
         table_sample_2 = values$data@meta.data[,sapply(values$data@meta.data, is.numeric)]
-        table_sample_2 = table_sample_2[,!sapply(colnames(table_sample_2), function(x){return(all(table_sample_2[,x] == 0))})]
+        table_sample_2 = table_sample_2[,input$metadata_filter_for_distances]
         
         
       } else {
