@@ -13,7 +13,16 @@ fig_distance_boxplot_for_each_samples <- function(){
     # get values
     if (input$choose_distances_to_determine == "Genes") {
       
-      table_sample = raster::t(GetAssayData(values$data))
+      if(class(values$data@assays$Spatial) == "Assay5"){
+        
+        New<- JoinLayers(values$data@assays$Spatial)
+        table_sample = raster::t(GetAssayData(New))
+        rm(New)
+        gc()
+        
+      } else {
+        table_sample = raster::t(GetAssayData(values$data))
+      }
       
     } else if (input$choose_distances_to_determine != "Genes") {
       if (input$choose_distances_to_determine == "Metadata") {
@@ -37,7 +46,16 @@ fig_distance_boxplot_for_each_samples <- function(){
     
     if (input$choose_distances_to_determine_2 == "Genes") {
       
-      table_sample_2 = raster::t(GetAssayData(values$data))
+      if(class(values$data@assays$Spatial) == "Assay5"){
+        
+        New <- JoinLayers(values$data@assays$Spatial)
+        table_sample_2 = raster::t(GetAssayData(New))
+        rm(New)
+        gc()
+        
+      } else {
+        table_sample_2 = raster::t(GetAssayData(values$data))
+      }
       
     } else if (input$choose_distances_to_determine_2 != "Genes") {
       if (input$choose_distances_to_determine_2 == "Metadata") {
