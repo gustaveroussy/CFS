@@ -8,9 +8,11 @@ Run_distances(
   data = NULL,
   images = NULL,
   method = c("Lee"),
-  value1 = c("ica"),
-  value2 = c("ica"),
-  keep_positive_values = T
+  value1 = c("ica", "Genes", "Metadata"),
+  value2 = c("ica", "Genes", "Metadata"),
+  keep_positive_values = T,
+  gene_filter_table = NULL,
+  metadata_filter = NULL
 )
 }
 \arguments{
@@ -21,6 +23,10 @@ Run_distances(
 \item{method}{method to use for distances}
 
 \item{keep_positive_values}{Keep only the positive side of values to calculate de distances}
+
+\item{gene_filter_table}{datatable with two columns of genes to compare when "value1" and "value2" == "Genes", use all genes from the table when only one "value" == "Genes", unused otherwise.}
+
+\item{metadata_filter}{Names of the metadata column to use for the distance analysis}
 
 \item{value1/2}{Two variable within the object to calculate distances between}
 }

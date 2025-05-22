@@ -12,7 +12,7 @@ Enrich_ICA(
     "KEGG_2021_Human"),
   kurtosis = 3,
   overwrite = TRUE,
-  enrich_positive_genes = TRUE
+  enrich_positive_genes = FALSE
 )
 }
 \arguments{
