@@ -15,7 +15,7 @@
 #' data = Run_distances(data = data, images = c("sample"), method = c("Lee"), value1 = c("ica"), value2 = c("ica"), keep_positive_values = T)
 #' 
 #' @export
-Run_distances <- function(data = NULL, images = NULL, method = c("Lee"), value1 = c("ica", "Genes", "Metadata"), value2 = c("ica", "Genes", "Metadata"), keep_positive_values = T, gene_filter_table = NULL, metadata_filter = NULL){
+Run_distances <- function(data = NULL, images = NULL, method = c("Lee","Dotproduct"), value1 = c("ica", "Genes", "Metadata"), value2 = c("ica", "Genes", "Metadata"), keep_positive_values = T, gene_filter_table = NULL, metadata_filter = NULL){
   
   # metadata handling
   if (is.null(metadata_filter)){
@@ -214,7 +214,40 @@ Run_distances <- function(data = NULL, images = NULL, method = c("Lee"), value1 
       } else {
         shinyalert("Oops!", "No LR interaction found within selected sample", type = "error")
       }
+    } else if (method == "Dotproduct"){
+      
+      if (value1 == value2){
+        
+        if (value1 == "Genes"){
+          
+          lr = read.delim(paste0(system.file(package = "CFS"), "/tmp_data/human_lr_pair.csv"))$lr_pair
+          
+          df <- data.frame(lr=lr)
+          df <- df %>% separate(lr, into = c(value1, paste0(value2,"_2")), sep = "_")
+          
+          table_sample = table_sample[,colnames(table_sample) %in% unique(c(df[,1],df[,2]))]
+          table_sample_2 = table_sample_2[,colnames(table_sample_2) %in% unique(c(df[,1],df[,2]))]
+          
+        }
+        
+        dot_product = t(table_sample) %*% table_sample_2
+        dot_product = as.data.frame(as.table(as.matrix(dot_product)))
+        
+        if (value1 == "Genes"){
+          df = merge(df, dot_product, by=c(1,2))
+        } else {
+          combinations = t(combn(colnames(table_sample), 2))
+          df = merge(combinations, dot_product, by=c(1,2))
+        }
+        
+        data@misc$distances[[paste0(value1,"_",value2)]][[sample]][[method]] = df
+        
+      } else {
+        stop("value1 and value2 need to be equal.")
+      }
+      
     }
+    
   }
   
   return(data)

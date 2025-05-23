@@ -7,7 +7,7 @@
 Run_distances(
   data = NULL,
   images = NULL,
-  method = c("Lee"),
+  method = c("Lee", "Dotproduct"),
   value1 = c("ica", "Genes", "Metadata"),
   value2 = c("ica", "Genes", "Metadata"),
   keep_positive_values = T,
