@@ -93,15 +93,20 @@ Calculate_distances <- function(method = NULL, sample = NULL) {
           df <- data.frame(lr=lr)
           df <- df %>% separate(lr, into = c(input$choose_distances_to_determine, paste0(input$choose_distances_to_determine_2,"_2")), sep = "_")
         } else {
-          df = read.csv(input$import_genes_table_distances$datapath)
+          df = read.csv(input$import_genes_table_distances$datapath, header = FALSE)
           colnames(df) = c(input$choose_distances_to_determine, paste0(input$choose_distances_to_determine_2,"_2"))
         }
         
-        table_sample = as.data.frame(table_sample[,colnames(table_sample) %in% unique(c(df[,1],df[,2]))])
-        table_sample_2 = as.data.frame(table_sample_2[,colnames(table_sample_2) %in% unique(c(df[,1],df[,2]))])
+        unique = unique(c(df$Genes))[unique(c(df$Genes)) %in% colnames(table_sample)[colSums(table_sample) > 0]]
+        table_sample = as.data.frame(table_sample[,unique])
         
-        df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample) > 0],]
-        df = df[df[,2] %in% colnames(table_sample_2)[colSums(table_sample_2) > 0],]
+        unique_2 = unique(c(df$Genes_2))[unique(c(df$Genes_2)) %in% colnames(table_sample_2)[colSums(table_sample_2) > 0]]
+        table_sample_2 = as.data.frame(table_sample_2[,unique_2])
+        
+        df = expand_grid(unique, unique_2)
+        
+        df = as.data.frame(df)
+        colnames(df) = c(input$choose_distances_to_determine, paste0(input$choose_distances_to_determine_2,"_2"))
         
       } else if (input$choose_distances_to_determine == "Genes") {
         if(is.null(input$import_genes_table_distances)){
@@ -110,16 +115,15 @@ Calculate_distances <- function(method = NULL, sample = NULL) {
           df <- data.frame(lr=lr)
           df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")
         } else {
-          df = read.csv(input$import_genes_table_distances$datapath)
+          df = read.csv(input$import_genes_table_distances$datapath, header = FALSE)
           colnames(df) = c("l", "r")
         }
         
-        table_sample = as.data.frame(table_sample[,colnames(table_sample) %in% unique(c(df$l,df$r))])
+        unique = unique(c(df$l,df$r))[unique(c(df$l,df$r)) %in% colnames(table_sample)[colSums(table_sample) > 0]]
         
-        df = df[df[,1] %in% colnames(table_sample)[colSums(table_sample) > 0],]
-        df = df[df[,2] %in% colnames(table_sample)[colSums(table_sample) > 0],]
+        table_sample = as.data.frame(table_sample[,unique])
         
-        df = expand_grid(unique(c(df$l,df$r)),unique(colnames(table_sample_2)))
+        df = expand_grid(unique, unique(colnames(table_sample_2)))
         df = as.data.frame(df)
         colnames(df) = c(input$choose_distances_to_determine,input$choose_distances_to_determine_2)
         
@@ -129,17 +133,18 @@ Calculate_distances <- function(method = NULL, sample = NULL) {
           
           df <- data.frame(lr=lr)
           df <- df %>% separate(lr, into = c('l', 'r'), sep = "_")
+          
         } else {
-          df = read.csv(input$import_genes_table_distances$datapath)
+          df = read.csv(input$import_genes_table_distances$datapath, header = FALSE)
           colnames(df) = c("l", "r")
+          
         }
         
-        table_sample_2 = as.data.frame(table_sample_2[,colnames(table_sample_2) %in% unique(c(df$l,df$r))])
+        unique = unique(c(df$l,df$r))[unique(c(df$l,df$r)) %in% colnames(table_sample_2)[colSums(table_sample_2) > 0]]
         
-        df = df[df[,1] %in% colnames(table_sample_2)[colSums(table_sample_2) > 0],]
-        df = df[df[,2] %in% colnames(table_sample_2)[colSums(table_sample_2) > 0],]
+        table_sample_2 = as.data.frame(table_sample_2[,unique])
         
-        df = expand_grid(unique(colnames(table_sample)),unique(c(df$l,df$r)))
+        df = expand_grid(unique(colnames(table_sample)), unique)
         df = as.data.frame(df)
         colnames(df) = c(input$choose_distances_to_determine,input$choose_distances_to_determine_2)
         
