@@ -5,11 +5,7 @@
 create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges_list = NULL, tree_table = NULL){
   ##### create edgelist #####
   
-  if(input$choose_distances_to_determine == input$choose_distances_to_determine_2){
-    colnames(edges_list) = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2,"_2"))
-  } else {
-    colnames(edges_list) = c(input$choose_distances_to_determine,input$choose_distances_to_determine_2)
-  }
+  colnames(edges_list) = colnames(tree_table)[1:2]
   
   ##### create layout #####
   
@@ -144,7 +140,7 @@ create_distance_graph_plotly = function(G = NULL, layout = "kk", n_dim = 2,edges
     annotation_2 = c()
     
     for(i in names(V(G))){
-      if(i %in% rownames(values$data@assays$SCT@data)){
+      if(i %in% rownames(values$data@assays$Spatial)){
         ICs = lapply(values$data@misc$GeneAndStat$Contrib_gene,function(x){x = x[x$Sig > 0,];return(i %in% x$gene)})
         ICs = names(ICs[ICs == TRUE])
         ICs = paste0(ICs, " : ", values$Annotation[rownames(values$Annotation) %in% ICs,"Type"] ," : ",values$Annotation[rownames(values$Annotation) %in% ICs,"Annotation"])

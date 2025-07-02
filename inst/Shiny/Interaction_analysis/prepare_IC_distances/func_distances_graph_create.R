@@ -43,9 +43,9 @@ create_distance_graph = function(sample = "All"){
     
     t = rbindlist(tree_table)
     
-    count = t[, .N, by = c(input$choose_distances_to_determine,paste0(input$choose_distances_to_determine_2,"_2"))]
+    count = t[, .N, by = c(colnames(tree_table[[1]])[1:2])]
     t = t %>%
-      group_by(ica,ica_2) %>%
+      group_by_at(c(colnames(count)[1],colnames(count)[2])) %>%
       summarise_all(mean)
     
     df <- t %>% inner_join(count)
