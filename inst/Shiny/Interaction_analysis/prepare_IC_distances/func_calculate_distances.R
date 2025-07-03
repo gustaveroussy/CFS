@@ -1,79 +1,11 @@
-Calculate_distances <- function(method = NULL, sample = NULL) {
+Calculate_distances <- function(table_sample = NULL, table_sample_2 = NULL, method = NULL, sample = NULL) {
   
   withProgress(message = 'Calculating distances', value = 0, {
-    
-    if (input$choose_distances_to_determine == "Genes") {
-      if(class(values$data@assays$Spatial) == "Assay5"){
-        
-        New<- JoinLayers(values$data@assays$Spatial)
-        table_sample = raster::t(GetAssayData(New))
-        rm(New)
-        gc()
-        
-      } else {
-        table_sample = raster::t(GetAssayData(values$data))
-      }
-      
-    } else if (input$choose_distances_to_determine != "Genes") {
-      
-      if (input$choose_distances_to_determine == "Metadata") {
-        
-        table_sample = values$data@meta.data[,sapply(values$data@meta.data, is.numeric)]
-        table_sample = table_sample[,input$metadata_filter_for_distances]
-        
-      } else {
-        table_sample = values$data@reductions[[input$choose_distances_to_determine]]@cell.embeddings
-        
-        if(input$choose_distances_to_determine != "ica"){
-          colnames(table_sample) = values$data@misc$reduction_names[[input$choose_distances_to_determine]]
-        }
-        
-      }
-      
-      if(input$use_positive_values_for_distances){
-        table_sample[table_sample < 0] = 0
-      }
-      
-    }
-    
-    if (input$choose_distances_to_determine_2 == "Genes") {
-      
-      if(class(values$data@assays$Spatial) == "Assay5"){
-        
-        New<- JoinLayers(values$data@assays$Spatial)
-        table_sample_2 = raster::t(GetAssayData(New))
-        rm(New)
-        gc()
-        
-      } else {
-        table_sample_2 = raster::t(GetAssayData(values$data))
-      }
-      
-    } else if (input$choose_distances_to_determine_2 != "Genes") {
-      if (input$choose_distances_to_determine_2 == "Metadata") {
-        
-        table_sample_2 = values$data@meta.data[,sapply(values$data@meta.data, is.numeric)]
-        table_sample_2 = table_sample_2[,input$metadata_filter_for_distances]
-        
-        
-      } else {
-        
-        table_sample_2 = values$data@reductions[[input$choose_distances_to_determine_2]]@cell.embeddings
-        
-        if(input$choose_distances_to_determine_2 != "ica"){
-          colnames(table_sample_2) = values$data@misc$reduction_names[[input$choose_distances_to_determine_2]]
-        }
-      }
-      
-      if(input$use_positive_values_for_distances){
-        table_sample_2[table_sample_2 < 0] = 0
-      }
-      
-    }
     
     if(length(values$data@images) > 1){
       table_sample = table_sample[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample)),]
       table_sample_2 = table_sample_2[grepl(paste0(sample,"_[ACGT]+"), rownames(table_sample_2)),]
+      gc()
     }
     
     incProgress(0.1, detail = "Finding neighbors")

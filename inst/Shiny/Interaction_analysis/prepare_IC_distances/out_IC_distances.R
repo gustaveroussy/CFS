@@ -24,12 +24,17 @@ observeEvent(input$start_distance_IC,{
   sample = input$choose_sample_for_distances
   
   if(is.null(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]]) & is.null(values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]][[sample]][[method]])){
+    
+    table = search_table_for_distance()
 
-    values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]] = Calculate_distances(method = input$choose_method_for_distances, sample = input$choose_sample_for_distances)
+    values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]] = Calculate_distances(table_sample = table[[1]], table_sample_2 = table[[2]], method = input$choose_method_for_distances, sample = input$choose_sample_for_distances)
 
   } else {
     shinyalert("Info", "Already calculated", type = "info")
   }
+  
+  rm(table)
+  gc()
   
 })
 
@@ -40,9 +45,16 @@ observeEvent(input$start_distance_IC_batch,{
   method = input$choose_method_for_distances
   sample_all = names(values$data@images)
   
+  table = search_table_for_distance()
+  
   for(sample in sample_all){
-    values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]] = Calculate_distances(method = input$choose_method_for_distances, sample = sample)
+    if(is.null(values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]]) & is.null(values$distances[[paste0(input$choose_distances_to_determine_2,"_",input$choose_distances_to_determine)]][[sample]][[method]])){
+      values$distances[[paste0(input$choose_distances_to_determine,"_",input$choose_distances_to_determine_2)]][[sample]][[method]] = Calculate_distances(table_sample = table[[1]], table_sample_2 = table[[2]], method = input$choose_method_for_distances, sample = sample)
+    }
   }
+  
+  rm(table)
+  gc()
 })
 
 fig_distance_graph_IC <- reactive({
