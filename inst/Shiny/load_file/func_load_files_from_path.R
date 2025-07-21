@@ -16,6 +16,8 @@ load_file_from_path <- function(filepath = NULL, from_path = TRUE){
       values$HD_image_2 = NULL
       values$marker_gene = NULL
       
+      gc()
+      
       incProgress(0.2, detail = "Reading RDS")
       
       if(from_path){

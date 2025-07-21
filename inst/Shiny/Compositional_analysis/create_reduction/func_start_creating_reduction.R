@@ -21,7 +21,7 @@ observeEvent(input$start_creating_reduction,{
     table = matrix(nrow = nrow(ICA_ratio), ncol = 0)
     rownames(table) = rownames(ICA_ratio)
     table_genes = matrix(nrow = nrow(values$data@reductions$ica@feature.loadings), ncol = 0)
-    rownames(table_genes) = rownames(nrow(GetAssayData(values$data)))
+    rownames(table_genes) = Features(values$data)
     
     
     #Combinaison ICs -> broad
