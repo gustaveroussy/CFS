@@ -28,13 +28,6 @@ devtools::install_github("/gustaveroussy/CFS"
                          ,ref="main")
 ```
 
-To install the development branch with additional (potentially unstable) features, use:
-
-``` r
-devtools::install_github("/gustaveroussy/CFS"
-                         ,ref="development")
-```
-
 CellsFromSpace has the following dependencies : 
 
 -   shiny 

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/README_images/CFS_Logo.png" alt="CFS_logo" width="250"/>
+  <img src="https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/README_images/CFS_Logo.png" alt="CFS_logo" width="250"/>
 </p>
 
 CellsFromSpace
@@ -8,7 +8,7 @@ Built on the [Seurat](https://satijalab.org/seurat/) ecosystem, CellsFromSpace (
 
 # Documentation
 
-Full documentation and tutorial can be found at: [Tutorial and instructions](https://github.com/gustaveroussy/CFS/blob/development/docs/CFS_Tuto_Visium.md)
+Full documentation and tutorial can be found at: [Tutorial and instructions](https://github.com/gustaveroussy/CFS/blob/main/docs/CFS_Tuto_Visium.md)
 
 More documentation and tutorials are being made as new features are implemented. The tool can already be installed and is still un beta but is being actively worked on for full release.
 
@@ -17,7 +17,7 @@ More documentation and tutorials are being made as new features are implemented.
 CellsFromSpace aims at providing a simple and user-friendly ST analysis pipeline to any researcher, biologist, pathologist or bioinformatician regardless of coding ability. As a reference-free complete analysis tool, any dataset can be processed and analysed from end to end within the CFS interactive interface. CFS also allows integrated analysis of multiple samples for complex datasets.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/gustaveroussy/CFS/development/docs/README_images/CFS_graphAbstract.png" alt="CFS_graphAbstract" width="100%"/>
+  <img src="https://raw.githubusercontent.com/gustaveroussy/CFS/main/docs/README_images/CFS_graphAbstract.png" alt="CFS_graphAbstract" width="100%"/>
 </p>
 
 # Installation
@@ -27,13 +27,6 @@ CellsFromSpace can be installed from the github repository using the package dev
 install.packages("devtools")
 devtools::install_github("gustaveroussy/CFS"
                          ,ref="main")
-```
-
-To install the development branch with additional (potentially unstable) features, use:
-
-``` r
-devtools::install_github("gustaveroussy/CFS"
-                         ,ref="development")
 ```
 
 
@@ -49,7 +42,7 @@ library(Seurat)
 
 launchCFS()
 ```
-Follow along our [Tutorials](Tutorial URL) for a step-by-step exploration of the CFS pipeline. Briefly, the analysis workflow consists of:
+Follow along our [Tutorial](https://github.com/gustaveroussy/CFS/blob/main/docs/CFS_Tuto_Visium.md) for a step-by-step exploration of the CFS pipeline. Briefly, the analysis workflow consists of:
 
 - Pre-processing
 - IC annotation*
@@ -59,21 +52,22 @@ Follow along our [Tutorials](Tutorial URL) for a step-by-step exploration of the
 
 
 # Citation  
-
-This tool is not yet published. In the meantime, please cite our [preprint](https://www.biorxiv.org/content/10.1101/2023.08.30.555558v2)
+This work is published in [Bioinformatics Advances](https://doi.org/10.1093/bioadv/vbae081). You can cite the article as:
 ``` r
-@article {Thuilliez2023.08.30.555558,
-	author = {Corentin Thuilliez & Gaël Moquin-Beaudry et al.},
-	title = {CellsFromSpace: A fast, accurate and reference-free tool to deconvolve and annotate spatially distributed Omics data},
-	elocation-id = {2023.08.30.555558},
-	year = {2024},
-	doi = {10.1101/2023.08.30.555558},
-	publisher = {Cold Spring Harbor Laboratory},
-	URL = {https://www.biorxiv.org/content/early/2024/02/15/2023.08.30.555558},
-	eprint = {https://www.biorxiv.org/content/early/2024/02/15/2023.08.30.555558.full.pdf},
-	journal = {bioRxiv}
+@article{10.1093/bioadv/vbae081,
+    author = {Thuilliez, Corentin and Moquin-Beaudry, Gaël et al.},
+    title = "{CellsFromSpace: a fast, accurate, and reference-free tool to deconvolve and annotate spatially distributed omics data}",
+    journal = {Bioinformatics Advances},
+    volume = {4},
+    number = {1},
+    pages = {vbae081},
+    year = {2024},
+    month = {05},
+    issn = {2635-0041},
+    doi = {10.1093/bioadv/vbae081},
+    url = {https://doi.org/10.1093/bioadv/vbae081},
+    eprint = {https://academic.oup.com/bioinformaticsadvances/article-pdf/4/1/vbae081/58310899/vbae081.pdf},
 }
-
 ``` 
 
 # License
